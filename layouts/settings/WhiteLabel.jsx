@@ -13,11 +13,14 @@ export default function WhiteLabel() {
 
   const updateCompanyWhiteLabel = (fieldName, value) => {
     dispatch(
-      companyActions.updateCompanyProperties({
-        id: company.whiteLabel._id,
-        property: 'whiteLabel',
-        fieldName,
-        value
+      companyActions.updateCompany({
+        company: {
+          _id: company._id,
+          whiteLabel: {
+            [fieldName]: value
+          }
+        },
+        role: company.role
       })
     );
   };

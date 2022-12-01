@@ -46,9 +46,9 @@ export default function CompanyLogo() {
   useEffect(() => {
     if (didMount && companyLogoLink) {
       dispatch(
-        companyActions.updateCompanyLogoRequest({
-          companyId: company._id,
-          logoUrl: companyLogoLink
+        companyActions.updateCompany({
+          company: { _id: company._id, logoUrl: companyLogoLink },
+          role: company.role
         })
       );
     }

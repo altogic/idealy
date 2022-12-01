@@ -305,6 +305,24 @@ export const companySlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
+    updateCompany(state) {
+      state.isLoading = true;
+    },
+    updateCompanySuccess(state, action) {
+      state.isLoading = false;
+      state.company = action.payload;
+      state.companies = state.companies.map((company) => {
+        if (company._id === action.payload._id) {
+          return action.payload;
+        }
+        return company;
+      });
+      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
+    },
+    updateCompanyFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
     updateCompanyLogoRequest(state) {
       state.logoLoading = true;
     },

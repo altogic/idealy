@@ -219,6 +219,23 @@ function* createCompanySaga({ payload: { userId, onSuccess } }) {
     yield put(companyActions.createCompanyFailed(error));
   }
 }
+function* updateCompanySaga({ payload: { company, role } }) {
+  try {
+    const { data, errors } = yield call(companyService.updateCompany, company);
+    if (errors) {
+      throw errors;
+    }
+    yield put(
+      companyActions.updateCompanySuccess({
+        ...data,
+        role
+      })
+    );
+    yield call(realtimeService.sendMessage(data._id, 'update', data));
+  } catch (error) {
+    yield put(companyActions.updateCompanyFailed(error));
+  }
+}
 function* getCompanySaga({ payload: companyId }) {
   try {
     const { data, error } = yield call(companyService.getCompanyById, companyId);
@@ -296,56 +313,7 @@ function* updateMemberStatusSaga({ payload }) {
     yield put(companyActions.updateMemberStatusFailed(error));
   }
 }
-function* updateCompanyLogoSaga({ payload: { logoUrl, companyId } }) {
-  try {
-    const { data, errors } = yield call(companyService.updateCompanyLogo, {
-      logoUrl,
-      companyId
-    });
 
-    if (errors) {
-      throw new Error(errors);
-    }
-    yield put(companyActions.updateCompanyLogoSuccess(data));
-  } catch (error) {
-    yield put(companyActions.updateCompanyLogoFailure(error));
-  }
-}
-function* updateCompanyFaviconSaga({ payload: { favicon, companyId } }) {
-  try {
-    const { data, errors } = yield call(companyService.updateCompanyFavicon, {
-      favicon,
-      companyId
-    });
-
-    if (errors) {
-      throw new Error(errors);
-    }
-    yield put(companyActions.updateCompanyFaviconSuccess(data));
-  } catch (error) {
-    yield put(companyActions.updateCompanyFaviconFailure(error));
-  }
-}
-function* changeCompanyNameSaga({ payload: { name, companyId, role } }) {
-  try {
-    const { data, errors } = yield call(companyService.updateCompanyName, {
-      name,
-      companyId
-    });
-    if (errors) {
-      throw errors.items;
-    } else {
-      yield put(
-        companyActions.changeCompanyNameSuccess({
-          ...data,
-          role
-        })
-      );
-    }
-  } catch (error) {
-    yield put(companyActions.changeCompanyNameFailure(error));
-  }
-}
 function* addNewMember({ payload }) {
   try {
     const { data, error } = yield call(companyService.registerTeamMember, payload);
@@ -358,36 +326,11 @@ function* addNewMember({ payload }) {
   }
 }
 function* selectCompany({ payload }) {
-  console.log('payload', payload);
   localStorage.setItem('selectedCompany', JSON.stringify(payload));
   yield put(companyActions.selectCompanySuccess(payload));
 }
 function* setCompanies({ payload }) {
   yield put(companyActions.setCompaniesSuccess(payload));
-}
-function* updateCompanyProperties({ payload: { id, fieldName, property, value, role } }) {
-  try {
-    const { data, error } = yield call(companyService.updateCompanyProperties, {
-      id,
-      fieldName,
-      value,
-      modelName: property ? `company.${property}` : 'company'
-    });
-    if (error) {
-      throw new Error(error);
-    }
-    yield put(
-      companyActions.updateCompanyPropertiesSuccess({
-        data: {
-          ...data,
-          role
-        },
-        property
-      })
-    );
-  } catch (error) {
-    yield put(companyActions.updateCompanyPropertiesFailed(error));
-  }
 }
 function* updateCompanySubLists({ payload: { id, fieldName, property, value, role } }) {
   try {
@@ -582,9 +525,6 @@ function* updateCompanyMemberRealtime({ payload: user }) {
 
 export default function* companySaga() {
   yield all([
-    takeEvery(companyActions.updateCompanyLogoRequest.type, updateCompanyLogoSaga),
-    takeEvery(companyActions.updateCompanyFaviconRequest.type, updateCompanyFaviconSaga),
-    takeEvery(companyActions.changeCompanyName.type, changeCompanyNameSaga),
     takeEvery(companyActions.removeCompanyRoadMap.type, removeCompanyRoadMapSaga),
     takeEvery(companyActions.setCompanyRoadMap.type, setCompanyRoadMapCreatedSaga),
     takeEvery(companyActions.removeCompanyStatuses.type, removeCompanyStatusesSaga),
@@ -609,7 +549,6 @@ export default function* companySaga() {
     takeEvery(companyActions.getCompany.type, getCompanySaga),
     takeEvery(companyActions.selectCompany.type, selectCompany),
     takeEvery(companyActions.setCompanies.type, setCompanies),
-    takeEvery(companyActions.updateCompanyProperties.type, updateCompanyProperties),
     takeEvery(companyActions.deleteAllIdeas.type, deleteAllIdeas),
     takeEvery(companyActions.deleteCompany.type, deleteCompany),
     takeEvery(companyActions.deleteCompanyMember.type, deleteCompanyMember),
@@ -626,6 +565,7 @@ export default function* companySaga() {
     takeEvery(companyActions.updateCompanyMemberRoleRealtime.type, updateCompanyMemberRoleRealtime),
     takeEvery(companyActions.acceptInvitationRealtime.type, acceptInvitationRealtime),
     takeEvery(companyActions.addNewMemberRealtime.type, addNewMemberRealtime),
-    takeEvery(companyActions.updateCompanyMemberRealtime.type, updateCompanyMemberRealtime)
+    takeEvery(companyActions.updateCompanyMemberRealtime.type, updateCompanyMemberRealtime),
+    takeEvery(companyActions.updateCompany, updateCompanySaga)
   ]);
 }

@@ -48,9 +48,8 @@ export default function CompanyName() {
   const formSubmit = (form) => {
     setChangeCompanyNameLoading(true);
     dispatch(
-      companyActions.changeCompanyName({
-        companyId: company._id,
-        name: form.companyName,
+      companyActions.updateCompany({
+        company: { _id: company._id, name: form.companyName },
         role: company.role
       })
     );

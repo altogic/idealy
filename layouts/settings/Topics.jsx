@@ -55,7 +55,6 @@ export default function Topics() {
         order: company.topics.length + 1
       })
     );
-    reset();
   };
 
   useEffect(() => {

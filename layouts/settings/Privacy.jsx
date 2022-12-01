@@ -16,11 +16,14 @@ export default function Privacy() {
   const [ideaApproval, setIdeaApproval] = useState(company.privacy.ideaApproval);
   const updateCompanyPrivacy = (fieldName, value) => {
     dispatch(
-      companyActions.updateCompanyProperties({
-        id: company.privacy._id,
-        property: 'privacy',
-        fieldName,
-        value
+      companyActions.updateCompany({
+        company: {
+          _id: company._id,
+          privacy: {
+            [fieldName]: value
+          }
+        },
+        role: company.role
       })
     );
   };

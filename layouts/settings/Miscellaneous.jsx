@@ -22,11 +22,14 @@ export default function Miscellaneous() {
   );
   const updateCompanyInfo = (fieldName, value) => {
     dispatch(
-      companyActions.updateCompanyProperties({
-        id: company.miscellaneous._id,
-        property: 'miscellaneous',
-        fieldName,
-        value
+      companyActions.updateCompany({
+        company: {
+          _id: company._id,
+          miscellaneous: {
+            [fieldName]: value
+          }
+        },
+        role: company.role
       })
     );
   };
