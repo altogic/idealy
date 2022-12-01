@@ -62,10 +62,10 @@ export default function Settings() {
       <Layout>
         {!loading && (
           <div className="max-w-screen-xl mx-auto">
-            <div className="grid grid-cols-[350px,1fr]">
+            <div className="grid grid-cols-[250px,1fr] xl:grid-cols-[350px,1fr]">
               <Tab.Group selectedIndex={tabIndex}>
                 <Tab.List className="flex flex-col gap-1 px-6 border-r border-gray-300">
-                  <h2 className="text-slate-800 p-4 mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200">
+                  <h2 className="text-slate-800 p-4 mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200">
                     You
                   </h2>
                   {profileTabs?.map((tab) => (
@@ -107,7 +107,7 @@ export default function Settings() {
                       )
                   )}
                 </Tab.List>
-                <Tab.Panels className="px-20 py-16">
+                <Tab.Panels className="p-10 xl:px-20 xl:py-16">
                   {/* Profile */}
                   <Tab.Panel>
                     <Profile />

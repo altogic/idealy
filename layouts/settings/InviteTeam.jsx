@@ -100,21 +100,35 @@ export default function InviteTeam() {
   };
   return (
     <div>
-      <div className="flex items-center justify-between pb-4 mb-11 border-b border-slate-200">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 mb-11 lg:border-b lg:border-slate-200">
         <SectionTitle
           sectionTitle="Invite Team"
           sectionDescription="Add members to your company to help manage ideas."
           big
         />
+        <hr className="mb-8 border-slate-200" />
         <div>
-          <Button
-            type="button"
-            text="Invite team"
-            icon={<TwoPeople className="w-5 h-5" />}
-            variant="indigo"
-            size="base"
-            onClick={() => setIsInvite(!isInvite)}
-          />
+          <div className="hidden lg:block">
+            <Button
+              type="button"
+              text="Invite team"
+              icon={<TwoPeople className="w-5 h-5" />}
+              variant="indigo"
+              size="base"
+              onClick={() => setIsInvite(!isInvite)}
+            />
+          </div>
+          <div className="lg:hidden">
+            <Button
+              type="button"
+              text="Invite team"
+              icon={<TwoPeople className="w-5 h-5" />}
+              variant="indigo"
+              size="base"
+              fullWidth
+              onClick={() => setIsInvite(!isInvite)}
+            />
+          </div>
           <Transition appear show={isInvite} as={Fragment}>
             <Dialog as="div" className="relative z-10" onClose={() => setIsInvite(!isInvite)}>
               <Transition.Child
@@ -287,10 +301,10 @@ export default function InviteTeam() {
           <ClipLoader loading={getCompanyMembersLoading} color="#4338ca" size={50} />
         </div>
       ) : (
-        <div className="max-w-2xl">
+        <div>
           <div className="flex items-center justify-between pl-4 pr-[7rem] pb-4 mb-11 border-b border-slate-200">
             <span>Admins</span>
-            <span>Role</span>
+            <span className="hidden lg:inline-block">Role</span>
           </div>
           <div className="divide-y divide-slate-200">
             {companyMembers?.length > 0 || unregisteredCompanyMembers?.length > 0 ? (
