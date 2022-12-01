@@ -5,6 +5,7 @@ import { authSlice } from './auth/authSlice';
 import { companySlice } from './company/companySlice';
 import { topicSlice } from './topics/topicSlice';
 import { fileSlice } from './file/fileSlice';
+import { notificationSlice } from './notification/notificationSlice';
 import rootSaga from './rootSaga';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -14,7 +15,8 @@ const makeStore = () => {
       [authSlice.name]: authSlice.reducer,
       [companySlice.name]: companySlice.reducer,
       [topicSlice.name]: topicSlice.reducer,
-      [fileSlice.name]: fileSlice.reducer
+      [fileSlice.name]: fileSlice.reducer,
+      [notificationSlice.name]: notificationSlice.reducer
     },
     devTools: true,
     middleware: (getDefaultMiddleware) =>

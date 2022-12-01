@@ -24,7 +24,8 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
       realtimeService.sendMessage(userId, 'user-message', {
         type: 'delete-member',
         companyId: company._id,
-        userId
+        userId,
+        companyName: company.name
       });
       realtimeService.sendMessage(company._id, 'company-message', {
         type: 'delete-member',
