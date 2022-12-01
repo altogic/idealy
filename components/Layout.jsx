@@ -8,6 +8,7 @@ import { companyActions } from '@/redux/company/companySlice';
 import _ from 'lodash';
 import realtimeService from '@/utils/realtime';
 import { Dialog, Transition } from '@headlessui/react';
+import { notificationActions } from '@/redux/notification/notificationSlice';
 import Header from './Header';
 import { Email } from './icons';
 
@@ -18,6 +19,8 @@ export default function Layout({ children }) {
   const companies = useSelector((state) => state.company.companies);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const [invitationDialog, setInvitationDialog] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [deletedCompanyName, setDeletedCompanyName] = useState(false);
   const [invitation, setInvitation] = useState();
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
@@ -63,12 +66,11 @@ export default function Layout({ children }) {
             dispatch(
               companyActions.deleteCompanyMemberRealtime({
                 id: data.message.id,
-                companyId: data.message.companyId,
-                onSuccess: () => {
-                  router.push('/admin/create-new-company');
-                }
+                companyId: data.message.companyId
               })
             );
+            setDeletedCompanyName(data.message.companyName);
+            setDeleteDialog(true);
             break;
           case 'update-role':
             dispatch(companyActions.updateCompanyMemberRoleRealtime(data.message));
@@ -144,7 +146,7 @@ export default function Layout({ children }) {
   }, [user, companies]);
   const handleAcceptInvitation = () => {
     dispatch(
-      companyActions.updateMemberStatus({ id: invitation._id, companyId: invitation.companyId })
+      companyActions.updateMemberStatus({ id: invitation._id, companyId: invitation.company._id })
     );
     dispatch(
       companyActions.invalidateInvitationToken({
@@ -157,11 +159,16 @@ export default function Layout({ children }) {
       ...invitation,
       type: 'new-member',
       userId: user._id,
-      isAccepted: true,
-      sa: true
+      isAccepted: true
     });
+    dispatch(
+      notificationActions.sendNotification({
+        user: user._id,
+        companyId: invitation.company._id,
+        message: `<b>${user.name}</b> has accepted your invitation to join <b>${invitation.company.name}</b>`
+      })
+    );
     setInvitationDialog(false);
-
     router.push('/public-view');
   };
   const handleDeclineInvitation = () => {
@@ -176,8 +183,7 @@ export default function Layout({ children }) {
       type: 'new-member',
       companyId: invitation.company._id,
       userId: user._id,
-      isAccepted: false,
-      as: true
+      isAccepted: false
     });
     dispatch(
       companyActions.invalidateInvitationToken({
@@ -188,6 +194,16 @@ export default function Layout({ children }) {
     );
     setInvitationDialog(false);
   };
+  const handleDeleteMembership = () => {
+    setDeleteDialog(false);
+    if (companies.length === 1) {
+      dispatch(companyActions.selectCompany(companies[0]));
+    } else if (companies.length > 1) {
+      router.push('/admin/select-company');
+    } else {
+      router.push('/admin/create-new-company');
+    }
+  };
   return (
     <div>
       <Head>
@@ -196,6 +212,55 @@ export default function Layout({ children }) {
       <Header />
       <main className="px-4">
         {children}
+        <Transition appear show={deleteDialog} as={Fragment}>
+          <Dialog as="div" className="relative z-10" onClose={() => {}}>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0">
+              <div className="fixed inset-0 bg-black bg-opacity-25" />
+            </Transition.Child>
+
+            <div className="fixed inset-0 overflow-y-auto">
+              <div className="flex min-h-full items-center justify-center p-4 text-center">
+                <Transition.Child
+                  as={Fragment}
+                  enter="ease-out duration-300"
+                  enterFrom="opacity-0 scale-95"
+                  enterTo="opacity-100 scale-100"
+                  leave="ease-in duration-200"
+                  leaveFrom="opacity-100 scale-100"
+                  leaveTo="opacity-0 scale-95">
+                  <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                    <div className="inline-flex items-center justify-center flex-shrink-0 w-10 h-10 bg-indigo-100 rounded-full">
+                      <Email className="w-6 h-6 text-indigo-600" />
+                    </div>
+                    <div className="space-y-2 mt-2">
+                      <h2 className="text-slate-800 text-lg font-medium tracking-sm">
+                        You have been removed from <b>{deletedCompanyName}</b>
+                      </h2>
+                      <p className="text-slate-500 text-sm tracking-sm">
+                        Please contact your company admin for more information
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-center mt-6 gap-3">
+                      <button
+                        type="button"
+                        className="inline-flex items-center justify-center bg-indigo-600 text-white py-2.5 px-4 text-sm font-medium tracking-sm border border-transparent rounded-md transition  hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        onClick={handleDeleteMembership}>
+                        OK
+                      </button>
+                    </div>
+                  </Dialog.Panel>
+                </Transition.Child>
+              </div>
+            </div>
+          </Dialog>
+        </Transition>
         <Transition appear show={invitationDialog} as={Fragment}>
           <Dialog as="div" className="relative z-10" onClose={() => setInvitationDialog(false)}>
             <Transition.Child

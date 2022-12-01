@@ -3,18 +3,16 @@ import * as React from 'react';
 function SvgNotification(props) {
   return (
     <svg
-      width="1em"
-      height="1em"
-      viewBox="0 0 20 20"
-      fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth="1.5"
+      stroke="currentColor"
       {...props}>
       <path
-        d="M9.167 3.333H6.5c-1.4 0-2.1 0-2.635.273a2.5 2.5 0 0 0-1.093 1.092C2.5 5.233 2.5 5.933 2.5 7.333V13.5c0 1.4 0 2.1.272 2.635a2.5 2.5 0 0 0 1.093 1.092C4.4 17.5 5.1 17.5 6.5 17.5h6.167c1.4 0 2.1 0 2.635-.273a2.5 2.5 0 0 0 1.092-1.092c.273-.535.273-1.235.273-2.635v-2.667m.1-7.6a2.5 2.5 0 1 1-3.535 3.535 2.5 2.5 0 0 1 3.536-3.536Z"
-        stroke="currentColor"
-        strokeWidth={1.667}
         strokeLinecap="round"
         strokeLinejoin="round"
+        d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
       />
     </svg>
   );
