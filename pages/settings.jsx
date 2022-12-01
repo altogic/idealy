@@ -19,11 +19,13 @@ import Miscellaneous from '@/layouts/settings/Miscellaneous';
 import { useRouter } from 'next/router';
 import { PROFILE_TABS, COMPANY_TABS } from 'constants';
 import { useSelector } from 'react-redux';
+import { Close } from '@/components/icons';
 import _ from 'lodash';
 
 export default function Settings() {
   const [loading, setLoading] = useState(true);
   const [tabIndex, setTabIndex] = useState();
+  const [openSidebar, setOpenSidebar] = useState(false);
   const [profileTabs, setProfileTabs] = useState();
   const [companyTabs, setCompanyTabs] = useState();
   const router = useRouter();
@@ -62,9 +64,20 @@ export default function Settings() {
       <Layout>
         {!loading && (
           <div className="max-w-screen-xl mx-auto">
-            <div className="grid grid-cols-[250px,1fr] xl:grid-cols-[350px,1fr]">
+            <button type="button" onClick={() => setOpenSidebar(!openSidebar)}>
+              Deneme
+            </button>
+            <div className="lg:grid grid-cols-[250px,1fr] xl:grid-cols-[350px,1fr]">
               <Tab.Group selectedIndex={tabIndex}>
-                <Tab.List className="flex flex-col gap-1 px-6 border-r border-gray-300">
+                <Tab.List
+                  className={cn(
+                    `flex flex-col gap-1 absolute lg:static transform -translate-x-[200%] lg:transform-none px-6 transition lg:transition-none border-r border-gray-300`,
+                    openSidebar ? 'top-0 left-0 translate-x-[0] h-screen bg-white z-50' : ''
+                  )}>
+                  <Close
+                    onClick={() => setOpenSidebar(!openSidebar)}
+                    className="absolute top-4 right-4 w-4 h-4 text-slate-500"
+                  />
                   <h2 className="text-slate-800 p-4 mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200">
                     You
                   </h2>
@@ -107,7 +120,7 @@ export default function Settings() {
                       )
                   )}
                 </Tab.List>
-                <Tab.Panels className="p-10 xl:px-20 xl:py-16">
+                <Tab.Panels className="py-10 lg:p-10 xl:px-20 xl:py-16">
                   {/* Profile */}
                   <Tab.Panel>
                     <Profile />
