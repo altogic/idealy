@@ -19,7 +19,7 @@ export default function Header() {
   }, [isAuthenticated]);
   return (
     <>
-      <header className="flex items-center justify-between bg-indigo-900 py-6 px-12">
+      <header className="flex items-center justify-between bg-indigo-900 px-4 py-6 lg:px-12">
         <div className="flex items-center">
           {company?.name ? (
             <Link href="/">
