@@ -77,7 +77,7 @@ export default function ChangePassword() {
 
   return (
     <>
-      <div className="pb-4 mb-11 border-b border-slate-200">
+      <div className="pb-6 lg:pb-4 mb-6 lg:mb-11 border-b border-slate-200">
         <SectionTitle
           sectionTitle="Password"
           sectionDescription="Please enter your current password to change your password."
