@@ -71,14 +71,16 @@ export default function Settings() {
               <Tab.Group selectedIndex={tabIndex}>
                 <Tab.List
                   className={cn(
-                    `flex flex-col gap-1 absolute lg:static transform -translate-x-[200%] lg:transform-none px-6 transition lg:transition-none border-r border-gray-300`,
-                    openSidebar ? 'top-0 left-0 translate-x-[0] h-screen bg-white z-50' : ''
+                    `flex flex-col gap-1 fixed lg:static w-full lg:w-auto pb-10 transform -translate-x-[200%] lg:transform-none px-2 lg:px-6 transition lg:transition-none lg:border-r lg:border-gray-300`,
+                    openSidebar
+                      ? 'top-0 left-0 translate-x-[0] h-screen bg-white overflow-y-auto z-50'
+                      : ''
                   )}>
                   <Close
                     onClick={() => setOpenSidebar(!openSidebar)}
-                    className="absolute top-4 right-4 w-4 h-4 text-slate-500"
+                    className="absolute top-3 right-3 w-6 h-6 text-slate-500"
                   />
-                  <h2 className="text-slate-800 p-4 mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200">
+                  <h2 className="text-slate-800 p-4 mt-3 lg:mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200">
                     You
                   </h2>
                   {profileTabs?.map((tab) => (
@@ -97,7 +99,7 @@ export default function Settings() {
                     </Tab>
                   ))}
                   {company?.role !== 'Moderator' && (
-                    <h2 className="text-slate-800 p-4 mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200">
+                    <h2 className="text-slate-800 p-4 mt-3 lg:mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200">
                       {company?.name}
                     </h2>
                   )}
