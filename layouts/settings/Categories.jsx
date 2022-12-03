@@ -73,7 +73,7 @@ export default function Categories() {
       <div className="max-w-2xl">
         <div className="pb-6 mb-11 border-b border-slate-200">
           <form onSubmit={handleSubmit(formSubmit)}>
-            <div className="grid grid-cols-[1fr,135px] gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-[1fr,135px] gap-4">
               <Input
                 type="text"
                 name="categoriesName"
@@ -99,6 +99,8 @@ export default function Categories() {
                 <SortableCompanyActions
                   items={company?.categories}
                   property="categories"
+                  modalTitle="Delete Categories"
+                  modalDescription="Are you sure you want to delete this categories? This action cannot be undone."
                   onDelete={(item) =>
                     dispatch(
                       companyActions.removeCompanyCategories({

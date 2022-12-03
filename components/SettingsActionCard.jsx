@@ -121,7 +121,7 @@ export default function SettingsActionCard({
         ...provided?.draggableProps?.style,
         cursor: !isColorModalOpen ? 'grab' : 'default'
       }}>
-      <div className="flex justify-between w-full h-full p-4">
+      <div className="flex justify-between gap-4 w-full h-full p-4">
         <div className="flex items-center gap-3 w-full h-full">
           {!topics && colorCircle && (
             <div>
@@ -171,7 +171,7 @@ export default function SettingsActionCard({
                 name="name"
                 error={errors.name}
                 register={register('name')}
-                className="bg-transparent text-slate-700 tracking-sm border-0 focus:outline-none focus:ring-0"
+                className="bg-transparent text-slate-700 text-sm lg:text-base tracking-sm border-0 focus:outline-none focus:ring-0"
                 onBlur={(e) => {
                   handleEdit(e.target.value, 'name', !roadMapDescription);
                 }}
@@ -202,15 +202,21 @@ export default function SettingsActionCard({
             </form>
           ) : (
             <div className="flex flex-col">
-              <h6 className="text-slate-700 text-base tracking-sm">{name}</h6>
+              <h6
+                className="max-w-[200px] lg:max-w-xs text-slate-700 text-sm lg:text-base tracking-sm truncate"
+                title={name}>
+                {name}
+              </h6>
               {roadMapDescription && (
-                <p className="text-slate-500 mt-2 text-sm tracking-sm">{description}</p>
+                <p className="text-slate-500 mt-2 text-sm tracking-sm" title={description}>
+                  {description}
+                </p>
               )}
             </div>
           )}
         </div>
         {!isHideUpdate && (
-          <div className="flex items-center justify-between gap-4 transition opacity-0 group-hover:opacity-100">
+          <div className="flex items-center justify-between gap-2 lg:gap-4 transition opacity-0 group-hover:opacity-100">
             <Button
               type="button"
               icon={<Pen className="w-5 h-5 text-slate-500" />}

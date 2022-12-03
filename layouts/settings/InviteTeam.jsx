@@ -100,13 +100,14 @@ export default function InviteTeam() {
   };
   return (
     <div>
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 mb-11 lg:border-b lg:border-slate-200">
-        <SectionTitle
-          sectionTitle="Invite Team"
-          sectionDescription="Add members to your company to help manage ideas."
-          big
-        />
-        <hr className="mb-8 border-slate-200" />
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between lg:gap-4 pb-4 mb-10 lg:mb-11 lg:border-b lg:border-slate-200">
+        <div className="pb-4 mb-10 lg:pb-0 lg:mb-0 border-b border-slate-200 lg:border-0">
+          <SectionTitle
+            sectionTitle="Invite Team"
+            sectionDescription="Add members to your company to help manage ideas."
+            big
+          />
+        </div>
         <div>
           <div className="hidden lg:block">
             <Button
@@ -173,8 +174,8 @@ export default function InviteTeam() {
                           </p>
                         </div>
                         <form onSubmit={handleSubmit(formSubmit)}>
-                          <div className="flex items-center gap-3">
-                            <div className="flex-1 max-h-[4.5rem]">
+                          <div className="flex flex-col md:flex-row md:items-center gap-3">
+                            <div className="flex-1 md:max-h-[4.5rem]">
                               <Input
                                 label="Email address"
                                 type="text"
@@ -190,7 +191,7 @@ export default function InviteTeam() {
                               <Label label="Role" />
                               <Listbox value={roleSelected} onChange={setRoleSelected}>
                                 <div className="relative">
-                                  <Listbox.Button className="flex items-center relative w-[150px] h-11 bg-white py-3 px-[14px] border border-gray-300 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                                  <Listbox.Button className="flex items-center relative w-full md:w-[150px] h-11 bg-white py-3 px-[14px] border border-gray-300 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                                     <span className="block text-gray-500 text-sm tracking-sm truncate">
                                       {roleSelected.name}
                                     </span>
@@ -215,7 +216,7 @@ export default function InviteTeam() {
                                     leave="transition ease-in duration-100"
                                     leaveFrom="opacity-100"
                                     leaveTo="opacity-0">
-                                    <Listbox.Options className="absolute mt-1 w-[150px] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-[9999]">
+                                    <Listbox.Options className="absolute mt-1 w-full md:w-[150px] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-[9999]">
                                       {ROLE.map((item) => (
                                         <Listbox.Option
                                           key={item.id}
