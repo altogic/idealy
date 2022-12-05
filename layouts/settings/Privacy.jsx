@@ -17,13 +17,10 @@ export default function Privacy() {
   const updateCompanyPrivacy = (fieldName, value) => {
     dispatch(
       companyActions.updateCompany({
-        company: {
-          _id: company._id,
-          privacy: {
-            [fieldName]: value
-          }
-        },
-        role: company.role
+        _id: company._id,
+        privacy: {
+          [fieldName]: value
+        }
       })
     );
   };

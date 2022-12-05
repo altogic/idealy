@@ -49,8 +49,8 @@ export default function CompanyName() {
     setChangeCompanyNameLoading(true);
     dispatch(
       companyActions.updateCompany({
-        company: { _id: company._id, name: form.companyName },
-        role: company.role
+        _id: company._id,
+        name: form.companyName
       })
     );
   };

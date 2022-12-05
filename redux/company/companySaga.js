@@ -219,19 +219,25 @@ function* createCompanySaga({ payload: { userId, onSuccess } }) {
     yield put(companyActions.createCompanyFailed(error));
   }
 }
-function* updateCompanySaga({ payload: { company, role } }) {
+function* updateCompanySaga({ payload: company }) {
   try {
     const { data, errors } = yield call(companyService.updateCompany, company);
     if (errors) {
       throw errors;
     }
+
+    const stateCompany = yield select((state) => state.company.company);
+    const user = yield select((state) => state.auth.user);
     yield put(
       companyActions.updateCompanySuccess({
         ...data,
-        role
+        role: stateCompany.role
       })
     );
-    yield call(realtimeService.sendMessage(data._id, 'update', data));
+    realtimeService.sendMessage(data._id, 'update-company', {
+      company: data,
+      sender: user._id
+    });
   } catch (error) {
     yield put(companyActions.updateCompanyFailed(error));
   }
@@ -494,16 +500,10 @@ function* declineInvitation({ payload: { email, companyId } }) {
 function* updateMemberStatus({ payload: { userId, company } }) {
   yield put(companyActions.updateMemberStatusRealtimeSuccess({ userId, company }));
 }
-function* deleteCompanyMemberRealtime({ payload: { userId, companyId, isCompany, onSuccess } }) {
-  yield put(companyActions.deleteCompanyMemberRealtimeSuccess({ userId, companyId, isCompany }));
-  if (!isCompany) {
-    const companies = yield select((state) => state.company.companies);
-    if (!companies.length) {
-      onSuccess();
-    } else {
-      yield fork(selectCompany, { payload: companies[0] });
-    }
-  }
+function* deleteCompanyMemberRealtime({ payload: { userId, companyId, isCompany, id } }) {
+  yield put(
+    companyActions.deleteCompanyMemberRealtimeSuccess({ userId, companyId, isCompany, id })
+  );
 }
 function* acceptInvitationRealtime({ payload: company }) {
   yield fork(selectCompany, { payload: company });

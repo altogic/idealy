@@ -309,15 +309,19 @@ export const companySlice = createSlice({
       state.isLoading = true;
     },
     updateCompanySuccess(state, action) {
-      state.isLoading = false;
-      state.company = action.payload;
-      state.companies = state.companies.map((company) => {
-        if (company._id === action.payload._id) {
-          return action.payload;
-        }
-        return company;
-      });
-      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
+      try {
+        state.isLoading = false;
+        state.company = action.payload;
+        state.companies = state.companies.map((company) => {
+          if (company._id === action.payload._id) {
+            return action.payload;
+          }
+          return company;
+        });
+        localStorage.setItem('selectedCompany', JSON.stringify(state.company));
+      } catch (error) {
+        console.log(error);
+      }
     },
     updateCompanyFailed(state, action) {
       state.isLoading = false;
@@ -580,9 +584,15 @@ export const companySlice = createSlice({
     },
     deleteCompanyMemberRealtimeSuccess(state, action) {
       state.isLoading = false;
-      state.companyMembers = state.companyMembers.filter(
-        (member) => member.user._id !== action.payload.userId
-      );
+      if (action.payload.isRegistered) {
+        state.companyMembers = state.companyMembers.filter(
+          (member) => member._id !== action.payload.id
+        );
+      } else {
+        state.unregisteredCompanyMembers = state.unregisteredCompanyMembers.filter(
+          (member) => member._id !== action.payload.id
+        );
+      }
       if (!action.payload.isCompany) {
         state.companies = state.companies.filter(
           (company) => company._id !== action.payload.companyId
@@ -594,15 +604,27 @@ export const companySlice = createSlice({
     },
     updateCompanyMemberRoleRealtimeSuccess(state, action) {
       state.isLoading = false;
-      state.companyMembers = state.companyMembers.map((member) => {
-        if (member._id === action.payload.id) {
-          return {
-            ...member,
-            role: action.payload.role
-          };
-        }
-        return member;
-      });
+      if (action.payload.isRegistered) {
+        state.companyMembers = state.companyMembers.map((member) => {
+          if (member._id === action.payload.id) {
+            return {
+              ...member,
+              role: action.payload.role
+            };
+          }
+          return member;
+        });
+      } else {
+        state.unregisteredCompanyMembers = state.unregisteredCompanyMembers.map((member) => {
+          if (member._id === action.payload.id) {
+            return {
+              ...member,
+              role: action.payload.role
+            };
+          }
+          return member;
+        });
+      }
       if (!action.payload.isCompany) {
         if (state.company._id === action.payload.companyId) {
           state.company.role = action.payload.role;
@@ -646,6 +668,11 @@ export const companySlice = createSlice({
         }
         return member;
       });
+      if (action.payload.user) {
+        state.companyMembers = [...state.companyMembers, action.payload];
+      } else {
+        state.unregisteredCompanyMembers = [...state.unregisteredCompanyMembers, action.payload];
+      }
     }
   },
 

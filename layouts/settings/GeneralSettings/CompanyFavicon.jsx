@@ -45,8 +45,8 @@ export default function CompanyFavicon() {
     if (didMount && companyFaviconLink) {
       dispatch(
         companyActions.updateCompany({
-          company: { _id: company._id, favicon: companyFaviconLink },
-          role: company.role
+          _id: company._id,
+          favicon: companyFaviconLink
         })
       );
     }

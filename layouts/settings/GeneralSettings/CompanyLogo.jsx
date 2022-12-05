@@ -47,8 +47,8 @@ export default function CompanyLogo() {
     if (didMount && companyLogoLink) {
       dispatch(
         companyActions.updateCompany({
-          company: { _id: company._id, logoUrl: companyLogoLink },
-          role: company.role
+          _id: company._id,
+          logoUrl: companyLogoLink
         })
       );
     }
