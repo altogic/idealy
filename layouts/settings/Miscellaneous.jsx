@@ -81,7 +81,7 @@ export default function Miscellaneous() {
         </div> */}
         {company?.role === 'Owner' && (
           <div className="py-14 divide-y divide-slate-200">
-            <div className="flex items-center justify-between gap-4 py-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-6">
               <div>
                 <h2 className="text-slate-800 text-base font-semibold tracking-sm">
                   Delete all ideas
@@ -97,7 +97,7 @@ export default function Miscellaneous() {
                 onClick={() => dispatch(companyActions.deleteAllIdeas(company._id))}
               />
             </div>
-            <div className="flex items-center justify-between gap-4 py-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-6">
               <div>
                 <h2 className="text-slate-800 text-base font-semibold tracking-sm">
                   Delete company

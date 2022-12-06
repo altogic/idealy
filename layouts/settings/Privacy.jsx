@@ -36,7 +36,7 @@ export default function Privacy() {
       <div className="max-w-2xl">
         <div className="divide-y divide-slate-200">
           <div className="pb-6">
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <SectionTitle
                 sectionTitle="Company visibility"
                 sectionDescription="Select who sees your Ideas board, Roadmap and Announcements."
@@ -48,7 +48,7 @@ export default function Privacy() {
                   updateCompanyPrivacy('isPublic', selected === 'Public');
                 }}>
                 <div className="relative">
-                  <Listbox.Button className="relative w-[150px] inline-flex bg-white py-3.5 px-[14px] border border-slate-300 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                  <Listbox.Button className="relative w-full md:w-[150px] inline-flex bg-white py-3.5 px-[14px] border border-slate-300 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                     <span className="block text-gray-500 text-sm tracking-sm truncate">
                       {companySelected}
                     </span>
@@ -73,7 +73,7 @@ export default function Privacy() {
                     leave="transition ease-in duration-100"
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0">
-                    <Listbox.Options className="absolute mt-1 max-h-60 w-[150px] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50">
+                    <Listbox.Options className="absolute mt-1 md:max-h-60 w-full md:w-[150px] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50">
                       {COMPANY_VISIBILITY.map((item) => (
                         <Listbox.Option
                           key={item}

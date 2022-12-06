@@ -10,7 +10,7 @@ export default function Toggle({
   ...props
 }) {
   return (
-    <Switch.Group as="div" className="flex items-center justify-between" {...props}>
+    <Switch.Group as="div" className="flex items-center justify-between gap-4" {...props}>
       <span className="flex flex-grow flex-col">
         <Switch.Label
           as="span"
