@@ -29,7 +29,6 @@ export default function Header() {
       companies.forEach((company) => {
         realtimeService.join(company._id);
         realtimeService.listen('notification', (data) => {
-          console.log(company._id, data);
           if (data.message.user !== user._id) {
             dispatch(notificationActions.receiveNotificationRealtime(data.message));
           }
@@ -46,7 +45,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="flex items-center justify-between bg-indigo-900 py-6 px-12">
+      <header className="flex items-center justify-between bg-indigo-900 p-4 lg:py-6 lg:px-12">
         <div className="flex items-center">
           {company?.name ? (
             <Link href="/">
@@ -67,7 +66,7 @@ export default function Header() {
             </Link>
           ) : null}
           {companyLoading || (
-            <ul className="flex items-center gap-2">
+            <ul className="hidden lg:flex items-center gap-2">
               {company?.siteNavigation?.feedback && (
                 <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800">
                   <Link href="/">
@@ -114,6 +113,7 @@ export default function Header() {
           >
             Public View
           </button> */}
+
           {/* Notification */}
           <Menu as="div" className="relative">
             <Menu.Button className="relative inline-flex items-center justify-center w-10 h-10 p-[10px] rounded-full text-gray-500 focus:outline-none">

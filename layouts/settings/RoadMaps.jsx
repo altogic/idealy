@@ -73,11 +73,11 @@ export default function RoadMaps() {
           big
         />
       </div>
-      <div className="max-w-2xl">
-        <div className="pl-4 pb-6 mb-11 border-b border-slate-200">
+      <div className="lg:max-w-2xl">
+        <div className="pb-6 mb-11 border-b border-slate-200">
           <form
             onSubmit={handleSubmit(formSubmit)}
-            className="grid grid-cols-[500px,1fr] items-end gap-4">
+            className="grid grid-cols-1 md:grid-cols-[500px,1fr] items-end gap-4">
             <div className="flex-1 space-y-4">
               <Input
                 type="text"

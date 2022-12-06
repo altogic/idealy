@@ -84,7 +84,7 @@ export default function Statuses() {
 
   return (
     <>
-      <div className="pb-4 mb-11 border-b border-slate-200">
+      <div className="pb-4 mb-6 lg:mb-11 border-b border-slate-200">
         <SectionTitle
           sectionTitle="Statuses"
           sectionDescription="Use Statuses to track Ideas on your Roadmap."
@@ -92,9 +92,9 @@ export default function Statuses() {
         />
       </div>
       <div className="max-w-2xl">
-        <div className="pb-6 mb-11 border-b border-slate-200">
+        <div className="pb-4 mb-6 lg:mb-11 border-b border-slate-200">
           <form onSubmit={handleSubmit(formSubmit)}>
-            <div className="grid grid-cols-[1fr,135px] gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-[1fr,135px] gap-4">
               <Input
                 type="text"
                 name="statusesName"
@@ -114,12 +114,14 @@ export default function Statuses() {
             </div>
           </form>
         </div>
-        <div className="mb-11">
+        <div className="mb-6 lg:mb-11">
           {company?.statuses.length > 0 ? (
             <SortableCompanyActions
               items={company?.statuses}
               setStatus={setStatus}
               property="statuses"
+              modalTitle="Delete Status"
+              modalDescription="Are you sure you want to delete this status? This action cannot be undone."
               onDelete={(item) => {
                 dispatch(
                   companyActions.removeCompanyStatuses({
@@ -140,7 +142,7 @@ export default function Statuses() {
         </div>
         <hr className="border-slate-200" />
         <div>
-          <div className="flex items-center justify-between mt-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-8">
             <span className="text-sm">
               Which Status is your &quot;<strong>Completed</strong>&quot; Status?{' '}
             </span>
@@ -176,7 +178,7 @@ export default function Statuses() {
                   leave="transition ease-in duration-100"
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0">
-                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-[60]">
                     {company.statuses.map((item) => (
                       <Listbox.Option
                         key={item._id}

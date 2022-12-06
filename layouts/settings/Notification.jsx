@@ -25,7 +25,6 @@ export default function Notification() {
   useEffect(() => {
     if (user) {
       const notification = user.notifications.find((n) => n.companyId === selectedCompany._id);
-      console.log(notification);
       if (notification) {
         setSelectedNotification(notification);
         setDailyDigest(notification.dailyDigest);
@@ -50,7 +49,7 @@ export default function Notification() {
   };
   return (
     <>
-      <div className="pb-4 mb-11 border-b border-slate-200">
+      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200">
         <SectionTitle
           sectionTitle="Notifications"
           sectionDescription="Keep your inbox under control."

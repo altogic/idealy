@@ -19,11 +19,13 @@ import Miscellaneous from '@/layouts/settings/Miscellaneous';
 import { useRouter } from 'next/router';
 import { PROFILE_TABS, COMPANY_TABS } from 'constants';
 import { useSelector } from 'react-redux';
+import { Close } from '@/components/icons';
 import _ from 'lodash';
 
 export default function Settings() {
   const [loading, setLoading] = useState(true);
   const [tabIndex, setTabIndex] = useState();
+  const [openSidebar, setOpenSidebar] = useState(false);
   const [profileTabs, setProfileTabs] = useState();
   const [companyTabs, setCompanyTabs] = useState();
   const router = useRouter();
@@ -61,11 +63,27 @@ export default function Settings() {
       </Head>
       <Layout>
         {!loading && (
-          <div className="max-w-screen-xl mx-auto">
-            <div className="grid grid-cols-[350px,1fr]">
+          <div className="relative max-w-screen-xl mx-auto">
+            <button
+              type="button"
+              onClick={() => setOpenSidebar(!openSidebar)}
+              className="fixed bottom-0 left-0 inline-flex lg:hidden items-center justify-center w-full bg-indigo-900 text-white text-base font-medium tracking-sm px-4 py-3 z-50">
+              Settings Menu
+            </button>
+            <div className="lg:grid grid-cols-[250px,1fr] xl:grid-cols-[350px,1fr]">
               <Tab.Group selectedIndex={tabIndex}>
-                <Tab.List className="flex flex-col gap-1 px-6 border-r border-gray-300">
-                  <h2 className="text-slate-800 p-4 mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200">
+                <Tab.List
+                  className={cn(
+                    `flex flex-col gap-1 fixed lg:static w-full lg:w-auto pb-10 transform -translate-x-[200%] lg:transform-none px-2 lg:px-6 transition lg:transition-none lg:border-r lg:border-gray-300`,
+                    openSidebar
+                      ? 'top-0 left-0 translate-x-[0] h-screen bg-white overflow-y-auto z-50'
+                      : ''
+                  )}>
+                  <Close
+                    onClick={() => setOpenSidebar(!openSidebar)}
+                    className="absolute top-3 right-3 w-6 h-6 text-slate-500"
+                  />
+                  <h2 className="text-slate-800 p-4 mt-3 lg:mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200">
                     You
                   </h2>
                   {profileTabs?.map((tab) => (
@@ -84,7 +102,7 @@ export default function Settings() {
                     </Tab>
                   ))}
                   {company?.role !== 'Moderator' && (
-                    <h2 className="text-slate-800 p-4 mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200">
+                    <h2 className="text-slate-800 p-4 mt-3 lg:mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200">
                       {company?.name}
                     </h2>
                   )}
@@ -107,7 +125,7 @@ export default function Settings() {
                       )
                   )}
                 </Tab.List>
-                <Tab.Panels className="px-20 py-16">
+                <Tab.Panels className="pt-10 pb-28 lg:p-10 xl:px-20 xl:py-16">
                   {/* Profile */}
                   <Tab.Panel>
                     <Profile />

@@ -4,7 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import SettingsActionList from './SettingsActionList';
 
-export default function SortableCompanyActions({ items, property, topics, onDelete }) {
+export default function SortableCompanyActions({
+  items,
+  property,
+  topics,
+  modalTitle,
+  modalDescription,
+  onDelete
+}) {
   const dispatch = useDispatch();
   const [first, setFirst] = useState(items);
   const [isHideUpdate, setIsHideUpdate] = useState(false);
@@ -48,6 +55,8 @@ export default function SortableCompanyActions({ items, property, topics, onDele
               topics={topics}
               onDelete={onDelete}
               property={property}
+              modalTitle={modalTitle}
+              modalDescription={modalDescription}
               isHideUpdate={isHideUpdate}
             />
 
