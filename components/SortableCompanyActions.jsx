@@ -4,16 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import SettingsActionList from './SettingsActionList';
 
-export default function SortableCompanyActions({
-  items,
-  property,
-  topics,
-  modalTitle,
-  modalDescription,
-  onDelete
-}) {
+export default function SortableCompanyActions({ property, topics, onDelete }) {
   const dispatch = useDispatch();
-  const [first, setFirst] = useState(items);
+  const [items, setItems] = useState();
   const [isHideUpdate, setIsHideUpdate] = useState(false);
   const company = useSelector((state) => state.company.company);
 
@@ -24,18 +17,27 @@ export default function SortableCompanyActions({
 
     return result;
   };
+  useEffect(() => {
+    if (company && property) {
+      dispatch(
+        companyActions.getCompanyProperties({
+          companyId: company._id,
+          fieldName: property
+        })
+      );
+    }
+  }, [property]);
 
   useEffect(() => {
-    if (items) {
-      const temp = [...items];
-      setFirst(temp.sort((a, b) => a.order - b.order));
+    if (company[property]) {
+      setItems(company[property]);
     }
-  }, [items]);
+  }, [company]);
   return (
     <DragDropContext
       onDragEnd={(result) => {
-        const reorderedList = reorder(first, result.source.index, result.destination.index);
-        setFirst(reorderedList);
+        const reorderedList = reorder(items, result.source.index, result.destination.index);
+        setItems(reorderedList);
         dispatch(
           companyActions.updateCompanySubListsOrder({
             property,
@@ -43,7 +45,6 @@ export default function SortableCompanyActions({
             value: reorderedList.map((item, index) => ({ ...item, order: index + 1 }))
           })
         );
-
         setIsHideUpdate(false);
       }}
       onDragUpdate={() => setIsHideUpdate(!isHideUpdate)}>
@@ -51,7 +52,7 @@ export default function SortableCompanyActions({
         {(provided) => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
             <SettingsActionList
-              items={first}
+              items={items}
               topics={topics}
               onDelete={onDelete}
               property={property}

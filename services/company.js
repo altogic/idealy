@@ -71,6 +71,8 @@ const companyService = {
   },
   updateCompanyMemberRole: (req) => endpoint.put('/company/member', req),
   updateCompanySubListsOrder: ({ modelName, value }) =>
-    endpoint.put(`/company/${modelName}/order`, value)
+    endpoint.put(`/company/${modelName}/order`, value),
+  getCompanyProperties: (fieldName, companyId) =>
+    db.model(`company.${fieldName}`).filter(`_parent == '${companyId}'`).sort('order', 'desc').get()
 };
 export default companyService;

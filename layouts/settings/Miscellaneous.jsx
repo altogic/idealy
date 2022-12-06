@@ -6,11 +6,12 @@ import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
 import { Trash } from '@/components/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
-import { Router } from 'next/router';
+import Router from 'next/router';
+import realtimeService from '@/utils/realtime';
 
 export default function Miscellaneous() {
   const [deleteCompanyConfirm, setDeleteCompanyConfirm] = useState(false);
-
+  const user = useSelector((state) => state.auth.user);
   const company = useSelector((state) => state.company.company);
   const deleteIdeaLoading = useSelector((state) => state.company.deleteIdeaLoading);
   const dispatch = useDispatch();
@@ -124,7 +125,27 @@ export default function Miscellaneous() {
           dispatch(
             companyActions.deleteCompany({
               companyId: company._id,
-              onSuccess: () => Router.push('/public-view')
+              onSuccess: (companies) => {
+                try {
+                  realtimeService.sendMessage(company._id, 'company-message', {
+                    type: 'company-deleted',
+                    sender: user._id,
+                    companyId: company._id,
+                    companyName: company.name
+                  });
+                  console.log(companies);
+                  if (companies.length > 1) {
+                    Router.push('/admin/select-company');
+                  } else if (companies.length === 1) {
+                    dispatch(companyActions.selectCompany(companies[0]));
+                    Router.push('/admin/dashboard');
+                  } else {
+                    Router.push('/admin/create-company');
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              }
             })
           );
         }}

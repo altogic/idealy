@@ -124,6 +124,13 @@ export default function Layout({ children }) {
                 dispatch(companyActions.updateCompanyMemberRealtime(data.message.user));
               }
               break;
+            case 'company-deleted':
+              if (user._id !== data.message.sender) {
+                dispatch(companyActions.deleteCompanyRealtime(data.message.companyId));
+                setDeletedCompanyName(data.message.companyName);
+                setDeleteDialog(true);
+              }
+              break;
             default:
               break;
           }

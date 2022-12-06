@@ -450,8 +450,6 @@ export const companySlice = createSlice({
     deleteCompanySuccess(state, action) {
       state.isLoading = false;
       state.companies = state.companies.filter((company) => company._id !== action.payload);
-      [state.company] = state.companies;
-      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
     },
     deleteCompanyFailed(state, action) {
       state.isLoading = false;
@@ -524,16 +522,8 @@ export const companySlice = createSlice({
     updateCompanySubListsOrder(state) {
       state.isLoading = true;
     },
-    updateCompanySubListsOrderSuccess(state, action) {
+    updateCompanySubListsOrderSuccess(state) {
       state.isLoading = false;
-      state.company = action.payload;
-      state.companies = state.companies.map((company) => {
-        if (company._id === action.payload._id) {
-          return action.payload;
-        }
-        return company;
-      });
-      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
     },
     updateCompanySubListsOrderFailed(state, action) {
       state.isLoading = false;
@@ -673,6 +663,25 @@ export const companySlice = createSlice({
       } else {
         state.unregisteredCompanyMembers = [...state.unregisteredCompanyMembers, action.payload];
       }
+    },
+    getCompanyProperties(state) {
+      state.isLoading = true;
+    },
+    getCompanyPropertiesSuccess(state, action) {
+      state.isLoading = false;
+      state.company[action.payload.fieldName] = action.payload.data;
+      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
+    },
+    getCompanyPropertiesFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    deleteCompanyRealtime(state) {
+      state.isLoading = true;
+    },
+    deleteCompanyRealtimeSuccess(state, action) {
+      state.isLoading = false;
+      state.companies = state.companies.filter((company) => company._id !== action.payload);
     }
   },
 

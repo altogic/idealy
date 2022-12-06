@@ -379,8 +379,9 @@ function* deleteCompany({ payload: { companyId, onSuccess } }) {
     if (error) {
       throw new Error(error);
     }
-    onSuccess();
     yield put(companyActions.deleteCompanySuccess(companyId));
+    const companies = yield select((state) => state.company.companies);
+    onSuccess(companies);
   } catch (error) {
     yield put(companyActions.deleteCompanyFailed(error));
   }
@@ -518,6 +519,25 @@ function* updateCompanyMemberRoleRealtime({ payload: { id, role, companyId, isCo
 function* addNewMemberRealtime({ payload }) {
   yield put(companyActions.addNewMemberRealtimeSuccess(payload));
 }
+function* getCompanyProperties({ payload: { fieldName, companyId } }) {
+  try {
+    const { data, error } = yield call(companyService.getCompanyProperties, fieldName, companyId);
+    if (error) {
+      throw error;
+    }
+    yield put(
+      companyActions.getCompanyPropertiesSuccess({
+        data,
+        fieldName
+      })
+    );
+  } catch (error) {
+    yield put(companyActions.getCompanyPropertiesFailed(error));
+  }
+}
+function* deleteCompanyRealtimeSaga({ payload: companyId }) {
+  yield put(companyActions.deleteCompanyRealtimeSuccess(companyId));
+}
 
 function* updateCompanyMemberRealtime({ payload: user }) {
   yield put(companyActions.updateCompanyMemberRealtimeSuccess(user));
@@ -566,6 +586,9 @@ export default function* companySaga() {
     takeEvery(companyActions.acceptInvitationRealtime.type, acceptInvitationRealtime),
     takeEvery(companyActions.addNewMemberRealtime.type, addNewMemberRealtime),
     takeEvery(companyActions.updateCompanyMemberRealtime.type, updateCompanyMemberRealtime),
-    takeEvery(companyActions.updateCompany, updateCompanySaga)
+    takeEvery(companyActions.updateCompany, updateCompanySaga),
+    takeEvery(companyActions.updateCompany, updateCompanySaga),
+    takeEvery(companyActions.getCompanyProperties.type, getCompanyProperties),
+    takeEvery(companyActions.deleteCompanyRealtime.type, deleteCompanyRealtimeSaga)
   ]);
 }
