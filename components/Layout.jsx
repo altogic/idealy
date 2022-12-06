@@ -63,12 +63,7 @@ export default function Layout({ children }) {
         console.log(data);
         switch (data.message.type) {
           case 'delete-member':
-            dispatch(
-              companyActions.deleteCompanyMemberRealtime({
-                id: data.message.id,
-                companyId: data.message.companyId
-              })
-            );
+            dispatch(companyActions.deleteCompanyMemberRealtime(data.message));
             setDeletedCompanyName(data.message.companyName);
             setDeleteDialog(true);
             break;
@@ -88,7 +83,6 @@ export default function Layout({ children }) {
       companies.forEach((company) => {
         realtimeService.join(company._id);
         realtimeService.listen('company-message', (data) => {
-          console.log(data);
           switch (data.message.type) {
             case 'new-member':
               if (data.message.isAccepted) {
@@ -99,12 +93,7 @@ export default function Layout({ children }) {
                   })
                 );
               } else {
-                dispatch(
-                  companyActions.deleteCompanyMemberRealtime({
-                    userId: data.message.userId,
-                    companyId: data.message.companyId
-                  })
-                );
+                dispatch(companyActions.deleteCompanyMemberRealtime(data.message));
               }
               break;
             case 'update-member':
@@ -120,8 +109,7 @@ export default function Layout({ children }) {
             case 'delete-member':
               dispatch(
                 companyActions.deleteCompanyMemberRealtime({
-                  userId: data.message.userId,
-                  companyId: data.message.companyId,
+                  ...data.message,
                   isCompany: true
                 })
               );
@@ -134,6 +122,13 @@ export default function Layout({ children }) {
             case 'user-update':
               if (user._id !== data.message.user._id) {
                 dispatch(companyActions.updateCompanyMemberRealtime(data.message.user));
+              }
+              break;
+            case 'company-deleted':
+              if (user._id !== data.message.sender) {
+                dispatch(companyActions.deleteCompanyRealtime(data.message.companyId));
+                setDeletedCompanyName(data.message.companyName);
+                setDeleteDialog(true);
               }
               break;
             default:

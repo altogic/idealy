@@ -16,11 +16,9 @@ export default function CompanyFavicon() {
 
   const updateCompanyDisplay = (fieldName, value) => {
     dispatch(
-      companyActions.updateCompanyProperties({
-        id: company._id,
-        fieldName,
-        value,
-        role: company.role
+      companyActions.updateCompany({
+        _id: company._id,
+        [fieldName]: value
       })
     );
   };

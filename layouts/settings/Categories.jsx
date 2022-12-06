@@ -97,7 +97,6 @@ export default function Categories() {
             <div>
               {company.categories.length && (
                 <SortableCompanyActions
-                  items={company?.categories}
                   property="categories"
                   modalTitle="Delete Categories"
                   modalDescription="Are you sure you want to delete this categories? This action cannot be undone."

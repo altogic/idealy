@@ -6,12 +6,12 @@ export default function SettingsActionList({
   items,
   property,
   topics,
-  modalTitle,
-  modalDescription,
   onDelete,
-  isHideUpdate
+  isHideUpdate,
+  modalTitle,
+  modalDescription
 }) {
-  return items.map((item, index) => (
+  return items?.map((item, index) => (
     <SettingsActionCard
       key={item._id}
       id={item._id}

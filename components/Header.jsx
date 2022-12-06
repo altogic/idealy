@@ -4,6 +4,7 @@ import { Transition, Dialog, Menu } from '@headlessui/react';
 import { useSelector, useDispatch } from 'react-redux';
 import realtimeService from '@/utils/realtime';
 import { notificationActions } from '@/redux/notification/notificationSlice';
+import { companyActions } from '@/redux/company/companySlice';
 import { Search, Feedback, Roadmap, Announcements, Close, Notification } from './icons';
 import UserDropdown from './Header/UserDropdown';
 import CompanyAvatar from './CompanyAvatar';
@@ -31,6 +32,11 @@ export default function Header() {
         realtimeService.listen('notification', (data) => {
           if (data.message.user !== user._id) {
             dispatch(notificationActions.receiveNotificationRealtime(data.message));
+          }
+        });
+        realtimeService.listen('update-company', (data) => {
+          if (data.message.company._id === company._id && data.message.sender !== user._id) {
+            dispatch(companyActions.selectCompany({ ...data.message.company, role: company.role }));
           }
         });
       });

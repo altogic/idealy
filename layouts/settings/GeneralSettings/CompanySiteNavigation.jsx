@@ -14,12 +14,11 @@ export default function CompanySiteNavigation() {
 
   const updateCompanyNavigation = (fieldName, value) => {
     dispatch(
-      companyActions.updateCompanyProperties({
-        id: company.siteNavigation._id,
-        property: 'siteNavigation',
-        fieldName,
-        value,
-        role: company.role
+      companyActions.updateCompany({
+        _id: company._id,
+        siteNavigation: {
+          [fieldName]: value
+        }
       })
     );
   };

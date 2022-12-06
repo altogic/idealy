@@ -55,7 +55,6 @@ export default function Topics() {
         order: company.topics.length + 1
       })
     );
-    reset();
   };
 
   useEffect(() => {
@@ -98,7 +97,6 @@ export default function Topics() {
         <div>
           {company?.topics.length > 0 ? (
             <SortableCompanyActions
-              items={company?.topics}
               property="topics"
               modalTitle="Delete Topics"
               modalDescription="Are you sure you want to delete this topics? This action cannot be undone."
