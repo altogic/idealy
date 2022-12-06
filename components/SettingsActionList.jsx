@@ -2,7 +2,15 @@ import React from 'react';
 import { companyActions } from '@/redux/company/companySlice';
 import SettingsActionCard from './SettingsActionCard';
 
-export default function SettingsActionList({ items, property, topics, onDelete, isHideUpdate }) {
+export default function SettingsActionList({
+  items,
+  property,
+  topics,
+  onDelete,
+  isHideUpdate,
+  modalTitle,
+  modalDescription
+}) {
   return items?.map((item, index) => (
     <SettingsActionCard
       key={item._id}
