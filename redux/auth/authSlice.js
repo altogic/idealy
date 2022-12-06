@@ -6,6 +6,7 @@ import ToastMessage from '@/utils/toast';
 // Initial state
 const initialState = {
   isLoading: false,
+  changeEmailLoading: false,
   error: null,
   loginError: null,
   registerError: null,
@@ -108,15 +109,14 @@ export const authSlice = createSlice({
     },
     resetErrorsRequest() {},
     changeEmailRequest(state) {
-      state.isLoading = true;
+      state.changeEmailLoading = true;
     },
     changeEmailSuccess(state, action) {
-      state.isLoading = false;
-      state.user = action.payload.user;
-      window.location.href = `/mail-verification-message?operation=change&email=${action.payload.email}`;
+      state.changeEmailLoading = false;
+      state.user = action.payload;
     },
     changeEmailFailure(state, action) {
-      state.isLoading = false;
+      state.changeEmailLoading = false;
       state.changeEmailError = action.payload;
     },
     changePassword(state) {
@@ -130,29 +130,7 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.changePasswordError = action.payload;
     },
-    changeName(state) {
-      state.isLoading = true;
-    },
-    changeNameSuccess(state, action) {
-      state.isLoading = false;
-      state.user.name = action.payload.name;
-      ToastMessage.success('User name updated successfully');
-    },
-    changeNameFailure(state, action) {
-      state.isLoading = false;
-      state.changeNameError = action.payload;
-    },
-    updateProfileRequest(state) {
-      state.isLoading = true;
-    },
-    updateUserSuccess(state, action) {
-      state.isLoading = false;
-      state.user = action.payload;
-    },
-    updateUserFailure(state, action) {
-      state.isLoading = false;
-      state.updateProfileError = action.payload;
-    },
+
     authenticateWithProvider(state) {
       state.isLoading = false;
     },
@@ -243,6 +221,17 @@ export const authSlice = createSlice({
     },
     getUserCompanies(state) {
       state.isLoading = true;
+    },
+    updateUserProfile(state) {
+      state.isLoading = true;
+    },
+    updateUserSuccess(state, action) {
+      state.isLoading = false;
+      state.user = action.payload;
+    },
+    updateUserFailure(state, action) {
+      state.isLoading = false;
+      state.updateProfileError = action.payload;
     }
   },
   extraReducers: {

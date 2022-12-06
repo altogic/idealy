@@ -131,6 +131,11 @@ export default function Layout({ children }) {
                 dispatch(companyActions.addNewMemberRealtimeSuccess(data.message));
               }
               break;
+            case 'user-update':
+              if (user._id !== data.message.user._id) {
+                dispatch(companyActions.updateCompanyMemberRealtime(data.message.user));
+              }
+              break;
             default:
               break;
           }

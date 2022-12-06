@@ -47,22 +47,24 @@ export default function PersonalInformation() {
   const formSubmit = (form) => {
     setChangeNameLoading(true);
     dispatch(
-      authActions.changeName({
-        name: form.name
+      authActions.updateUserProfile({
+        name: form.name,
+        _id: user._id
       })
     );
   };
+
+  useEffect(() => {
+    if (user) {
+      setValue('name', user.name);
+    }
+  }, [user, setValue]);
 
   useEffect(() => {
     if (!loading) {
       setChangeNameLoading(false);
     }
   }, [loading]);
-  useEffect(() => {
-    if (user) {
-      setValue('name', user.name);
-    }
-  }, [user, setValue]);
 
   return (
     <>

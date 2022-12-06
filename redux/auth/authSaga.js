@@ -3,20 +3,9 @@ import { takeEvery, put, call, all, select } from 'redux-saga/effects';
 import { randomInt, setSessionCookie } from '@/utils/index';
 import { COLORS } from 'constants';
 import companyService from '@/services/company';
+import realtimeService from '@/utils/realtime';
 import { authActions } from './authSlice';
 import { companyActions } from '../company/companySlice';
-
-function* changeNameSaga({ payload }) {
-  try {
-    const { errors } = yield call(AuthService.nameChange, payload);
-    if (errors) {
-      throw errors.items;
-    }
-    yield put(authActions.changeNameSuccess(payload));
-  } catch (e) {
-    yield put(authActions.changeNameFailure(e));
-  }
-}
 
 function* removeSavedFiltersSaga({ payload: { filter } }) {
   try {
@@ -199,44 +188,15 @@ function* changeEmailSaga({ payload }) {
     if (errors) {
       throw errors.items;
     } else {
-      yield put(authActions.changeEmailSuccess({ user, email: payload.email }));
+      yield put(authActions.changeEmailSuccess({ ...user, email: payload.email }));
+      yield call(AuthService.setUser, { ...user, email: payload.email });
+      payload.onSuccess();
     }
   } catch (e) {
     yield put(authActions.changeEmailFailure(e));
   }
 }
 
-function* updateProfileAvatarSaga({ payload: { _id, profilePicture } }) {
-  try {
-    const { data, errors } = yield call(AuthService.updateUserProfile, {
-      _id,
-      profilePicture
-    });
-
-    if (errors) {
-      throw new Error(errors);
-    }
-    yield call(AuthService.setUser, data);
-    yield put(authActions.updateUserSuccess(data));
-  } catch (error) {
-    yield put(authActions.updateUserFailure(error));
-  }
-}
-
-export function* setDefaultAvatarSaga() {
-  try {
-    const user = yield select((state) => state.auth.user);
-    const { data, errors } = yield call(AuthService.setDefaultAvatar, user.name);
-    if (errors) throw errors;
-    if (data) {
-      yield call(AuthService.authStateChange, data);
-      yield put(authActions.updateUserSuccess(data));
-    }
-    return { data, errors: null };
-  } catch (e) {
-    return { data: null, errors: e };
-  }
-}
 function* updateNotificationSaga({ payload }) {
   try {
     const { data, errors } = yield call(AuthService.updateNotificationSettings, payload);
@@ -301,14 +261,29 @@ function* getUserCompaniesSaga({ payload: userId }) {
     yield put(companyActions.setCompaniesFailed(error));
   }
 }
+function* updateUserProfileSaga({ payload }) {
+  try {
+    const company = yield select((state) => state.company.company);
+    const { data, errors } = yield call(AuthService.updateUserProfile, payload);
+    if (errors) {
+      throw new Error(errors);
+    }
+    yield put(authActions.updateUserSuccess(data));
+    yield call(AuthService.setUser, data);
+    realtimeService.sendMessage(company._id, 'company-message', {
+      type: 'user-update',
+      user: data
+    });
+  } catch (error) {
+    yield put(authActions.updateUserFailure(error));
+  }
+}
 
 export default function* rootSaga() {
   yield all([
     takeEvery(authActions.register.type, registerSaga),
     takeEvery(authActions.login.type, loginSaga),
     takeEvery(authActions.getAuthGrant.type, getAuthGrantSaga),
-    takeEvery(authActions.changeName.type, changeNameSaga),
-    takeEvery(authActions.updateProfileRequest.type, updateProfileAvatarSaga),
     takeEvery(authActions.setUser.type, getUserFromDb),
     takeEvery(authActions.changePassword.type, changePasswordSaga),
     takeEvery(authActions.logout.type, logoutSaga),
@@ -322,7 +297,8 @@ export default function* rootSaga() {
     takeEvery(authActions.updateNotificationSettings.type, updateNotificationSaga),
     takeEvery(authActions.updateSavedFilters.type, updateSavedFilterSaga),
     takeEvery(authActions.clearError.type, clearErrorsSaga),
-    takeEvery(authActions.deleteProfile, deleteProfileSaga),
-    takeEvery(authActions.getUserCompanies, getUserCompaniesSaga)
+    takeEvery(authActions.deleteProfile.type, deleteProfileSaga),
+    takeEvery(authActions.getUserCompanies.type, getUserCompaniesSaga),
+    takeEvery(authActions.updateUserProfile.type, updateUserProfileSaga)
   ]);
 }
