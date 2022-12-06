@@ -3,6 +3,7 @@ import FileService from '@/services/file';
 import companyService from '@/services/company';
 import _ from 'lodash';
 import { takeEvery, put, call, all, select } from 'redux-saga/effects';
+import realtimeService from '@/utils/realtime';
 import { authActions } from '../auth/authSlice';
 import { fileActions } from './fileSlice';
 import { companyActions } from '../company/companySlice';
@@ -56,12 +57,17 @@ export function* clearFileLink() {
 
 function* deleteAvatarFileSaga({ payload: userId }) {
   try {
+    const company = yield select((state) => state.company.company);
     const { data, errors } = yield call(AuthService.deleteProfileAvatar, userId);
     if (errors) throw errors;
     if (data) {
       yield call(AuthService.setUser, data);
       yield put(authActions.setUser(data));
       yield put(fileActions.deleteUserAvatarSuccess());
+      realtimeService.sendMessage(company._id, 'company-message', {
+        type: 'user-update',
+        user: data
+      });
     }
   } catch (error) {
     yield put(fileActions.deleteUserAvatarFailure(error));

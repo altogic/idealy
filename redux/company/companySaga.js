@@ -548,7 +548,7 @@ function* declineInvitation({ payload: { email, companyId } }) {
     yield put(companyActions.declineInvitationFailed(error));
   }
 }
-function* updateCompanyMemberRealtime({ payload: { userId, company } }) {
+function* updateMemberStatus({ payload: { userId, company } }) {
   yield put(companyActions.updateMemberStatusRealtimeSuccess({ userId, company }));
 }
 function* deleteCompanyMemberRealtime({ payload: { userId, companyId, isCompany, onSuccess } }) {
@@ -574,6 +574,10 @@ function* updateCompanyMemberRoleRealtime({ payload: { id, role, companyId, isCo
 }
 function* addNewMemberRealtime({ payload }) {
   yield put(companyActions.addNewMemberRealtimeSuccess(payload));
+}
+
+function* updateCompanyMemberRealtime({ payload: user }) {
+  yield put(companyActions.updateCompanyMemberRealtimeSuccess(user));
 }
 
 export default function* companySaga() {
@@ -617,10 +621,11 @@ export default function* companySaga() {
     takeEvery(companyActions.updateCompanySubListsOrder.type, updateCompanySubListsOrder),
     takeEvery(companyActions.getUserCompanies.type, getUserCompanies),
     takeEvery(companyActions.declineInvitation.type, declineInvitation),
-    takeEvery(companyActions.updateMemberStatusRealtime.type, updateCompanyMemberRealtime),
+    takeEvery(companyActions.updateMemberStatusRealtime.type, updateMemberStatus),
     takeEvery(companyActions.deleteCompanyMemberRealtime.type, deleteCompanyMemberRealtime),
     takeEvery(companyActions.updateCompanyMemberRoleRealtime.type, updateCompanyMemberRoleRealtime),
     takeEvery(companyActions.acceptInvitationRealtime.type, acceptInvitationRealtime),
-    takeEvery(companyActions.addNewMemberRealtime.type, addNewMemberRealtime)
+    takeEvery(companyActions.addNewMemberRealtime.type, addNewMemberRealtime),
+    takeEvery(companyActions.updateCompanyMemberRealtime.type, updateCompanyMemberRealtime)
   ]);
 }

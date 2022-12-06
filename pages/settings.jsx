@@ -81,7 +81,7 @@ export default function Settings() {
                   )}>
                   <Close
                     onClick={() => setOpenSidebar(!openSidebar)}
-                    className="absolute top-3 right-3 w-6 h-6 text-slate-500"
+                    className="absolute top-3 right-3 lg:hidden w-6 h-6 text-slate-500"
                   />
                   <h2 className="text-slate-800 p-4 mt-3 lg:mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200">
                     You

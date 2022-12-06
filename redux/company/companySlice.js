@@ -613,6 +613,21 @@ export const companySlice = createSlice({
     addNewMemberRealtimeSuccess(state, action) {
       state.isLoading = false;
       state.companyMembers = [...state.companyMembers, action.payload];
+    },
+    updateCompanyMemberRealtime(state) {
+      state.isLoading = true;
+    },
+    updateCompanyMemberRealtimeSuccess(state, action) {
+      state.isLoading = false;
+      state.companyMembers = state.companyMembers.map((member) => {
+        if (member.user._id === action.payload._id) {
+          return {
+            ...member,
+            user: action.payload
+          };
+        }
+        return member;
+      });
     }
   },
 

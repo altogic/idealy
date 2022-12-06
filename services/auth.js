@@ -42,12 +42,6 @@ const AuthService = {
   setUserInformation(req) {
     return endpoint.post('/user/information', req);
   },
-  nameChange({ name }) {
-    return db
-      .model('users')
-      .object(auth.getUser()._id)
-      .updateFields([{ field: 'name', updateType: 'set', value: name }]);
-  },
   authenticateWithProvider(provider) {
     return auth.signInWithProvider(provider);
   },
@@ -59,12 +53,6 @@ const AuthService = {
   },
   setSession(session) {
     auth.setSession(session);
-  },
-  updateUserProfile({ _id, profilePicture }) {
-    return db
-      .model('users')
-      .object(_id)
-      .updateFields([{ field: 'profilePicture', updateType: 'set', value: profilePicture }]);
   },
   updateNotificationSettings({ id, value, fieldName }) {
     return db
@@ -92,6 +80,9 @@ const AuthService = {
   },
   deleteProfile() {
     return endpoint.delete('/user');
+  },
+  updateUserProfile(user) {
+    return db.model('users').object(user._id).update(user);
   }
 };
 
