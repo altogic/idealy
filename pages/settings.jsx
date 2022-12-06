@@ -63,9 +63,12 @@ export default function Settings() {
       </Head>
       <Layout>
         {!loading && (
-          <div className="max-w-screen-xl mx-auto">
-            <button type="button" onClick={() => setOpenSidebar(!openSidebar)}>
-              Deneme
+          <div className="relative max-w-screen-xl mx-auto">
+            <button
+              type="button"
+              onClick={() => setOpenSidebar(!openSidebar)}
+              className="fixed bottom-0 left-0 inline-flex lg:hidden items-center justify-center w-full bg-indigo-900 text-white text-base font-medium tracking-sm px-4 py-3 z-50">
+              Settings Menu
             </button>
             <div className="lg:grid grid-cols-[250px,1fr] xl:grid-cols-[350px,1fr]">
               <Tab.Group selectedIndex={tabIndex}>
@@ -122,7 +125,7 @@ export default function Settings() {
                       )
                   )}
                 </Tab.List>
-                <Tab.Panels className="py-10 lg:p-10 xl:px-20 xl:py-16">
+                <Tab.Panels className="pt-10 pb-28 lg:p-10 xl:px-20 xl:py-16">
                   {/* Profile */}
                   <Tab.Panel>
                     <Profile />
