@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import { ArrowLeft, Email } from '@/components/icons';
 import realtimeService from '@/utils/realtime';
-import Router from 'next/router';
 
 export default function EmailChangedMessage() {
   const company = useSelector((state) => state.company.company);
