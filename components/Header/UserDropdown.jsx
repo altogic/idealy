@@ -27,12 +27,10 @@ export default function UserDropdown() {
   const companies = useSelector((state) => state.company.companies);
   const selectedCompany = useSelector((state) => state.company.company);
   return (
-    <Menu as="div" className="relative inline-block text-left">
-      <div>
-        <Menu.Button className="inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-          <Avatar src={user?.profilePicture} alt={user?.name} />
-        </Menu.Button>
-      </div>
+    <Menu as="div" className="relative inline-flex items-center text-left">
+      <Menu.Button className="inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+        <Avatar src={user?.profilePicture} alt={user?.name} />
+      </Menu.Button>
       <Transition
         as={Fragment}
         enter="transition ease-out duration-100"

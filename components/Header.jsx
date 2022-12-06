@@ -45,7 +45,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="flex items-center justify-between bg-indigo-900 px-4 py-6 lg:px-12">
+      <header className="flex items-center justify-between bg-indigo-900 p-4 lg:py-6 lg:px-12">
         <div className="flex items-center">
           {company?.name ? (
             <Link href="/">
@@ -113,6 +113,7 @@ export default function Header() {
           >
             Public View
           </button> */}
+
           {/* Notification */}
           <Menu as="div" className="relative">
             <Menu.Button className="relative inline-flex items-center justify-center w-10 h-10 p-[10px] rounded-full text-gray-500 focus:outline-none">
