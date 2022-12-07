@@ -12,7 +12,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ROLE } from 'constants';
-import { ClipLoader } from 'react-spinners';
 import EmptyState from '@/components/EmptyState';
 import realtimeService from '@/utils/realtime';
 
