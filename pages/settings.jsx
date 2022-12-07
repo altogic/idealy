@@ -74,10 +74,10 @@ export default function Settings() {
               <Tab.Group selectedIndex={tabIndex}>
                 <Tab.List
                   className={cn(
-                    `flex flex-col gap-1 fixed lg:static w-full lg:w-auto pb-10 transform -translate-x-[200%] lg:transform-none px-2 lg:px-6 transition lg:transition-none lg:border-r lg:border-gray-300`,
+                    `lg:flex flex-col gap-1 fixed lg:static w-full lg:w-auto pb-10 transform px-2 lg:px-6 lg:border-r lg:border-gray-300`,
                     openSidebar
-                      ? 'top-0 left-0 translate-x-[0] h-screen bg-white overflow-y-auto z-50'
-                      : ''
+                      ? 'top-0 left-0 flex h-screen bg-white overflow-y-auto z-50'
+                      : 'hidden'
                   )}>
                   <Close
                     onClick={() => setOpenSidebar(!openSidebar)}
