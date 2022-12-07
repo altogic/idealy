@@ -97,7 +97,10 @@ export default function Settings() {
                         )
                       }
                       key={tab.id}
-                      onClick={() => handleTabChange(tab.name)}>
+                      onClick={() => {
+                        handleTabChange(tab.name);
+                        setOpenSidebar(!openSidebar);
+                      }}>
                       {tab.name}
                     </Tab>
                   ))}
@@ -119,7 +122,10 @@ export default function Settings() {
                             )
                           }
                           key={tab.id}
-                          onClick={() => handleTabChange(tab.name)}>
+                          onClick={() => {
+                            handleTabChange(tab.name);
+                            setOpenSidebar(!openSidebar);
+                          }}>
                           {tab.name}
                         </Tab>
                       )
