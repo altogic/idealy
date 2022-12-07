@@ -1,13 +1,18 @@
 import { useEffect } from 'react';
-import { authActions } from '@/redux/auth/authSlice';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import { ArrowLeft, Email } from '@/components/icons';
+import realtimeService from '@/utils/realtime';
 
 export default function EmailChangedMessage() {
-  const dispatch = useDispatch();
+  const company = useSelector((state) => state.company.company);
+  const user = useSelector((state) => state.auth.user);
+
   useEffect(() => {
-    dispatch(authActions.updateUserSuccess());
+    realtimeService.sendMessage(company._id, 'company-message', {
+      type: 'user-update',
+      user
+    });
   }, []);
   return (
     <div className="relative h-screen">

@@ -20,21 +20,26 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
     setIsDelete(!isDelete);
     if (isRegistered) {
       dispatch(companyActions.deleteCompanyMember({ userId, email, companyId: company._id }));
-
       realtimeService.sendMessage(userId, 'user-message', {
         type: 'delete-member',
         companyId: company._id,
         userId,
-        companyName: company.name
-      });
-      realtimeService.sendMessage(company._id, 'company-message', {
-        type: 'delete-member',
-        companyId: company._id,
-        userId
+        companyName: company.name,
+        name,
+        id,
+        isRegistered
       });
     } else {
       dispatch(companyActions.deleteUnregisteredMember({ id, email: name }));
     }
+    realtimeService.sendMessage(company._id, 'company-message', {
+      type: 'delete-member',
+      companyId: company._id,
+      userId,
+      isRegistered,
+      id,
+      name
+    });
   };
   const handleRoleChange = (role) => {
     setSelected(role);
@@ -48,6 +53,12 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
           companyId: company._id
         })
       );
+      realtimeService.sendMessage(userId, 'user-message', {
+        type: 'update-role',
+        role,
+        id,
+        companyId: company._id
+      });
     } else {
       dispatch(
         companyActions.updateCompanyMemberRole({
@@ -59,12 +70,7 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
         })
       );
     }
-    realtimeService.sendMessage(userId, 'user-message', {
-      type: 'update-role',
-      role,
-      id,
-      companyId: company._id
-    });
+
     realtimeService.sendMessage(company._id, 'company-message', {
       type: 'update-member',
       role,

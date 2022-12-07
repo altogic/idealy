@@ -219,6 +219,29 @@ function* createCompanySaga({ payload: { userId, onSuccess } }) {
     yield put(companyActions.createCompanyFailed(error));
   }
 }
+function* updateCompanySaga({ payload: company }) {
+  try {
+    const { data, errors } = yield call(companyService.updateCompany, company);
+    if (errors) {
+      throw errors;
+    }
+
+    const stateCompany = yield select((state) => state.company.company);
+    const user = yield select((state) => state.auth.user);
+    yield put(
+      companyActions.updateCompanySuccess({
+        ...data,
+        role: stateCompany.role
+      })
+    );
+    realtimeService.sendMessage(data._id, 'update-company', {
+      company: data,
+      sender: user._id
+    });
+  } catch (error) {
+    yield put(companyActions.updateCompanyFailed(error));
+  }
+}
 function* getCompanySaga({ payload: companyId }) {
   try {
     const { data, error } = yield call(companyService.getCompanyById, companyId);
@@ -296,56 +319,7 @@ function* updateMemberStatusSaga({ payload }) {
     yield put(companyActions.updateMemberStatusFailed(error));
   }
 }
-function* updateCompanyLogoSaga({ payload: { logoUrl, companyId } }) {
-  try {
-    const { data, errors } = yield call(companyService.updateCompanyLogo, {
-      logoUrl,
-      companyId
-    });
 
-    if (errors) {
-      throw new Error(errors);
-    }
-    yield put(companyActions.updateCompanyLogoSuccess(data));
-  } catch (error) {
-    yield put(companyActions.updateCompanyLogoFailure(error));
-  }
-}
-function* updateCompanyFaviconSaga({ payload: { favicon, companyId } }) {
-  try {
-    const { data, errors } = yield call(companyService.updateCompanyFavicon, {
-      favicon,
-      companyId
-    });
-
-    if (errors) {
-      throw new Error(errors);
-    }
-    yield put(companyActions.updateCompanyFaviconSuccess(data));
-  } catch (error) {
-    yield put(companyActions.updateCompanyFaviconFailure(error));
-  }
-}
-function* changeCompanyNameSaga({ payload: { name, companyId, role } }) {
-  try {
-    const { data, errors } = yield call(companyService.updateCompanyName, {
-      name,
-      companyId
-    });
-    if (errors) {
-      throw errors.items;
-    } else {
-      yield put(
-        companyActions.changeCompanyNameSuccess({
-          ...data,
-          role
-        })
-      );
-    }
-  } catch (error) {
-    yield put(companyActions.changeCompanyNameFailure(error));
-  }
-}
 function* addNewMember({ payload }) {
   try {
     const { data, error } = yield call(companyService.registerTeamMember, payload);
@@ -358,36 +332,11 @@ function* addNewMember({ payload }) {
   }
 }
 function* selectCompany({ payload }) {
-  console.log('payload', payload);
   localStorage.setItem('selectedCompany', JSON.stringify(payload));
   yield put(companyActions.selectCompanySuccess(payload));
 }
 function* setCompanies({ payload }) {
   yield put(companyActions.setCompaniesSuccess(payload));
-}
-function* updateCompanyProperties({ payload: { id, fieldName, property, value, role } }) {
-  try {
-    const { data, error } = yield call(companyService.updateCompanyProperties, {
-      id,
-      fieldName,
-      value,
-      modelName: property ? `company.${property}` : 'company'
-    });
-    if (error) {
-      throw new Error(error);
-    }
-    yield put(
-      companyActions.updateCompanyPropertiesSuccess({
-        data: {
-          ...data,
-          role
-        },
-        property
-      })
-    );
-  } catch (error) {
-    yield put(companyActions.updateCompanyPropertiesFailed(error));
-  }
 }
 function* updateCompanySubLists({ payload: { id, fieldName, property, value, role } }) {
   try {
@@ -430,8 +379,9 @@ function* deleteCompany({ payload: { companyId, onSuccess } }) {
     if (error) {
       throw new Error(error);
     }
-    onSuccess();
     yield put(companyActions.deleteCompanySuccess(companyId));
+    const companies = yield select((state) => state.company.companies);
+    onSuccess(companies);
   } catch (error) {
     yield put(companyActions.deleteCompanyFailed(error));
   }
@@ -548,19 +498,13 @@ function* declineInvitation({ payload: { email, companyId } }) {
     yield put(companyActions.declineInvitationFailed(error));
   }
 }
-function* updateCompanyMemberRealtime({ payload: { userId, company } }) {
+function* updateMemberStatus({ payload: { userId, company } }) {
   yield put(companyActions.updateMemberStatusRealtimeSuccess({ userId, company }));
 }
-function* deleteCompanyMemberRealtime({ payload: { userId, companyId, isCompany, onSuccess } }) {
-  yield put(companyActions.deleteCompanyMemberRealtimeSuccess({ userId, companyId, isCompany }));
-  if (!isCompany) {
-    const companies = yield select((state) => state.company.companies);
-    if (!companies.length) {
-      onSuccess();
-    } else {
-      yield fork(selectCompany, { payload: companies[0] });
-    }
-  }
+function* deleteCompanyMemberRealtime({ payload: { userId, companyId, isCompany, id } }) {
+  yield put(
+    companyActions.deleteCompanyMemberRealtimeSuccess({ userId, companyId, isCompany, id })
+  );
 }
 function* acceptInvitationRealtime({ payload: company }) {
   yield fork(selectCompany, { payload: company });
@@ -575,12 +519,32 @@ function* updateCompanyMemberRoleRealtime({ payload: { id, role, companyId, isCo
 function* addNewMemberRealtime({ payload }) {
   yield put(companyActions.addNewMemberRealtimeSuccess(payload));
 }
+function* getCompanyProperties({ payload: { fieldName, companyId } }) {
+  try {
+    const { data, error } = yield call(companyService.getCompanyProperties, fieldName, companyId);
+    if (error) {
+      throw error;
+    }
+    yield put(
+      companyActions.getCompanyPropertiesSuccess({
+        data,
+        fieldName
+      })
+    );
+  } catch (error) {
+    yield put(companyActions.getCompanyPropertiesFailed(error));
+  }
+}
+function* deleteCompanyRealtimeSaga({ payload: companyId }) {
+  yield put(companyActions.deleteCompanyRealtimeSuccess(companyId));
+}
+
+function* updateCompanyMemberRealtime({ payload: user }) {
+  yield put(companyActions.updateCompanyMemberRealtimeSuccess(user));
+}
 
 export default function* companySaga() {
   yield all([
-    takeEvery(companyActions.updateCompanyLogoRequest.type, updateCompanyLogoSaga),
-    takeEvery(companyActions.updateCompanyFaviconRequest.type, updateCompanyFaviconSaga),
-    takeEvery(companyActions.changeCompanyName.type, changeCompanyNameSaga),
     takeEvery(companyActions.removeCompanyRoadMap.type, removeCompanyRoadMapSaga),
     takeEvery(companyActions.setCompanyRoadMap.type, setCompanyRoadMapCreatedSaga),
     takeEvery(companyActions.removeCompanyStatuses.type, removeCompanyStatusesSaga),
@@ -605,7 +569,6 @@ export default function* companySaga() {
     takeEvery(companyActions.getCompany.type, getCompanySaga),
     takeEvery(companyActions.selectCompany.type, selectCompany),
     takeEvery(companyActions.setCompanies.type, setCompanies),
-    takeEvery(companyActions.updateCompanyProperties.type, updateCompanyProperties),
     takeEvery(companyActions.deleteAllIdeas.type, deleteAllIdeas),
     takeEvery(companyActions.deleteCompany.type, deleteCompany),
     takeEvery(companyActions.deleteCompanyMember.type, deleteCompanyMember),
@@ -617,10 +580,15 @@ export default function* companySaga() {
     takeEvery(companyActions.updateCompanySubListsOrder.type, updateCompanySubListsOrder),
     takeEvery(companyActions.getUserCompanies.type, getUserCompanies),
     takeEvery(companyActions.declineInvitation.type, declineInvitation),
-    takeEvery(companyActions.updateMemberStatusRealtime.type, updateCompanyMemberRealtime),
+    takeEvery(companyActions.updateMemberStatusRealtime.type, updateMemberStatus),
     takeEvery(companyActions.deleteCompanyMemberRealtime.type, deleteCompanyMemberRealtime),
     takeEvery(companyActions.updateCompanyMemberRoleRealtime.type, updateCompanyMemberRoleRealtime),
     takeEvery(companyActions.acceptInvitationRealtime.type, acceptInvitationRealtime),
-    takeEvery(companyActions.addNewMemberRealtime.type, addNewMemberRealtime)
+    takeEvery(companyActions.addNewMemberRealtime.type, addNewMemberRealtime),
+    takeEvery(companyActions.updateCompanyMemberRealtime.type, updateCompanyMemberRealtime),
+    takeEvery(companyActions.updateCompany, updateCompanySaga),
+    takeEvery(companyActions.updateCompany, updateCompanySaga),
+    takeEvery(companyActions.getCompanyProperties.type, getCompanyProperties),
+    takeEvery(companyActions.deleteCompanyRealtime.type, deleteCompanyRealtimeSaga)
   ]);
 }

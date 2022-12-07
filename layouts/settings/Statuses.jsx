@@ -117,7 +117,6 @@ export default function Statuses() {
         <div className="mb-6 lg:mb-11">
           {company?.statuses.length > 0 ? (
             <SortableCompanyActions
-              items={company?.statuses}
               setStatus={setStatus}
               property="statuses"
               modalTitle="Delete Status"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import SectionTitle from '@/components/SectionTitle';
 import Input from '@/components/Input';
 import * as yup from 'yup';
@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Email, Key } from '@/components/icons';
 import Button from '@/components/Button';
 import { authActions } from '@/redux/auth/authSlice';
+import Router from 'next/router';
 
 export default function ChangeEmail({ user }) {
   const changeEmailSchema = new yup.ObjectSchema({
@@ -19,8 +20,8 @@ export default function ChangeEmail({ user }) {
   });
   const dispatch = useDispatch();
   const error = useSelector((state) => state.auth.changeEmailError);
-  const loading = useSelector((state) => state.auth.isLoading);
-  const [changeEmailLoading, setChangeEmailLoading] = useState(false);
+  const loading = useSelector((state) => state.auth.changeEmailLoading);
+
   const {
     register,
     handleSubmit,
@@ -54,11 +55,12 @@ export default function ChangeEmail({ user }) {
   }, [error, setError]);
 
   const formSubmit = (form) => {
-    setChangeEmailLoading(true);
     dispatch(
       authActions.changeEmailRequest({
         password: form.password,
-        email: form.newEmail
+        email: form.newEmail,
+        onSuccess: () =>
+          Router.push(`/mail-verification-message?operation=change&email=${form.newEmail}`)
       })
     );
   };
@@ -68,11 +70,6 @@ export default function ChangeEmail({ user }) {
     },
     []
   );
-  useEffect(() => {
-    if (!loading) {
-      setChangeEmailLoading(false);
-    }
-  }, [loading]);
 
   return (
     <>
@@ -113,7 +110,7 @@ export default function ChangeEmail({ user }) {
           placeholder="Enter your current password"
         />
         <div className="flex items-center justify-end gap-3">
-          <Button type="submit" loading={changeEmailLoading} text="Change Email" variant="indigo" />
+          <Button type="submit" loading={loading} text="Change Email" variant="indigo" />
         </div>
       </form>
     </>

@@ -18,18 +18,7 @@ const companyService = {
       .model('companyMembers')
       .filter(`user == '${userId}' && companyId == '${companyId}'`)
       .updateFields([{ field: 'status', updateType: 'set', value: 'Active' }]),
-  updateCompanyLogo: ({ companyId, logoUrl }) =>
-    db
-      .model('company')
-      .object(companyId)
-      .updateFields([{ field: 'logoUrl', updateType: 'set', value: logoUrl }]),
-  updateCompanyFavicon: ({ companyId, favicon }) =>
-    db
-      .model('company')
-      .object(companyId)
-      .updateFields([{ field: 'favicon', updateType: 'set', value: favicon }]),
-  updateCompanyName: ({ companyId, name }) =>
-    db.model('company').object(companyId).update({ name }),
+  updateCompany: (company) => db.model('company').object(company._id).update(company),
   registerTeamMember: (req) => endpoint.post('/company/member', req),
   setCompanyTopics: ({ name, companyId, order }) =>
     db.model('company.topics').append({ name, order }, companyId),
@@ -54,11 +43,6 @@ const companyService = {
       .filter(`email == '${email}' && companyId == '${companyId}'`)
       .updateFields([{ field: 'isExpire', updateType: 'set', value: true }]),
   getUserCompanies: (userId) => endpoint.get(`/user/companies?userId='${userId}'`),
-  updateCompanyProperties: ({ id, modelName, fieldName, value }) =>
-    db
-      .model(modelName)
-      .object(id)
-      .updateFields([{ field: fieldName, updateType: 'set', value }]),
   updateCompletedStatus: ({ id, companyId }) =>
     endpoint.put(`/company/${companyId}/status`, { id }),
   deleteAllIdeas: (companyId) =>
@@ -87,6 +71,8 @@ const companyService = {
   },
   updateCompanyMemberRole: (req) => endpoint.put('/company/member', req),
   updateCompanySubListsOrder: ({ modelName, value }) =>
-    endpoint.put(`/company/${modelName}/order`, value)
+    endpoint.put(`/company/${modelName}/order`, value),
+  getCompanyProperties: (fieldName, companyId) =>
+    db.model(`company.${fieldName}`).filter(`_parent == '${companyId}'`).sort('order', 'desc').get()
 };
 export default companyService;

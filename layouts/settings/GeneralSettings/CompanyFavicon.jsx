@@ -44,8 +44,8 @@ export default function CompanyFavicon() {
   useEffect(() => {
     if (didMount && companyFaviconLink) {
       dispatch(
-        companyActions.updateCompanyFaviconRequest({
-          companyId: company._id,
+        companyActions.updateCompany({
+          _id: company._id,
           favicon: companyFaviconLink
         })
       );

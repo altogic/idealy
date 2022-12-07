@@ -21,11 +21,11 @@ export default function Authentication() {
 
   const updateCompanyAuthentication = (fieldName, value) => {
     dispatch(
-      companyActions.updateCompanyProperties({
-        id: company.authentication._id,
-        property: 'authentication',
-        fieldName,
-        value
+      companyActions.updateCompany({
+        _id: company._id,
+        authentication: {
+          [fieldName]: value
+        }
       })
     );
   };
