@@ -18,8 +18,9 @@ const nextConfig = {
     ]
   },
   env: {
-    appName: 'Acme',
-    url: 'acme.com'
+    appName: 'idealy',
+    url: 'idealy.com',
+    testWildCard: 'idealy'
   }
 };
 const { withSuperjson } = require('next-superjson');
