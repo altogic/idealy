@@ -143,6 +143,18 @@ export default function Layout({ children }) {
                 );
               }
               break;
+            case 'accept-invitation':
+              if (data.message.sender !== user._id) {
+                dispatch(
+                  companyActions.acceptInvitationRealtime({
+                    companyId: data.message.companyId,
+                    role: data.message.role,
+                    status: data.message.status,
+                    user: data.message.user
+                  })
+                );
+              }
+              break;
             default:
               break;
           }
