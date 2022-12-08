@@ -76,7 +76,7 @@ export default function Settings() {
                   className={cn(
                     `lg:flex flex-col gap-1 fixed lg:static w-full lg:w-auto pb-10 transform px-2 lg:px-6 lg:border-r lg:border-gray-300`,
                     openSidebar
-                      ? 'top-0 left-0 flex h-screen bg-white overflow-y-auto z-50'
+                      ? 'top-0 left-0 flex h-screen bg-white overflow-y-auto z-40'
                       : 'hidden'
                   )}>
                   <Close
