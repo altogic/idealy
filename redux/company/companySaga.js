@@ -543,6 +543,9 @@ function* deleteCompanyRealtimeSaga({ payload: companyId }) {
 function* updateCompanyMemberRealtime({ payload: user }) {
   yield put(companyActions.updateCompanyMemberRealtimeSuccess(user));
 }
+function* acceptInvitation({ payload }) {
+  yield put(companyActions.acceptInvitationSuccess(payload));
+}
 
 export default function* companySaga() {
   yield all([
@@ -589,6 +592,7 @@ export default function* companySaga() {
     takeEvery(companyActions.updateCompanyMemberRealtime.type, updateCompanyMemberRealtime),
     takeEvery(companyActions.updateCompany, updateCompanySaga),
     takeEvery(companyActions.getCompanyProperties.type, getCompanyProperties),
-    takeEvery(companyActions.deleteCompanyRealtime.type, deleteCompanyRealtimeSaga)
+    takeEvery(companyActions.deleteCompanyRealtime.type, deleteCompanyRealtimeSaga),
+    takeEvery(companyActions.acceptInvitation.type, acceptInvitation)
   ]);
 }

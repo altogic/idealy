@@ -686,6 +686,20 @@ export const companySlice = createSlice({
     deleteCompanyRealtimeSuccess(state, action) {
       state.isLoading = false;
       state.companies = state.companies.filter((company) => company._id !== action.payload);
+    },
+    acceptInvitation(state) {
+      state.isLoading = true;
+    },
+    acceptInvitationSuccess(state, action) {
+      state.isLoading = false;
+      state.companyMembers = [...state.companyMembers, action.payload];
+      state.unregisteredCompanyMembers = state.unregisteredCompanyMembers.filter(
+        (member) => member.email !== action.payload.user.email
+      );
+    },
+    acceptInvitationFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   },
 
