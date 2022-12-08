@@ -14,7 +14,6 @@ import _ from 'lodash';
 import Providers from '@/components/Providers';
 import Button from '@/components/Button';
 import companyService from '@/services/company';
-import realtimeService from '@/utils/realtime';
 
 export default function CreateAnAccount({ company, invitation }) {
   const dispatch = useDispatch();
@@ -56,14 +55,7 @@ export default function CreateAnAccount({ company, invitation }) {
                 status: 'Active'
               })
             );
-            realtimeService.sendMessage(invitation.companyId, 'company-message', {
-              type: 'accept-invitation',
-              user,
-              companyId: invitation.companyId,
-              role: invitation.role,
-              status: 'Active',
-              sender: user._id
-            });
+
             dispatch(companyActions.selectCompany(company));
             router.push('/public-view');
           } else {
@@ -73,7 +65,7 @@ export default function CreateAnAccount({ company, invitation }) {
       })
     );
   };
-  console.log({ company, invitation });
+
   useEffect(() => {
     setValue('email', invitation?.email);
   }, [invitation]);

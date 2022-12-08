@@ -700,6 +700,19 @@ export const companySlice = createSlice({
     acceptInvitationFailed(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    updateCompanyRealtime(state) {
+      state.isLoading = true;
+    },
+    updateCompanyRealtimeSuccess(state, action) {
+      state.isLoading = false;
+      state.company = action.payload;
+      state.companies = state.companies.map((company) => {
+        if (company._id === action.payload._id) {
+          return action.payload;
+        }
+        return company;
+      });
     }
   },
 
