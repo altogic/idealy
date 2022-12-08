@@ -66,7 +66,7 @@ export default function Invitation({ invitation, errors, companies }) {
                   </span>
                   <h1 className="text-slate-800 mb-3 text-3xl font-semibold">Invitation</h1>
                   <p className="text-slate-500 mb-6 text-base tracking-sm">
-                    {invitation.companyName} sent a invitation to be{' '}
+                    {invitation.companyName} has sent you an invitation to be{' '}
                     <span className="text-slate-700">{invitation.role}</span>
                   </p>
                 </div>

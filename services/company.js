@@ -73,6 +73,15 @@ const companyService = {
   updateCompanySubListsOrder: ({ modelName, value }) =>
     endpoint.put(`/company/${modelName}/order`, value),
   getCompanyProperties: (fieldName, companyId) =>
-    db.model(`company.${fieldName}`).filter(`_parent == '${companyId}'`).sort('order', 'desc').get()
+    db
+      .model(`company.${fieldName}`)
+      .filter(`_parent == '${companyId}'`)
+      .sort('order', 'desc')
+      .get(),
+  updateCompanyProperties: ({ id, modelName, fieldName, value }) =>
+    db
+      .model(modelName)
+      .object(id)
+      .updateFields([{ field: fieldName, updateType: 'set', value }])
 };
 export default companyService;
