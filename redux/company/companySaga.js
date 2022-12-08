@@ -328,6 +328,11 @@ function* addNewMember({ payload }) {
       throw new Error(error);
     }
     yield put(companyActions.addNewMemberSuccess(data));
+    yield call(realtimeService.sendMessage, data.companyId, 'company-message', {
+      type: 'accept-invitation',
+      sender: data.user._id,
+      payload: data
+    });
   } catch (error) {
     yield put(companyActions.addNewMemberFailed(error));
   }
@@ -546,6 +551,9 @@ function* updateCompanyMemberRealtime({ payload: user }) {
 function* acceptInvitation({ payload }) {
   yield put(companyActions.acceptInvitationSuccess(payload));
 }
+function* updateCompanyRealtime({ payload: company }) {
+  yield put(companyActions.updateCompanyRealtimeSuccess(company));
+}
 
 export default function* companySaga() {
   yield all([
@@ -593,6 +601,7 @@ export default function* companySaga() {
     takeEvery(companyActions.updateCompany, updateCompanySaga),
     takeEvery(companyActions.getCompanyProperties.type, getCompanyProperties),
     takeEvery(companyActions.deleteCompanyRealtime.type, deleteCompanyRealtimeSaga),
-    takeEvery(companyActions.acceptInvitation.type, acceptInvitation)
+    takeEvery(companyActions.acceptInvitation.type, acceptInvitation),
+    takeEvery(companyActions.updateCompanyRealtime.type, updateCompanyRealtime)
   ]);
 }

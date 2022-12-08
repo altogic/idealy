@@ -141,18 +141,17 @@ export default function Layout({ children }) {
                 dispatch(
                   companyActions.selectCompany({ ...data.message.company, role: company.role })
                 );
+                dispatch(
+                  companyActions.updateCompanyRealtime({
+                    ...data.message.company,
+                    role: company.role
+                  })
+                );
               }
               break;
             case 'accept-invitation':
               if (data.message.sender !== user._id) {
-                dispatch(
-                  companyActions.acceptInvitationRealtime({
-                    companyId: data.message.companyId,
-                    role: data.message.role,
-                    status: data.message.status,
-                    user: data.message.user
-                  })
-                );
+                dispatch(companyActions.acceptInvitationRealtime(data.message.payload));
               }
               break;
             default:
