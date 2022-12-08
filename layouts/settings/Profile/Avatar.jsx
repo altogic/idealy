@@ -11,9 +11,11 @@ export default function AvatarLayout({ user }) {
   const userAvatarLink = useSelector((state) => state.file.fileLink);
   const loading = useSelector((state) => state.file.isLoading);
   const loadingUser = useSelector((state) => state.auth.isLoading);
-  const [fileLink, setFileLink] = useState();
+
   const dispatch = useDispatch();
+  const [fileLink, setFileLink] = useState();
   const [didMount, setDidMount] = useState(false);
+  const [updatePhotoLoading, setUpdatePhotoLoading] = useState();
   const uploadPhotoHandler = (e) => {
     e.stopPropagation();
     const fileInput = document.createElement('input');
@@ -42,6 +44,7 @@ export default function AvatarLayout({ user }) {
 
   useEffect(() => {
     if (didMount && userAvatarLink) {
+      setUpdatePhotoLoading(true);
       dispatch(
         authActions.updateUserProfile({
           _id: user._id,
@@ -55,6 +58,12 @@ export default function AvatarLayout({ user }) {
     setDidMount(true);
   }, []);
 
+  useEffect(() => {
+    if (!loadingUser) {
+      setUpdatePhotoLoading(false);
+    }
+  }, [loadingUser]);
+
   return (
     <>
       <div className="pb-6 lg:pb-4 mb-6 lg:mb-11 border-b border-slate-200">
@@ -64,9 +73,9 @@ export default function AvatarLayout({ user }) {
         />
       </div>
       <div className="flex gap-6 mb-6">
-        {loading || loadingUser ? (
+        {loading || updatePhotoLoading ? (
           <div className="flex items-center justify-center">
-            <ClipLoader loading={loading || loadingUser} color="#4338ca" size={30} />
+            <ClipLoader loading={loading || updatePhotoLoading} color="#4338ca" size={30} />
           </div>
         ) : (
           <Avatar src={fileLink || user?.profilePicture} alt={user?.name} />
