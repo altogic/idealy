@@ -77,10 +77,16 @@ function* deleteAvatarFileSaga({ payload: userId }) {
 function* deleteCompanyLogoFileSaga({ payload: companyId }) {
   try {
     const { data, errors } = yield call(companyService.deleteIsCompanyLogo, companyId);
+    const user = yield select((state) => state.auth.user);
     if (errors) throw errors;
     if (data) {
       yield put(fileActions.deleteCompanyLogoSuccess(data));
       yield put(companyActions.updateCompanyLogoSuccess(data));
+      realtimeService.sendMessage(data._id, 'company-message', {
+        company: data,
+        sender: user._id,
+        type: 'update-company'
+      });
     }
   } catch (error) {
     yield put(fileActions.deleteCompanyLogoFailure(error));
@@ -94,6 +100,12 @@ function* deleteCompanyFaviconFileSaga({ payload: companyId }) {
     if (data) {
       yield put(fileActions.deleteCompanyFaviconSuccess(data));
       yield put(companyActions.updateCompanyFaviconSuccess(data));
+      const user = yield select((state) => state.auth.user);
+      realtimeService.sendMessage(data._id, 'company-message', {
+        company: data,
+        sender: user._id,
+        type: 'update-company'
+      });
     }
   } catch (error) {
     yield put(fileActions.deleteCompanyFaviconFailure(error));

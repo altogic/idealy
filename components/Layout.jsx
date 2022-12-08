@@ -115,7 +115,7 @@ export default function Layout({ children }) {
               );
               break;
             case 'invite-team-member':
-              if (user._id !== data.message.sender) {
+              if (user._id !== data.message.sender && company._id === data.message.companyId) {
                 dispatch(companyActions.addNewMemberRealtimeSuccess(data.message));
               }
               break;
@@ -131,6 +131,18 @@ export default function Layout({ children }) {
                 setDeleteDialog(true);
               }
               break;
+            case 'notification':
+              if (data.message.user !== user._id && data.message.companyId === company) {
+                dispatch(notificationActions.receiveNotificationRealtime(data.message));
+              }
+              break;
+            case 'update-company':
+              if (data.message.company._id === company._id && data.message.sender !== user._id) {
+                dispatch(
+                  companyActions.selectCompany({ ...data.message.company, role: company.role })
+                );
+              }
+              break;
             default:
               break;
           }
@@ -138,10 +150,14 @@ export default function Layout({ children }) {
       });
     }
     return () => {
-      realtimeService.leave('invite-team');
-      companies.forEach((company) => {
-        realtimeService.leave(company._id);
-      });
+      if (user) {
+        realtimeService.leave(user?._id);
+      }
+      if (companies && companies.length > 0) {
+        companies.forEach((company) => {
+          realtimeService.leave(company._id);
+        });
+      }
     };
   }, [user, companies]);
   const handleAcceptInvitation = () => {
@@ -155,7 +171,7 @@ export default function Layout({ children }) {
       })
     );
     dispatch(companyActions.acceptInvitationRealtime(invitation.company));
-    realtimeService.sendMessage(company._id, 'company-message', {
+    realtimeService.sendMessage(invitation.company._id, 'company-message', {
       ...invitation,
       type: 'new-member',
       userId: user._id,
@@ -179,7 +195,7 @@ export default function Layout({ children }) {
         companyId: invitation.company._id
       })
     );
-    realtimeService.sendMessage(company._id, 'company-message', {
+    realtimeService.sendMessage(invitation.company._id, 'company-message', {
       type: 'new-member',
       companyId: invitation.company._id,
       userId: user._id,
