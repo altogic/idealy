@@ -127,14 +127,26 @@ export default function SettingsActionCard({
             <div>
               <button
                 type="button"
-                className="p-4"
+                className="inline-flex items-center justify-center w-7 h-7 bg-slate-50 border border-slate-300 rounded-lg transition ease-linear duration-200 hover:bg-slate-200"
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsColorModalOpen(!isColorModalOpen);
                 }}>
-                <svg className="h-2.5 w-2.5" fill={colorPicker} viewBox="0 0 8 8">
-                  <circle cx={4} cy={4} r={3} />
+                <svg
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="block overflow-hidden pointer-events-none w-5 h-5">
+                  <path
+                    fill={colorPicker}
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M8 11.5C9.933 11.5 11.5 9.933 11.5 8C11.5 6.067 9.933 4.5 8 4.5C6.067 4.5 4.5 6.067 4.5 8C4.5 9.933 6.067 11.5 8 11.5ZM8 13C10.7614 13 13 10.7614 13 8C13 5.23858 10.7614 3 8 3C5.23858 3 3 5.23858 3 8C3 10.7614 5.23858 13 8 13Z"
+                  />
                 </svg>
+                {/* <svg className="h-2.5 w-2.5" fill={colorPicker} viewBox="0 0 8 8">
+                  <circle cx={4} cy={4} r={3} />
+                </svg> */}
               </button>
               <Transition
                 appear
