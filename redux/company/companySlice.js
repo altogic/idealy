@@ -131,7 +131,7 @@ export const companySlice = createSlice({
     removeCompanyTopicsSuccess(state, action) {
       state.isLoading = false;
       state.company.topics = state.company.topics.filter((topic) => topic._id !== action.payload);
-      localStorage.setItem('company', JSON.stringify(state.company));
+      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
       ToastMessage.success('Topic deleted successfully');
     },
     removeCompanyTopicFailure(state, action) {
@@ -147,7 +147,7 @@ export const companySlice = createSlice({
       state.company.statuses = state.company.statuses.filter(
         (status) => status._id !== action.payload
       );
-      localStorage.setItem('company', JSON.stringify(state.company));
+      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
     },
     removeCompanyStatusesFailure(state, action) {
       state.isLoading = false;
@@ -162,7 +162,7 @@ export const companySlice = createSlice({
         (category) => category._id !== action.payload
       );
       ToastMessage.success('Category deleted successfully');
-      localStorage.setItem('company', JSON.stringify(state.company));
+      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
     },
     removeCompanyCategoriesFailure(state, action) {
       state.isLoading = false;
@@ -177,7 +177,7 @@ export const companySlice = createSlice({
       state.company.roadmaps = state.company.roadmaps.filter(
         (roadmap) => roadmap._id !== action.payload
       );
-      localStorage.setItem('company', JSON.stringify(state.company));
+      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
     },
     removeCompanyRoadMapFailure(state, action) {
       state.isLoading = false;

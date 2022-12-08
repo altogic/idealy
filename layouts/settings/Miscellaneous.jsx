@@ -140,7 +140,7 @@ export default function Miscellaneous() {
                     dispatch(companyActions.selectCompany(companies[0]));
                     Router.push('/admin/dashboard');
                   } else {
-                    Router.push('/admin/create-company');
+                    Router.push('/admin/create-new-company');
                   }
                 } catch (e) {
                   console.log(e);

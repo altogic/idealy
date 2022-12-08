@@ -33,7 +33,8 @@ export default function Statuses() {
     resolver: yupResolver(createStatusName)
   });
   useEffect(() => {
-    setStatus(company.statuses.find((s) => s.isCompletedStatus));
+    const status = company.statuses.find((s) => s.isCompletedStatus);
+    setStatus(status || { _id: 0, name: 'Select Status' });
   }, [company]);
 
   useEffect(() => {
