@@ -1,5 +1,6 @@
 import { call, put, takeEvery, all } from 'redux-saga/effects';
 import notificationService from '@/services/notification';
+import realtimeService from '@/utils/realtime';
 import { notificationActions } from './notificationSlice';
 
 function* getNotifications(action) {
@@ -34,6 +35,10 @@ function* sendNotification({ payload }) {
       throw errors;
     }
     yield put(notificationActions.sendNotificationSuccess(data));
+    yield call(realtimeService.sendMessage, payload.companyId, 'company-message', {
+      ...data,
+      type: 'notification'
+    });
   } catch (error) {
     yield put(notificationActions.sendNotificationFailure(error));
   }
