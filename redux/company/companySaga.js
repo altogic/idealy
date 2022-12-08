@@ -234,9 +234,10 @@ function* updateCompanySaga({ payload: company }) {
         role: stateCompany.role
       })
     );
-    realtimeService.sendMessage(data._id, 'update-company', {
+    realtimeService.sendMessage(data._id, 'company-message', {
       company: data,
-      sender: user._id
+      sender: user._id,
+      type: 'update-company'
     });
   } catch (error) {
     yield put(companyActions.updateCompanyFailed(error));
@@ -498,7 +499,7 @@ function* declineInvitation({ payload: { email, companyId } }) {
     yield put(companyActions.declineInvitationFailed(error));
   }
 }
-function* updateMemberStatus({ payload: { userId, company } }) {
+function* updateMemberStatusRealtime({ payload: { userId, company } }) {
   yield put(companyActions.updateMemberStatusRealtimeSuccess({ userId, company }));
 }
 function* deleteCompanyMemberRealtime({ payload: { userId, companyId, isCompany, id } }) {
@@ -580,13 +581,12 @@ export default function* companySaga() {
     takeEvery(companyActions.updateCompanySubListsOrder.type, updateCompanySubListsOrder),
     takeEvery(companyActions.getUserCompanies.type, getUserCompanies),
     takeEvery(companyActions.declineInvitation.type, declineInvitation),
-    takeEvery(companyActions.updateMemberStatusRealtime.type, updateMemberStatus),
+    takeEvery(companyActions.updateMemberStatusRealtime.type, updateMemberStatusRealtime),
     takeEvery(companyActions.deleteCompanyMemberRealtime.type, deleteCompanyMemberRealtime),
     takeEvery(companyActions.updateCompanyMemberRoleRealtime.type, updateCompanyMemberRoleRealtime),
     takeEvery(companyActions.acceptInvitationRealtime.type, acceptInvitationRealtime),
     takeEvery(companyActions.addNewMemberRealtime.type, addNewMemberRealtime),
     takeEvery(companyActions.updateCompanyMemberRealtime.type, updateCompanyMemberRealtime),
-    takeEvery(companyActions.updateCompany, updateCompanySaga),
     takeEvery(companyActions.updateCompany, updateCompanySaga),
     takeEvery(companyActions.getCompanyProperties.type, getCompanyProperties),
     takeEvery(companyActions.deleteCompanyRealtime.type, deleteCompanyRealtimeSaga)

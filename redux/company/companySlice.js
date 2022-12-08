@@ -642,7 +642,11 @@ export const companySlice = createSlice({
     },
     addNewMemberRealtimeSuccess(state, action) {
       state.isLoading = false;
-      state.companyMembers = [...state.companyMembers, action.payload];
+      if (action.payload.profilePicture) {
+        state.companyMembers = [...state.companyMembers, action.payload];
+      } else {
+        state.unregisteredCompanyMembers = [...state.unregisteredCompanyMembers, action.payload];
+      }
     },
     updateCompanyMemberRealtime(state) {
       state.isLoading = true;
