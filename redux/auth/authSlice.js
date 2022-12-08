@@ -198,6 +198,7 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.user = null;
       state.isAuthenticated = false;
+      state.company = null;
     },
     deleteProfileFailure(state, action) {
       state.isLoading = false;
