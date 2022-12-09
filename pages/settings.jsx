@@ -19,7 +19,7 @@ import Miscellaneous from '@/layouts/settings/Miscellaneous';
 import { useRouter } from 'next/router';
 import { PROFILE_TABS, COMPANY_TABS } from 'constants';
 import { useSelector } from 'react-redux';
-import { Close } from '@/components/icons';
+import { Close, HamburgerMenu } from '@/components/icons';
 import _ from 'lodash';
 
 export default function Settings() {
@@ -67,8 +67,8 @@ export default function Settings() {
             <button
               type="button"
               onClick={() => setOpenSidebar(!openSidebar)}
-              className="fixed bottom-0 left-0 inline-flex lg:hidden items-center justify-center w-full bg-indigo-900 text-white text-base font-medium tracking-sm px-4 py-3 z-50">
-              Settings Menu
+              className="absolute top-[-56px] left-0 inline-flex lg:hidden items-center justify-center text-white">
+              <HamburgerMenu className="w-8 h-8" />
             </button>
             <div className="lg:grid grid-cols-[250px,1fr] xl:grid-cols-[350px,1fr]">
               <Tab.Group selectedIndex={tabIndex}>

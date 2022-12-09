@@ -7,10 +7,10 @@ export default function Avatar({ src, alt }) {
   ) : (
     <div>
       {name && (
-        <div className="w-[50px] h-[50px] rounded-full bg-slate-100 flex items-center justify-center">
-          <span className="text-slate-700 text-xl tracking-sm">{name[0]?.charAt(0)}</span>
+        <div className="w-11 h-11 rounded-full bg-slate-100 flex items-center justify-center">
+          <span className="text-slate-700 text-lg tracking-sm">{name[0]?.charAt(0)}</span>
           {name.length > 1 && (
-            <span className="text-slate-700 text-xl tracking-sm">{name[1]?.charAt(0)}</span>
+            <span className="text-slate-700 text-lg tracking-sm">{name[1]?.charAt(0)}</span>
           )}
         </div>
       )}

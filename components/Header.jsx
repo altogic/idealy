@@ -1,13 +1,16 @@
 import { Fragment, useState, useEffect } from 'react';
 import Link from 'next/link';
+import cn from 'classnames';
 import { Transition, Dialog, Menu } from '@headlessui/react';
 import { useSelector, useDispatch } from 'react-redux';
 import { notificationActions } from '@/redux/notification/notificationSlice';
+import { useRouter } from 'next/router';
 import { Search, Feedback, Roadmap, Announcements, Close, Notification } from './icons';
 import UserDropdown from './Header/UserDropdown';
 import CompanyAvatar from './CompanyAvatar';
 
 export default function Header() {
+  const router = useRouter();
   const user = useSelector((state) => state.auth.user);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const company = useSelector((state) => state.company.company);
@@ -25,7 +28,11 @@ export default function Header() {
 
   return (
     <>
-      <header className="flex items-center justify-between bg-indigo-900 p-4 lg:py-6 lg:px-12">
+      <header
+        className={cn(
+          `flex items-center justify-between bg-indigo-900 p-4 lg:py-6 lg:px-12`,
+          router.asPath.includes('settings') ? 'pl-16' : null
+        )}>
         <div className="flex items-center">
           {company?.name ? (
             <Link href="/">
@@ -38,7 +45,7 @@ export default function Header() {
                   className="w-11 h-11 text-xl"
                 />
                 {company?.showCompanyName && (
-                  <span className="text-white font-medium tracking-sm truncate max-w-[100px]">
+                  <span className="hidden md:block text-white font-medium tracking-sm truncate max-w-[100px]">
                     {company?.name}
                   </span>
                 )}
