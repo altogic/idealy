@@ -165,7 +165,7 @@ export default function SettingsActionCard({
                 leaveTo="transform opacity-0 scale-95">
                 <Menu as="div" className="relative z-10">
                   <Menu.Item>
-                    <div className="absolute top-2 -left-20 overflow-y-auto drop-shadow-lg border border-slate-200">
+                    <div className="absolute top-2 md:-left-20 overflow-y-auto drop-shadow-lg border border-slate-200">
                       <SketchPicker
                         id="colorPicker"
                         color={colorPicker}
