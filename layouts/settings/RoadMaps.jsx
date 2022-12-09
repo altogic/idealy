@@ -49,13 +49,14 @@ export default function RoadMaps() {
   const formSubmit = (form) => {
     setUpdateRoadMapLoading(true);
     dispatch(
-      companyActions.setCompanyRoadMap({
-        name: form.name,
-        description: form.description,
-        companyId: company._id
+      companyActions.addItemToCompanySubLists({
+        fieldName: 'roadmaps',
+        value: {
+          name: form.name,
+          description: form.description
+        }
       })
     );
-    reset();
   };
 
   useEffect(() => {
@@ -122,8 +123,9 @@ export default function RoadMaps() {
                   modalDescription="Are you sure you want to delete this roadmap? This action cannot be undone."
                   deleteAction={() =>
                     dispatch(
-                      companyActions.removeCompanyRoadMap({
-                        roadmap: roadmap._id
+                      companyActions.deleteCompanySubListsItem({
+                        id: roadmap._id,
+                        fieldName: 'roadmaps'
                       })
                     )
                   }

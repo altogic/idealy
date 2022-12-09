@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import SectionTitle from '@/components/SectionTitle';
 import { Listbox, Transition } from '@headlessui/react';
 import Toggle from '@/components/Toggle';
@@ -14,6 +14,11 @@ export default function Privacy() {
   );
   const [userApproval, setUserApproval] = useState(company.privacy.userApproval);
   const [ideaApproval, setIdeaApproval] = useState(company.privacy.ideaApproval);
+  useEffect(() => {
+    setCompanySelected(COMPANY_VISIBILITY[company.privacy.isPublic ? 0 : 1]);
+    setUserApproval(company.privacy.userApproval);
+    setIdeaApproval(company.privacy.ideaApproval);
+  }, [company]);
   const updateCompanyPrivacy = (fieldName, value) => {
     dispatch(
       companyActions.updateCompany({

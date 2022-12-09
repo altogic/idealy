@@ -11,7 +11,6 @@ import SortableCompanyActions from '@/components/SortableCompanyActions';
 import EmptyState from '@/components/EmptyState';
 
 export default function Categories() {
-  const colorPicker = '#37d67a';
   const createCategoriesNameSchema = new yup.ObjectSchema({
     categoriesName: yup.string().required('Categories name is required')
   });
@@ -50,14 +49,15 @@ export default function Categories() {
   const formSubmit = (form) => {
     setUpdateCategoriesLoading(true);
     dispatch(
-      companyActions.setCompanyCategories({
-        name: form.categoriesName,
-        color: colorPicker,
-        companyId: company._id,
-        order: company.categories.length + 1
+      companyActions.addItemToCompanySubLists({
+        fieldName: 'categories',
+        value: {
+          name: form.categoriesName,
+          color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+          order: company.categories.length + 1
+        }
       })
     );
-    reset();
   };
 
   useEffect(() => {
@@ -102,8 +102,9 @@ export default function Categories() {
                   modalDescription="Are you sure you want to delete this categories? This action cannot be undone."
                   onDelete={(item) =>
                     dispatch(
-                      companyActions.removeCompanyCategories({
-                        category: item._id
+                      companyActions.deleteCompanySubListsItem({
+                        id: item._id,
+                        fieldName: 'categories'
                       })
                     )
                   }

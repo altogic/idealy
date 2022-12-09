@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import SectionTitle from '@/components/SectionTitle';
 import { useDispatch, useSelector } from 'react-redux';
@@ -65,6 +65,15 @@ export default function Authentication() {
         return 'Users can sign up and sign in using their email address.';
     }
   };
+  useEffect(() => {
+    if (company) {
+      setAuthenticationSelected(company.authentication.type);
+      setSubmitIdeasSelected(company.authentication.submitIdeas);
+      setCommentsSelected(company.authentication.commentIdea);
+      setVotingSelected(company.authentication.voteIdea);
+      setAnnouncementsReactionsSelected(company.authentication.announcementReaction);
+    }
+  }, [company]);
   return (
     <div>
       <div className="pb-4 mb-11 border-b border-slate-200">

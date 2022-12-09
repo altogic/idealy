@@ -49,10 +49,12 @@ export default function Topics() {
   const formSubmit = (form) => {
     setUpdateTopicsLoading(true);
     dispatch(
-      companyActions.setCompanyTopics({
-        name: form.topicsName,
-        companyId: company._id,
-        order: company.topics.length + 1
+      companyActions.addItemToCompanySubLists({
+        fieldName: 'topics',
+        value: {
+          name: form.topicsName,
+          order: company.topics.length + 1
+        }
       })
     );
   };
@@ -102,8 +104,9 @@ export default function Topics() {
               modalDescription="Are you sure you want to delete this topics? This action cannot be undone."
               onDelete={(topic) =>
                 dispatch(
-                  companyActions.removeCompanyTopics({
-                    topic: topic._id
+                  companyActions.deleteCompanySubListsItem({
+                    id: topic._id,
+                    fieldName: 'topics'
                   })
                 )
               }

@@ -1,22 +1,25 @@
 import { Fragment, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Transition, Dialog, Menu } from '@headlessui/react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { notificationActions } from '@/redux/notification/notificationSlice';
 import { Search, Feedback, Roadmap, Announcements, Close, Notification } from './icons';
 import UserDropdown from './Header/UserDropdown';
 import CompanyAvatar from './CompanyAvatar';
 
 export default function Header() {
+  const user = useSelector((state) => state.auth.user);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const company = useSelector((state) => state.company.company);
   const companyLoading = useSelector((state) => state.company.getCompanyLoading);
   const notifications = useSelector((state) => state.notification.notifications);
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     if (isAuthenticated) {
       setIsLoggedIn(isAuthenticated);
+      dispatch(notificationActions.getNotifications(user._id));
     }
   }, [isAuthenticated]);
 
@@ -94,6 +97,9 @@ export default function Header() {
           {/* Notification */}
           {isLoggedIn && (
             <Menu as="div" className="relative">
+              <span className="absolute top-[10px] right-[8px] inline-flex items-center justify-center px-1 py-0.5 text-[10px] font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full">
+                {notifications.length}
+              </span>
               <Menu.Button className="relative inline-flex items-center justify-center w-10 h-10 p-[10px] rounded-full text-gray-500 focus:outline-none">
                 <Notification className="w-5 h-5 text-white" />
               </Menu.Button>

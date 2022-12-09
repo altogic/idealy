@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SectionTitle from '@/components/SectionTitle';
 import Toggle from '@/components/Toggle';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,8 +8,14 @@ export default function WhiteLabel() {
   const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
 
-  const [canCreateCompany, setCanCreateCompany] = useState(!company.whiteLabel.canCreateCompany);
-  const [isHideBanner, setIsHideBanner] = useState(company.whiteLabel.isHideBanner);
+  const [canCreateCompany, setCanCreateCompany] = useState();
+  const [isHideBanner, setIsHideBanner] = useState();
+  useEffect(() => {
+    if (company) {
+      setCanCreateCompany(!company.whiteLabel.canCreateCompany);
+      setIsHideBanner(company.whiteLabel.isHideBanner);
+    }
+  }, [company]);
 
   const updateCompanyWhiteLabel = (fieldName, value) => {
     dispatch(

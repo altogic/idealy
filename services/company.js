@@ -20,19 +20,10 @@ const companyService = {
       .updateFields([{ field: 'status', updateType: 'set', value: 'Active' }]),
   updateCompany: (company) => db.model('company').object(company._id).update(company),
   registerTeamMember: (req) => endpoint.post('/company/member', req),
-  setCompanyTopics: ({ name, companyId, order }) =>
-    db.model('company.topics').append({ name, order }, companyId),
-  setCompanyStatuses: ({ name, color, order, companyId }) =>
-    db.model('company.statuses').append({ name, color, order }, companyId),
-  removeCompanyTopics: ({ topic }) => db.model('company.topics').object(topic).delete(),
-  removeCompanyStatuses: ({ status }) => db.model('company.statuses').object(status).delete(),
-  setCompanyCategories: ({ name, color, companyId, order }) =>
-    db.model('company.categories').append({ name, color, order }, companyId),
-  setCompanyRoadMap: ({ name, description, companyId }) =>
-    db.model('company.roadmaps').append({ name, description }, companyId),
-  removeCompanyCategories: ({ category }) =>
-    db.model('company.categories').object(category).delete(),
-  removeCompanyRoadMap: ({ roadmap }) => db.model('company.roadmaps').object(roadmap).delete(),
+  addItemToCompanySubLists: ({ fieldName, value, companyId }) =>
+    db.model(`company.${fieldName}`).append({ ...value }, companyId),
+  deleteCompanySubListsItem: ({ fieldName, id }) =>
+    db.model(`company.${fieldName}`).object(id).delete(),
   checkSubdomainExists: (subdomain) =>
     db.model('company').filter(`subdomain == '${subdomain}'`).get(),
   getInvitation: (token) => db.model('invitations').filter(`token == '${token}'`).get(),
@@ -73,11 +64,7 @@ const companyService = {
   updateCompanySubListsOrder: ({ modelName, value }) =>
     endpoint.put(`/company/${modelName}/order`, value),
   getCompanyProperties: (fieldName, companyId) =>
-    db
-      .model(`company.${fieldName}`)
-      .filter(`_parent == '${companyId}'`)
-      .sort('order', 'desc')
-      .get(),
+    db.model(`company.${fieldName}`).filter(`_parent == '${companyId}'`).sort('order', 'asc').get(),
   updateCompanyProperties: ({ id, modelName, fieldName, value }) =>
     db
       .model(modelName)

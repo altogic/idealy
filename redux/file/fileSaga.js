@@ -3,7 +3,7 @@ import FileService from '@/services/file';
 import companyService from '@/services/company';
 import _ from 'lodash';
 import { takeEvery, put, call, all, select } from 'redux-saga/effects';
-import realtimeService from '@/utils/realtime';
+import { realtime } from '@/utils/altogic';
 import { authActions } from '../auth/authSlice';
 import { fileActions } from './fileSlice';
 import { companyActions } from '../company/companySlice';
@@ -64,10 +64,7 @@ function* deleteAvatarFileSaga({ payload: userId }) {
       yield call(AuthService.setUser, data);
       yield put(authActions.setUser(data));
       yield put(fileActions.deleteUserAvatarSuccess());
-      realtimeService.sendMessage(company._id, 'company-message', {
-        type: 'user-update',
-        user: data
-      });
+      realtime.send(company._id, 'user-update', data);
     }
   } catch (error) {
     yield put(fileActions.deleteUserAvatarFailure(error));
@@ -82,10 +79,9 @@ function* deleteCompanyLogoFileSaga({ payload: companyId }) {
     if (data) {
       yield put(fileActions.deleteCompanyLogoSuccess(data));
       yield put(companyActions.updateCompanyLogoSuccess(data));
-      realtimeService.sendMessage(data._id, 'company-message', {
+      realtime.send(data._id, 'update-company', {
         company: data,
-        sender: user._id,
-        type: 'update-company'
+        sender: user._id
       });
     }
   } catch (error) {
@@ -101,10 +97,9 @@ function* deleteCompanyFaviconFileSaga({ payload: companyId }) {
       yield put(fileActions.deleteCompanyFaviconSuccess(data));
       yield put(companyActions.updateCompanyFaviconSuccess(data));
       const user = yield select((state) => state.auth.user);
-      realtimeService.sendMessage(data._id, 'company-message', {
+      realtime.send(data._id, 'update-company', {
         company: data,
-        sender: user._id,
-        type: 'update-company'
+        sender: user._id
       });
     }
   } catch (error) {
