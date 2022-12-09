@@ -171,7 +171,7 @@ function* inviteTeamMemberSaga({ payload }) {
     }
     yield put(companyActions.inviteTeamMemberSuccess(data));
     payload.onSuccess(data?.user?._id);
-    yield call(realtime.send, payload.companyId, 'invite-team-member', {
+    realtime.send(payload.companyId, 'invite-team-member', {
       sender: user._id,
       ...data
     });
@@ -202,7 +202,7 @@ function* addNewMember({ payload }) {
       throw new Error(error);
     }
     yield put(companyActions.addNewMemberSuccess(data));
-    yield call(realtime.send, data.companyId, 'accept-invitation', {
+    realtime.send(data.companyId, 'accept-invitation', {
       sender: data.user._id,
       payload: data
     });

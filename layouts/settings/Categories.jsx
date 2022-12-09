@@ -58,6 +58,7 @@ export default function Categories() {
         }
       })
     );
+    reset();
   };
 
   useEffect(() => {

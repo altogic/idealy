@@ -35,7 +35,7 @@ function* sendNotification({ payload }) {
       throw errors;
     }
     yield put(notificationActions.sendNotificationSuccess(data));
-    yield call(realtime.send, payload.companyId, 'notification', data);
+    realtime.send(payload.companyId, 'notification', data);
   } catch (error) {
     yield put(notificationActions.sendNotificationFailure(error));
   }

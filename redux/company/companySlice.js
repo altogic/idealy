@@ -432,9 +432,15 @@ export const companySlice = createSlice({
     },
     deleteCompanySubListsItemSuccess(state, action) {
       state.isLoading = false;
-      state.company[action.payload.fieldName] = state.company[action.payload.fieldName].filter(
-        (item) => item._id !== action.payload.id
-      );
+      if (action.payload.fieldName === 'roadmaps') {
+        state.company.roadmaps = state.company[action.payload.fieldName].filter(
+          (item) => item._id !== action.payload.id
+        );
+      } else {
+        state[action.payload.fieldName] = state[action.payload.fieldName].filter(
+          (item) => item._id !== action.payload.id
+        );
+      }
     },
     deleteCompanySubListsItemFailed(state, action) {
       state.isLoading = false;
@@ -444,11 +450,11 @@ export const companySlice = createSlice({
       state.isLoading = true;
     },
     addItemToCompanySubListsSuccess(state, action) {
-      try {
-        state.isLoading = false;
-        state.company[action.payload.fieldName].push(action.payload.data);
-      } catch (error) {
-        console.log(error);
+      state.isLoading = false;
+      if (action.payload.fieldName === 'roadmaps') {
+        state.company.roadmaps.push(action.payload.data);
+      } else {
+        state[action.payload.fieldName].push(action.payload.data);
       }
     },
     addItemToCompanySubListsFailed(state, action) {
