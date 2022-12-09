@@ -13,7 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ROLE } from 'constants';
 import EmptyState from '@/components/EmptyState';
-import realtimeService from '@/utils/realtime';
+import { realtime } from '@/utils/altogic';
 
 export default function InviteTeam() {
   const dispatch = useDispatch();
@@ -53,8 +53,7 @@ export default function InviteTeam() {
         onSuccess: (userId) => {
           setIsInvite(false);
           if (userId) {
-            realtimeService.sendMessage(userId, 'user-message', {
-              type: 'invite-team-member',
+            realtime.send(userId, 'new-invitation', {
               role: roleSelected.name,
               userId,
               company

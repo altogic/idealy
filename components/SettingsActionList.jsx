@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { companyActions } from '@/redux/company/companySlice';
 import SettingsActionCard from './SettingsActionCard';
 
@@ -11,6 +11,7 @@ export default function SettingsActionList({
   modalTitle,
   modalDescription
 }) {
+  const [activeIndex, setActiveIndex] = useState(-1);
   return items?.map((item, index) => (
     <SettingsActionCard
       key={item._id}
@@ -27,6 +28,9 @@ export default function SettingsActionList({
       topics={topics}
       isHideUpdate={isHideUpdate}
       canDnd
+      isColorModalOpen={index === activeIndex}
+      setActiveIndex={setActiveIndex}
+      activeIndex={activeIndex}
     />
   ));
 }

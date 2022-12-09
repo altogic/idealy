@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { DISPLAY_COMPANY_ASSETS } from 'constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
@@ -7,7 +7,7 @@ import SectionTitle from '@/components/SectionTitle';
 import Label from '@/components/Label';
 import { Check } from '@/components/icons';
 
-export default function CompanyFavicon() {
+export default function CompanyDisplay() {
   const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
   const [displaySelected, setDisplaySelected] = useState(
@@ -22,6 +22,9 @@ export default function CompanyFavicon() {
       })
     );
   };
+  useEffect(() => {
+    setDisplaySelected(DISPLAY_COMPANY_ASSETS[company.showCompanyName ? 0 : 1]);
+  }, [company]);
 
   return (
     <>

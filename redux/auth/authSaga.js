@@ -3,7 +3,7 @@ import { takeEvery, put, call, all, select } from 'redux-saga/effects';
 import { randomInt, setSessionCookie } from '@/utils/index';
 import { COLORS } from 'constants';
 import companyService from '@/services/company';
-import realtimeService from '@/utils/realtime';
+import { realtime } from '@/utils/altogic';
 import { authActions } from './authSlice';
 import { companyActions } from '../company/companySlice';
 
@@ -270,10 +270,7 @@ function* updateUserProfileSaga({ payload }) {
     }
     yield put(authActions.updateUserSuccess(data));
     yield call(AuthService.setUser, data);
-    realtimeService.sendMessage(company._id, 'company-message', {
-      type: 'user-update',
-      user: data
-    });
+    realtime.send(company._id, 'user-update', data);
   } catch (error) {
     yield put(authActions.updateUserFailure(error));
   }

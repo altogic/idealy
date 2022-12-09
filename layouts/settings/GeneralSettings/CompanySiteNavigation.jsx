@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
 import SectionTitle from '@/components/SectionTitle';
@@ -22,7 +22,11 @@ export default function CompanySiteNavigation() {
       })
     );
   };
-
+  useEffect(() => {
+    setFeedback(company.siteNavigation.feedback);
+    setRoadMap(company.siteNavigation.roadmap);
+    setAnnouncements(company.siteNavigation.announcements);
+  }, [company]);
   return (
     <>
       <div className="pb-4 mb-11 border-b border-slate-200">

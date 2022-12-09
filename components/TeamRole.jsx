@@ -4,7 +4,8 @@ import { Listbox, Transition } from '@headlessui/react';
 import { ROLE } from 'constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
-import realtimeService from '@/utils/realtime';
+import { realtime } from '@/utils/altogic';
+import { notificationActions } from '@/redux/notification/notificationSlice';
 import Button from './Button';
 import DeleteModal from './DeleteModal';
 import { Danger, Trash, CircleUser, ChevronDown } from './icons';
@@ -12,7 +13,7 @@ import Avatar from './Avatar';
 
 export default function TeamRole({ avatar, name, email, status, role, isRegistered, id, userId }) {
   const [isDelete, setIsDelete] = useState(false);
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState(role);
   const company = useSelector((state) => state.company.company);
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
@@ -20,8 +21,7 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
     setIsDelete(!isDelete);
     if (isRegistered) {
       dispatch(companyActions.deleteCompanyMember({ userId, email, companyId: company._id }));
-      realtimeService.sendMessage(userId, 'user-message', {
-        type: 'delete-member',
+      realtime.send(userId, 'delete-membership', {
         companyId: company._id,
         userId,
         companyName: company.name,
@@ -32,14 +32,29 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
     } else {
       dispatch(companyActions.deleteUnregisteredMember({ id, email: name }));
     }
-    realtimeService.sendMessage(company._id, 'company-message', {
-      type: 'delete-member',
+    realtime.send(company._id, 'delete-member', {
       companyId: company._id,
       userId,
       isRegistered,
       id,
       name
     });
+    realtime.send(company._id, 'update-member', {
+      type: 'update-member',
+      role,
+      id,
+      companyId: company._id,
+      isRegistered,
+      userId,
+      companyName: company.name
+    });
+    dispatch(
+      notificationActions.sendNotification({
+        user: userId,
+        companyId: company._id,
+        message: `You have been removed from <b>${company?.name}</b>`
+      })
+    );
   };
   const handleRoleChange = (role) => {
     setSelected(role);
@@ -53,7 +68,7 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
           companyId: company._id
         })
       );
-      realtimeService.sendMessage(userId, 'user-message', {
+      realtime.send(userId, 'update-role', {
         type: 'update-role',
         role,
         id,
@@ -71,11 +86,26 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
       );
     }
 
-    realtimeService.sendMessage(company._id, 'company-message', {
+    realtime.send(company._id, 'update-member', {
       type: 'update-member',
       role,
       id,
-      companyId: company._id
+      companyId: company._id,
+      isRegistered,
+      userId,
+      companyName: company.name
+    });
+    dispatch(
+      notificationActions.sendNotification({
+        user: userId,
+        companyId: company._id,
+        message: `Your role has been changed to <b>${role}</b> in <b>${company?.name}</b>`
+      })
+    );
+    realtime.send(userId, 'notification', {
+      userId,
+      companyId: company._id,
+      message: `Your role has been changed to <b>${role}</b> in <b>${company?.name}</b>`
     });
   };
   useEffect(() => {

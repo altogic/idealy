@@ -25,11 +25,13 @@ export default function SettingsActionCard({
   editAction,
   canDnd,
   index,
-  isHideUpdate
+  isHideUpdate,
+  isColorModalOpen,
+  setActiveIndex,
+  activeIndex
 }) {
   const [isDelete, setIsDelete] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [isColorModalOpen, setIsColorModalOpen] = useState(false);
   const [name, setName] = useState();
   const [description, setDescription] = useState();
   const [colorPicker, setColorPicker] = useState();
@@ -87,12 +89,14 @@ export default function SettingsActionCard({
       setDescription(roadMapDescription);
     }
   }, [title, roadMapDescription]);
-  const handleOnBodyClick = (e) => {
+  function handleOnBodyClick(e) {
     if (e.target.id !== 'name' && e.target.id !== 'description') {
-      setIsColorModalOpen(false);
+      if (setActiveIndex) {
+        setActiveIndex(-1);
+      }
       setIsEdit(false);
     }
-  };
+  }
   useEffect(() => {
     document.addEventListener('click', (e) => handleOnBodyClick(e));
     return () => {
@@ -119,7 +123,7 @@ export default function SettingsActionCard({
       {...provided?.dragHandleProps}
       style={{
         ...provided?.draggableProps?.style,
-        cursor: !isColorModalOpen ? 'grab' : 'default'
+        cursor: !isColorModalOpen && canDnd ? 'grab' : 'default'
       }}>
       <div className="flex justify-between gap-4 w-full h-full p-4">
         <div className="flex items-center gap-3 w-full h-full">
@@ -130,7 +134,8 @@ export default function SettingsActionCard({
                 className="p-4"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setIsColorModalOpen(!isColorModalOpen);
+                  console.log(activeIndex === index ? -1 : index);
+                  setActiveIndex(activeIndex === index ? -1 : index);
                 }}>
                 <svg className="h-2.5 w-2.5" fill={colorPicker} viewBox="0 0 8 8">
                   <circle cx={4} cy={4} r={3} />

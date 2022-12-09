@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SectionTitle from '@/components/SectionTitle';
 import Button from '@/components/Button';
 import Toggle from '@/components/Toggle';
@@ -7,7 +7,7 @@ import { Trash } from '@/components/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
 import Router from 'next/router';
-import realtimeService from '@/utils/realtime';
+import { realtime } from '@/utils/altogic';
 
 export default function Miscellaneous() {
   const [deleteCompanyConfirm, setDeleteCompanyConfirm] = useState(false);
@@ -31,6 +31,12 @@ export default function Miscellaneous() {
       })
     );
   };
+  useEffect(() => {
+    if (company) {
+      setDisableCommentReactions(company.miscellaneous.disableCommentReactions);
+      setDisableAnnouncementReactions(company.miscellaneous.disableAnnouncementReactions);
+    }
+  }, [company]);
   return (
     <div>
       <div className="pb-4 mb-11 border-b border-slate-200">
@@ -127,13 +133,12 @@ export default function Miscellaneous() {
               companyId: company._id,
               onSuccess: (companies) => {
                 try {
-                  realtimeService.sendMessage(company._id, 'company-message', {
-                    type: 'company-deleted',
+                  realtime.send(company._id, 'company-deleted', {
                     sender: user._id,
                     companyId: company._id,
                     companyName: company.name
                   });
-                  console.log(companies);
+
                   if (companies.length > 1) {
                     Router.push('/admin/select-company');
                   } else if (companies.length === 1) {

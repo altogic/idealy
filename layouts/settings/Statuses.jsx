@@ -12,7 +12,6 @@ import SortableCompanyActions from '@/components/SortableCompanyActions';
 import EmptyState from '@/components/EmptyState';
 
 export default function Statuses() {
-  const colorPicker = '#37d67a';
   const createStatusName = new yup.ObjectSchema({
     statusesName: yup.string().required('Status name is required')
   });
@@ -56,11 +55,13 @@ export default function Statuses() {
   const formSubmit = (form) => {
     setUpdateStatusesLoading(true);
     dispatch(
-      companyActions.setCompanyStatuses({
-        name: form.statusesName,
-        color: colorPicker,
-        companyId: company._id,
-        order: company.statuses.length + 1
+      companyActions.addItemToCompanySubLists({
+        fieldName: 'statuses',
+        value: {
+          name: form.statusesName,
+          color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+          order: company.statuses.length + 1
+        }
       })
     );
     reset();
@@ -124,8 +125,9 @@ export default function Statuses() {
               modalDescription="Are you sure you want to delete this status? This action cannot be undone."
               onDelete={(item) => {
                 dispatch(
-                  companyActions.removeCompanyStatuses({
-                    status: item._id
+                  companyActions.deleteCompanySubListsItem({
+                    id: item._id,
+                    fieldName: 'statuses'
                   })
                 );
                 if (item.isCompletedStatus) {

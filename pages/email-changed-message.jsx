@@ -2,17 +2,14 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import { ArrowLeft, Email } from '@/components/icons';
-import realtimeService from '@/utils/realtime';
+import { realtime } from '@/utils/altogic';
 
 export default function EmailChangedMessage() {
   const company = useSelector((state) => state.company.company);
   const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    realtimeService.sendMessage(company._id, 'company-message', {
-      type: 'user-update',
-      user
-    });
+    realtime.send(company._id, 'user-update', user);
   }, []);
   return (
     <div className="relative h-screen">

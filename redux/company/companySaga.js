@@ -3,132 +3,10 @@ import { SUBDOMAIN_REGEX } from 'constants';
 import _ from 'lodash';
 import companyService from '@/services/company';
 import AuthService from '@/services/auth';
-import realtimeService from '@/utils/realtime';
+import { realtime } from '@/utils/altogic';
 import { companyActions } from './companySlice';
 import { authActions } from '../auth/authSlice';
 
-function* removeCompanyTopicSaga({ payload: { topic, companyId } }) {
-  try {
-    const { errors } = yield call(companyService.removeCompanyTopics, {
-      topic,
-      companyId
-    });
-    if (errors) {
-      throw new Error(errors);
-    }
-    yield put(companyActions.removeCompanyTopicsSuccess(topic));
-  } catch (error) {
-    yield put(companyActions.removeCompanyTopicFailure(error));
-  }
-}
-
-function* setCompanyTopicsCreatedSaga({ payload: { name, companyId, order } }) {
-  try {
-    const { data, errors } = yield call(companyService.setCompanyTopics, {
-      name,
-      companyId,
-      order
-    });
-    if (errors) {
-      throw errors.items;
-    }
-    yield put(companyActions.setCompanyTopicsSuccess(data));
-  } catch (e) {
-    yield put(companyActions.setCompanyTopicsFailure(e));
-  }
-}
-
-function* setCompanyStatusesCreatedSaga({ payload: { name, color, companyId, order } }) {
-  try {
-    const { data, errors } = yield call(companyService.setCompanyStatuses, {
-      name,
-      color,
-      companyId,
-      order
-    });
-    if (errors) {
-      throw errors.items;
-    }
-    yield put(companyActions.setCompanyStatusesSuccess(data));
-  } catch (e) {
-    yield put(companyActions.setCompanyStatusesFailure(e));
-  }
-}
-
-function* removeCompanyStatusesSaga({ payload: { status } }) {
-  try {
-    const { errors } = yield call(companyService.removeCompanyStatuses, {
-      status
-    });
-    if (errors) {
-      throw new Error(errors);
-    }
-    yield put(companyActions.removeCompanyStatusesSuccess(status));
-  } catch (error) {
-    yield put(companyActions.removeCompanyStatusesFailure(error));
-  }
-}
-
-function* setCompanyCategoriesCreatedSaga({ payload: { name, color, companyId, order } }) {
-  try {
-    const { data, errors } = yield call(companyService.setCompanyCategories, {
-      name,
-      color,
-      companyId,
-      order
-    });
-    if (errors) {
-      throw errors.items;
-    }
-    yield put(companyActions.setCompanyCategoriesSuccess(data));
-  } catch (e) {
-    yield put(companyActions.setCompanyCategoriesFailure(e));
-  }
-}
-
-function* removeCompanyCategoriesSaga({ payload: { category } }) {
-  try {
-    const { errors } = yield call(companyService.removeCompanyCategories, {
-      category
-    });
-    if (errors) {
-      throw new Error(errors);
-    }
-    yield put(companyActions.removeCompanyCategoriesSuccess(category));
-  } catch (error) {
-    yield put(companyActions.removeCompanyCategoriesFailure(error));
-  }
-}
-
-function* setCompanyRoadMapCreatedSaga({ payload: { name, description, companyId } }) {
-  try {
-    const { data, errors } = yield call(companyService.setCompanyRoadMap, {
-      name,
-      description,
-      companyId
-    });
-    if (errors) {
-      throw errors.items;
-    }
-    yield put(companyActions.setCompanyRoadMapSuccess(data));
-  } catch (e) {
-    yield put(companyActions.setCompanyRoadMapFailure(e));
-  }
-}
-
-function* removeCompanyRoadMapSaga({ payload: { roadmap } }) {
-  try {
-    const { errors } = yield call(companyService.removeCompanyRoadMap, {
-      roadmap
-    });
-    if (errors) {
-      throw new Error(errors);
-    }
-    yield put(companyActions.removeCompanyRoadMapSuccess(roadmap));
-  } catch (error) {
-    yield put(companyActions.removeCompanyRoadMapFailure(error));
-  }
-}
 function* setCreatedCompanySaga({ payload }) {
   yield put(companyActions.setCompanyWillBeCreatedSuccess(payload));
 }
@@ -234,10 +112,9 @@ function* updateCompanySaga({ payload: company }) {
         role: stateCompany.role
       })
     );
-    realtimeService.sendMessage(data._id, 'company-message', {
+    realtime.send(data._id, 'update-company', {
       company: data,
-      sender: user._id,
-      type: 'update-company'
+      sender: user._id
     });
   } catch (error) {
     yield put(companyActions.updateCompanyFailed(error));
@@ -294,13 +171,10 @@ function* inviteTeamMemberSaga({ payload }) {
     }
     yield put(companyActions.inviteTeamMemberSuccess(data));
     payload.onSuccess(data?.user?._id);
-    yield call(
-      realtimeService.sendMessage(payload.companyId, 'company-message', {
-        type: 'invite-team-member',
-        sender: user._id,
-        ...data
-      })
-    );
+    yield call(realtime.send, payload.companyId, 'invite-team-member', {
+      sender: user._id,
+      ...data
+    });
   } catch (error) {
     yield put(companyActions.inviteTeamMemberFailed(error));
   }
@@ -328,8 +202,7 @@ function* addNewMember({ payload }) {
       throw new Error(error);
     }
     yield put(companyActions.addNewMemberSuccess(data));
-    yield call(realtimeService.sendMessage, data.companyId, 'company-message', {
-      type: 'accept-invitation',
+    yield call(realtime.send, data.companyId, 'accept-invitation', {
       sender: data.user._id,
       payload: data
     });
@@ -346,6 +219,8 @@ function* setCompanies({ payload }) {
 }
 function* updateCompanySubLists({ payload: { id, fieldName, property, value, role } }) {
   try {
+    const company = yield select((state) => state.company.company);
+    const user = yield select((state) => state.auth.user);
     const { data, error } = yield call(companyService.updateCompanyProperties, {
       id,
       fieldName,
@@ -353,7 +228,7 @@ function* updateCompanySubLists({ payload: { id, fieldName, property, value, rol
       modelName: `company.${property}`
     });
     if (error) {
-      throw new Error(error);
+      throw error;
     }
     yield put(
       companyActions.updateCompanySubListsSuccess({
@@ -364,6 +239,17 @@ function* updateCompanySubLists({ payload: { id, fieldName, property, value, rol
         property
       })
     );
+    realtime.send(company._id, 'update-sublist', {
+      sender: user._id,
+      property,
+      companyId: company._id,
+      data: company[property].map((item) => {
+        if (item._id === data._id) {
+          return data;
+        }
+        return item;
+      })
+    });
   } catch (error) {
     yield put(companyActions.updateCompanySubListsFailed(error));
   }
@@ -372,7 +258,7 @@ function* deleteAllIdeas({ payload: companyId }) {
   try {
     const { data, error } = yield call(companyService.deleteAllIdeas, companyId);
     if (error) {
-      throw new Error(error);
+      throw error;
     }
     yield put(companyActions.deleteAllIdeasSuccess(data));
   } catch (error) {
@@ -446,6 +332,7 @@ function* invalidateInvitationTokenSaga({ payload: { email, companyId } }) {
 }
 function* updateCompletedStatus({ payload: { id, companyId, role } }) {
   try {
+    const user = yield select((state) => state.auth.user);
     const { data, error } = yield call(companyService.updateCompletedStatus, { id, companyId });
     if (error) {
       throw new Error(error);
@@ -456,25 +343,31 @@ function* updateCompletedStatus({ payload: { id, companyId, role } }) {
         role
       })
     );
+    realtime.send(data._id, 'update-company', {
+      sender: user._id,
+      company: data
+    });
   } catch (e) {
     yield put(companyActions.updateCompletedStatusFailed(e));
   }
 }
-function* updateCompanySubListsOrder({ payload: { property, value, role } }) {
+function* updateCompanySubListsOrder({ payload: { property, value } }) {
   try {
+    const user = yield select((state) => state.auth.user);
     const { data, error } = yield call(companyService.updateCompanySubListsOrder, {
       value,
       modelName: property
     });
     if (error) {
-      throw new Error(error);
+      throw error;
     }
-    yield put(
-      companyActions.updateCompanySubListsOrderSuccess({
-        ...data,
-        role
-      })
-    );
+    yield put(companyActions.updateCompanySubListsOrderSuccess());
+    realtime.send(data._id, 'update-sublist', {
+      sender: user._id,
+      companyId: data._id,
+      property,
+      data: data[property]
+    });
   } catch (error) {
     yield put(companyActions.updateCompanySubListsOrderFailed(error));
   }
@@ -507,9 +400,17 @@ function* declineInvitation({ payload: { email, companyId } }) {
 function* updateMemberStatusRealtime({ payload: { userId, company } }) {
   yield put(companyActions.updateMemberStatusRealtimeSuccess({ userId, company }));
 }
-function* deleteCompanyMemberRealtime({ payload: { userId, companyId, isCompany, id } }) {
+function* deleteCompanyMemberRealtime({
+  payload: { userId, companyId, isCompany, id, isRegistered }
+}) {
   yield put(
-    companyActions.deleteCompanyMemberRealtimeSuccess({ userId, companyId, isCompany, id })
+    companyActions.deleteCompanyMemberRealtimeSuccess({
+      userId,
+      companyId,
+      isCompany,
+      id,
+      isRegistered
+    })
   );
 }
 function* acceptInvitationRealtime({ payload: company }) {
@@ -517,9 +418,17 @@ function* acceptInvitationRealtime({ payload: company }) {
   yield put(companyActions.acceptInvitationRealtimeSuccess(company));
 }
 
-function* updateCompanyMemberRoleRealtime({ payload: { id, role, companyId, isCompany } }) {
+function* updateCompanyMemberRoleRealtime({
+  payload: { id, role, companyId, isCompany, isRegistered }
+}) {
   yield put(
-    companyActions.updateCompanyMemberRoleRealtimeSuccess({ id, role, companyId, isCompany })
+    companyActions.updateCompanyMemberRoleRealtimeSuccess({
+      id,
+      role,
+      companyId,
+      isCompany,
+      isRegistered
+    })
   );
 }
 function* addNewMemberRealtime({ payload }) {
@@ -541,6 +450,65 @@ function* getCompanyProperties({ payload: { fieldName, companyId } }) {
     yield put(companyActions.getCompanyPropertiesFailed(error));
   }
 }
+function* addItemToCompanySubLists({ payload: { fieldName, value } }) {
+  try {
+    const company = yield select((state) => state.company.company);
+    const user = yield select((state) => state.auth.user);
+    const { data, error } = yield call(companyService.addItemToCompanySubLists, {
+      fieldName,
+      value,
+      companyId: company._id
+    });
+    if (error) {
+      throw error;
+    }
+
+    yield put(
+      companyActions.addItemToCompanySubListsSuccess({
+        data,
+        fieldName
+      })
+    );
+    realtime.send(company._id, 'update-company', {
+      sender: user._id,
+      company: {
+        ...company,
+        [fieldName]: company[fieldName].concat(data)
+      }
+    });
+  } catch (error) {
+    yield put(companyActions.addItemToCompanySubListsFailed(error));
+  }
+}
+function* deleteCompanySubListsItem({ payload: { id, fieldName } }) {
+  try {
+    const company = yield select((state) => state.company.company);
+    const user = yield select((state) => state.auth.user);
+    const { error } = yield call(companyService.deleteCompanySubListsItem, {
+      id,
+      fieldName,
+      companyId: company._id
+    });
+    if (error) {
+      throw error;
+    }
+    yield put(
+      companyActions.deleteCompanySubListsItemSuccess({
+        id,
+        fieldName
+      })
+    );
+    realtime.send(company._id, 'update-company', {
+      sender: user._id,
+      company: {
+        ...company,
+        [fieldName]: company[fieldName].filter((item) => item._id !== id)
+      }
+    });
+  } catch (error) {
+    yield put(companyActions.deleteCompanySubListsItemFailed(error));
+  }
+}
 function* deleteCompanyRealtimeSaga({ payload: companyId }) {
   yield put(companyActions.deleteCompanyRealtimeSuccess(companyId));
 }
@@ -554,17 +522,15 @@ function* acceptInvitation({ payload }) {
 function* updateCompanyRealtime({ payload: company }) {
   yield put(companyActions.updateCompanyRealtimeSuccess(company));
 }
+function* declineInvitationRealtime({ payload: userId }) {
+  yield put(companyActions.declineInvitationRealtimeSuccess(userId));
+}
+function* updateCompanySubListsOrderRealtime({ payload }) {
+  yield put(companyActions.updateCompanySubListsOrderRealtimeSuccess(payload));
+}
 
 export default function* companySaga() {
   yield all([
-    takeEvery(companyActions.removeCompanyRoadMap.type, removeCompanyRoadMapSaga),
-    takeEvery(companyActions.setCompanyRoadMap.type, setCompanyRoadMapCreatedSaga),
-    takeEvery(companyActions.removeCompanyStatuses.type, removeCompanyStatusesSaga),
-    takeEvery(companyActions.setCompanyStatuses.type, setCompanyStatusesCreatedSaga),
-    takeEvery(companyActions.removeCompanyCategories.type, removeCompanyCategoriesSaga),
-    takeEvery(companyActions.setCompanyCategories.type, setCompanyCategoriesCreatedSaga),
-    takeEvery(companyActions.removeCompanyTopics.type, removeCompanyTopicSaga),
-    takeEvery(companyActions.setCompanyTopics.type, setCompanyTopicsCreatedSaga),
     takeEvery(companyActions.setCompanyWillBeCreated.type, setCreatedCompanySaga),
     takeEvery(companyActions.setSubdomain.type, setSubdomainSaga),
     takeEvery(companyActions.setCompanyError.type, setCompanyErrorSaga),
@@ -598,10 +564,17 @@ export default function* companySaga() {
     takeEvery(companyActions.acceptInvitationRealtime.type, acceptInvitationRealtime),
     takeEvery(companyActions.addNewMemberRealtime.type, addNewMemberRealtime),
     takeEvery(companyActions.updateCompanyMemberRealtime.type, updateCompanyMemberRealtime),
-    takeEvery(companyActions.updateCompany, updateCompanySaga),
+    takeEvery(companyActions.updateCompany.type, updateCompanySaga),
     takeEvery(companyActions.getCompanyProperties.type, getCompanyProperties),
     takeEvery(companyActions.deleteCompanyRealtime.type, deleteCompanyRealtimeSaga),
     takeEvery(companyActions.acceptInvitation.type, acceptInvitation),
-    takeEvery(companyActions.updateCompanyRealtime.type, updateCompanyRealtime)
+    takeEvery(companyActions.updateCompanyRealtime.type, updateCompanyRealtime),
+    takeEvery(companyActions.declineInvitationRealtime.type, declineInvitationRealtime),
+    takeEvery(companyActions.addItemToCompanySubLists.type, addItemToCompanySubLists),
+    takeEvery(companyActions.deleteCompanySubListsItem.type, deleteCompanySubListsItem),
+    takeEvery(
+      companyActions.updateCompanySubListsOrderRealtime.type,
+      updateCompanySubListsOrderRealtime
+    )
   ]);
 }
