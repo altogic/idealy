@@ -25,7 +25,7 @@ export default function ThirdWizard() {
 
   return (
     <>
-      <div className="max-w-[444px] mx-auto mb-16 text-center">
+      <div className="max-w-[444px] mx-auto mb-8 md:mb-16 text-center">
         <h2 className="text-slate-700 mb-4 text-3xl font-semibold tracking-md">
           Add topics to your idea
         </h2>
