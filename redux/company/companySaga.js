@@ -239,6 +239,7 @@ function* updateCompanySubLists({ payload: { id, fieldName, property, value, rol
         property
       })
     );
+
     realtime.send(company._id, 'update-sublist', {
       sender: user._id,
       property,
@@ -354,6 +355,7 @@ function* updateCompletedStatus({ payload: { id, companyId, role } }) {
 function* updateCompanySubListsOrder({ payload: { property, value } }) {
   try {
     const user = yield select((state) => state.auth.user);
+    const company = yield select((state) => state.company.company);
     const { data, error } = yield call(companyService.updateCompanySubListsOrder, {
       value,
       modelName: property
@@ -361,7 +363,13 @@ function* updateCompanySubListsOrder({ payload: { property, value } }) {
     if (error) {
       throw error;
     }
-    yield put(companyActions.updateCompanySubListsOrderSuccess());
+
+    yield put(
+      companyActions.updateCompanySubListsOrderSuccess({
+        ...data,
+        role: company.role
+      })
+    );
     realtime.send(data._id, 'update-sublist', {
       sender: user._id,
       companyId: data._id,

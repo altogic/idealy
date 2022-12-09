@@ -108,6 +108,11 @@ export default function Layout({ children }) {
       dispatch(notificationActions.receiveNotificationRealtime(data.message));
     }
   }
+  function userNotificationHandler(data) {
+    if (data.message.user === user._id) {
+      dispatch(notificationActions.receiveNotificationRealtime(data.message));
+    }
+  }
   function updateCompanyHandler(data) {
     if (data.message.company._id === company._id && data.message.sender !== user._id) {
       dispatch(
@@ -130,6 +135,7 @@ export default function Layout({ children }) {
     }
   }
   function updateSublistHandler(data) {
+    console.log(data.message);
     if (data.message.sender !== user._id && company._id === data.message.companyId) {
       dispatch(companyActions.updateCompanySubListsOrderRealtime(data.message));
     }
@@ -171,7 +177,7 @@ export default function Layout({ children }) {
       realtime.on('delete-membership', deleteMembershipHandler);
       realtime.on('update-role', updateRoleHandler);
       realtime.on('new-invitation', newInvitationHandler);
-      realtime.on('user-notification', notificationHandler);
+      realtime.on('user-notification', userNotificationHandler);
     }
 
     if (companies && companies.length > 0) {
@@ -191,7 +197,7 @@ export default function Layout({ children }) {
     }
     return () => {
       realtime.off('delete-membership', deleteMembershipHandler);
-      realtime.off('user-notification', notificationHandler);
+      realtime.off('user-notification', userNotificationHandler);
       realtime.off('update-role', updateRoleHandler);
       realtime.off('new-invitation', newInvitationHandler);
       realtime.off('new-member', newMemberHandler);
