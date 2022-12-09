@@ -129,7 +129,7 @@ export default function InviteTeam() {
             />
           </div>
           <Transition appear show={isInvite} as={Fragment}>
-            <Dialog as="div" className="relative z-10" onClose={() => setIsInvite(!isInvite)}>
+            <Dialog as="div" className="relative z-50" onClose={() => setIsInvite(!isInvite)}>
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"

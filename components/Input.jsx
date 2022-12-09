@@ -3,7 +3,7 @@ import { Exclamation } from './icons';
 
 export default function Input({ id, label, error, register, icon, postfix, ...props }) {
   return (
-    <div className="relative w-full max-h-[100px]">
+    <div className="relative w-full max-h-[200px] md:max-h-[100px]">
       {label && (
         <label
           htmlFor={id}
