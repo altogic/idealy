@@ -57,6 +57,7 @@ export default function Topics() {
         }
       })
     );
+    reset();
   };
 
   useEffect(() => {
