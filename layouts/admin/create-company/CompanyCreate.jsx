@@ -99,7 +99,7 @@ export default function FirstWizard() {
 
   return (
     <>
-      <div className="max-w-[444px] mx-auto mb-16 text-center">
+      <div className="max-w-[444px] mx-auto mb-8 md:mb-16 text-center">
         <h2 className="text-slate-700 mb-4 text-3xl font-semibold tracking-md">
           Welcome to {process.env.appName}
         </h2>
@@ -107,7 +107,7 @@ export default function FirstWizard() {
           Let &apos; s start by setting up your company.
         </p>
       </div>
-      <div className="max-h-[200px] mx-auto mb-4">
+      <div className="max-h-[300px] md:max-h-[200px] mx-auto mb-4">
         <div className="mt-4">
           <Input
             name="companyName"

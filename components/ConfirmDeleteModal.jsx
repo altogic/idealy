@@ -45,7 +45,7 @@ export default function ConfirmDeleteModal({
 
   return (
     <Transition appear show={show} as={Fragment} {...props}>
-      <Dialog as="div" className="relative z-10" {...props}>
+      <Dialog as="div" className="relative z-50" {...props}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

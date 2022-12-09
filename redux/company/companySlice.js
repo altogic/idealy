@@ -397,7 +397,8 @@ export const companySlice = createSlice({
     updateCompanySubListsOrder(state) {
       state.isLoading = true;
     },
-    updateCompanySubListsOrderSuccess(state) {
+    updateCompanySubListsOrderSuccess(state, action) {
+      state.company = action.payload;
       state.isLoading = false;
     },
     updateCompanySubListsOrderFailed(state, action) {

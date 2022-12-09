@@ -35,7 +35,7 @@ export default function CreateNewCompany() {
         <meta name="description" content="Altogic Canny Create New Company" />
       </Head>
       <div className="w-full h-screen">
-        <div className="h-[92px] bg-slate-50 px-4 py-8">
+        <div className="md:h-[92px] bg-slate-50 px-4 py-8 mb-8 md:mb-0">
           <div className="flex items-center justify-between max-w-screen-lg mx-auto">
             <Link href="/">
               <a className="flex items-center">
@@ -45,7 +45,7 @@ export default function CreateNewCompany() {
             <p className="text-slate-700 text-base tracking-sm">Step {activePageIndex + 1}/4</p>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center h-[calc(100%-92px)] max-w-3xl mx-auto">
+        <div className="flex flex-col items-center justify-center md:h-[calc(100%-92px)] max-w-3xl mx-auto px-4 md:p-0">
           <Wizard activePageIndex={activePageIndex} setActivePageIndex={setActivePageIndex}>
             <CompanyCreate />
             <IdeaCreate />

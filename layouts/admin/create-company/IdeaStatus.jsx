@@ -24,7 +24,7 @@ export default function FourthWizard() {
 
   return (
     <>
-      <div className="max-w-[444px] mx-auto mb-16 text-center">
+      <div className="max-w-[444px] mx-auto mb-8 md:mb-16 text-center">
         <h2 className="text-slate-700 mb-4 text-3xl font-semibold tracking-md">
           Every idea has a status
         </h2>
@@ -114,7 +114,7 @@ export default function FourthWizard() {
         <div className="bg-white py-8 px-6 border border-slate-200 rounded-lg">
           <h2 className="text-slate-800 mb-2 text-base font-semibold tracking-sm">{idea}</h2>
           <p className="text-slate-500 mb-5 text-sm tracking-sm">{ideaDescription}</p>
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex flex-wrap items-center gap-4">
               {companyTopics.map((topic) => (
                 <TopicBadges key={topic._id} badgeName={topic.name} />

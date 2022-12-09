@@ -95,7 +95,7 @@ export default function Wizard({ children, activePageIndex, setActivePageIndex }
   };
 
   return (
-    <div className="w-full bg-slate-100 p-[72px] rounded-2xl">
+    <div className="w-full bg-slate-100 px-4 py-10 md:p-[72px] rounded-2xl">
       <div>
         {activePageIndex <= 3 ? currentPage : pages[3]}
         {activePageIndex >= 0 ? (
