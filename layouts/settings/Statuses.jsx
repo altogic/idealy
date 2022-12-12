@@ -21,6 +21,7 @@ export default function Statuses() {
   const loading = useSelector((state) => state.company.isLoading);
   const company = useSelector((state) => state.company.company);
   const [status, setStatus] = useState({ _id: 0, name: 'Select Status' });
+  const [statuses, setStatuses] = useState();
   const [updateStatusesLoading, setUpdateStatusesLoading] = useState(false);
   const {
     register,
@@ -83,6 +84,10 @@ export default function Statuses() {
       })
     );
   };
+  useEffect(() => {
+    const temp = [...company.statuses];
+    setStatuses(temp.sort((a, b) => a.order - b.order));
+  }, [company]);
 
   return (
     <>
@@ -181,7 +186,7 @@ export default function Statuses() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0">
                   <Listbox.Options className="absolute bottom-16 lg:bottom-[initial] mt-1 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-[60]">
-                    {company.statuses.map((item) => (
+                    {statuses?.map((item) => (
                       <Listbox.Option
                         key={item._id}
                         className={({ active }) =>

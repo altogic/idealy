@@ -15,33 +15,15 @@ export default function SortableCompanyActions({
   const [items, setItems] = useState();
   const [isHideUpdate, setIsHideUpdate] = useState(false);
   const company = useSelector((state) => state.company.company);
-  const topicList = useSelector((state) => state.company.topics);
-  const statuses = useSelector((state) => state.company.statuses);
-  const categories = useSelector((state) => state.company.categories);
+
   const [isDragEnd, setIsDragEnd] = useState();
-  useEffect(() => {
-    if (company && property) {
-      dispatch(
-        companyActions.getCompanyProperties({
-          companyId: company._id,
-          fieldName: property
-        })
-      );
-    }
-  }, [property]);
 
   useEffect(() => {
-    if (topicList || statuses || categories) {
-      if (property === 'topics') {
-        setItems(topicList);
-      } else if (property === 'statuses') {
-        setItems(statuses);
-      } else if (property === 'categories') {
-        setItems(categories);
-      }
+    if (company[property]) {
+      const temp = [...company[property]];
+      setItems(temp.sort((a, b) => a.order - b.order));
     }
-  }, [topicList, statuses, categories]);
-
+  }, [company]);
   useEffect(() => {
     if (items && isDragEnd) {
       const temp = [...items];
@@ -52,6 +34,7 @@ export default function SortableCompanyActions({
         })
       );
     }
+    setIsDragEnd(false);
   }, [items, isDragEnd]);
 
   const onDragEnd = (result, items, setItems) => {

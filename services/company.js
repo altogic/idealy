@@ -13,11 +13,11 @@ const companyService = {
   inviteTeamMember: (req) => endpoint.post('/company/invite', req),
   getUnregisteredCompanyMembers: (companyId) =>
     db.model('unregisteredCompanyMembers').filter(`companyId == '${companyId}'`).get(),
-  updateMemberStatus: ({ userId, companyId }) =>
+  updateMemberStatus: ({ userId, companyId, status }) =>
     db
       .model('companyMembers')
       .filter(`user == '${userId}' && companyId == '${companyId}'`)
-      .updateFields([{ field: 'status', updateType: 'set', value: 'Active' }]),
+      .updateFields([{ field: 'status', updateType: 'set', value: status }]),
   updateCompany: (company) => db.model('company').object(company._id).update(company),
   registerTeamMember: (req) => endpoint.post('/company/member', req),
   addItemToCompanySubLists: ({ fieldName, value, companyId }) =>
@@ -63,8 +63,7 @@ const companyService = {
   updateCompanyMemberRole: (req) => endpoint.put('/company/member', req),
   updateCompanySubListsOrder: ({ modelName, value }) =>
     endpoint.put(`/company/${modelName}/order`, value),
-  getCompanyProperties: (fieldName, companyId) =>
-    db.model(`company.${fieldName}`).filter(`_parent == '${companyId}'`).sort('order', 'asc').get(),
+
   updateCompanyProperties: ({ id, modelName, fieldName, value }) =>
     db
       .model(modelName)

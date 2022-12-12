@@ -124,7 +124,10 @@ export const getServerSideProps = async ({ query, req, res }) => {
         });
         AuthService.updateUserCanCreateCompany(user._id, invitation.canCreateCompany);
       } else if (query.action === 'oauth-signin') {
-        await companyService.updateMemberStatus(user._id);
+        await companyService.updateMemberStatus({
+          userId: user._id,
+          companyId: invitation.companyId
+        });
       }
     }
 

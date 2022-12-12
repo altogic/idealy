@@ -3,6 +3,7 @@ import Head from 'next/head';
 import CompanyButton from '@/components/CompanyButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
+import Realtime from '@/components/Realtime';
 
 export default function Home() {
   const companies = useSelector((state) => state.company.companies);
@@ -44,6 +45,7 @@ export default function Home() {
           </div>
         </div>
       )}
+      <Realtime />
     </div>
   );
 }
