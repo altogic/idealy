@@ -21,14 +21,16 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
     setIsDelete(!isDelete);
     if (isRegistered) {
       dispatch(companyActions.deleteCompanyMember({ userId, email, companyId: company._id }));
-      realtime.send(userId, 'delete-membership', {
-        companyId: company._id,
-        userId,
-        companyName: company.name,
-        name,
-        id,
-        isRegistered
-      });
+      if (status !== 'Declined') {
+        realtime.send(userId, 'delete-membership', {
+          companyId: company._id,
+          userId,
+          companyName: company.name,
+          name,
+          id,
+          isRegistered
+        });
+      }
     } else {
       dispatch(companyActions.deleteUnregisteredMember({ id, email: name }));
     }

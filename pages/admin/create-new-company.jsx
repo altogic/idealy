@@ -5,7 +5,6 @@ import CompanyCreate from '@/layouts/admin/create-company/CompanyCreate';
 import IdeaCreate from '@/layouts/admin/create-company/IdeaCreate';
 import IdeaTopics from '@/layouts/admin/create-company/IdeaTopics';
 import IdeaStatus from '@/layouts/admin/create-company/IdeaStatus';
-import Link from 'next/link';
 import AuthService from '@/services/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { topicActions } from '@/redux/topics/topicSlice';
@@ -22,7 +21,6 @@ export default function CreateNewCompany() {
   useEffect(() => {
     if (user) {
       if (!user?.canCreateCompany) {
-        // Todo
         AuthService.updateUserCanCreateCompany(user._id, true);
       }
     }
@@ -37,11 +35,7 @@ export default function CreateNewCompany() {
       <div className="w-full h-screen">
         <div className="md:h-[92px] bg-slate-50 px-4 py-8 mb-8 md:mb-0">
           <div className="flex items-center justify-between max-w-screen-lg mx-auto">
-            <Link href="/">
-              <a className="flex items-center">
-                <h1 className="text-slate-700 text-xl font-semibold">Create New Company</h1>
-              </a>
-            </Link>
+            <h1 className="text-slate-700 text-xl font-semibold">Create New Company</h1>
             <p className="text-slate-700 text-base tracking-sm">Step {activePageIndex + 1}/4</p>
           </div>
         </div>

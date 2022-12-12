@@ -13,12 +13,15 @@ export default function Header() {
   const router = useRouter();
   const user = useSelector((state) => state.auth.user);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const company = useSelector((state) => state.company.company);
+  const selectedCompany = useSelector((state) => state.company.company);
+  const companies = useSelector((state) => state.company.companies);
   const companyLoading = useSelector((state) => state.company.getCompanyLoading);
   const notifications = useSelector((state) => state.notification.notifications);
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userCompanies, setUserCompanies] = useState();
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (isAuthenticated) {
       setIsLoggedIn(isAuthenticated);
@@ -26,6 +29,14 @@ export default function Header() {
     }
   }, [isAuthenticated]);
 
+  useEffect(() => {
+    if (companies.length > 0 && selectedCompany) {
+      setUserCompanies([
+        selectedCompany,
+        ...companies.filter((company) => company._id !== selectedCompany._id).slice(0, 2)
+      ]);
+    }
+  }, [companies, selectedCompany]);
   return (
     <>
       <header
@@ -34,19 +45,19 @@ export default function Header() {
           router.asPath.includes('settings') ? 'pl-16' : null
         )}>
         <div className="flex items-center">
-          {company?.name ? (
+          {selectedCompany?.name ? (
             <Link href="/">
               <a
                 className="inline-flex items-center gap-4 flex-shrink-0 mr-6"
-                title={company?.name}>
+                title={selectedCompany?.name}>
                 <CompanyAvatar
-                  logoUrl={company?.logoUrl}
-                  name={company?.name}
+                  logoUrl={selectedCompany?.logoUrl}
+                  name={selectedCompany?.name}
                   className="w-11 h-11 text-xl"
                 />
-                {company?.showCompanyName && (
+                {selectedCompany?.showCompanyName && (
                   <span className="hidden md:block text-white font-medium tracking-sm truncate max-w-[100px]">
-                    {company?.name}
+                    {selectedCompany?.name}
                   </span>
                 )}
               </a>
@@ -54,7 +65,7 @@ export default function Header() {
           ) : null}
           {companyLoading || (
             <ul className="hidden lg:flex items-center gap-2">
-              {company?.siteNavigation?.feedback && (
+              {selectedCompany?.siteNavigation?.feedback && (
                 <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800">
                   <Link href="/">
                     <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
@@ -64,7 +75,7 @@ export default function Header() {
                   </Link>
                 </li>
               )}
-              {company?.siteNavigation?.roadmap && (
+              {selectedCompany?.siteNavigation?.roadmap && (
                 <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800">
                   <Link href="/">
                     <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
@@ -74,7 +85,7 @@ export default function Header() {
                   </Link>
                 </li>
               )}
-              {company?.siteNavigation?.announcements && (
+              {selectedCompany?.siteNavigation?.announcements && (
                 <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800">
                   <Link href="/">
                     <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
@@ -181,7 +192,7 @@ export default function Header() {
           {isLoggedIn ? (
             <>
               {/* <NotificationDropdown /> */}
-              <UserDropdown />
+              <UserDropdown companies={userCompanies} />
             </>
           ) : (
             <ul className="flex items-center gap-4">

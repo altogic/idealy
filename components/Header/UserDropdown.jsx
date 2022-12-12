@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
@@ -10,8 +10,9 @@ import { companyActions } from '@/redux/company/companySlice';
 import Avatar from '../Avatar';
 import CompanyAvatar from '../CompanyAvatar';
 
-export default function UserDropdown() {
+export default function UserDropdown({ companies }) {
   const dispatch = useDispatch();
+  const [selectedCompany, setSelectedCompany] = useState();
   const handleLogout = () => {
     dispatch(
       authActions.logout({
@@ -24,8 +25,12 @@ export default function UserDropdown() {
     );
   };
   const user = useSelector((state) => state.auth.user);
-  const companies = useSelector((state) => state.company.companies);
-  const selectedCompany = useSelector((state) => state.company.company);
+  useEffect(() => {
+    if (companies?.length) {
+      setSelectedCompany(companies[0]);
+    }
+  }, [companies]);
+
   return (
     <Menu as="div" className="relative inline-block w-11 h-11 text-left">
       <Menu.Button className="inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
@@ -72,7 +77,7 @@ export default function UserDropdown() {
               </span>
             </Menu.Button>
             <div className="flex flex-col items-start">
-              {companies?.slice(0, 3).map((company) => (
+              {companies?.map((company) => (
                 <Menu.Button
                   className="w-full text-left"
                   key={company._id}
