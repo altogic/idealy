@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
-import { deleteCookie, getCookie } from 'cookies-next';
+import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { authActions } from '@/redux/auth/authSlice';
@@ -16,21 +16,27 @@ export default function Layout({ children }) {
   const companies = useSelector((state) => state.company.companies);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const user = useSelector((state) => state.auth.user);
-  const [canFetchCompany, setCanFetchCompany] = useState();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user && _.isEmpty(companies) && canFetchCompany) {
-      setCanFetchCompany(false);
+    if (user && _.isEmpty(companies)) {
       dispatch(companyActions.getUserCompanies(user?._id));
     }
-  }, [user, companies]);
+  }, []);
   useEffect(() => {
     const wildcard = window.location.hostname.split('.')[0];
-    if (isAuthenticated && company?.subdomain !== wildcard) {
-      dispatch(companyActions.getCompanyBySubdomain(wildcard));
+    setCookie('subdomain', wildcard, {
+      domain: process.env.NEXT_PUBLIC_DOMAIN
+    });
+    if (companies.length) {
+      const wildCardCompany = companies?.find((c) => c.subdomain === wildcard);
+      if (!wildCardCompany) {
+        router.push(generateUrl('company-not-found'));
+      } else if (company?.subdomain !== wildcard && wildCardCompany) {
+        dispatch(companyActions.selectCompany(wildCardCompany));
+      }
     }
-  }, [isAuthenticated]);
+  }, [companies]);
 
   useEffect(() => {
     const invitation = JSON.parse(getCookie('invitation-token') || null);
@@ -56,13 +62,6 @@ export default function Layout({ children }) {
       router.push(generateUrl('create-new-company'));
     }
   }, [companies]);
-
-  useEffect(() => {
-    if (user && _.isEmpty(companies) && canFetchCompany) {
-      setCanFetchCompany(false);
-      dispatch(companyActions.getUserCompanies(user?._id));
-    }
-  }, [user, companies]);
 
   return (
     <div>
