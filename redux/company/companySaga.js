@@ -56,6 +56,7 @@ function* createCompanySaga({ payload: { userId, onSuccess } }) {
     const statuses = yield select((state) => state.topic.statuses);
     const selectedTopics = yield select((state) => state.company.companyTopics);
     const status = yield select((state) => state.company.ideaStatus) || statuses[0];
+
     const { data } = yield call(companyService.createCompany, {
       name: yield select((state) => state.company.companyWillBeCreated),
       subdomain: yield select((state) => state.company.subdomain),
@@ -481,18 +482,23 @@ function* deleteCompanySubListsItem({ payload: { id, fieldName } }) {
     yield put(companyActions.deleteCompanySubListsItemFailed(error));
   }
 }
-function* updateCompanyBySubdomain({ payload: subdomain }) {
+function* updateCompanyBySubdomain({ payload: { subdomain, onFail, onSuccess } }) {
   try {
     const { data, error } = yield call(companyService.getCompanyBySubdomain, subdomain);
     if (error) {
       throw error;
     }
-    yield put(
-      companyActions.getCompanyBySubdomainSuccess({
-        ...data.company,
-        ...data.role
-      })
-    );
+    if (data) {
+      onSuccess();
+      yield put(
+        companyActions.getCompanyBySubdomainSuccess({
+          ...data.company,
+          ...data.role
+        })
+      );
+    } else {
+      onFail();
+    }
   } catch (error) {
     yield put(companyActions.getCompanyBySubdomainFailed(error));
   }
