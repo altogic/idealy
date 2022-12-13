@@ -233,6 +233,10 @@ export const authSlice = createSlice({
     updateUserFailure(state, action) {
       state.isLoading = false;
       state.updateProfileError = action.payload;
+    },
+    authStateChange(state, action) {
+      state.user = action.payload.user;
+      state.isAuthenticated = true;
     }
   },
   extraReducers: {

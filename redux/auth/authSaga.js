@@ -104,7 +104,7 @@ function* loginSaga({ payload: { email, password, onSuccess } }) {
       yield call(setSessionCookie, session.token);
       yield put(authActions.loginSuccess(user));
       yield put(companyActions.setCompaniesSuccess(data.response.companies));
-      onSuccess(data.response.companies);
+      onSuccess(data.response.companies, session, user);
     }
     if (errors) {
       throw errors.items;
@@ -276,6 +276,10 @@ function* updateUserProfileSaga({ payload }) {
   }
 }
 
+function* authStateChangeSaga({ payload: { user, session } }) {
+  yield call(AuthService.authStateChange, user, session);
+}
+
 export default function* rootSaga() {
   yield all([
     takeEvery(authActions.register.type, registerSaga),
@@ -296,6 +300,7 @@ export default function* rootSaga() {
     takeEvery(authActions.clearError.type, clearErrorsSaga),
     takeEvery(authActions.deleteProfile.type, deleteProfileSaga),
     takeEvery(authActions.getUserCompanies.type, getUserCompaniesSaga),
-    takeEvery(authActions.updateUserProfile.type, updateUserProfileSaga)
+    takeEvery(authActions.updateUserProfile.type, updateUserProfileSaga),
+    takeEvery(authActions.authStateChange.type, authStateChangeSaga)
   ]);
 }

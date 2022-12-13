@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { authActions } from '@/redux/auth/authSlice';
 import { deleteCookie } from 'cookies-next';
+import { generateUrl } from '@/utils/index';
 import PersonalInformation from './Profile/PersonalInformation';
 import ChangeEmail from './Profile/ChangeEmail';
 import ChangePassword from './Profile/ChangePassword';
@@ -21,16 +22,15 @@ export default function Profile() {
   useEffect(() => {
     if (_user) {
       setUser(_user);
-    } else router.push('/login');
+    }
   }, [_user]);
   const deleteProfileHandler = () => {
     dispatch(
       authActions.deleteProfile({
         onSuccess: () => {
           setDeleteProfile(!deleteProfile);
-          localStorage.removeItem('selectedCompany');
           deleteCookie('invitation-token');
-          router.push('/login');
+          router.push(generateUrl('login'));
         }
       })
     );

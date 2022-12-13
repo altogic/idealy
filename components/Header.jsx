@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { Search, Feedback, Roadmap, Announcements, Close, Notification } from './icons';
 import UserDropdown from './Header/UserDropdown';
 import CompanyAvatar from './CompanyAvatar';
+import { generateUrl } from '../utils';
 
 export default function Header() {
   const router = useRouter();
@@ -197,12 +198,12 @@ export default function Header() {
           ) : (
             <ul className="flex items-center gap-4">
               <li>
-                <Link href="/login">
+                <Link href={generateUrl('login')}>
                   <a className="inline-flex text-indigo-50 text-sm tracking-sm">Login</a>
                 </Link>
               </li>
               <li>
-                <Link href="/create-an-account">
+                <Link href={generateUrl('register')}>
                   <a className="inline-flex text-indigo-400 text-sm tracking-sm">Signup</a>
                 </Link>
               </li>

@@ -21,11 +21,3 @@ export default function Index() {
     </>
   );
 }
-export async function getServerSideProps() {
-  return {
-    redirect: {
-      destination: '/public-view',
-      permanent: false
-    }
-  };
-}

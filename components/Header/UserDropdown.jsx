@@ -6,7 +6,7 @@ import { Settings, People, Logout, Plus, CircleCheck, Check } from '@/components
 import { authActions } from '@/redux/auth/authSlice';
 import Link from 'next/link';
 import { deleteCookie } from 'cookies-next';
-import { companyActions } from '@/redux/company/companySlice';
+import { generateUrl } from '@/utils/index';
 import Avatar from '../Avatar';
 import CompanyAvatar from '../CompanyAvatar';
 
@@ -17,9 +17,8 @@ export default function UserDropdown({ companies }) {
     dispatch(
       authActions.logout({
         onSuccess: () => {
-          localStorage.removeItem('selectedCompany');
           deleteCookie('invitation-token');
-          Router.push('/login');
+          Router.push(generateUrl('login'));
         }
       })
     );
@@ -82,8 +81,7 @@ export default function UserDropdown({ companies }) {
                   className="w-full text-left"
                   key={company._id}
                   onClick={() => {
-                    dispatch(companyActions.selectCompany(company));
-                    Router.push('/admin/dashboard');
+                    Router.push(generateUrl('dashboard', company.subdomain));
                   }}>
                   <span
                     className="flex items-center justify-between gap-3 text-slate-500 p-4 text-sm
@@ -105,7 +103,7 @@ export default function UserDropdown({ companies }) {
 
               {companies?.length > 3 && (
                 <Menu.Item>
-                  <Link href="/admin/select-company">
+                  <Link href={generateUrl('select-company')}>
                     <a className="inline-flex items-center gap-3 w-full text-slate-500 px-4 py-2.5 text-sm hover:bg-slate-50">
                       <Check className="w-4 h-4" />
                       Select Company
@@ -115,7 +113,7 @@ export default function UserDropdown({ companies }) {
               )}
               {user?.canCreateCompany && (
                 <Menu.Item>
-                  <Link href="/admin/create-new-company">
+                  <Link href={generateUrl('create-new-company')}>
                     <a className="inline-flex items-center gap-3 w-full text-slate-500 px-4 py-2.5 text-sm hover:bg-slate-50">
                       <Plus className="w-4 h-4" />
                       Create a company

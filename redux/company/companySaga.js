@@ -91,8 +91,7 @@ function* createCompanySaga({ payload: { userId, onSuccess } }) {
     yield put(companyActions.createCompanySuccess(companyData));
     yield put(authActions.loginSuccess(user));
     yield call(AuthService.setUser, user);
-    localStorage.setItem('selectedCompany', JSON.stringify(companyData));
-    onSuccess();
+    onSuccess(companyData);
   } catch (error) {
     yield put(companyActions.createCompanyFailed(error));
   }
@@ -193,8 +192,6 @@ function* addNewMember({ payload }) {
   }
 }
 function* selectCompany({ payload }) {
-  console.log('selectCompany', payload);
-  localStorage.setItem('selectedCompany', JSON.stringify(payload));
   yield put(companyActions.selectCompanySuccess(payload));
 }
 function* setCompanies({ payload }) {
@@ -484,6 +481,22 @@ function* deleteCompanySubListsItem({ payload: { id, fieldName } }) {
     yield put(companyActions.deleteCompanySubListsItemFailed(error));
   }
 }
+function* updateCompanyBySubdomain({ payload: subdomain }) {
+  try {
+    const { data, error } = yield call(companyService.getCompanyBySubdomain, subdomain);
+    if (error) {
+      throw error;
+    }
+    yield put(
+      companyActions.getCompanyBySubdomainSuccess({
+        ...data.company,
+        ...data.role
+      })
+    );
+  } catch (error) {
+    yield put(companyActions.getCompanyBySubdomainFailed(error));
+  }
+}
 function* deleteCompanyRealtimeSaga({ payload: companyId }) {
   yield put(companyActions.deleteCompanyRealtimeSuccess(companyId));
 }
@@ -545,6 +558,7 @@ export default function* companySaga() {
     takeEvery(companyActions.declineInvitationRealtime.type, declineInvitationRealtime),
     takeEvery(companyActions.addItemToCompanySubLists.type, addItemToCompanySubLists),
     takeEvery(companyActions.deleteCompanySubListsItem.type, deleteCompanySubListsItem),
+    takeEvery(companyActions.getCompanyBySubdomain.type, updateCompanyBySubdomain),
     takeEvery(
       companyActions.updateCompanySubListsOrderRealtime.type,
       updateCompanySubListsOrderRealtime

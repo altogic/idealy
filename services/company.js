@@ -3,7 +3,7 @@ import { db, endpoint } from '@/utils/altogic';
 const companyService = {
   createCompany: (company) => endpoint.post('/company', company),
   getCompaniesByOwner: (ownerId) => db.model('company').filter(`owner == '${ownerId}'`).get(),
-  getCompanyById: (companyId) => db.model('company').object(companyId).get(),
+  getCompanyBySubdomain: (subdomain) => endpoint.get(`/company?subdomain=${subdomain}`),
   getCompanyMembers: (companyId) =>
     db
       .model('companyMembers')

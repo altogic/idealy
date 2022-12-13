@@ -19,8 +19,9 @@ const nextConfig = {
   },
   env: {
     appName: 'idealy',
-    url: 'idealy.com',
-    testWildCard: 'idealy'
+    url: 'idealy.io',
+    testWildCard: 'idealy',
+    NEXT_PUBLIC_DOMAIN: `idealy.${process.env.NODE_ENV === 'development' ? 'com' : 'io'}`
   }
 };
 const { withSuperjson } = require('next-superjson');

@@ -7,6 +7,7 @@ import _ from 'lodash';
 import Router from 'next/router';
 import { SUBDOMAIN_REGEX } from 'constants';
 import Button from './Button';
+import { generateUrl } from '../utils';
 
 export default function Wizard({ children, activePageIndex, setActivePageIndex }) {
   const pages = React.Children.toArray(children);
@@ -29,7 +30,7 @@ export default function Wizard({ children, activePageIndex, setActivePageIndex }
     dispatch(
       companyActions.createCompany({
         userId: user._id,
-        onSuccess: () => Router.push('/public-view')
+        onSuccess: (company) => Router.push(generateUrl('public-view', company.subdomain))
       })
     );
   };
@@ -88,7 +89,7 @@ export default function Wizard({ children, activePageIndex, setActivePageIndex }
   };
   const handleCancel = () => {
     if (companies.length > 0) {
-      Router.push('/admin/select-company');
+      Router.push(generateUrl('select-company'));
     } else {
       Router.back();
     }

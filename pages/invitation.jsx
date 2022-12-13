@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { authActions } from '@/redux/auth/authSlice';
 import { companyActions } from '@/redux/company/companySlice';
 import AuthService from '@/services/auth';
+import { generateUrl } from '../utils';
 
 export default function Invitation({ invitation, errors, companies }) {
   const router = useRouter();
@@ -23,19 +24,11 @@ export default function Invitation({ invitation, errors, companies }) {
   useEffect(() => {
     if (!errors) {
       if (user?.email !== invitation?.email) {
-        dispatch(
-          authActions.logout({
-            onSuccess: () => {
-              localStorage.removeItem('selectedCompany');
-            }
-          })
-        );
+        dispatch(authActions.logout());
       } else {
         dispatch(companyActions.updateMemberStatus({ companyId: invitation.companyId }));
-        dispatch(
-          companyActions.selectCompany(companies.find((c) => c._id === invitation.companyId))
-        );
-        router.push('/public-view');
+        const company = companies.find((c) => c._id === invitation.companyId);
+        router.push(generateUrl('public-view', company.subdomain));
         deleteCookie('invitation');
       }
     }
@@ -83,14 +76,14 @@ export default function Invitation({ invitation, errors, companies }) {
               )}
               <p className="text-slate-500 mb-8 text-center text-sm tracking-sm">
                 Do you have an account?{' '}
-                <Link href="/login">
+                <Link href={generateUrl('login')}>
                   <a className="font-medium text-indigo-700 tracking-sm hover:text-indigo-500">
                     Click to login
                   </a>
                 </Link>
               </p>
               <p className="text-slate-500 mb-8 text-center text-sm tracking-sm">
-                <Link href="/create-an-account">
+                <Link href={generateUrl('register')}>
                   <a className="font-medium text-indigo-700 tracking-sm hover:text-indigo-500">
                     Create an account
                   </a>

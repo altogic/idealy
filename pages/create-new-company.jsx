@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Wizard from '@/components/Wizard';
-import CompanyCreate from '@/layouts/admin/create-company/CompanyCreate';
-import IdeaCreate from '@/layouts/admin/create-company/IdeaCreate';
-import IdeaTopics from '@/layouts/admin/create-company/IdeaTopics';
-import IdeaStatus from '@/layouts/admin/create-company/IdeaStatus';
 import AuthService from '@/services/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { topicActions } from '@/redux/topics/topicSlice';
+import CompanyCreate from '@/layouts/create-company/CompanyCreate';
+import IdeaCreate from '@/layouts/create-company/IdeaCreate';
+import IdeaTopics from '@/layouts/create-company/IdeaTopics';
+import IdeaStatus from '@/layouts/create-company/IdeaStatus';
 
 export default function CreateNewCompany() {
   const dispatch = useDispatch();
