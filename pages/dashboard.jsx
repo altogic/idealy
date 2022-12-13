@@ -23,7 +23,6 @@ import {
   Pen,
   UpDown
 } from '@/components/icons';
-import { getCookie } from 'cookies-next';
 import AuthService from '@/services/auth';
 
 const commentsFilters = [
