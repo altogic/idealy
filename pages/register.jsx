@@ -14,6 +14,7 @@ import _ from 'lodash';
 import Providers from '@/components/Providers';
 import Button from '@/components/Button';
 import companyService from '@/services/company';
+import { generateUrl } from '../utils';
 
 export default function CreateAnAccount({ company, invitation }) {
   const dispatch = useDispatch();
@@ -55,9 +56,7 @@ export default function CreateAnAccount({ company, invitation }) {
                 status: 'Active'
               })
             );
-
-            dispatch(companyActions.selectCompany(company));
-            router.push('/public-view');
+            router.push(generateUrl('public-view', company.subdomain));
           } else {
             router.push(`/mail-verification-message?email=${data.email}`);
           }
@@ -172,7 +171,7 @@ export default function CreateAnAccount({ company, invitation }) {
                   </form>
                   <p className="text-center text-sm text-slate-500 mt-8">
                     Don’t have an account?{' '}
-                    <Link href="/login">
+                    <Link href={generateUrl('login')}>
                       <a className="font-medium text-indigo-700 tracking-sm hover:text-indigo-500">
                         Login
                       </a>

@@ -10,9 +10,10 @@ import Link from 'next/link';
 import { authActions } from '@/redux/auth/authSlice';
 import Providers from '@/components/Providers';
 import { companyActions } from '@/redux/company/companySlice';
-import { getCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 import _ from 'lodash';
 import Button from '@/components/Button';
+import { generateUrl, setSessionCookie } from '../utils';
 
 export default function Login({ invitation }) {
   const loginSchema = new yup.ObjectSchema({
@@ -24,7 +25,7 @@ export default function Login({ invitation }) {
   const error = useSelector((state) => state.auth.loginError);
   const loading = useSelector((state) => state.auth.isLoading);
   const user = useSelector((state) => state.auth.user);
-
+  const company = useSelector((state) => state.company.company);
   const {
     handleSubmit,
     register,
@@ -35,27 +36,31 @@ export default function Login({ invitation }) {
     resolver: yupResolver(loginSchema)
   });
 
-  const loginOnSuccess = (companies) => {
+  const loginOnSuccess = async (companies, session, user) => {
     if (_.isNil(invitation)) {
       if (companies.length === 0) {
-        router.push('/admin/create-new-company');
+        router.push(generateUrl('create-new-company'));
       } else if (companies.length === 1) {
-        dispatch(companyActions.selectCompany(companies[0]));
-        router.push('/public-view');
+        router.push(generateUrl('public-view', companies[0].subdomain));
+        setCookie('selectedCompany', companies[0], {
+          maxAge: 60 * 60 * 24 * 365,
+          domain: process.env.NEXT_PUBLIC_DOMAIN
+        });
       } else {
-        router.push('/admin/select-company');
+        router.push(generateUrl('select-company'));
       }
     } else {
+      const company = companies.find((c) => c._id === invitation.companyId);
       dispatch(companyActions.updateMemberStatus({ companyId: invitation.companyId }));
-      dispatch(companyActions.selectCompany(companies.find((c) => c._id === invitation.companyId)));
-      router.push('/public-view');
+      router.push(generateUrl('public-view', company.subdomain));
     }
+    setSessionCookie(session, user);
   };
   async function formSubmit(data) {
     dispatch(
       authActions.login({
         ...data,
-        onSuccess: (companies) => loginOnSuccess(companies)
+        onSuccess: (companies, session, user) => loginOnSuccess(companies, session, user)
       })
     );
   }
@@ -74,8 +79,8 @@ export default function Login({ invitation }) {
   }, [invitation]);
 
   useEffect(() => {
-    if (user && _.isNil(invitation)) {
-      router.push('/public-view');
+    if (user && company && _.isNil(invitation)) {
+      router.push(generateUrl('public-view', company.subdomain));
     }
     return () => {
       dispatch(authActions.clearError());
@@ -160,7 +165,7 @@ export default function Login({ invitation }) {
                   </form>
                   <p className="text-center mt-8 text-sm text-slate-500">
                     Don’t have an account?{' '}
-                    <Link href="/create-an-account">
+                    <Link href={generateUrl('register')}>
                       <a className="text-indigo-700 text-sm font-medium tracking-sm hover:text-indigo-500">
                         Sign up
                       </a>

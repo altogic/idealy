@@ -1,27 +1,32 @@
 import { useEffect } from 'react';
 import { wrapper } from '@/redux/store';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
 import { ToastContainer, cssTransition } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'animate.css/animate.min.css';
+import { getCookie } from 'cookies-next';
+import { authActions } from '@/redux/auth/authSlice';
 import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
   const dispatch = useDispatch();
-  const company = useSelector((state) => state.company.company);
   const toastTransition = cssTransition({
     enter: 'animate__animated animate__slideInDown',
     exit: 'animate__animated animate__slideOutUp'
   });
-  useEffect(() => {
-    if (!company) {
-      dispatch(
-        companyActions.selectCompany(JSON.parse(localStorage.getItem('selectedCompany') || '[]'))
-      );
-    }
-  }, [company]);
 
+  useEffect(() => {
+    const user = JSON.parse(getCookie('user') || null);
+    const session = JSON.parse(getCookie('session') || null);
+    const selectedCompany = JSON.parse(getCookie('selectedCompany') || null);
+    if (user && session) {
+      dispatch(authActions.authStateChange({ user, session }));
+    }
+    if (selectedCompany) {
+      dispatch(companyActions.selectCompany(selectedCompany));
+    }
+  }, []);
   return (
     <>
       <ToastContainer

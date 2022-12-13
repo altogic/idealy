@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
 import Router from 'next/router';
 import { realtime } from '@/utils/altogic';
+import { generateUrl } from '@/utils/index';
 
 export default function Miscellaneous() {
   const [deleteCompanyConfirm, setDeleteCompanyConfirm] = useState(false);
@@ -132,23 +133,18 @@ export default function Miscellaneous() {
             companyActions.deleteCompany({
               companyId: company._id,
               onSuccess: (companies) => {
-                try {
-                  realtime.send(company._id, 'company-deleted', {
-                    sender: user._id,
-                    companyId: company._id,
-                    companyName: company.name
-                  });
+                realtime.send(company._id, 'company-deleted', {
+                  sender: user._id,
+                  companyId: company._id,
+                  companyName: company.name
+                });
 
-                  if (companies.length > 1) {
-                    Router.push('/admin/select-company');
-                  } else if (companies.length === 1) {
-                    dispatch(companyActions.selectCompany(companies[0]));
-                    Router.push('/admin/dashboard');
-                  } else {
-                    Router.push('/admin/create-new-company');
-                  }
-                } catch (e) {
-                  console.log(e);
+                if (companies.length > 1) {
+                  Router.push(generateUrl('select-company'));
+                } else if (companies.length === 1) {
+                  Router.push(generateUrl('dashboard', company.subdomain));
+                } else {
+                  Router.push(generateUrl('create-new-company'));
                 }
               }
             })

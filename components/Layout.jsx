@@ -8,15 +8,29 @@ import { companyActions } from '@/redux/company/companySlice';
 import _ from 'lodash';
 import Realtime from './Realtime';
 import Header from './Header';
+import { generateUrl } from '../utils';
 
 export default function Layout({ children }) {
   const router = useRouter();
-  const [canFetchCompany, setCanFetchCompany] = useState(true);
   const company = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const user = useSelector((state) => state.auth.user);
+  const [canFetchCompany, setCanFetchCompany] = useState();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (user && _.isEmpty(companies) && canFetchCompany) {
+      setCanFetchCompany(false);
+      dispatch(companyActions.getUserCompanies(user?._id));
+    }
+  }, [user, companies]);
+  useEffect(() => {
+    const wildcard = window.location.hostname.split('.')[0];
+    if (isAuthenticated && company?.subdomain !== wildcard) {
+      dispatch(companyActions.getCompanyBySubdomain(wildcard));
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const invitation = JSON.parse(getCookie('invitation-token') || null);
@@ -31,14 +45,15 @@ export default function Layout({ children }) {
     }
     if (isAuthenticated) {
       dispatch(authActions.setUser());
-    } else {
-      router.push('/public-view');
     }
+    // else {
+    //   router.push(generateUrl('public-view', company.subdomain));
+    // }
   }, [isAuthenticated]);
 
   useEffect(() => {
     if (_.isNil(companies) && isAuthenticated) {
-      router.push('/admin/create-new-company');
+      router.push(generateUrl('create-new-company'));
     }
   }, [companies]);
 

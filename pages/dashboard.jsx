@@ -23,6 +23,7 @@ import {
   Pen,
   UpDown
 } from '@/components/icons';
+import AuthService from '@/services/auth';
 
 const commentsFilters = [
   { name: 'Trending' },
@@ -1541,4 +1542,11 @@ export default function AdminDashboard() {
       </Transition.Root>
     </>
   );
+}
+export async function getServerSideProps({ req, res }) {
+  const { user, errors } = await AuthService.getUserFromDBbyCookie(req, res);
+  console.log(user, errors);
+  return {
+    props: {}
+  };
 }

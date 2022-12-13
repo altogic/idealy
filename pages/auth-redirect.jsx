@@ -8,6 +8,7 @@ import { companyActions } from '@/redux/company/companySlice';
 import { getCookie, setCookie } from 'cookies-next';
 import BackToLogin from '@/components/BackToLogin';
 import { Danger } from '@/components/icons';
+import { generateUrl } from '../utils';
 
 export default function AuthRedirect({ error, session, user, companies }) {
   const router = useRouter();
@@ -26,12 +27,11 @@ export default function AuthRedirect({ error, session, user, companies }) {
       }
 
       if (companies && !companies?.length) {
-        router.push('/admin/create-new-company');
+        router.push(generateUrl('create-new-company'));
       } else if (companies?.length === 1) {
-        dispatch(companyActions.selectCompany(companies[0]));
-        router.push('admin/dashboard');
+        router.push(generateUrl('dashboard', companies[0].subdomain));
       } else if (companies?.length > 1) {
-        router.push('/admin/select-company');
+        router.push(generateUrl('select-company'));
       } else {
         router.push('/');
       }
@@ -41,7 +41,7 @@ export default function AuthRedirect({ error, session, user, companies }) {
     checkProps();
     if (router.query.status === 401) {
       alert(router.query.error);
-      router.push('/login');
+      router.push(generateUrl('login'));
     } else if (router.query.action === 'reset-pwd') {
       router.push({
         pathname: 'reset-password',

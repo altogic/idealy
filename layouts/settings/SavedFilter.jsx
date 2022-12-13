@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { authActions } from '@/redux/auth/authSlice';
 import cn from 'classnames';
@@ -11,11 +10,11 @@ export default function SavedFilter() {
   const dispatch = useDispatch();
   const _user = useSelector((state) => state.auth.user);
   const [user, setUser] = useState();
-  const router = useRouter();
+
   useEffect(() => {
     if (_user) {
       setUser(_user);
-    } else router.push('/login');
+    }
   }, [_user]);
 
   return (

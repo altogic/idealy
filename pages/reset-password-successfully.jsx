@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { Ok } from '@/components/icons';
+import { generateUrl } from '../utils';
 
 export default function ResetPasswordSuccessFull() {
   return (
@@ -28,7 +29,7 @@ export default function ResetPasswordSuccessFull() {
                 <p className="text-slate-500 mb-11 text-base tracking-sm">
                   Your password has been reset successfully.
                 </p>
-                <Link href="/login">
+                <Link href={generateUrl('login')}>
                   <a className="w-full flex items-center justify-center text-white py-2.5 px-7 text-sm font-medium tracking-sm border border-transparent rounded-lg bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Continue to login
                   </a>

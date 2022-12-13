@@ -101,6 +101,17 @@ export const companySlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
+    getCompany(state) {
+      state.getCompanyLoading = true;
+    },
+    getCompanySuccess(state, action) {
+      state.getCompanyLoading = false;
+      state.company = action.payload;
+    },
+    getCompanyFailed(state, action) {
+      state.getCompanyLoading = false;
+      state.error = action.payload;
+    },
     getCompanyMembers(state) {
       state.getCompanyMembersLoading = true;
     },
@@ -204,8 +215,6 @@ export const companySlice = createSlice({
         }
         return company;
       });
-
-      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
     },
     updateCompanyFailed(state, action) {
       state.isLoading = false;
@@ -224,7 +233,7 @@ export const companySlice = createSlice({
         }
         return company;
       });
-      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
+
       ToastMessage.success('Company logo updated successfully');
     },
     updateCompanyLogoFailure(state, action) {
@@ -243,7 +252,7 @@ export const companySlice = createSlice({
         }
         return company;
       });
-      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
+
       ToastMessage.success('Company favicon updated successfully');
     },
     updateCompanyFaviconFailure(state, action) {
@@ -260,7 +269,6 @@ export const companySlice = createSlice({
       } else {
         state.company = action.payload.data;
       }
-      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
     },
 
     updateCompanyPropertiesFailed(state, action) {
@@ -291,7 +299,6 @@ export const companySlice = createSlice({
         }
         return company;
       });
-      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
     },
     updateCompanySubListsFailed(state, action) {
       state.isLoading = false;
@@ -378,8 +385,6 @@ export const companySlice = createSlice({
         }
         return company;
       });
-
-      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
     },
     updateCompletedStatusFailed(state, action) {
       state.isLoading = false;
@@ -391,7 +396,6 @@ export const companySlice = createSlice({
     updateCompanySubListsOrderSuccess(state, action) {
       state.company = action.payload;
       state.isLoading = false;
-      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
     },
     updateCompanySubListsOrderFailed(state, action) {
       state.isLoading = false;
@@ -403,8 +407,6 @@ export const companySlice = createSlice({
     getUserCompaniesSuccess(state, action) {
       state.isLoading = false;
       state.companies = action.payload;
-      state.company = action.payload.find((company) => company._id === state.company._id);
-      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
     },
     getUserCompaniesFailed(state, action) {
       state.isLoading = false;
@@ -428,7 +430,6 @@ export const companySlice = createSlice({
       state.company[action.payload.fieldName] = state.company[action.payload.fieldName].filter(
         (item) => item._id !== action.payload.id
       );
-      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
     },
     deleteCompanySubListsItemFailed(state, action) {
       state.isLoading = false;
@@ -440,7 +441,6 @@ export const companySlice = createSlice({
     addItemToCompanySubListsSuccess(state, action) {
       state.isLoading = false;
       state.company[action.payload.fieldName].push(action.payload.data);
-      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
     },
     addItemToCompanySubListsFailed(state, action) {
       state.isLoading = false;
@@ -540,6 +540,18 @@ export const companySlice = createSlice({
         return member;
       });
     },
+    getCompanyProperties(state) {
+      state.isLoading = true;
+    },
+    getCompanyPropertiesSuccess(state, action) {
+      state.isLoading = false;
+      state.company[action.payload.fieldName] = action.payload.data;
+      state[action.payload.fieldName] = action.payload.data;
+    },
+    getCompanyPropertiesFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
     deleteCompanyRealtime() {},
     deleteCompanyRealtimeSuccess(state, action) {
       state.companies = state.companies.filter((company) => company._id !== action.payload);
@@ -563,7 +575,6 @@ export const companySlice = createSlice({
         }
         return company;
       });
-      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
     },
     declineInvitationRealtime() {},
     declineInvitationRealtimeSuccess(state, action) {
@@ -579,8 +590,22 @@ export const companySlice = createSlice({
     },
     updateCompanySubListsOrderRealtime() {},
     updateCompanySubListsOrderRealtimeSuccess(state, action) {
-      state.company[action.payload.property] = action.payload.data;
-      localStorage.setItem('selectedCompany', JSON.stringify(state.company));
+      if (action.payload.property === 'roadmaps') {
+        state.company.roadmaps = action.payload.data;
+      } else {
+        state[action.payload.property] = action.payload.data.sort((a, b) => a.order - b.order);
+      }
+    },
+    getCompanyBySubdomain(state) {
+      state.isLoading = true;
+    },
+    getCompanyBySubdomainSuccess(state, action) {
+      state.isLoading = false;
+      state.company = action.payload;
+    },
+    getCompanyBySubdomainFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   },
 
