@@ -6,7 +6,10 @@ async function handler(req, res) {
     req,
     res,
     maxAge: 60 * 60 * 24 * 365,
-    domain: process.env.NEXT_PUBLIC_DOMAIN
+    domain: process.env.NEXT_PUBLIC_DOMAIN,
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none'
   });
   delete user.notifications;
   delete user.savedFilters;
@@ -14,13 +17,19 @@ async function handler(req, res) {
     req,
     res,
     maxAge: 60 * 60 * 24 * 365,
-    domain: process.env.NEXT_PUBLIC_DOMAIN
+    domain: process.env.NEXT_PUBLIC_DOMAIN,
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none'
   });
   setCookie('session', session, {
     req,
     res,
     maxAge: 60 * 60 * 24 * 365,
-    domain: process.env.NEXT_PUBLIC_DOMAIN
+    domain: process.env.NEXT_PUBLIC_DOMAIN,
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none'
   });
   return res.status(200).json({ message: 'ok' });
 }

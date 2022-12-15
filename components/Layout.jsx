@@ -31,7 +31,11 @@ export default function Layout({ children }) {
           subdomain: wildcard,
           onSuccess: (subdomain) => {
             setCookie('subdomain', subdomain, {
-              domain: process.env.NEXT_PUBLIC_DOMAIN
+              domain: process.env.NEXT_PUBLIC_DOMAIN,
+              httpOnly: true,
+              secure: true,
+              sameSite: 'none',
+              maxAge: 60 * 12
             });
           },
           onFail: () => router.push(generateUrl('company-not-found'))
