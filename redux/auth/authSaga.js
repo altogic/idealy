@@ -1,6 +1,6 @@
 import AuthService from '@/services/auth';
 import { takeEvery, put, call, all, select } from 'redux-saga/effects';
-import { randomInt, setSessionCookie } from '@/utils/index';
+import { randomInt } from '@/utils/index';
 import { COLORS } from 'constants';
 import companyService from '@/services/company';
 import { realtime } from '@/utils/altogic';
@@ -101,7 +101,6 @@ function* loginSaga({ payload: { email, password, onSuccess } }) {
     const { user, errors, session } = yield call(AuthService.login, email, password);
     if (user) {
       const { data } = yield call(companyService.getUserCompanies, user._id);
-      yield call(setSessionCookie, session.token);
       yield put(authActions.loginSuccess(user));
       yield put(companyActions.setCompaniesSuccess(data));
       onSuccess(data, session, user);
