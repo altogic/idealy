@@ -103,8 +103,8 @@ function* loginSaga({ payload: { email, password, onSuccess } }) {
       const { data } = yield call(companyService.getUserCompanies, user._id);
       yield call(setSessionCookie, session.token);
       yield put(authActions.loginSuccess(user));
-      yield put(companyActions.setCompaniesSuccess(data.response.companies));
-      onSuccess(data.response.companies, session, user);
+      yield put(companyActions.setCompaniesSuccess(data));
+      onSuccess(data, session, user);
     }
     if (errors) {
       throw errors.items;

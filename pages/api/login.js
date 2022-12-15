@@ -8,6 +8,8 @@ async function handler(req, res) {
     maxAge: 60 * 60 * 24 * 365,
     domain: process.env.NEXT_PUBLIC_DOMAIN
   });
+  delete user.notifications;
+  delete user.savedFilters;
   setCookie('user', user, {
     req,
     res,

@@ -25,18 +25,20 @@ export default function Layout({ children }) {
   }, []);
   useEffect(() => {
     const wildcard = window.location.hostname.split('.')[0];
-    setCookie('subdomain', wildcard, {
-      domain: process.env.NEXT_PUBLIC_DOMAIN
-    });
-    if (companies.length) {
-      const wildCardCompany = companies?.find((c) => c.subdomain === wildcard);
-      if (!wildCardCompany) {
-        router.push(generateUrl('company-not-found'));
-      } else if (company?.subdomain !== wildcard && wildCardCompany) {
-        dispatch(companyActions.selectCompany(wildCardCompany));
-      }
+    if (isAuthenticated && company?.subdomain !== wildcard) {
+      dispatch(
+        companyActions.getCompanyBySubdomain({
+          subdomain: wildcard,
+          onSuccess: (subdomain) => {
+            setCookie('subdomain', subdomain, {
+              domain: process.env.NEXT_PUBLIC_DOMAIN
+            });
+          },
+          onFail: () => router.push(generateUrl('company-not-found'))
+        })
+      );
     }
-  }, [companies]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const invitation = JSON.parse(getCookie('invitation-token') || null);

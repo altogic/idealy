@@ -33,7 +33,7 @@ const companyService = {
       .model('invitations')
       .filter(`email == '${email}' && companyId == '${companyId}'`)
       .updateFields([{ field: 'isExpire', updateType: 'set', value: true }]),
-  getUserCompanies: (userId) => endpoint.get(`/user/companies?userId='${userId}'`),
+  getUserCompanies: (userId) => endpoint.get('/user/companies', { userId }),
   updateCompletedStatus: ({ id, companyId }) =>
     endpoint.put(`/company/${companyId}/status`, { id }),
   deleteAllIdeas: (companyId) =>

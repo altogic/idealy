@@ -56,7 +56,7 @@ function* createCompanySaga({ payload: { userId, onSuccess } }) {
     const statuses = yield select((state) => state.topic.statuses);
     const selectedTopics = yield select((state) => state.company.companyTopics);
     const status = yield select((state) => state.company.ideaStatus) || statuses[0];
-
+    const sessionUser = yield select((state) => state.auth.user);
     const { data } = yield call(companyService.createCompany, {
       name: yield select((state) => state.company.companyWillBeCreated),
       subdomain: yield select((state) => state.company.subdomain),
@@ -72,10 +72,12 @@ function* createCompanySaga({ payload: { userId, onSuccess } }) {
       })),
       ideas: [
         {
-          name: yield select((state) => state.company.idea),
+          title: yield select((state) => state.company.idea),
           topics: selectedTopics.map((topic) => topic.name),
           description: yield select((state) => state.company.ideaDescription),
-          status: status?.name
+          status: status?.name,
+          statusColor: status?.color,
+          createdBy: sessionUser.name
         }
       ],
       owner: userId
@@ -367,7 +369,7 @@ function* getUserCompanies({ payload: userId }) {
     if (error) {
       throw error;
     }
-    yield put(companyActions.getUserCompaniesSuccess(data.response.companies));
+    yield put(companyActions.getUserCompaniesSuccess(data));
   } catch (error) {
     yield put(companyActions.getUserCompaniesFailed(error));
   }
@@ -489,13 +491,13 @@ function* updateCompanyBySubdomain({ payload: { subdomain, onFail, onSuccess } }
       throw error;
     }
     if (data) {
-      onSuccess();
       yield put(
         companyActions.getCompanyBySubdomainSuccess({
           ...data.company,
           ...data.role
         })
       );
+      onSuccess(data.company.subdomain);
     } else {
       onFail();
     }

@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { authActions } from '@/redux/auth/authSlice';
 import Providers from '@/components/Providers';
 import { companyActions } from '@/redux/company/companySlice';
-import { getCookie, setCookie } from 'cookies-next';
+import { getCookie } from 'cookies-next';
 import _ from 'lodash';
 import Button from '@/components/Button';
 import { generateUrl, setSessionCookie } from '../utils';
@@ -42,10 +42,6 @@ export default function Login({ invitation }) {
         router.push(generateUrl('create-new-company'));
       } else if (companies.length === 1) {
         router.push(generateUrl('public-view', companies[0].subdomain));
-        setCookie('selectedCompany', companies[0], {
-          maxAge: 60 * 60 * 24 * 365,
-          domain: process.env.NEXT_PUBLIC_DOMAIN
-        });
       } else {
         router.push(generateUrl('select-company'));
       }
