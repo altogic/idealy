@@ -5,19 +5,19 @@ async function handler(req, res) {
   setCookie('session_token', session.token, {
     req,
     res,
-    domain: process.env.NEXT_PUBLIC_DOMAIN
+    domain: 'idealy.io'
   });
   delete user.notifications;
   delete user.savedFilters;
   setCookie('user', user, {
     req,
     res,
-    domain: process.env.NEXT_PUBLIC_DOMAIN
+    domain: 'idealy.io'
   });
   setCookie('session', session, {
     req,
     res,
-    domain: process.env.NEXT_PUBLIC_DOMAIN
+    domain: 'idealy.io'
   });
   return res.status(200).json({ message: 'ok' });
 }
