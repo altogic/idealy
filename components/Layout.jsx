@@ -25,7 +25,11 @@ export default function Layout({ children }) {
   }, []);
   useEffect(() => {
     const wildcard = window.location.hostname.split('.')[0];
-    if (isAuthenticated && company?.subdomain !== wildcard) {
+    if (
+      isAuthenticated &&
+      company?.subdomain !== wildcard &&
+      (wildcard !== 'www' || wildcard !== 'app')
+    ) {
       dispatch(
         companyActions.getCompanyBySubdomain({
           subdomain: wildcard,
