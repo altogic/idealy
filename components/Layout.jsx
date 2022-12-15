@@ -25,11 +25,7 @@ export default function Layout({ children }) {
   }, []);
   useEffect(() => {
     const wildcard = window.location.hostname.split('.')[0];
-    if (
-      isAuthenticated &&
-      company?.subdomain !== wildcard &&
-      (wildcard !== 'www' || wildcard !== 'app')
-    ) {
+    if (user && company?.subdomain !== wildcard && (wildcard !== 'www' || wildcard !== 'app')) {
       dispatch(
         companyActions.getCompanyBySubdomain({
           subdomain: wildcard,
@@ -40,11 +36,11 @@ export default function Layout({ children }) {
               secure: true
             });
           },
-          onFail: () => router.push(generateUrl('company-not-found'))
+          onFail: () => {}
         })
       );
     }
-  }, [isAuthenticated]);
+  }, [user]);
 
   useEffect(() => {
     const invitation = JSON.parse(getCookie('invitation-token') || null);

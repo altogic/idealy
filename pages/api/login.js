@@ -6,15 +6,18 @@ async function handler(req, res) {
     req,
     res,
     domain: process.env.NEXT_PUBLIC_DOMAIN,
+    maxAge: 60 * 60 * 24 * 7,
+    httpOnly: true,
     sameSite: 'none',
     secure: true
   });
-  delete user.notifications;
-  delete user.savedFilters;
+
   setCookie('user', user, {
     req,
     res,
     domain: process.env.NEXT_PUBLIC_DOMAIN,
+    maxAge: 60 * 60 * 24 * 7,
+    httpOnly: true,
     sameSite: 'none',
     secure: true
   });
@@ -22,6 +25,8 @@ async function handler(req, res) {
     req,
     res,
     domain: process.env.NEXT_PUBLIC_DOMAIN,
+    maxAge: 60 * 60 * 24 * 7,
+    httpOnly: true,
     sameSite: 'none',
     secure: true
   });

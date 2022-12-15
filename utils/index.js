@@ -16,9 +16,7 @@ export function randomHexColor() {
   return `#${randomInt(0, 16777214).toString(16)}`;
 }
 export function generateUrl(link, subdomain = 'app') {
-  return `${process.env.NODE_ENV === 'development' ? 'http:' : 'https:'}//${subdomain}.${
-    process.env.NEXT_PUBLIC_DOMAIN
-  }/${link}`;
+  return `https://${subdomain}.${process.env.NEXT_PUBLIC_DOMAIN}/${link}`;
 }
 export function LightenDarkenColor(col, amt) {
   let usePound = false;

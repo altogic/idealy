@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { authActions } from '@/redux/auth/authSlice';
 import { wrapper } from '@/redux/store';
-import { useDispatch } from 'react-redux';
-import { ToastContainer, cssTransition } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import 'animate.css/animate.min.css';
 import { getCookie } from 'cookies-next';
-import { authActions } from '@/redux/auth/authSlice';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { cssTransition, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
@@ -21,7 +21,6 @@ function MyApp({ Component, pageProps }) {
       dispatch(authActions.authStateChange({ user, session }));
     }
   }, []);
-
   return (
     <>
       <ToastContainer

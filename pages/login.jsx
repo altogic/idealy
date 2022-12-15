@@ -37,6 +37,14 @@ export default function Login({ invitation }) {
   });
 
   const loginOnSuccess = async (companies, session, user) => {
+    setSessionCookie(session, {
+      _id: user._id,
+      email: user.email,
+      name: user.name,
+      profilePicture: user.profilePicture,
+      canCreateCompany: user.canCreateCompany,
+      isDeleted: user.isDeleted
+    });
     if (_.isNil(invitation)) {
       if (companies.length === 0) {
         router.push(generateUrl('create-new-company'));
@@ -50,7 +58,6 @@ export default function Login({ invitation }) {
       dispatch(companyActions.updateMemberStatus({ companyId: invitation.companyId }));
       router.push(generateUrl('public-view', company.subdomain));
     }
-    setSessionCookie(session, user);
   };
   async function formSubmit(data) {
     dispatch(
