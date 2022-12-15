@@ -4,7 +4,7 @@ export function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 export async function setSessionCookie(session, user) {
-  console.log(process.env.NEXT_PUBLIC_DOMAIN);
+  console.log(process.env.NEXT_PUBLIC_DOMAIN, session, user);
   fetch('/api/login', {
     method: 'POST',
     credentials: 'include',
