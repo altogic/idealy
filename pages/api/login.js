@@ -5,31 +5,19 @@ async function handler(req, res) {
   setCookie('session_token', session.token, {
     req,
     res,
-    maxAge: 60 * 60 * 24 * 365,
-    domain: process.env.NEXT_PUBLIC_DOMAIN,
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none'
+    domain: process.env.NEXT_PUBLIC_DOMAIN
   });
   delete user.notifications;
   delete user.savedFilters;
   setCookie('user', user, {
     req,
     res,
-    maxAge: 60 * 60 * 24 * 365,
-    domain: process.env.NEXT_PUBLIC_DOMAIN,
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none'
+    domain: process.env.NEXT_PUBLIC_DOMAIN
   });
   setCookie('session', session, {
     req,
     res,
-    maxAge: 60 * 60 * 24 * 365,
-    domain: process.env.NEXT_PUBLIC_DOMAIN,
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none'
+    domain: process.env.NEXT_PUBLIC_DOMAIN
   });
   return res.status(200).json({ message: 'ok' });
 }
