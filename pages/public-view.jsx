@@ -163,7 +163,7 @@ export default function PublicView() {
               </Listbox>
             </div>
             <div>
-              {company?.ideas.map((idea) => (
+              {/* {company?.ideas.map((idea) => (
                 <button
                   type="button"
                   key={idea.id}
@@ -174,7 +174,7 @@ export default function PublicView() {
                   className="inline-block w-full py-6 border-b border-slate-200 last:border-0 first:pt-0">
                   <PublicViewCard idea={idea} />
                 </button>
-              ))}
+              ))} */}
             </div>
           </div>
         </div>

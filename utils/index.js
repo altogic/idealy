@@ -1,17 +1,25 @@
 /* eslint-disable no-param-reassign */
+
+import { setCookie as nextCookie } from 'cookies-next';
+
 /* eslint-disable no-bitwise */
 export function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-export async function setSessionCookie(session, user) {
-  console.log(process.env.NEXT_PUBLIC_DOMAIN, session, user);
-  fetch('/api/login', {
-    method: 'POST',
-    credentials: 'include',
-    body: JSON.stringify({ session, user }),
-    headers: { 'Content-Type': 'application/json' }
+export function setCookie(name, value, days) {
+  nextCookie(name, value, {
+    maxAge: days * 24 * 60 * 60,
+    path: '/',
+    sameSite: 'lax',
+    domain: process.env.NEXT_PUBLIC_DOMAIN
   });
 }
+export async function setSessionCookie(session, user) {
+  setCookie('session', session, 30);
+  setCookie('user', user, 30);
+  setCookie('session_token', session.token, 30);
+}
+
 export function randomHexColor() {
   return `#${randomInt(0, 16777214).toString(16)}`;
 }
