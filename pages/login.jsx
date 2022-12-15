@@ -1,18 +1,18 @@
-import { useEffect } from 'react';
-import Head from 'next/head';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
-import Input from '@/components/Input';
-import Link from 'next/link';
-import { authActions } from '@/redux/auth/authSlice';
-import Providers from '@/components/Providers';
-import { companyActions } from '@/redux/company/companySlice';
-import { getCookie } from 'cookies-next';
-import _ from 'lodash';
 import Button from '@/components/Button';
+import Input from '@/components/Input';
+import Providers from '@/components/Providers';
+import { authActions } from '@/redux/auth/authSlice';
+import { companyActions } from '@/redux/company/companySlice';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { getCookie, setCookie } from 'cookies-next';
+import _ from 'lodash';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import * as yup from 'yup';
 import { generateUrl, setSessionCookie } from '../utils';
 
 export default function Login({ invitation }) {
@@ -45,6 +45,21 @@ export default function Login({ invitation }) {
       canCreateCompany: user.canCreateCompany,
       isDeleted: user.isDeleted
     });
+    setCookie(
+      'user',
+      {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        profilePicture: user.profilePicture,
+        canCreateCompany: user.canCreateCompany,
+        isDeleted: user.isDeleted
+      },
+      {
+        domain: process.env.NEXT_PUBLIC_DOMAIN,
+        maxAge: 60 * 60 * 24 * 7
+      }
+    );
     if (_.isNil(invitation)) {
       if (companies.length === 0) {
         router.push(generateUrl('create-new-company'));

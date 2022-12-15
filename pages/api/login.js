@@ -1,26 +1,9 @@
+import AuthService from '@/services/auth';
 import { setCookie } from 'cookies-next';
 
 async function handler(req, res) {
-  const { user, session } = req.body;
-  setCookie('session_token', session.token, {
-    req,
-    res,
-    domain: process.env.NEXT_PUBLIC_DOMAIN,
-    maxAge: 60 * 60 * 24 * 7,
-    httpOnly: true,
-    sameSite: 'none',
-    secure: true
-  });
-
-  setCookie('user', user, {
-    req,
-    res,
-    domain: process.env.NEXT_PUBLIC_DOMAIN,
-    maxAge: 60 * 60 * 24 * 7,
-    httpOnly: true,
-    sameSite: 'none',
-    secure: true
-  });
+  const { session } = req.body;
+  AuthService.setSessionCookie(session.token, req, res);
   setCookie('session', session, {
     req,
     res,
