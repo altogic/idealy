@@ -31,7 +31,9 @@ export default function Layout({ children }) {
           subdomain: wildcard,
           onSuccess: (subdomain) => {
             setCookie('subdomain', subdomain, {
-              domain: 'idealy.io'
+              domain: process.env.NEXT_PUBLIC_DOMAIN,
+              sameSite: 'none',
+              secure: true
             });
           },
           onFail: () => router.push(generateUrl('company-not-found'))
