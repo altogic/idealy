@@ -3,12 +3,11 @@ import cn from 'classnames';
 import Head from 'next/head';
 import { Dialog, Listbox, Transition } from '@headlessui/react';
 import Layout from '@/components/Layout';
-import PublicViewCard from '@/components/PublicViewCard';
+
 import TopicBadges from '@/components/TopicBadges';
 import CommentCard from '@/components/CommentCard';
 import Button from '@/components/Button';
 import { Plus, UpDown } from '@/components/icons';
-import { useSelector } from 'react-redux';
 import { DateTime } from 'luxon';
 import StatusButton from '@/components/StatusButton';
 
@@ -55,8 +54,8 @@ export default function PublicView() {
   const [openSubmitFeedbackModal, setOpenSubmitFeedbackModal] = useState(false);
   const [openDetailFeedbackModal, setOpenDetailFeedbackModal] = useState(false);
   const [badgeSelected, setBadgeSelected] = useState(false);
-  const [selectedIdea, setSelectedIdea] = useState();
-  const company = useSelector((state) => state.company.company);
+  const [selectedIdea] = useState();
+
   // const handleChange = (event) => {
   //   if (event.target.checked) {
   //     setFeedbackBadges(true);
