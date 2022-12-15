@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import cn from 'classnames';
 import { LightenDarkenColor } from '../utils';
 
 export default function StatusButton({ name, color }) {
-  const bgColor = LightenDarkenColor(color, 230);
+  const [bgColor, setBgColor] = useState();
+
+  useEffect(() => {
+    if (color) {
+      setBgColor(LightenDarkenColor(color, 230));
+    }
+  }, [color]);
+
   return (
     <button
       type="button"

@@ -79,10 +79,10 @@ export default function PublicViewCard({ idea }) {
               </svg>
               Pinned
             </span>
-            <h2 className="text-slate-800 text-xl font-semibold tracking-md">{idea.title}</h2>
+            <h2 className="text-slate-800 text-xl font-semibold tracking-md">{idea?.title}</h2>
           </div>
           <p className="max-w-3xl text-slate-500 mb-6 text-sm tracking-sm text-left line-clamp-3">
-            {idea.description}
+            {idea?.description}
           </p>
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             {/* Bottom Left */}
@@ -90,14 +90,14 @@ export default function PublicViewCard({ idea }) {
               <div className="flex items-center gap-3">
                 {/* User */}
                 <span className="text-slate-700 text-sm font-medium tracking-sm">
-                  {idea.createdBy}
+                  {idea?.createdBy}
                 </span>
                 <svg className="h-1 w-1 text-slate-500" fill="currentColor" viewBox="0 0 8 8">
                   <circle cx={4} cy={4} r={3} />
                 </svg>
                 {/* Date */}
                 <span className="text-slate-500 text-sm tracking-sm">
-                  {DateTime.fromISO(idea.createdAt).toLocaleString({
+                  {DateTime.fromISO(idea?.createdAt).toLocaleString({
                     month: 'long',
                     day: 'numeric'
                   })}
@@ -111,7 +111,7 @@ export default function PublicViewCard({ idea }) {
               </svg>
               {/* Badges */}
               <div className="flex flex-wrap items-center gap-3">
-                {idea.topics.map((topic) => (
+                {idea?.topics.map((topic) => (
                   <TopicBadges key={topic} badgeName={topic} />
                 ))}
               </div>
@@ -119,7 +119,7 @@ export default function PublicViewCard({ idea }) {
             {/* Bottom Right */}
             <div className="flex items-center justify-between lg:justify-start gap-3">
               {/* Badges */}
-              <StatusButton name={idea.status} color={idea.statusColor} />
+              <StatusButton name={idea?.status} color={idea?.statusColor} />
               {/* Comments Button */}
               <button type="button" className="inline-flex items-center gap-1 text-slate-400">
                 <svg
