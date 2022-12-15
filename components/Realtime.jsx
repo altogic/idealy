@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
 import { Email } from './icons';
+import { generateUrl } from '../utils';
 
 export default function Realtime() {
   const [invitationDialog, setInvitationDialog] = useState(false);
@@ -205,7 +206,7 @@ export default function Realtime() {
       })
     );
     setInvitationDialog(false);
-    router.push('/public-view');
+    router.push(generateUrl('dashboard', invitation.company.subdomain));
   };
   const handleDeclineInvitation = () => {
     dispatch(

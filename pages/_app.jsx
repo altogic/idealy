@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { wrapper } from '@/redux/store';
 import { useDispatch } from 'react-redux';
-import { companyActions } from '@/redux/company/companySlice';
 import { ToastContainer, cssTransition } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'animate.css/animate.min.css';
@@ -15,18 +14,14 @@ function MyApp({ Component, pageProps }) {
     enter: 'animate__animated animate__slideInDown',
     exit: 'animate__animated animate__slideOutUp'
   });
-
   useEffect(() => {
     const user = JSON.parse(getCookie('user') || null);
     const session = JSON.parse(getCookie('session') || null);
-    const selectedCompany = JSON.parse(getCookie('selectedCompany') || null);
     if (user && session) {
       dispatch(authActions.authStateChange({ user, session }));
     }
-    if (selectedCompany) {
-      dispatch(companyActions.selectCompany(selectedCompany));
-    }
   }, []);
+
   return (
     <>
       <ToastContainer

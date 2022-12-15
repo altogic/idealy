@@ -1,10 +1,10 @@
 import { Fragment, useState, useEffect } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import TopicBadges from '@/components/TopicBadges';
-import cn from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
 import _ from 'lodash';
+import StatusButton from '@/components/StatusButton';
 
 export default function FourthWizard() {
   const companyTopics = useSelector((state) => state.company.companyTopics);
@@ -120,22 +120,7 @@ export default function FourthWizard() {
                 <TopicBadges key={topic._id} badgeName={topic.name} />
               ))}
             </div>
-            <button
-              type="button"
-              className={cn(
-                `inline-flex items-center rounded-full  px-3 py-0.5 text-xs font-medium`,
-                statuses.indexOf(status) === 0 ? 'bg-red-50 text-red-700' : null,
-                statuses.indexOf(status) === 1 ? 'bg-blue-50 text-blue-700' : null,
-                statuses.indexOf(status) === 2 ? 'bg-orange-50 text-orange-700' : null,
-                statuses.indexOf(status) === 3 ? 'bg-purple-50 text-purple-700' : null,
-                statuses.indexOf(status) === 4 ? 'bg-green-50 text-green-700' : null,
-                statuses.indexOf(status) === 5 ? 'bg-slate-50 text-slate-700' : null
-              )}>
-              <svg className="-ml-1 mr-1.5 h-2 w-2" fill={status?.color} viewBox="0 0 8 8">
-                <circle cx={4} cy={4} r={3} />
-              </svg>
-              {status?.name}
-            </button>
+            {status && <StatusButton name={status?.name} color={status?.color} />}
           </div>
         </div>
       </div>

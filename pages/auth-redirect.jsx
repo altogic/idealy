@@ -8,6 +8,7 @@ import { companyActions } from '@/redux/company/companySlice';
 import { getCookie, setCookie } from 'cookies-next';
 import BackToLogin from '@/components/BackToLogin';
 import { Danger } from '@/components/icons';
+import { realtime } from '@/utils/altogic';
 import { generateUrl } from '../utils';
 
 export default function AuthRedirect({ error, session, user, companies }) {
@@ -116,13 +117,17 @@ export const getServerSideProps = async ({ query, req, res }) => {
 
     if (invitation) {
       if (query.action === 'oauth-signup') {
-        await companyService.registerTeamMember({
+        const { data } = await companyService.registerTeamMember({
           user: user._id,
           companyId: invitation.companyId,
           role: invitation.role,
           status: 'Active'
         });
         AuthService.updateUserCanCreateCompany(user._id, invitation.canCreateCompany);
+        realtime.send(data.companyId, 'accept-invitation', {
+          sender: data.user._id,
+          payload: data
+        });
       } else if (query.action === 'oauth-signin') {
         await companyService.updateMemberStatus({
           userId: user._id,
@@ -133,7 +138,7 @@ export const getServerSideProps = async ({ query, req, res }) => {
 
     if (query.action !== 'reset-pwd' && query.action !== 'change-email') {
       const { data } = await companyService.getUserCompanies(user?._id);
-      props.companies = data.response.companies;
+      props.companies = data;
     }
     if (user) {
       AuthService.setSessionCookie(session.token, req, res);

@@ -90,7 +90,8 @@ export default function UserDropdown({ companies }) {
                       <CompanyAvatar
                         logoUrl={company.logoUrl}
                         name={company.name}
-                        className="w-6 h-6 text-xs"
+                        className="text-xs"
+                        size="w-6 h-6"
                       />
                       {company.name}
                     </div>

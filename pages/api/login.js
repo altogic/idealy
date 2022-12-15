@@ -2,12 +2,14 @@ import { setCookie } from 'cookies-next';
 
 async function handler(req, res) {
   const { user, session } = req.body;
-  setCookie('session-token', session.token, {
+  setCookie('session_token', session.token, {
     req,
     res,
     maxAge: 60 * 60 * 24 * 365,
     domain: process.env.NEXT_PUBLIC_DOMAIN
   });
+  delete user.notifications;
+  delete user.savedFilters;
   setCookie('user', user, {
     req,
     res,

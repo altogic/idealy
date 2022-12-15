@@ -21,7 +21,8 @@ export default function CompanyButton({ icon, company, label, ...props }) {
             <CompanyAvatar
               logoUrl={company?.logoUrl}
               name={company?.name}
-              className="w-[88px] h-[88px] text-2xl "
+              className="text-2xl"
+              size="w-[88px] h-[88px]"
             />
           </div>
         )}

@@ -118,7 +118,7 @@ export async function getServerSideProps({ req, res, query }) {
     return {
       props: {
         invitation: data,
-        companies: companies.response.companies
+        companies
       }
     };
   }

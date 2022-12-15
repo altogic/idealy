@@ -8,69 +8,15 @@ import TopicBadges from '@/components/TopicBadges';
 import CommentCard from '@/components/CommentCard';
 import Button from '@/components/Button';
 import { Plus, UpDown } from '@/components/icons';
+import { useSelector } from 'react-redux';
+import { DateTime } from 'luxon';
+import StatusButton from '@/components/StatusButton';
 
 const filter = [
   { name: 'Trending' },
   { name: 'Top' },
   { name: 'Newest' },
   { name: 'Status Changed' }
-];
-
-const feedbacks = [
-  {
-    id: 0,
-    title: 'Logo bigger',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Arcu scelerisque pellentesque posuere neque integer mauris. Eget sit nulla id sit urna velit. Eu sed elit mauris, semper viverra molestie orci vitae. Senectus sem et nullam...',
-    status: 1,
-    user: 'Olivia Rhye',
-    date: 'June 29'
-  },
-  {
-    id: 1,
-    title: 'Logo bigger',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Arcu scelerisque pellentesque posuere neque integer mauris. Eget sit nulla id sit urna velit. Eu sed elit mauris, semper viverra molestie orci vitae. Senectus sem et nullam...',
-    status: 2,
-    user: 'Olivia Rhye',
-    date: 'June 29'
-  },
-  {
-    id: 2,
-    title: 'Logo bigger',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Arcu scelerisque pellentesque posuere neque integer mauris. Eget sit nulla id sit urna velit. Eu sed elit mauris, semper viverra molestie orci vitae. Senectus sem et nullam...',
-    status: 3,
-    user: 'Olivia Rhye',
-    date: 'June 29'
-  },
-  {
-    id: 3,
-    title: 'Logo bigger',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Arcu scelerisque pellentesque posuere neque integer mauris. Eget sit nulla id sit urna velit. Eu sed elit mauris, semper viverra molestie orci vitae. Senectus sem et nullam...',
-    status: 4,
-    user: 'Olivia Rhye',
-    date: 'June 29'
-  },
-  {
-    id: 4,
-    title: 'Logo bigger',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Arcu scelerisque pellentesque posuere neque integer mauris. Eget sit nulla id sit urna velit. Eu sed elit mauris, semper viverra molestie orci vitae. Senectus sem et nullam...',
-    status: 5,
-    user: 'Olivia Rhye',
-    date: 'June 29'
-  },
-  {
-    id: 5,
-    title: 'Logo bigger',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Arcu scelerisque pellentesque posuere neque integer mauris. Eget sit nulla id sit urna velit. Eu sed elit mauris, semper viverra molestie orci vitae. Senectus sem et nullam...',
-    status: 6,
-    user: 'Olivia Rhye',
-    date: 'June 29'
-  }
 ];
 
 const feedbacksBadges = [
@@ -109,6 +55,8 @@ export default function PublicView() {
   const [openSubmitFeedbackModal, setOpenSubmitFeedbackModal] = useState(false);
   const [openDetailFeedbackModal, setOpenDetailFeedbackModal] = useState(false);
   const [badgeSelected, setBadgeSelected] = useState(false);
+  const [selectedIdea, setSelectedIdea] = useState();
+  const company = useSelector((state) => state.company.company);
   // const handleChange = (event) => {
   //   if (event.target.checked) {
   //     setFeedbackBadges(true);
@@ -215,20 +163,17 @@ export default function PublicView() {
               </Listbox>
             </div>
             <div>
-              {feedbacks.map((feedback) => (
-                <a
-                  href="#"
-                  key={feedback.id}
-                  onClick={() => setOpenDetailFeedbackModal(!openDetailFeedbackModal)}
+              {company?.ideas.map((idea) => (
+                <button
+                  type="button"
+                  key={idea.id}
+                  onClick={() => {
+                    setSelectedIdea(idea);
+                    setOpenDetailFeedbackModal(!openDetailFeedbackModal);
+                  }}
                   className="inline-block w-full py-6 border-b border-slate-200 last:border-0 first:pt-0">
-                  <PublicViewCard
-                    description={feedback.description}
-                    title={feedback.title}
-                    user={feedback.user}
-                    date={feedback.date}
-                    status={feedback.status}
-                  />
-                </a>
+                  <PublicViewCard idea={idea} />
+                </button>
               ))}
             </div>
           </div>
@@ -313,47 +258,17 @@ export default function PublicView() {
                                   Pinned
                                 </span>
                                 <h2 className="text-slate-800 text-xl font-semibold tracking-md">
-                                  Logo bigger
+                                  {selectedIdea?.title}
                                 </h2>
                               </div>
                               <div className="prose prose-p:text-slate-500 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
-                                <p>
-                                  Id fringilla lacus cras fringilla blandit. Justo, a tincidunt quis
-                                  nec. Quis luctus pellentesque vel, nec sed risus nunc ultricies.
-                                  Dignissim aenean in mauris integer posuere at odio interdum. Eget
-                                  egestas condimentum justo, adipiscing congue arcu. Pellentesque
-                                  tellus ultrices quam quis ultricies. Nam dignissim quisque vivamus
-                                  tellus in elit mollis dolor sit. Habitant morbi volutpat
-                                  consectetur sit dignissim ipsum pretium quis felis. Maecenas
-                                  suspendisse ullamcorper sed a ipsum aenean amet. At lectus amet,
-                                  aliquam volutpat nisl.
-                                </p>
-                                <p>
-                                  Feugiat donec aliquam suspendisse dictum fringilla semper.
-                                  Venenatis feugiat aenean risus nunc tortor auctor sed. Dolor, eget
-                                  varius elit sit sed donec pharetra, blandit. At imperdiet sed urna
-                                  tellus molestie pharetra lectus. Faucibus pharetra commodo,
-                                  malesuada quis venenatis, dui. A, eget eget magna et lacinia.
-                                  Euismod id ipsum in tellus. Auctor eu pulvinar aliquam pharetra.
-                                  Donec arcu tortor vitae vitae fusce blandit. Nullam integer netus
-                                  quam consectetur nec urna non maecenas tempor.
-                                </p>
-                                <p>
-                                  Diam ultrices mauris vitae ut nunc, sodales. Magnis ut amet odio
-                                  at porttitor. At gravida pretium pharetra fames commodo tristique
-                                  tortor non, a. Elit at sapien egestas odio etiam. Venenatis
-                                  egestas cursus elit sollicitudin mattis et ipsum. Vivamus
-                                  tincidunt ut pellentesque pharetra ut. Nullam enim in lectus
-                                  tincidunt mauris orci leo. Vestibulum ornare ut hendrerit
-                                  adipiscing curabitur id mauris. Viverra egestas tincidunt fusce
-                                  pulvinar vestibulum. Consequat.
-                                </p>
+                                <p>{selectedIdea?.description}</p>
                               </div>
                               <div className="mt-6 mb-16">
                                 <div className="flex items-center gap-3 mb-6">
                                   {/* User */}
                                   <span className="text-slate-700 text-sm font-medium tracking-sm">
-                                    Olivia Rhye
+                                    {selectedIdea?.createdBy}
                                   </span>
                                   <svg
                                     className="h-1 w-1 text-slate-500"
@@ -363,7 +278,10 @@ export default function PublicView() {
                                   </svg>
                                   {/* Date */}
                                   <span className="text-slate-500 text-sm tracking-sm">
-                                    June 29
+                                    {DateTime.fromISO(selectedIdea?.createdAt).toLocaleString({
+                                      month: 'long',
+                                      day: 'numeric'
+                                    })}
                                   </span>
                                   <svg
                                     className="h-1 w-1 text-slate-500"
@@ -410,23 +328,16 @@ export default function PublicView() {
                                       <circle cx={4} cy={4} r={3} />
                                     </svg>
                                     <div className="flex items-center gap-2">
-                                      <TopicBadges badgeName="Bug" />
-                                      <TopicBadges badgeName="Development" />
-                                      <TopicBadges badgeName="Design" />
+                                      {selectedIdea?.topics.map((topic) => (
+                                        <TopicBadges key={topic} badgeName={topic} />
+                                      ))}
                                     </div>
                                   </div>
                                   {/* Feedback Detail Status Badge */}
-                                  <button
-                                    type="button"
-                                    className="inline-flex items-center bg-red-100 text-red-800 rounded-full px-3 py-0.5 text-xs font-medium">
-                                    <svg
-                                      className="-ml-1 mr-1.5 h-2 w-2 text-red-800"
-                                      fill="currentColor"
-                                      viewBox="0 0 8 8">
-                                      <circle cx={4} cy={4} r={3} />
-                                    </svg>
-                                    Under Consideration
-                                  </button>
+                                  <StatusButton
+                                    name={selectedIdea?.status}
+                                    color={selectedIdea?.statusColor}
+                                  />
                                 </div>
                               </div>
                             </div>
