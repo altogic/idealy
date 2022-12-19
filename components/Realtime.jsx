@@ -107,17 +107,17 @@ export default function Realtime() {
     }
   }
   function updateCompanyHandler(data) {
-    if (data.message.company._id === company._id && data.message.sender !== user._id) {
+    if (data.message.company._id === company._id || (user && data.message.sender !== user?._id)) {
       dispatch(
         companyActions.selectCompany({
           ...data.message.company,
-          role: company.role
+          role: company?.role
         })
       );
       dispatch(
         companyActions.updateCompanyRealtime({
           ...data.message.company,
-          role: company.role
+          role: company?.role
         })
       );
     }
@@ -155,6 +155,9 @@ export default function Realtime() {
       realtime.on('update-company', updateCompanyHandler);
       realtime.on('accept-invitation', acceptedInvitationHandler);
       realtime.on('update-sublist', updateSublistHandler);
+    } else if (company) {
+      realtime.join(company._id);
+      realtime.on('update-company', updateCompanyHandler);
     }
     return () => {
       realtime.off('delete-membership', deleteMembershipHandler);
@@ -172,7 +175,7 @@ export default function Realtime() {
       realtime.off('accept-invitation', acceptedInvitationHandler);
       realtime.off('update-sublist', updateSublistHandler);
     };
-  }, [user, companies]);
+  }, [user, companies, company]);
 
   const handleAcceptInvitation = () => {
     dispatch(

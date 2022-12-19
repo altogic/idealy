@@ -4,11 +4,11 @@ import { DateTime } from 'luxon';
 import TopicBadges from './TopicBadges';
 import StatusButton from './StatusButton';
 
-export default function PublicViewCard({ idea }) {
+export default function PublicViewCard({ idea, onClick }) {
   const [counter, setCounter] = useState(0);
 
   return (
-    <div className="px-2 py-6 lg:p-6 rounded-lg transition hover:bg-slate-50">
+    <div className="px-2 py-6 lg:p-6 rounded-lg transition hover:bg-slate-50 ]">
       <div className="flex items-start lg:items-center gap-6">
         <div className="flex flex-col items-center bg-white px-3 md:px-5 rounded-lg">
           <button
@@ -54,7 +54,7 @@ export default function PublicViewCard({ idea }) {
             </svg>
           </button>
         </div>
-        <div className="w-full">
+        <button type="button" onClick={onClick} className="w-full">
           <div className="flex items-center gap-2 mb-2">
             <span className="inline-flex items-center rounded-full bg-orange-50 py-1 px-2 text-xs font-medium text-orange-700">
               <svg
@@ -82,7 +82,7 @@ export default function PublicViewCard({ idea }) {
             <h2 className="text-slate-800 text-xl font-semibold tracking-md">{idea?.title}</h2>
           </div>
           <p className="max-w-3xl text-slate-500 mb-6 text-sm tracking-sm text-left line-clamp-3">
-            {idea?.description}
+            {idea?.content}
           </p>
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             {/* Bottom Left */}
@@ -90,17 +90,14 @@ export default function PublicViewCard({ idea }) {
               <div className="flex items-center gap-3">
                 {/* User */}
                 <span className="text-slate-700 text-sm font-medium tracking-sm">
-                  {idea?.createdBy}
+                  {idea?.author ? idea?.author.name : idea?.guestName}
                 </span>
                 <svg className="h-1 w-1 text-slate-500" fill="currentColor" viewBox="0 0 8 8">
                   <circle cx={4} cy={4} r={3} />
                 </svg>
                 {/* Date */}
                 <span className="text-slate-500 text-sm tracking-sm">
-                  {DateTime.fromISO(idea?.createdAt).toLocaleString({
-                    month: 'long',
-                    day: 'numeric'
-                  })}
+                  {DateTime.fromISO(idea?.createdAt).setLocale('en').toRelative()}
                 </span>
               </div>
               <svg
@@ -119,7 +116,7 @@ export default function PublicViewCard({ idea }) {
             {/* Bottom Right */}
             <div className="flex items-center justify-between lg:justify-start gap-3">
               {/* Badges */}
-              <StatusButton name={idea?.status} color={idea?.statusColor} />
+              <StatusButton name={idea?.status.name} color={idea?.status.color} />
               {/* Comments Button */}
               <button type="button" className="inline-flex items-center gap-1 text-slate-400">
                 <svg
@@ -139,7 +136,7 @@ export default function PublicViewCard({ idea }) {
               </button>
             </div>
           </div>
-        </div>
+        </button>
       </div>
     </div>
   );
