@@ -68,7 +68,8 @@
   .basic-multi-select .select__clear-indicator {
     @apply hidden !important;
   } */
-}
-.company-button {
-  flex: 0 0 calc(16.66% - 20px);
+
+  .company-name {
+    word-break: break-word;
+  }
 }
