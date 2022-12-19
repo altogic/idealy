@@ -37,3 +37,4 @@ export { default as TwoPeople } from './TwoPeople';
 export { default as UpDown } from './UpDown';
 export { default as Upload } from './Upload';
 export { default as XCircle } from './XCircle';
+export { default as Switch } from './Switch';
