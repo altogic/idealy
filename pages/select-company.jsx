@@ -22,8 +22,6 @@ export default function Home() {
     }
   }, [companies, user]);
 
-  console.log(companies);
-
   return (
     <div>
       <Head>
