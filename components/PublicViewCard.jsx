@@ -79,7 +79,7 @@ export default function PublicViewCard({ idea, onClick }) {
               </svg>
               Pinned
             </span>
-            <h2 className="text-slate-800 text-xl font-semibold tracking-md">{idea.title}</h2>
+            <h2 className="text-slate-800 text-xl font-semibold tracking-md">{idea?.title}</h2>
           </div>
           <p className="max-w-3xl text-slate-500 mb-6 text-sm tracking-sm text-left line-clamp-3">
             {idea?.content}
@@ -90,14 +90,14 @@ export default function PublicViewCard({ idea, onClick }) {
               <div className="flex items-center gap-3">
                 {/* User */}
                 <span className="text-slate-700 text-sm font-medium tracking-sm">
-                  {idea?.author ? idea.author.name : idea.guestName}
+                  {idea?.author ? idea?.author.name : idea?.guestName}
                 </span>
                 <svg className="h-1 w-1 text-slate-500" fill="currentColor" viewBox="0 0 8 8">
                   <circle cx={4} cy={4} r={3} />
                 </svg>
                 {/* Date */}
                 <span className="text-slate-500 text-sm tracking-sm">
-                  {DateTime.fromISO(idea.createdAt).setLocale('en').toRelative()}
+                  {DateTime.fromISO(idea?.createdAt).setLocale('en').toRelative()}
                 </span>
               </div>
               <svg
@@ -108,7 +108,7 @@ export default function PublicViewCard({ idea, onClick }) {
               </svg>
               {/* Badges */}
               <div className="flex flex-wrap items-center gap-3">
-                {idea.topics.map((topic) => (
+                {idea?.topics.map((topic) => (
                   <TopicBadges key={topic} badgeName={topic} />
                 ))}
               </div>
