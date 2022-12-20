@@ -197,7 +197,6 @@ export async function getServerSideProps({ req, res }) {
   const invitation = JSON.parse(getCookie('invitation-token', { req, res }) || null);
   if (invitation) {
     const { data, errors } = await companyService.getCompanyById(invitation.companyId);
-    console.log(data);
     if (errors) {
       return {
         redirect: {

@@ -181,12 +181,8 @@ export const companySlice = createSlice({
       state.isLoading = true;
     },
     selectCompanySuccess(state, action) {
-      try {
-        state.isLoading = false;
-        state.company = action.payload;
-      } catch (error) {
-        console.log(error);
-      }
+      state.isLoading = false;
+      state.company = action.payload;
     },
     selectCompanyFailed(state, action) {
       state.isLoading = false;

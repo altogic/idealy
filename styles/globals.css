@@ -17,42 +17,13 @@
     scroll-behavior: smooth;
   }
 
-  #toolbar {
-    @apply md:h-[44px] bg-transparent p-0 border-0 !important;
+  [contenteditable='true'] {
+    min-height: 200px !important;
+    max-height: 300px;
+    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: scroll;
   }
-
-  .quill {
-    @apply h-[300px];
-  }
-
-  .quill .ql-container {
-    @apply rounded-md border-transparent !important;
-  }
-
-  .quill .ql-editor {
-    @apply px-1 !important;
-  }
-
-  .quill .ql-editor:before {
-    @apply text-slate-500 text-base leading-6 not-italic !important;
-  }
-
-  .search-bar .wrapper ul li svg {
-    @apply hidden;
-  }
-
-  .search-bar .wrapper ul {
-    @apply space-y-[5px] pb-0;
-  }
-
-  .search-bar .wrapper ul li.selected {
-    @apply bg-transparent !important;
-  }
-
-  .search-bar .wrapper ul li .result-wrapper svg {
-    display: block !important;
-  }
-
   textarea {
     resize: none;
   }

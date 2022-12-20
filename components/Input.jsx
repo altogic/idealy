@@ -1,7 +1,9 @@
 import cn from 'classnames';
 import { Exclamation } from './icons';
 
-export default function Input({ id, label, error, register, icon, disabled, postfix, ...props }) {
+
+export default function Input({ id, label, error, register, icon, postfix, type, ...props }) {
+
   return (
     <div className="relative w-full max-h-[200px] md:max-h-[100px]">
       {label && (
@@ -27,9 +29,9 @@ export default function Input({ id, label, error, register, icon, disabled, post
               disabled ? 'bg-gray-100 opacity-50 cursor-not-allowed' : '',
               error && postfix ? 'border-r-gray-300' : ''
             )}
+            type={type}
             {...register}
             {...props}
-            autoComplete="rutjfkde"
           />
           {postfix && (
             <span
@@ -41,7 +43,7 @@ export default function Input({ id, label, error, register, icon, disabled, post
             </span>
           )}
         </div>
-        {error && (
+        {error && type !== 'checkbox' && (
           <Exclamation
             className={cn(
               'absolute top-1/2 -translate-y-1/2 w-6 h-6 pointer-events-none text-red-600 mr-2',

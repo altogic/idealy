@@ -5,6 +5,7 @@ import topicSaga from './topics/topicSaga';
 import companySaga from './company/companySaga';
 import fileSaga from './file/fileSaga';
 import notificationSaga from './notification/notificationSaga';
+import ideaSaga from './ideas/ideaSaga';
 
 function* rootSaga() {
   yield all([
@@ -12,7 +13,8 @@ function* rootSaga() {
     fork(topicSaga),
     fork(companySaga),
     fork(fileSaga),
-    fork(notificationSaga)
+    fork(notificationSaga),
+    fork(ideaSaga)
   ]);
 }
 
