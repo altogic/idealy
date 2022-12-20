@@ -1,13 +1,76 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { yupResolver } from '@hookform/resolvers/yup';
+import dynamic from 'next/dynamic';
+import { Fragment, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import 'react-quill/dist/quill.snow.css';
+import { useSelector, useDispatch } from 'react-redux';
+import * as yup from 'yup';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
 import Button from '../Button';
 import { Plus } from '../icons';
-import TopicBadges from '../TopicBadges';
+import Input from '../Input';
+import TopicButton from '../TopicButton';
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 export default function SubmitIdea() {
   const company = useSelector((state) => state.company.company);
+  const user = useSelector((state) => state.auth.user);
   const [openSubmitFeedbackModal, setOpenSubmitFeedbackModal] = useState(false);
+  const [guestValidation, setGuestValidation] = useState(false);
+  const [topics, setTopics] = useState([]);
+  const [value, setValue] = useState('');
+  const dispatch = useDispatch();
+  const schema = yup.object().shape({
+    title: yup.string().required('Title is required'),
+    content: yup.string(),
+    topic: yup.array(),
+    guestName: yup.string().when([], {
+      is: () => guestValidation && !user,
+      then: yup.string().required('Name is required')
+    }),
+    guestEmail: yup.string().when([], {
+      is: () => guestValidation && !user,
+      then: yup.string().required('Email is required')
+    }),
+    privacyPolicy: yup.boolean().when([], {
+      is: () => guestValidation && !user,
+      then: yup.boolean().oneOf([true], 'Privacy Policy is required')
+    })
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    defaultValues: {
+      privacyPolicy: false
+    },
+    resolver: yupResolver(schema),
+    mode: 'all'
+  });
+  const onSubmit = (data) => {
+    const reqData = {
+      ...data,
+      content: value,
+      topics,
+      companySubdomain: window.location.hostname.split('.')[0]
+    };
+    dispatch(ideaActions.createIdea(reqData));
+    setOpenSubmitFeedbackModal(false);
+  };
+
+  useEffect(() => {
+    if (company) {
+      setGuestValidation(
+        company?.authentication.type === 'Guest Authentication' ||
+          (company.authentication.type === 'Custom' &&
+            company.authentication.submitIdeas === 'Guest Authentication')
+      );
+    }
+  }, [company]);
   return (
     <>
       <Button
@@ -75,119 +138,103 @@ export default function SubmitIdea() {
                         </div>
                       </div>
                       <div className="relative flex-1">
-                        <form action="">
+                        <form onSubmit={handleSubmit(onSubmit)}>
                           <div className="mb-8">
-                            <input
-                              type="text"
-                              name="feedback-title"
-                              id="feedback-title"
+                            <Input
+                              name="title"
+                              id="title"
+                              label="Title"
+                              register={register('title')}
+                              error={errors.title}
                               placeholder="Feedback Title"
-                              className="block w-full min-h-[44px] text-slate-500 text-base tracking-sm border border-gray-300 rounded-lg placeholder-slate-500 focus:border-indigo-500 focus:ring-indigo-500"
                             />
                           </div>
                           <div>
-                            <textarea
-                              id="type-a-comment"
-                              name="type-a-comment"
-                              rows={10}
-                              className="block w-full text-slate-500 text-base tracking-sm border border-gray-300 rounded-lg placeholder-slate-500 focus:border-indigo-500 focus:ring-indigo-500"
-                              placeholder="Type a comment"
-                            />
+                            <ReactQuill theme="snow" value={value} onChange={setValue} />
                           </div>
                           <div className="mt-8">
                             <span className="inline-block text-slate-600 mb-4 text-base tracking-sm">
                               Choose up to 3 Topics for this Idea (optional)
                             </span>
                             <div className="flex flex-wrap items-center gap-4">
-                              {/* {feedbacksBadges.map((item) => (
-          <label
-            key={item.id}
-            htmlFor={item.name}
-            className={cn(
-              feedbackBadges
-                ? "bg-red-500"
-                : "bg-slate-300"
-            )}
-          >
-            <svg
-              className="w-3 h-3 mr-1 text-gray-500 group-hover:text-indigo-500"
-              viewBox="0 0 12 12"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M6 2V10M9 3L3 9M10 6H2M9 9L3 3"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <input
-              type="checkbox"
-              value={item.name}
-              onChange={handleChange}
-              id={item.name}
-              name="topics"
-            />
-            Subscribe
-          </label>
-        ))} */}
                               {company?.topics.map((topic) => (
-                                <TopicBadges key={topic._id} badgeName={topic.name} />
+                                <TopicButton
+                                  key={topic._id}
+                                  badgeName={topic.name}
+                                  onClick={() => {
+                                    if (topics.some((t) => t === topic.name)) {
+                                      setTopics((prevTopics) =>
+                                        prevTopics.filter((t) => t !== topic.name)
+                                      );
+                                    } else if (topics.length < 3) {
+                                      setTopics((prevTopics) => [...prevTopics, topic.name]);
+                                    }
+                                  }}
+                                  selected={topics.some((t) => t === topic.name)}
+                                />
                               ))}
                             </div>
                           </div>
                           <hr className="my-8 border-slate-200" />
                           <div>
-                            <form action="">
-                              <div className="flex items-center gap-4 mb-4">
-                                <span className="inline-block text-slate-600 text-base tracking-sm whitespace-nowrap">
-                                  Your details
-                                </span>
-                                <input
-                                  type="text"
-                                  name="your-name"
-                                  id="your-name"
-                                  placeholder="Your name"
-                                  className="block w-full min-h-[44px] text-slate-500 text-base tracking-sm border border-gray-300 rounded-lg placeholder-slate-500 focus:border-indigo-500 focus:ring-indigo-500"
-                                />
-                                <input
-                                  type="email"
-                                  name="your-email"
-                                  id="your-email"
-                                  placeholder="Your email"
-                                  className="block w-full min-h-[44px] text-slate-500 text-base tracking-sm border border-gray-300 rounded-lg placeholder-slate-500 focus:border-indigo-500 focus:ring-indigo-500"
-                                />
-                              </div>
-                              <div className="relative flex items-start">
-                                <div className="flex h-5 items-center">
-                                  <input
-                                    id="privacy-policy"
-                                    aria-describedby="privacy-policy"
-                                    name="privacy-policy"
-                                    type="checkbox"
-                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            {(company?.authentication.type !== 'Registered Users' ||
+                              !(
+                                company?.authentication.type === 'Custom' &&
+                                company?.authentication.submitIdeas !== 'Registered Users'
+                              )) && (
+                              <>
+                                <div className="flex items-center gap-4 mb-4">
+                                  <span className="inline-block text-slate-600 text-base tracking-sm whitespace-nowrap">
+                                    Your details
+                                  </span>
+                                  <Input
+                                    type="text"
+                                    name="guestName"
+                                    id="guestName"
+                                    placeholder="Name"
+                                    register={register('guestName')}
+                                    error={errors.guestName}
+                                  />
+                                  <Input
+                                    type="email"
+                                    name="guestEmail"
+                                    id="guestEmail"
+                                    register={register('guestEmail')}
+                                    error={errors.guestEmail}
+                                    placeholder="Email"
                                   />
                                 </div>
-                                <div className="ml-2 text-sm">
-                                  <label
-                                    htmlFor="privacy-policy"
-                                    className="text-slate-500 text-sm tracking-sm">
-                                    I consent to my information being stored and used according to
-                                    the Privacy Policy.
-                                  </label>
+                                <div className="relative flex items-start">
+                                  <div className="flex h-5 items-center">
+                                    <Input
+                                      id="privacyPolicy"
+                                      aria-describedby="privacyPolicy"
+                                      name="privacyPolicy"
+                                      type="checkbox"
+                                      register={register('privacyPolicy')}
+                                      error={errors.privacyPolicy}
+                                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                    />
+                                  </div>
+                                  <div className="ml-2 text-sm">
+                                    <label
+                                      htmlFor="privacyPolicy"
+                                      className="text-slate-500 text-sm tracking-sm">
+                                      I consent to my information being stored and used according to
+                                      the Privacy Policy.
+                                    </label>
+                                  </div>
                                 </div>
-                              </div>
-                              <hr className="mt-8 mb-20" />
-                              <div className="flex justify-end">
-                                <button
-                                  type="button"
-                                  className="flex items-center justify-center text-white py-3 px-4 text-sm font-medium tracking-sm border border-transparent rounded-lg bg-indigo-700 hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                  Submit Feedback
-                                </button>
-                              </div>
-                            </form>
+                              </>
+                            )}
+                            <hr className="mt-8 mb-20" />
+                            <div className="flex justify-end">
+                              <Button
+                                type="submit"
+                                className="flex items-center justify-center text-white py-3 px-4 text-sm font-medium tracking-sm border border-transparent rounded-lg bg-indigo-700 hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                text="Submit Feedback"
+                              />
+                            </div>
                           </div>
                         </form>
                       </div>
