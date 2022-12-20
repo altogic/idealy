@@ -81,9 +81,10 @@ export default function PublicViewCard({ idea, onClick }) {
             </span>
             <h2 className="text-slate-800 text-xl font-semibold tracking-md">{idea?.title}</h2>
           </div>
-          <p className="max-w-3xl text-slate-500 mb-6 text-sm tracking-sm text-left line-clamp-3">
-            {idea?.content}
-          </p>
+          <p
+            className="max-w-3xl text-slate-500 mb-6 text-sm tracking-sm text-left line-clamp-3"
+            dangerouslySetInnerHTML={{ __html: idea?.content }}
+          />
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             {/* Bottom Left */}
             <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-3">
@@ -116,7 +117,9 @@ export default function PublicViewCard({ idea, onClick }) {
             {/* Bottom Right */}
             <div className="flex items-center justify-between lg:justify-start gap-3">
               {/* Badges */}
-              <StatusButton name={idea?.status.name} color={idea?.status.color} />
+              {idea.status && (
+                <StatusButton name={idea?.status?.name} color={idea?.status?.color} />
+              )}
               {/* Comments Button */}
               <button type="button" className="inline-flex items-center gap-1 text-slate-400">
                 <svg
