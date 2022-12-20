@@ -83,7 +83,7 @@ export default function Settings() {
                     onClick={() => setOpenSidebar(!openSidebar)}
                     className="absolute top-3 right-3 lg:hidden w-6 h-6 text-slate-500"
                   />
-                  <h2 className="text-slate-800 p-4 mt-3 lg:mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200">
+                  <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 p-4 mt-3 lg:mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200">
                     You
                   </h2>
                   {profileTabs?.map((tab) => (
