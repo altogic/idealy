@@ -54,6 +54,7 @@
     "redux-saga": "^1.2.1",
     "styled-components": "^5.3.6",
     "superjson": "^1.11.0",
+    "tailwindcss-multi-theme": "^1.0.4",
     "values.js": "^2.1.1",
     "yup": "^0.32.11"
   },
