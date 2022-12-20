@@ -117,7 +117,7 @@ export default function PublicViewCard({ idea, onClick }) {
             {/* Bottom Right */}
             <div className="flex items-center justify-between lg:justify-start gap-3">
               {/* Badges */}
-              {idea.status && (
+              {idea?.status && (
                 <StatusButton name={idea?.status?.name} color={idea?.status?.color} />
               )}
               {/* Comments Button */}

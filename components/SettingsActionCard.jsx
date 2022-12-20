@@ -134,7 +134,6 @@ export default function SettingsActionCard({
                 className="inline-flex items-center justify-center w-7 h-7 bg-slate-50 border border-slate-300 rounded-lg transition ease-linear duration-200 hover:bg-slate-200"
                 onClick={(e) => {
                   e.stopPropagation();
-                  console.log(activeIndex === index ? -1 : index);
                   setActiveIndex(activeIndex === index ? -1 : index);
                 }}>
                 <svg
