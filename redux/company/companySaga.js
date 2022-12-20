@@ -4,6 +4,7 @@ import _ from 'lodash';
 import companyService from '@/services/company';
 import AuthService from '@/services/auth';
 import { realtime } from '@/utils/altogic';
+import ideaService from '@/services/idea';
 import { companyActions } from './companySlice';
 import { authActions } from '../auth/authSlice';
 
@@ -70,18 +71,19 @@ function* createCompanySaga({ payload: { userId, onSuccess } }) {
         order: status.order,
         isCompletedStatus: status.isCompletedStatus
       })),
-      ideas: [
-        {
-          title: yield select((state) => state.company.idea),
-          topics: selectedTopics.map((topic) => topic.name),
-          description: yield select((state) => state.company.ideaDescription),
-          status: status?.name,
-          statusColor: status?.color,
-          createdBy: sessionUser.name
-        }
-      ],
       owner: userId
     });
+
+    if (selectedTopics.length || status) {
+      yield call(ideaService.createIdea, {
+        title: yield select((state) => state.company.idea),
+        topics: selectedTopics.map((topic) => topic.name),
+        content: yield select((state) => state.company.ideaDescription),
+        status: data.company.statuses.find((st) => st.name === status.name)._id,
+        author: sessionUser._id,
+        companySubdomain: data.company.subdomain
+      });
+    }
 
     const { company, user, errors } = data;
     if (!_.isNil(errors)) {
@@ -484,18 +486,22 @@ function* deleteCompanySubListsItem({ payload: { id, fieldName } }) {
     yield put(companyActions.deleteCompanySubListsItemFailed(error));
   }
 }
-function* updateCompanyBySubdomain({ payload: { subdomain, onFail, onSuccess } }) {
+function* updateCompanyBySubdomain({ payload: { subdomain, onFail, onSuccess, userId } }) {
   try {
-    const { data, error } = yield call(companyService.getCompanyBySubdomain, subdomain);
+    const { data, error } = yield call(companyService.getCompanyBySubdomain, subdomain, userId);
     if (error) {
       throw error;
     }
     if (data) {
       yield put(
-        companyActions.getCompanyBySubdomainSuccess({
-          ...data.company,
-          ...data.role
-        })
+        companyActions.getCompanyBySubdomainSuccess(
+          data.company
+            ? {
+                ...data.company,
+                ...data.role
+              }
+            : data
+        )
       );
       onSuccess(data.company.subdomain);
     } else {

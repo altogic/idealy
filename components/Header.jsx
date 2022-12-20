@@ -35,7 +35,7 @@ export default function Header() {
     if (companies.length > 0 && selectedCompany) {
       setUserCompanies([
         selectedCompany,
-        ...companies.filter((company) => company._id !== selectedCompany._id).slice(0, 2)
+        ...companies.filter((company) => company._id !== selectedCompany._id)
       ]);
     }
   }, [companies, selectedCompany]);

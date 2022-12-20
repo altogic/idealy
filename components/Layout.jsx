@@ -25,10 +25,11 @@ export default function Layout({ children }) {
   }, []);
   useEffect(() => {
     const wildcard = window.location.hostname.split('.')[0];
-    if (user && company?.subdomain !== wildcard && (wildcard !== 'www' || wildcard !== 'app')) {
+    if (company?.subdomain !== wildcard && (wildcard !== 'www' || wildcard !== 'app')) {
       dispatch(
         companyActions.getCompanyBySubdomain({
           subdomain: wildcard,
+          userId: user?._id,
           onSuccess: (subdomain) => {
             setCookie('subdomain', subdomain, 30);
           },
@@ -36,8 +37,7 @@ export default function Layout({ children }) {
         })
       );
     }
-  }, [user]);
-
+  }, []);
   useEffect(() => {
     const invitation = JSON.parse(getCookie('invitation-token') || null);
     if (invitation) {

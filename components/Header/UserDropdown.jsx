@@ -1,12 +1,12 @@
-import { Fragment, useEffect, useState } from 'react';
-import { Menu, Transition } from '@headlessui/react';
-import { useDispatch, useSelector } from 'react-redux';
-import Router from 'next/router';
-import { Settings, People, Logout, Plus, CircleCheck, Check } from '@/components/icons';
+import { CircleCheck, Logout, People, Plus, Settings, Switch } from '@/components/icons';
 import { authActions } from '@/redux/auth/authSlice';
-import Link from 'next/link';
-import { deleteCookie } from 'cookies-next';
 import { generateUrl } from '@/utils/index';
+import { Menu, Transition } from '@headlessui/react';
+import { deleteCookie } from 'cookies-next';
+import Link from 'next/link';
+import Router from 'next/router';
+import { Fragment, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Avatar from '../Avatar';
 import CompanyAvatar from '../CompanyAvatar';
 
@@ -79,7 +79,7 @@ export default function UserDropdown({ companies }) {
               </span>
             </Menu.Button>
             <div className="flex flex-col items-start">
-              {companies?.map((company) => (
+              {companies?.slice(0, 2).map((company) => (
                 <Menu.Button
                   className="w-full text-left"
                   key={company._id}
@@ -109,7 +109,7 @@ export default function UserDropdown({ companies }) {
                 <Menu.Item>
                   <Link href={generateUrl('select-company')}>
                     <a className="inline-flex items-center gap-3 w-full text-slate-500 px-4 py-2.5 text-sm hover:bg-slate-50">
-                      <Check className="w-4 h-4" />
+                      <Switch className="w-4 h-4" />
                       Select Company
                     </a>
                   </Link>
