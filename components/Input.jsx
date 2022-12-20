@@ -1,9 +1,17 @@
 import cn from 'classnames';
 import { Exclamation } from './icons';
 
-
-export default function Input({ id, label, error, register, icon, postfix, type, ...props }) {
-
+export default function Input({
+  id,
+  label,
+  error,
+  register,
+  icon,
+  postfix,
+  type,
+  disabled,
+  ...props
+}) {
   return (
     <div className="relative w-full max-h-[200px] md:max-h-[100px]">
       {label && (

@@ -19,6 +19,8 @@ function MyApp({ Component, pageProps }) {
     const session = JSON.parse(getCookie('session') || null);
     if (user && session) {
       dispatch(authActions.authStateChange({ user, session }));
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('session', JSON.stringify(session));
     }
   }, []);
   return (
