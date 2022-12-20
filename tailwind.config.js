@@ -60,7 +60,7 @@ module.exports = {
   plugins: [
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
-    require('tailwindcss-multi-theme')
+    require('tailwindcss-multi-theme'),
     require('@tailwindcss/line-clamp')
   ]
 };

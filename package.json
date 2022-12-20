@@ -20,9 +20,9 @@
     "@hookform/resolvers": "^2.9.8",
     "@reduxjs/toolkit": "^1.8.5",
     "@svgr/cli": "^6.3.1",
-    "@tailwindcss/forms": "^0.5.2",
+    "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/line-clamp": "^0.4.2",
-    "@tailwindcss/typography": "^0.5.2",
+    "@tailwindcss/typography": "^0.5.8",
     "altogic": "^2.3.6",
     "animate.css": "^4.1.1",
     "classnames": "^2.3.1",
@@ -68,7 +68,7 @@
     "@storybook/manager-webpack5": "^6.5.10",
     "@storybook/react": "^6.5.10",
     "@storybook/testing-library": "^0.0.13",
-    "autoprefixer": "^10.4.7",
+    "autoprefixer": "^10.4.13",
     "babel-loader": "^8.2.5",
     "eslint": "^7.32.0 || ^8.2.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -81,7 +81,7 @@
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "node-sass": "^8.0.0",
-    "postcss": "^8.4.14",
-    "tailwindcss": "^3.2.1"
+    "postcss": "^8.4.20",
+    "tailwindcss": "^3.2.4"
   }
 }

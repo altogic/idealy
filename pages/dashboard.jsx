@@ -8,8 +8,7 @@ import FeatureListCard from '@/components/FeatureListCard';
 import CreateModal from '@/components/CreateModal';
 import FeedbackCardDetail from '@/components/FeedbackCardDetail';
 import Select, { components } from 'react-select';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import ToastMessage from '@/utils/toast';
 import { Listbox, Dialog, Transition } from '@headlessui/react';
 import copy from 'copy-to-clipboard';
 import {
@@ -230,7 +229,7 @@ export default function AdminDashboard() {
 
   const copyToClipboard = () => {
     copy(copyText);
-    toast.success('Link copied to clipboard');
+    ToastMessage.success('Link copied to clipboard');
   };
   console.log('userChoice', userChoice);
   return (
@@ -840,18 +839,6 @@ export default function AdminDashboard() {
                 </h2>
                 <div className="space-y-4">
                   <div>
-                    <ToastContainer
-                      position="top-right"
-                      autoClose={2000}
-                      hideProgressBar={false}
-                      newestOnTop={false}
-                      closeOnClick
-                      rtl={false}
-                      pauseOnFocusLoss
-                      draggable
-                      pauseOnHover
-                      theme="light"
-                    />
                     <Label label="Public Link" />
                     <div className="flex h-10">
                       <input
