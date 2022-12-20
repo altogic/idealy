@@ -66,7 +66,7 @@ export default function Layout({ children }) {
   }, [companies]);
 
   return (
-    <div>
+    <div className="bg-white dark:bg-aa-900 purple:bg-pt-1000">
       <Head>
         <link rel="icon" href={company?.favicon} />
       </Head>

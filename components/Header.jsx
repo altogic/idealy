@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { Search, Feedback, Roadmap, Announcements, Close, Notification } from './icons';
 import UserDropdown from './Header/UserDropdown';
 import CompanyAvatar from './CompanyAvatar';
+import ThemeChanger from './ThemeChanger';
 import { generateUrl } from '../utils';
 
 export default function Header() {
@@ -42,7 +43,7 @@ export default function Header() {
     <>
       <header
         className={cn(
-          `flex items-center justify-between bg-indigo-900 p-4 lg:py-6 lg:px-12`,
+          `flex items-center justify-between bg-indigo-900 dark:bg-aa-900 purple:bg-pt-1000 border-b dark:border-slate-600 p-4 lg:py-6 lg:px-12`,
           router.asPath.includes('settings') ? 'pl-16' : null
         )}>
         <div className="flex items-center">
@@ -112,7 +113,7 @@ export default function Header() {
           >
             Public View
           </button> */}
-
+          <ThemeChanger />
           {/* Notification */}
           {isLoggedIn && (
             <Menu as="div" className="relative">
