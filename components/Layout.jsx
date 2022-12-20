@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
-import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { deleteCookie, getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { authActions } from '@/redux/auth/authSlice';
@@ -8,7 +8,7 @@ import { companyActions } from '@/redux/company/companySlice';
 import _ from 'lodash';
 import Realtime from './Realtime';
 import Header from './Header';
-import { generateUrl } from '../utils';
+import { generateUrl, setCookie } from '../utils';
 
 export default function Layout({ children }) {
   const router = useRouter();
@@ -25,20 +25,18 @@ export default function Layout({ children }) {
   }, []);
   useEffect(() => {
     const wildcard = window.location.hostname.split('.')[0];
-    if (isAuthenticated && company?.subdomain !== wildcard) {
+    if (user && company?.subdomain !== wildcard && (wildcard !== 'www' || wildcard !== 'app')) {
       dispatch(
         companyActions.getCompanyBySubdomain({
           subdomain: wildcard,
           onSuccess: (subdomain) => {
-            setCookie('subdomain', subdomain, {
-              domain: process.env.NEXT_PUBLIC_DOMAIN
-            });
+            setCookie('subdomain', subdomain, 30);
           },
-          onFail: () => router.push(generateUrl('company-not-found'))
+          onFail: () => {}
         })
       );
     }
-  }, [isAuthenticated]);
+  }, [user]);
 
   useEffect(() => {
     const invitation = JSON.parse(getCookie('invitation-token') || null);

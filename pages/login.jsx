@@ -1,18 +1,18 @@
-import { useEffect } from 'react';
-import Head from 'next/head';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
+import Button from '@/components/Button';
 import Input from '@/components/Input';
-import Link from 'next/link';
-import { authActions } from '@/redux/auth/authSlice';
 import Providers from '@/components/Providers';
+import { authActions } from '@/redux/auth/authSlice';
 import { companyActions } from '@/redux/company/companySlice';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { getCookie } from 'cookies-next';
 import _ from 'lodash';
-import Button from '@/components/Button';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import * as yup from 'yup';
 import { generateUrl, setSessionCookie } from '../utils';
 
 export default function Login({ invitation }) {
@@ -37,6 +37,14 @@ export default function Login({ invitation }) {
   });
 
   const loginOnSuccess = async (companies, session, user) => {
+    setSessionCookie(session, {
+      _id: user._id,
+      email: user.email,
+      name: user.name,
+      profilePicture: user.profilePicture,
+      canCreateCompany: user.canCreateCompany,
+      isDeleted: user.isDeleted
+    });
     if (_.isNil(invitation)) {
       if (companies.length === 0) {
         router.push(generateUrl('create-new-company'));
@@ -50,7 +58,6 @@ export default function Login({ invitation }) {
       dispatch(companyActions.updateMemberStatus({ companyId: invitation.companyId }));
       router.push(generateUrl('public-view', company.subdomain));
     }
-    setSessionCookie(session, user);
   };
   async function formSubmit(data) {
     dispatch(

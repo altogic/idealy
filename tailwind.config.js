@@ -61,5 +61,6 @@ module.exports = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
     require('tailwindcss-multi-theme')
+    require('@tailwindcss/line-clamp')
   ]
 };
