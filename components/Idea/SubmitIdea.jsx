@@ -3,7 +3,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import dynamic from 'next/dynamic';
 import { Fragment, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import 'react-quill/dist/quill.snow.css';
 import { useSelector, useDispatch } from 'react-redux';
 import * as yup from 'yup';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
