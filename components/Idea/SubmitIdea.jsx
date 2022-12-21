@@ -2,7 +2,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import dynamic from 'next/dynamic';
 import { Fragment, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import * as yup from 'yup';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
@@ -23,8 +23,8 @@ export default function SubmitIdea() {
   const dispatch = useDispatch();
   const schema = yup.object().shape({
     title: yup.string().required('Title is required'),
-    content: yup.string(),
-    topic: yup.array(),
+    content: yup.string().required('Content is required'),
+    topic: yup.array().max(3, 'Maximum 3 topics'),
     guestName: yup.string().when([], {
       is: () => guestValidation && !user,
       then: yup.string().required('Name is required')
@@ -42,6 +42,8 @@ export default function SubmitIdea() {
   const {
     register,
     handleSubmit,
+    control,
+    reset,
     formState: { errors }
   } = useForm({
     defaultValues: {
@@ -60,7 +62,7 @@ export default function SubmitIdea() {
     dispatch(ideaActions.createIdea(reqData));
     setOpenSubmitFeedbackModal(false);
   };
-
+  console.log('errors', errors);
   useEffect(() => {
     if (company) {
       setGuestValidation(
@@ -70,6 +72,9 @@ export default function SubmitIdea() {
       );
     }
   }, [company]);
+  useEffect(() => {
+    reset();
+  }, []);
   return (
     <>
       <Button
@@ -148,42 +153,75 @@ export default function SubmitIdea() {
                               placeholder="Feedback Title"
                             />
                           </div>
-                          <div>
-                            <ReactQuill theme="snow" value={value} onChange={setValue} />
+                          <div className="mb-8">
+                            <Controller
+                              name="content"
+                              control={control}
+                              rules={{ required: true }}
+                              render={() => (
+                                <ReactQuill
+                                  theme="snow"
+                                  value={value}
+                                  onChange={setValue}
+                                  className={` border ${
+                                    !errors?.content?.message
+                                      ? 'border-gray-300 focus:border-blue-300'
+                                      : 'border-red-300 focus:border-red-300'
+                                  }  rounded-md`}
+                                />
+                              )}
+                            />
+                            {errors?.content?.message && (
+                              <span className="inline-block text-sm text-red-600">
+                                {errors.content.message}
+                              </span>
+                            )}
                           </div>
                           <div className="mt-8">
                             <span className="inline-block text-slate-600 mb-4 text-base tracking-sm">
                               Choose up to 3 Topics for this Idea (optional)
                             </span>
-                            <div className="flex flex-wrap items-center gap-4">
-                              {company?.topics.map((topic) => (
-                                <TopicButton
-                                  key={topic._id}
-                                  badgeName={topic.name}
-                                  onClick={() => {
-                                    if (topics.some((t) => t === topic.name)) {
-                                      setTopics((prevTopics) =>
-                                        prevTopics.filter((t) => t !== topic.name)
-                                      );
-                                    } else if (topics.length < 3) {
-                                      setTopics((prevTopics) => [...prevTopics, topic.name]);
-                                    }
-                                  }}
-                                  selected={topics.some((t) => t === topic.name)}
-                                />
-                              ))}
-                            </div>
+                            <Controller
+                              name="topics"
+                              control={control}
+                              defaultValue={[]}
+                              rules={{ required: false, validate: (value) => value.length <= 3 }}
+                              render={() => (
+                                <div className="flex flex-wrap items-center gap-4">
+                                  {company?.topics.map((topic) => (
+                                    <TopicButton
+                                      key={topic._id}
+                                      badgeName={topic.name}
+                                      onClick={() => {
+                                        if (topics.some((t) => t === topic.name)) {
+                                          setTopics((prevTopics) =>
+                                            prevTopics.filter((t) => t !== topic.name)
+                                          );
+                                        } else if (topics.length < 3) {
+                                          setTopics((prevTopics) => [...prevTopics, topic.name]);
+                                        }
+                                      }}
+                                      selected={topics.some((t) => t === topic.name)}
+                                    />
+                                  ))}
+                                  {errors?.topics?.message && (
+                                    <span className="inline-block text-sm text-red-600">
+                                      {errors.topics.message}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                            />
                           </div>
                           <hr className="my-8 border-slate-200" />
                           <div>
-                            {(company?.authentication.type !== 'Registered Users' ||
-                              !(
-                                company?.authentication.type === 'Custom' &&
-                                company?.authentication.submitIdeas !== 'Registered Users'
-                              )) && (
+                            {(company?.authentication.type === 'Guest Authentication' ||
+                              (company?.authentication.type === 'Custom' &&
+                                company?.authentication.submitIdeas ===
+                                  'Guest Authentication')) && (
                               <>
-                                <div className="flex items-center gap-4 mb-4">
-                                  <span className="inline-block text-slate-600 text-base tracking-sm whitespace-nowrap">
+                                <div className="flex gap-4 mb-4 relative max-h-[46px]">
+                                  <span className="inline-block text-slate-600 text-base tracking-sm whitespace-nowrap m-auto">
                                     Your details
                                   </span>
                                   <Input
@@ -203,37 +241,29 @@ export default function SubmitIdea() {
                                     placeholder="Email"
                                   />
                                 </div>
-                                <div className="relative flex items-start">
-                                  <div className="flex h-5 items-center">
-                                    <Input
-                                      id="privacyPolicy"
-                                      aria-describedby="privacyPolicy"
-                                      name="privacyPolicy"
-                                      type="checkbox"
-                                      register={register('privacyPolicy')}
-                                      error={errors.privacyPolicy}
-                                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                    />
-                                  </div>
-                                  <div className="ml-2 text-sm">
-                                    <label
-                                      htmlFor="privacyPolicy"
-                                      className="text-slate-500 text-sm tracking-sm">
-                                      I consent to my information being stored and used according to
-                                      the Privacy Policy.
-                                    </label>
-                                  </div>
+                                <div className="flex items-center mt-10">
+                                  <Input
+                                    id="privacyPolicy"
+                                    aria-describedby="privacyPolicy"
+                                    name="privacyPolicy"
+                                    type="checkbox"
+                                    register={register('privacyPolicy')}
+                                    error={errors.privacyPolicy}
+                                    label="I consent to my information being stored and used according to
+                                      the Privacy Policy."
+                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                  />
                                 </div>
+                                <hr className="mt-8 mb-20" />
                               </>
                             )}
-                            <hr className="mt-8 mb-20" />
-                            <div className="flex justify-end">
-                              <Button
-                                type="submit"
-                                className="flex items-center justify-center text-white py-3 px-4 text-sm font-medium tracking-sm border border-transparent rounded-lg bg-indigo-700 hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                text="Submit Feedback"
-                              />
-                            </div>
+                          </div>
+                          <div className="flex justify-end">
+                            <Button
+                              type="submit"
+                              className="flex items-center justify-center text-white py-3 px-4 text-sm font-medium tracking-sm border border-transparent rounded-lg bg-indigo-700 hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              text="Submit Feedback"
+                            />
                           </div>
                         </form>
                       </div>
