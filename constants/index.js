@@ -16,7 +16,7 @@ export const AUTHENTICATION_METHOD = [
   'Anonymous',
   'Custom'
 ];
-export const IDEAS_PERMISSION_TYPE = ['Guests', 'Anonymous', 'Registered Users'];
+export const IDEAS_PERMISSION_TYPE = ['Registered Users', 'Guest Authentication', 'Anonymous'];
 export const PROFILE_TABS = [
   { id: 1, name: 'Profile' },
   { id: 2, name: 'Notifications' },

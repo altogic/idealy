@@ -1,8 +1,8 @@
 export default function TopicBadges({ badgeName, selected }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full bg-gray-200 py-1 px-3 text-xs font-medium ${
-        selected ? 'text-indigo-700' : 'text-gray-700'
+      className={`inline-flex items-center rounded-full border-2 bg-gray-200 py-1 px-3 text-xs font-medium ${
+        selected ? 'text-indigo-700 border-indigo-500' : 'text-gray-700'
       }`}>
       <svg
         className={`w-3 h-3 mr-1 ${selected ? 'text-indigo-500' : 'text-gray-500'}`}

@@ -4,7 +4,7 @@ import { Exclamation } from './icons';
 export default function Input({ id, label, error, register, icon, postfix, type, ...props }) {
   return (
     <div className="relative w-full max-h-[200px] md:max-h-[100px]">
-      {label && (
+      {label && type !== 'checkbox' && (
         <label
           htmlFor={id}
           className={cn(
@@ -16,7 +16,7 @@ export default function Input({ id, label, error, register, icon, postfix, type,
       )}
       <div className={cn(`relative`)}>
         {icon && <div className="absolute top-1/2 left-3.5 -translate-y-1/2">{icon}</div>}
-        <div className="flex">
+        <div className={`flex ${type === 'checkbox' ? 'items-center' : ''} `}>
           <input
             id={id}
             className={cn(
@@ -38,6 +38,16 @@ export default function Input({ id, label, error, register, icon, postfix, type,
               )}>
               {postfix}
             </span>
+          )}
+          {label && type === 'checkbox' && (
+            <label
+              htmlFor={id}
+              className={cn(
+                'inline-block text-slate-700 ml-1.5 text-sm font-medium',
+                error && 'text-red-600'
+              )}>
+              {label}
+            </label>
           )}
         </div>
         {error && type !== 'checkbox' && (
