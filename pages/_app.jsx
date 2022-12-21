@@ -3,6 +3,7 @@ import { wrapper } from '@/redux/store';
 import 'animate.css/animate.min.css';
 import { getCookie } from 'cookies-next';
 import { useEffect } from 'react';
+import 'react-quill/dist/quill.snow.css';
 import { useDispatch } from 'react-redux';
 import { cssTransition, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -19,6 +20,8 @@ function MyApp({ Component, pageProps }) {
     const session = JSON.parse(getCookie('session') || null);
     if (user && session) {
       dispatch(authActions.authStateChange({ user, session }));
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('session', JSON.stringify(session));
     }
   }, []);
   return (

@@ -35,7 +35,7 @@ export default function Button({
         variant === 'blankRed' ? 'bg-white text-red-700 border-red-300 hover:bg-red-100' : '',
         variant === 'red' ? 'bg-red-600 text-white border-transparent hover:bg-red-700' : '',
         variant === 'indigo'
-          ? 'bg-indigo-700 text-white border-transparent hover:bg-indigo-600'
+          ? 'bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 dark:border-pt-600 purple:border-pt-400 text-white border-transparent hover:bg-indigo-600'
           : ''
       )}
       {...props}

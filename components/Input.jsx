@@ -1,7 +1,17 @@
 import cn from 'classnames';
 import { Exclamation } from './icons';
 
-export default function Input({ id, label, error, register, icon, postfix, type, ...props }) {
+export default function Input({
+  id,
+  label,
+  error,
+  register,
+  icon,
+  postfix,
+  type,
+  disabled,
+  ...props
+}) {
   return (
     <div className="relative w-full max-h-[200px] md:max-h-[100px]">
       {label && type !== 'checkbox' && (
@@ -24,6 +34,7 @@ export default function Input({ id, label, error, register, icon, postfix, type,
               error && 'text-red-900 pr-11 border-red-600 placeholder-red-300 focus:ring-red-600',
               icon ? 'pl-[42px] pr-3.5' : 'px-3.5',
               postfix && 'rounded-r-none',
+              disabled ? 'bg-gray-100 opacity-50 cursor-not-allowed' : '',
               error && postfix ? 'border-r-gray-300' : ''
             )}
             type={type}

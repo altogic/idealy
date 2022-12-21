@@ -18,6 +18,9 @@ export default function UserDropdown({ companies }) {
       authActions.logout({
         onSuccess: () => {
           deleteCookie('invitation-token');
+          deleteCookie('user');
+          deleteCookie('session');
+          deleteCookie('session_token');
           Router.push(generateUrl('login'));
         }
       })

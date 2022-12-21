@@ -76,7 +76,9 @@ export default function PublicView() {
         <div className="max-w-screen-lg mx-auto my-14">
           <div className="flex items-start justify-between mb-16">
             <div>
-              <h1 className="text-slate-800 mb-2 text-3xl font-semibold">Feature Ideas</h1>
+              <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
+                Feature Ideas
+              </h1>
               <p className="text-slate-600 text-base tracking-sm">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.{' '}
               </p>
