@@ -28,9 +28,9 @@ export default function PublicViewCard({ idea, onClick, voted }) {
             <ChevronUp className={`w-5 h-5${voted ? ' text-indigo-900' : 'text-slate-400'} `} />
           </button>
           <span className="text-indigo-700 text-2xl font-semibold tracking-md">
-            {idea?.voteCount}
+            {idea.voteCount}
           </span>
-          {idea?.voteCount > 0 && (
+          {idea.voteCount > 0 && (
             <button
               type="button"
               onClick={downVote}
