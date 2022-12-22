@@ -32,7 +32,9 @@ export default function Layout({ children }) {
         })
       );
     }
-    dispatch(companyActions.getUserCompanies(user?._id));
+    if (user) {
+      dispatch(companyActions.getUserCompanies(user?._id));
+    }
   }, []);
   useEffect(() => {
     const invitation = JSON.parse(getCookie('invitation-token') || null);

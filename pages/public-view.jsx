@@ -26,6 +26,7 @@ export default function PublicView() {
   const dispatch = useDispatch();
   const ideas = useSelector((state) => state.idea.ideas);
   const countInfo = useSelector((state) => state.idea.countInfo);
+  const ideaVotes = useSelector((state) => state.idea.ideaVotes);
   const getIdeasByCompany = useCallback(() => {
     dispatch(
       ideaActions.getIdeasByCompany({
@@ -100,6 +101,7 @@ export default function PublicView() {
                     setSelectedIdea(idea);
                     setOpenDetailFeedbackModal(!openDetailFeedbackModal);
                   }}
+                  voted={ideaVotes.some((vote) => vote.ideaId === idea._id)}
                 />
               </div>
             ))}
