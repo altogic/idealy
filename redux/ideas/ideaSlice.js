@@ -76,6 +76,33 @@ export const ideaSlice = createSlice({
     downvoteIdeaFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    updateIdea(state) {
+      state.isLoading = true;
+    },
+    updateIdeaSuccess(state, action) {
+      state.isLoading = false;
+      state.ideas = state.ideas.map((idea) => {
+        if (idea._id === action.payload._id) {
+          return action.payload;
+        }
+        return idea;
+      });
+    },
+    updateIdeaFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    deleteIdea(state) {
+      state.isLoading = true;
+    },
+    deleteIdeaSuccess(state, action) {
+      state.isLoading = false;
+      state.ideas = state.ideas.filter((idea) => idea._id !== action.payload);
+    },
+    deleteIdeaFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   },
   extraReducers: {

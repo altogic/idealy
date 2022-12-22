@@ -13,10 +13,10 @@ import TopicButton from '../TopicButton';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
-export default function SubmitIdea() {
+export default function SubmitIdea({ open, setOpen, idea }) {
   const company = useSelector((state) => state.company.company);
   const user = useSelector((state) => state.auth.user);
-  const [openSubmitFeedbackModal, setOpenSubmitFeedbackModal] = useState(false);
+
   const [guestValidation, setGuestValidation] = useState(false);
   const [topics, setTopics] = useState([]);
   const [value, setValue] = useState('');
@@ -24,7 +24,7 @@ export default function SubmitIdea() {
   const schema = yup.object().shape({
     title: yup.string().required('Title is required'),
     content: yup.string().required('Content is required'),
-    topic: yup.array().max(3, 'Maximum 3 topics'),
+    topics: yup.array().max(3, 'Maximum 3 topics'),
     guestName: yup.string().when([], {
       is: () => guestValidation && !user,
       then: yup.string().required('Name is required')
@@ -56,13 +56,17 @@ export default function SubmitIdea() {
     const reqData = {
       ...data,
       content: value,
-      topics,
-      companySubdomain: window.location.hostname.split('.')[0]
+      topics
     };
-    dispatch(ideaActions.createIdea(reqData));
-    setOpenSubmitFeedbackModal(false);
+    delete reqData.privacyPolicy;
+    if (idea) {
+      console.log({ data });
+      dispatch(ideaActions.updateIdea({ _id: idea._id, ...reqData }));
+    } else {
+      dispatch(ideaActions.createIdea(reqData));
+    }
+    setOpen(false);
   };
-  console.log('errors', errors);
   useEffect(() => {
     if (company) {
       setGuestValidation(
@@ -75,6 +79,24 @@ export default function SubmitIdea() {
   useEffect(() => {
     reset();
   }, []);
+  useEffect(() => {
+    console.log({});
+    if (idea) {
+      reset({
+        title: idea.title,
+        content: idea.content,
+        topics: idea.topics,
+        guestName: idea.guestName,
+        guestEmail: idea.guestEmail
+      });
+      setValue(idea.content);
+      setTopics(idea.topics);
+    } else {
+      reset();
+      setTopics([]);
+      setValue('');
+    }
+  }, [idea]);
   return (
     <>
       <Button
@@ -83,10 +105,10 @@ export default function SubmitIdea() {
         icon={<Plus className="w-5 h-5" />}
         variant="indigo"
         size="sm"
-        onClick={() => setOpenSubmitFeedbackModal(!openSubmitFeedbackModal)}
+        onClick={() => setOpen(!open)}
       />
-      <Transition.Root show={openSubmitFeedbackModal} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={setOpenSubmitFeedbackModal}>
+      <Transition.Root show={open} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={setOpen}>
           <Transition.Child
             as={Fragment}
             enter="ease-in-out duration-500"
@@ -116,7 +138,7 @@ export default function SubmitIdea() {
                         <button
                           type="button"
                           className="inline-flex items-center justify-center w-full h-full text-slate-500 rounded-md transition hover:bg-slate-100"
-                          onClick={() => setOpenSubmitFeedbackModal(false)}>
+                          onClick={() => setOpen(false)}>
                           <span className="sr-only">Close panel</span>
                           <svg
                             className="w-4 h-4"
@@ -215,7 +237,8 @@ export default function SubmitIdea() {
                           </div>
                           <hr className="my-8 border-slate-200" />
                           <div>
-                            {(company?.authentication.type === 'Guest Authentication' ||
+                            {((idea?.guestName && idea?.guestEmail) ||
+                              company?.authentication.type === 'Guest Authentication' ||
                               (company?.authentication.type === 'Custom' &&
                                 company?.authentication.submitIdeas ===
                                   'Guest Authentication')) && (
@@ -262,7 +285,7 @@ export default function SubmitIdea() {
                             <Button
                               type="submit"
                               className="flex items-center justify-center text-white py-3 px-4 text-sm font-medium tracking-sm border border-transparent rounded-lg bg-indigo-700 hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                              text="Submit Feedback"
+                              text={`${idea ? 'Update' : 'Submit'} Feedback`}
                             />
                           </div>
                         </form>

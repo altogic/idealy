@@ -1,5 +1,5 @@
 import ideaService from '@/services/idea';
-import { call, takeEvery, put } from 'redux-saga/effects';
+import { call, put, takeEvery } from 'redux-saga/effects';
 import { ideaActions } from './ideaSlice';
 
 function* getIdeasByCompanySaga({ payload: { subdomain, limit, page } }) {
@@ -69,10 +69,35 @@ function* downvoteIdeaSaga({ payload: id }) {
     yield put(ideaActions.downvoteIdeaFailure(error));
   }
 }
+function* updateIdeaSaga({ payload: idea }) {
+  try {
+    const { data, errors } = yield call(ideaService.updateIdea, idea);
+
+    if (errors) {
+      throw new Error(errors);
+    }
+    yield put(ideaActions.updateIdeaSuccess(data));
+  } catch (error) {
+    yield put(ideaActions.updateIdeaFailure(error));
+  }
+}
+function* deleteIdeaSaga({ payload: id }) {
+  try {
+    const { errors } = yield call(ideaService.deleteIdea, id);
+    if (errors) {
+      throw new Error(errors);
+    }
+    yield put(ideaActions.deleteIdeaSuccess(id));
+  } catch (error) {
+    yield put(ideaActions.deleteIdeaFailure(error));
+  }
+}
 
 export default function* ideaSaga() {
   yield takeEvery(ideaActions.getIdeasByCompany.type, getIdeasByCompanySaga);
   yield takeEvery(ideaActions.createIdea.type, createIdeaSaga);
   yield takeEvery(ideaActions.voteIdea.type, voteIdeaSaga);
   yield takeEvery(ideaActions.downvoteIdea.type, downvoteIdeaSaga);
+  yield takeEvery(ideaActions.updateIdea.type, updateIdeaSaga);
+  yield takeEvery(ideaActions.deleteIdea.type, deleteIdeaSaga);
 }
