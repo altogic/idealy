@@ -1,7 +1,7 @@
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { DateTime } from 'luxon';
 import { useDispatch } from 'react-redux';
-import { Archive, ChevronDown, ChevronUp, Thumbtack } from './icons';
+import { Archive, Bug, ChevronDown, ChevronUp, Eye, Thumbtack } from './icons';
 import StatusButton from './StatusButton';
 import TopicBadges from './TopicBadges';
 
@@ -56,13 +56,13 @@ export default function PublicViewCard({ idea, onClick, voted }) {
             )}
             {idea?.isPrivate && (
               <span className="inline-flex items-center rounded-full bg-blue-50 py-1 px-2 text-xs font-medium text-blue-700">
-                <Archive className="w-3 h-3 mr-1 text-blue-500" />
+                <Eye className="w-3 h-3 mr-1 text-blue-500" />
                 Private
               </span>
             )}
             {idea?.isBug && (
               <span className="inline-flex items-center rounded-full bg-red-50 py-1 px-2 text-xs font-medium text-red-700">
-                <Archive className="w-3 h-3 mr-1 text-red-500" />
+                <Bug className="w-3 h-3 mr-1 text-red-500" />
                 Bug
               </span>
             )}

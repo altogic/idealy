@@ -7,7 +7,17 @@ import { DateTime } from 'luxon';
 import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DeleteModal from '../DeleteModal';
-import { Archive, ChevronDown, CircleCheck, Thumbtack, Trash, Danger, Pen } from '../icons';
+import {
+  Archive,
+  ChevronDown,
+  CircleCheck,
+  Thumbtack,
+  Trash,
+  Danger,
+  Pen,
+  Bug,
+  Eye
+} from '../icons';
 
 export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmitFeedbackModal }) {
   const dispatch = useDispatch();
@@ -197,8 +207,8 @@ export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmit
                                     type="button"
                                     className="flex p-2 rounded border border-slate-400">
                                     <Thumbtack
-                                      className={`w-4 h-4 hover:text-indigo-500 ${
-                                        isPinned ? 'text-indigo-500' : 'text-slate-500'
+                                      className={`w-4 h-4 hover:text-orange-500 ${
+                                        isPinned ? 'text-orange-500' : 'text-slate-500'
                                       }`}
                                       onClick={() => {
                                         updateIdea({ isPinned: !isPinned });
@@ -211,21 +221,13 @@ export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmit
                                   <button
                                     type="button"
                                     className="flex p-2 rounded border border-slate-400"
-                                    onClick={() => setIsDeleteModalOpen(!isDeleteModalOpen)}>
-                                    <Trash className="w-4 h-4 hover:text-red-500" />
-                                  </button>
-                                </div>
-                                <div className="inline-flex relative">
-                                  <button
-                                    type="button"
-                                    className="flex p-2 rounded border border-slate-400"
                                     onClick={() => {
                                       updateIdea({ isArchived: !isArchived });
                                       setIsArchived(!isArchived);
                                     }}>
                                     <Archive
-                                      className={`w-4 h-4 hover:text-indigo-500 ${
-                                        isArchived ? 'text-indigo-500' : 'text-slate-500'
+                                      className={`w-4 h-4 hover:text-yellow-500 ${
+                                        isArchived ? 'text-yellow-500' : 'text-slate-500'
                                       }`}
                                     />
                                   </button>
@@ -238,11 +240,19 @@ export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmit
                                       updateIdea({ isBug: !isBug });
                                       setIsBug(!isBug);
                                     }}>
-                                    <Archive
-                                      className={`w-4 h-4 hover:text-indigo-500 ${
-                                        isBug ? 'text-indigo-500' : 'text-slate-500'
+                                    <Bug
+                                      className={`w-4 h-4 hover:text-red-500 ${
+                                        isBug ? 'text-red-500' : 'text-slate-500'
                                       }`}
                                     />
+                                  </button>
+                                </div>
+                                <div className="inline-flex relative">
+                                  <button
+                                    type="button"
+                                    className="flex p-2 rounded border border-slate-400"
+                                    onClick={() => setIsDeleteModalOpen(!isDeleteModalOpen)}>
+                                    <Trash className="w-4 h-4 hover:text-red-500" />
                                   </button>
                                 </div>
                                 <div className="inline-flex relative">
@@ -308,13 +318,13 @@ export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmit
                               )}
                               {idea?.isPrivate && (
                                 <span className="inline-flex items-center rounded-full bg-blue-50 py-1 px-2 text-xs font-medium text-blue-700">
-                                  <Archive className="w-3 h-3 mr-1 text-blue-500" />
+                                  <Eye className="w-3 h-3 mr-1 text-blue-500" />
                                   Private
                                 </span>
                               )}
                               {idea?.isBug && (
                                 <span className="inline-flex items-center rounded-full bg-red-50 py-1 px-2 text-xs font-medium text-red-700">
-                                  <Archive className="w-3 h-3 mr-1 text-red-500" />
+                                  <Bug className="w-3 h-3 mr-1 text-red-500" />
                                   Bug
                                 </span>
                               )}
