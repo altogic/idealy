@@ -79,7 +79,7 @@ export default function UserDropdown({ companies }) {
               </span>
             </Menu.Button>
             <div className="flex flex-col items-start">
-              {companies?.slice(0, 2).map((company) => (
+              {companies?.slice(0, 3).map((company) => (
                 <Menu.Button
                   className="w-full text-left"
                   key={company._id}

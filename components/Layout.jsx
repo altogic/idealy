@@ -19,11 +19,6 @@ export default function Layout({ children }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user && _.isEmpty(companies)) {
-      dispatch(companyActions.getUserCompanies(user?._id));
-    }
-  }, []);
-  useEffect(() => {
     const wildcard = window.location.hostname.split('.')[0];
     if (company?.subdomain !== wildcard && (wildcard !== 'www' || wildcard !== 'app')) {
       dispatch(
@@ -36,6 +31,9 @@ export default function Layout({ children }) {
           onFail: () => {}
         })
       );
+    }
+    if (user) {
+      dispatch(companyActions.getUserCompanies(user?._id));
     }
   }, []);
   useEffect(() => {

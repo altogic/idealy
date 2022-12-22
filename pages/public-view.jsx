@@ -6,6 +6,7 @@ import Layout from '@/components/Layout';
 import PublicViewCard from '@/components/PublicViewCard';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import Head from 'next/head';
+import Router from 'next/router';
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -25,6 +26,7 @@ export default function PublicView() {
   const dispatch = useDispatch();
   const ideas = useSelector((state) => state.idea.ideas);
   const countInfo = useSelector((state) => state.idea.countInfo);
+  const ideaVotes = useSelector((state) => state.idea.ideaVotes);
   const getIdeasByCompany = useCallback(() => {
     dispatch(
       ideaActions.getIdeasByCompany({
@@ -49,12 +51,22 @@ export default function PublicView() {
     }
 
     if (company.authentication.type === 'Custom') {
-      return company.authentication.submitIdeas === 'Registered Users' && !!user;
+      return (
+        (company.authentication.submitIdeas === 'Registered Users' && !!user) ||
+        company.authentication.submitIdeas !== 'Registered Users'
+      );
     }
 
     return true;
   }, [company, user]);
 
+  useEffect(() => {
+    if (company) {
+      if (!company.privacy.isPublic && !company.privacy.isPublic.userApproval) {
+        Router.push('/404');
+      }
+    }
+  }, [company]);
   return (
     <>
       <Head>
@@ -89,6 +101,7 @@ export default function PublicView() {
                     setSelectedIdea(idea);
                     setOpenDetailFeedbackModal(!openDetailFeedbackModal);
                   }}
+                  voted={ideaVotes.some((vote) => vote.ideaId === idea._id)}
                 />
               </div>
             ))}

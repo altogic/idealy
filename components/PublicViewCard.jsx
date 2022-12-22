@@ -1,58 +1,43 @@
-import { useState } from 'react';
-import cn from 'classnames';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { DateTime } from 'luxon';
-import TopicBadges from './TopicBadges';
+import { useDispatch } from 'react-redux';
+import { ChevronDown, ChevronUp } from './icons';
 import StatusButton from './StatusButton';
+import TopicBadges from './TopicBadges';
 
-export default function PublicViewCard({ idea, onClick }) {
-  const [counter, setCounter] = useState(0);
+export default function PublicViewCard({ idea, onClick, voted }) {
+  const dispatch = useDispatch();
 
+  const upVote = () => {
+    dispatch(ideaActions.voteIdea(idea._id));
+  };
+  const downVote = () => {
+    dispatch(ideaActions.downvoteIdea(idea._id));
+  };
   return (
     <div className="px-2 py-6 lg:p-6 rounded-lg transition hover:bg-slate-50 ]">
       <div className="flex items-start lg:items-center gap-6">
-        <div className="flex flex-col items-center bg-white px-3 md:px-5 rounded-lg">
+        <div
+          className={`flex flex-col items-center bg-white px-3 md:px-5 border rounded-lg h-20 ${
+            voted ? 'border-indigo-500' : 'border-gray-400'
+          }`}>
           <button
             type="button"
-            onClick={() => setCounter(counter + 1)}
-            className="inline-flex items-center justify-center text-indigo-700 w-6 h-6">
-            <svg
-              className="w-4 h-2"
-              viewBox="0 0 14 8"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M13 7L7 1L1 7"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            onClick={upVote}
+            className="inline-flex items-center justify-center">
+            <ChevronUp className={`w-5 h-5${voted ? ' text-indigo-900' : 'text-slate-400'} `} />
           </button>
-          <span className="text-indigo-700 text-2xl font-semibold tracking-md">{counter}</span>
-          <button
-            type="button"
-            onClick={() => {
-              setCounter(counter === 0 ? 0 : counter - 1);
-            }}
-            className={cn(
-              `inline-flex items-center justify-center w-6 h-6`,
-              counter === 0 ? 'text-slate-100' : 'text-indigo-700'
-            )}>
-            <svg
-              className="w-4 h-2"
-              viewBox="0 0 14 8"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M1 1L7 7L13 1"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
+          <span className="text-indigo-700 text-2xl font-semibold tracking-md">
+            {idea?.voteCount}
+          </span>
+          {idea?.voteCount > 0 && (
+            <button
+              type="button"
+              onClick={downVote}
+              className="inline-flex items-center justify-center">
+              <ChevronDown className="w-5 h-5 text-slate-400" />
+            </button>
+          )}
         </div>
         <button type="button" onClick={onClick} className="w-full">
           <div className="flex items-center gap-2 mb-2">
