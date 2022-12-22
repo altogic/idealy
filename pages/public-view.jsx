@@ -7,7 +7,7 @@ import PublicViewCard from '@/components/PublicViewCard';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import Head from 'next/head';
 import Router from 'next/router';
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const filter = [
@@ -19,14 +19,18 @@ const filter = [
 export default function PublicView() {
   const [isFiltered, setIsFiltered] = useState(filter[0]);
   const [page, setPage] = useState(1);
-  const company = useSelector((state) => state.company.company);
-  const user = useSelector((state) => state.auth.user);
   const [openDetailFeedbackModal, setOpenDetailFeedbackModal] = useState(false);
   const [selectedIdea, setSelectedIdea] = useState();
+  const [openSubmitFeedbackModal, setOpenSubmitFeedbackModal] = useState(false);
+
   const dispatch = useDispatch();
+
+  const company = useSelector((state) => state.company.company);
+  const user = useSelector((state) => state.auth.user);
   const ideas = useSelector((state) => state.idea.ideas);
   const countInfo = useSelector((state) => state.idea.countInfo);
   const ideaVotes = useSelector((state) => state.idea.ideaVotes);
+
   const getIdeasByCompany = useCallback(() => {
     dispatch(
       ideaActions.getIdeasByCompany({
@@ -67,6 +71,13 @@ export default function PublicView() {
       }
     }
   }, [company]);
+  useEffect(() => {
+    const isModalOpen = openDetailFeedbackModal || openSubmitFeedbackModal;
+    if (!isModalOpen) {
+      setSelectedIdea();
+    }
+  }, [openDetailFeedbackModal, openSubmitFeedbackModal]);
+
   return (
     <>
       <Head>
@@ -84,7 +95,13 @@ export default function PublicView() {
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.{' '}
               </p>
             </div>
-            {isSubmitIdeaVisible && <SubmitIdea />}
+            {isSubmitIdeaVisible && (
+              <SubmitIdea
+                open={openSubmitFeedbackModal}
+                setOpen={setOpenSubmitFeedbackModal}
+                idea={selectedIdea}
+              />
+            )}
           </div>
           <FilterIdea isFiltered={isFiltered} setIsFiltered={setIsFiltered} />
           <InfiniteScroll
@@ -111,6 +128,8 @@ export default function PublicView() {
           open={openDetailFeedbackModal}
           setOpen={setOpenDetailFeedbackModal}
           idea={selectedIdea}
+          company={company}
+          setOpenSubmitFeedbackModal={setOpenSubmitFeedbackModal}
         />
       </Layout>
     </>
