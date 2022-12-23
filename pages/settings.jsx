@@ -17,9 +17,10 @@ import WhiteLabel from '@/layouts/settings/WhiteLabel';
 import Authentication from '@/layouts/settings/Authentication';
 import Miscellaneous from '@/layouts/settings/Miscellaneous';
 import { useRouter } from 'next/router';
-import { PROFILE_TABS, COMPANY_TABS } from 'constants';
+import { PROFILE_TABS, COMPANY_TABS, BREAKPOINT } from 'constants';
 import { useSelector } from 'react-redux';
 import { Close, HamburgerMenu } from '@/components/icons';
+import useWindowSize from '@/hooks/useWindowSize';
 import _ from 'lodash';
 
 export default function Settings() {
@@ -30,6 +31,8 @@ export default function Settings() {
   const [companyTabs, setCompanyTabs] = useState();
   const router = useRouter();
   const company = useSelector((state) => state.company.company);
+  const size = useWindowSize();
+
   useEffect(() => {
     if (router.query?.tab) {
       const filteredCompanyTabs = COMPANY_TABS.filter((tab) => tab.roles.includes(company?.role));
@@ -75,7 +78,7 @@ export default function Settings() {
                 <Tab.List
                   className={cn(
                     `lg:flex flex-col gap-1 fixed lg:static w-full lg:w-auto pb-10 transform px-2 lg:px-6 lg:border-r lg:border-gray-300`,
-                    openSidebar
+                    size.width < BREAKPOINT.TABLET_SIZE && openSidebar
                       ? 'top-0 left-0 flex h-screen bg-white overflow-y-auto z-40'
                       : 'hidden'
                   )}>
@@ -92,8 +95,8 @@ export default function Settings() {
                         cn(
                           'px-4 py-3 text-sm font-medium tracking-sm border-2 rounded-md text-left focus:outline-none',
                           selected
-                            ? 'bg-slate-50 text-slate-700 border-indigo-700'
-                            : 'text-slate-500 border-transparent'
+                            ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-100 purple:text-pt-100 border-indigo-700 dark:border-aa-400 purple:border-pt-400'
+                            : 'text-slate-500 dark:text-aa-200 purple:text-pt-200 border-transparent'
                         )
                       }
                       key={tab.id}
@@ -105,7 +108,7 @@ export default function Settings() {
                     </Tab>
                   ))}
                   {company?.role !== 'Moderator' && (
-                    <h2 className="text-slate-800 p-4 mt-3 lg:mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200">
+                    <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 p-4 mt-3 lg:mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200">
                       {company?.name}
                     </h2>
                   )}
@@ -117,8 +120,8 @@ export default function Settings() {
                             cn(
                               'px-4 py-3 text-sm font-medium tracking-sm border-2 rounded-md text-left focus:outline-none',
                               selected
-                                ? 'bg-slate-50 text-slate-700 border-indigo-700'
-                                : 'text-slate-500 border-transparent'
+                                ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-100 purple:text-pt-100 border-indigo-700 dark:border-aa-400 purple:border-pt-400'
+                                : 'text-slate-500 dark:text-aa-200 purple:text-pt-200 border-transparent'
                             )
                           }
                           key={tab.id}

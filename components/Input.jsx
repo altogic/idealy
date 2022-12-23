@@ -18,7 +18,7 @@ export default function Input({
         <label
           htmlFor={id}
           className={cn(
-            'inline-block text-slate-700 mb-1.5 text-sm font-medium',
+            'inline-block text-slate-700 dark:text-aa-100 purple:text-pt-100 mb-1.5 text-sm font-medium',
             error && 'text-red-600'
           )}>
           {label}

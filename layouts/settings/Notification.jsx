@@ -24,7 +24,7 @@ export default function Notification() {
 
   useEffect(() => {
     if (user) {
-      const notification = user.notifications.find((n) => n.companyId === selectedCompany._id);
+      const notification = user.notifications?.find((n) => n.companyId === selectedCompany?._id);
       if (notification) {
         setSelectedNotification(notification);
         setDailyDigest(notification.dailyDigest);
@@ -44,7 +44,7 @@ export default function Notification() {
   }, [user]);
   const updateNotification = (fieldName, value) => {
     dispatch(
-      authActions.updateNotificationSettings({ id: selectedNotification._id, fieldName, value })
+      authActions.updateNotificationSettings({ id: selectedNotification?._id, fieldName, value })
     );
   };
   return (
@@ -156,7 +156,7 @@ export default function Notification() {
             }}
           />
         </div>
-        <hr className="mt-6 mb-20 border-slate-200" />
+        {/* <hr className="mt-6 mb-20 border-slate-200" /> */}
         {
           // TODO - complete
           /* <div className="pb-4 mb-6 border-b border-slate-200">
