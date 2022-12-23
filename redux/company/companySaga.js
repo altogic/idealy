@@ -486,23 +486,18 @@ function* deleteCompanySubListsItem({ payload: { id, fieldName } }) {
     yield put(companyActions.deleteCompanySubListsItemFailed(error));
   }
 }
-function* updateCompanyBySubdomain({ payload: { subdomain, onFail, onSuccess, userId } }) {
+function* getCompanyBySubdomain({ payload: { subdomain, onFail, onSuccess, userId } }) {
   try {
     const { data, error } = yield call(companyService.getCompanyBySubdomain, subdomain, userId);
     if (error) {
       throw error;
     }
     if (data) {
-      yield put(
-        companyActions.getCompanyBySubdomainSuccess(
-          data.company
-            ? {
-                ...data.company,
-                ...data.role
-              }
-            : data
-        )
-      );
+      const companyRes = {
+        ...data.company,
+        ...data.role
+      };
+      yield put(companyActions.getCompanyBySubdomainSuccess(data.company ? companyRes : data));
       onSuccess(data.company.subdomain);
     } else {
       onFail();
@@ -572,7 +567,7 @@ export default function* companySaga() {
     takeEvery(companyActions.declineInvitationRealtime.type, declineInvitationRealtime),
     takeEvery(companyActions.addItemToCompanySubLists.type, addItemToCompanySubLists),
     takeEvery(companyActions.deleteCompanySubListsItem.type, deleteCompanySubListsItem),
-    takeEvery(companyActions.getCompanyBySubdomain.type, updateCompanyBySubdomain),
+    takeEvery(companyActions.getCompanyBySubdomain.type, getCompanyBySubdomain),
     takeEvery(
       companyActions.updateCompanySubListsOrderRealtime.type,
       updateCompanySubListsOrderRealtime

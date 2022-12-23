@@ -3,24 +3,25 @@ import { realtime } from '@/utils/altogic';
 import { call, put, takeEvery, select } from 'redux-saga/effects';
 import { ideaActions } from './ideaSlice';
 
-function* getIdeasByCompanySaga({ payload: { subdomain, limit, page, sort, type } }) {
+function* getIdeasByCompanySaga({ payload: { subdomain, limit, page, sort, filter, type } }) {
   try {
     const { data: ideas, errors } = yield call(ideaService.getIdeasByCompany, {
       subdomain,
       limit,
       page,
-      sort
+      sort,
+      filter
     });
-    let filter = '';
+    let voteFilter = '';
     ideas.result.forEach((idea, index) => {
       const { _id } = idea;
       if (index === ideas.result.length - 1) {
-        filter += `this.ideaId == '${_id}'`;
+        voteFilter += `this.ideaId == '${_id}'`;
       } else {
-        filter += `this.ideaId == '${_id}' || `;
+        voteFilter += `this.ideaId == '${_id}' || `;
       }
     });
-    const { data: votes } = yield call(ideaService.getIdeaVotes, filter);
+    const { data: votes } = yield call(ideaService.getIdeaVotes, voteFilter);
     if (errors) {
       throw new Error(errors);
     }
