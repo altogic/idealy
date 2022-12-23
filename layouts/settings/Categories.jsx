@@ -68,7 +68,7 @@ export default function Categories() {
   }, [loading]);
   return (
     <>
-      <div className="pb-4 mb-11 border-b border-slate-200">
+      <div className="pb-4 mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-aa-400">
         <SectionTitle
           sectionTitle="Categories"
           sectionDescription="Organize your ideas into categories. Categories help you internally manage ideas in groups. Unlike topics, which are visible to end users, categories can only be viewed by company admins and moderators."

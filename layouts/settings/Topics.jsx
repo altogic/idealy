@@ -68,7 +68,7 @@ export default function Topics() {
 
   return (
     <>
-      <div className="pb-4 mb-11 border-b border-slate-200">
+      <div className="pb-4 mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-aa-400">
         <SectionTitle
           sectionTitle="Topics"
           sectionDescription="Add Topics so that users can tag them when creating Ideas."
