@@ -86,7 +86,7 @@ export default function ChangeEmail({ user }) {
           name="email"
           id="email"
           value={user?.email}
-          icon={<Email className="w-5 h-5 text-gray-500" />}
+          icon={<Email className="w-5 h-5 text-gray-500 dark:text-aa-100 purple:text-pt-100" />}
           disabled
         />
         <Input

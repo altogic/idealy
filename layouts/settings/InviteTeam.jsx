@@ -98,7 +98,7 @@ export default function InviteTeam() {
   };
   return (
     <div>
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between lg:gap-4 pb-4 mb-10 lg:mb-11 lg:border-b lg:border-slate-200">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between lg:gap-4 pb-4 mb-10 lg:mb-11 lg:border-b lg:border-slate-200 dark:border-aa-400 purple:border-aa-400">
         <div className="pb-4 mb-10 lg:pb-0 lg:mb-0 border-b border-slate-200 lg:border-0">
           <SectionTitle
             sectionTitle="Invite Team"
@@ -315,9 +315,11 @@ export default function InviteTeam() {
         </div>
       ) : (
         <div>
-          <div className="flex items-center justify-between pl-4 pr-[7rem] pb-4 mb-11 border-b border-slate-200">
-            <span>Admins</span>
-            <span className="hidden lg:inline-block">Role</span>
+          <div className="flex items-center justify-between pl-4 pr-[7rem] pb-4 mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-aa-400">
+            <span className="text-slate-800 dark:text-aa-100 purple:text-pt-100">Admins</span>
+            <span className="hidden lg:inline-block text-slate-800 dark:text-aa-100 purple:text-pt-100">
+              Role
+            </span>
           </div>
           <div className="divide-y divide-slate-200">
             {companyMembers?.length > 0 || unregisteredCompanyMembers?.length > 0 ? (

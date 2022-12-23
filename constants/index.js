@@ -1,5 +1,10 @@
 // eslint-disable-next-line import/prefer-default-export
 
+export const BREAKPOINT = {
+  TABLET_SIZE: 1024,
+  DESKTOP_SIZE: 1270
+};
+
 export const ROLE = [
   { id: 1, name: 'Admin' },
   { id: 2, name: 'Moderator' }

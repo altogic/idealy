@@ -91,7 +91,7 @@ export default function Statuses() {
 
   return (
     <>
-      <div className="pb-4 mb-6 lg:mb-11 border-b border-slate-200">
+      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
         <SectionTitle
           sectionTitle="Statuses"
           sectionDescription="Use Statuses to track Ideas on your Roadmap."
@@ -150,7 +150,7 @@ export default function Statuses() {
         <hr className="border-slate-200" />
         <div>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-8">
-            <span className="text-sm">
+            <span className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-sm">
               Which Status is your &quot;<strong>Completed</strong>&quot; Status?{' '}
             </span>
             <Listbox value={status} onChange={(selected) => changeCompletedStatus(selected)}>
