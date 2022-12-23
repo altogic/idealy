@@ -39,6 +39,9 @@ export default function PublicView() {
       req.sort = sortQuery;
       req.type = 'sort';
     }
+    if (!user && !company?.role) {
+      req.filter = 'this.isArchived == false && this.isPrivate == false';
+    }
     dispatch(ideaActions.getIdeasByCompany(req));
   }, [page, sortQuery]);
 

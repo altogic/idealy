@@ -320,7 +320,7 @@ export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmit
                               )}
                             </div>
                             <div className="prose prose-p:text-slate-500 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
-                              <p>{idea?.content}</p>
+                              <p dangerouslySetInnerHTML={{ __html: idea?.content }} />
                             </div>
                             <div className="mt-6 mb-16">
                               <div className="flex items-center gap-3 mb-6">

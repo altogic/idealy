@@ -49,7 +49,7 @@ export const ideaSlice = createSlice({
     },
     createIdeaSuccess(state, action) {
       state.isLoading = false;
-      state.ideas = [...state.ideas, action.payload];
+      state.ideas = [action.payload, ...state.ideas];
     },
     createIdeaFailure(state, action) {
       state.isLoading = false;
