@@ -7,17 +7,7 @@ import { DateTime } from 'luxon';
 import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DeleteModal from '../DeleteModal';
-import {
-  Archive,
-  ChevronDown,
-  CircleCheck,
-  Thumbtack,
-  Trash,
-  Danger,
-  Pen,
-  Bug,
-  Eye
-} from '../icons';
+import { Archive, Bug, ChevronUp, CircleCheck, Danger, Eye, Pen, Thumbtack, Trash } from '../icons';
 
 export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmitFeedbackModal }) {
   const dispatch = useDispatch();
@@ -51,6 +41,7 @@ export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmit
     dispatch(ideaActions.deleteIdea(idea._id));
     setOpen(false);
   };
+  console.log(234);
   return (
     <>
       <Transition.Root show={open} as={Fragment}>
@@ -93,7 +84,7 @@ export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmit
                                 <>
                                   <Disclosure.Button className="-mx-2 p-2 flex items-center justify-between rounded transition-colors duration-300 hover:bg-surface-10 outline-none cursor-pointer">
                                     <span>Statuses</span>
-                                    <ChevronDown
+                                    <ChevronUp
                                       className={`${
                                         open ? 'rotate-180 transform' : ''
                                       } h-5 w-5 text-slate-500`}
@@ -164,7 +155,7 @@ export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmit
                                   <Disclosure.Button>
                                     <div className="-mx-2 p-2 flex items-center justify-between rounded transition-colors duration-300 hover:bg-surface-10 outline-none cursor-pointer">
                                       <span>Visibility</span>
-                                      <ChevronDown
+                                      <ChevronUp
                                         className={`${
                                           open ? 'rotate-180 transform' : ''
                                         } h-5 w-5 text-slate-500`}

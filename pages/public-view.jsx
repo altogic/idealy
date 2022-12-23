@@ -9,6 +9,8 @@ import Head from 'next/head';
 import Router from 'next/router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Button from '@/components/Button';
+import { Plus } from '@/components/icons';
 
 const filter = [
   { name: 'Trending' },
@@ -74,7 +76,9 @@ export default function PublicView() {
   useEffect(() => {
     const isModalOpen = openDetailFeedbackModal || openSubmitFeedbackModal;
     if (!isModalOpen) {
+      console.log(1);
       setSelectedIdea();
+      dispatch(ideaActions.clearSimilarIdeas());
     }
   }, [openDetailFeedbackModal, openSubmitFeedbackModal]);
 
@@ -96,11 +100,21 @@ export default function PublicView() {
               </p>
             </div>
             {isSubmitIdeaVisible && (
-              <SubmitIdea
-                open={openSubmitFeedbackModal}
-                setOpen={setOpenSubmitFeedbackModal}
-                idea={selectedIdea}
-              />
+              <>
+                <Button
+                  type="button"
+                  text="Submit Feedback"
+                  icon={<Plus className="w-5 h-5" />}
+                  variant="indigo"
+                  size="sm"
+                  onClick={() => setOpenSubmitFeedbackModal(!openSubmitFeedbackModal)}
+                />
+                <SubmitIdea
+                  open={openSubmitFeedbackModal}
+                  setOpen={setOpenSubmitFeedbackModal}
+                  idea={selectedIdea}
+                />
+              </>
             )}
           </div>
           <FilterIdea isFiltered={isFiltered} setIsFiltered={setIsFiltered} />

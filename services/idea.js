@@ -10,6 +10,7 @@ const ideaService = {
       filter
     }),
   updateIdea: (req) => endpoint.put('/idea', req),
-  deleteIdea: (id) => db.model('ideas').object(id).delete()
+  deleteIdea: (id) => db.model('ideas').object(id).delete(),
+  searchSimilarIdeas: (title) => endpoint.get('/idea/search', { title })
 };
 export default ideaService;

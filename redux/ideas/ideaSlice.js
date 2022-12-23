@@ -6,7 +6,8 @@ const initialState = {
   isLoading: false,
   error: null,
   countInfo: null,
-  ideaVotes: []
+  ideaVotes: [],
+  similarIdeas: []
 };
 
 export const ideaSlice = createSlice({
@@ -103,6 +104,21 @@ export const ideaSlice = createSlice({
     deleteIdeaFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    searchSimilarIdeas(state) {
+      state.isLoading = true;
+    },
+    searchSimilarIdeasSuccess(state, action) {
+      state.isLoading = false;
+      state.similarIdeas = action.payload;
+    },
+    searchSimilarIdeasFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    clearSimilarIdeas() {},
+    clearSimilarIdeasSuccess(state) {
+      state.similarIdeas = [];
     }
   },
   extraReducers: {
