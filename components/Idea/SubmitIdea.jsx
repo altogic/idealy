@@ -58,7 +58,6 @@ export default function SubmitIdea({ open, setOpen, idea }) {
     mode: 'all'
   });
   const onSubmit = (data) => {
-    console.log(data);
     const reqData = {
       ...data,
       content,
