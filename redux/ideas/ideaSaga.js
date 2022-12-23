@@ -92,6 +92,20 @@ function* deleteIdeaSaga({ payload: id }) {
     yield put(ideaActions.deleteIdeaFailure(error));
   }
 }
+function* searchSimilarIdeasSaga({ payload: title }) {
+  try {
+    const { data, errors } = yield call(ideaService.searchSimilarIdeas, title);
+    if (errors) {
+      throw new Error(errors);
+    }
+    yield put(ideaActions.searchSimilarIdeasSuccess(data));
+  } catch (error) {
+    yield put(ideaActions.searchSimilarIdeasFailure(error));
+  }
+}
+function* clearSimilarIdeas() {
+  yield put(ideaActions.clearSimilarIdeasSuccess());
+}
 
 export default function* ideaSaga() {
   yield takeEvery(ideaActions.getIdeasByCompany.type, getIdeasByCompanySaga);
@@ -100,4 +114,6 @@ export default function* ideaSaga() {
   yield takeEvery(ideaActions.downvoteIdea.type, downvoteIdeaSaga);
   yield takeEvery(ideaActions.updateIdea.type, updateIdeaSaga);
   yield takeEvery(ideaActions.deleteIdea.type, deleteIdeaSaga);
+  yield takeEvery(ideaActions.searchSimilarIdeas.type, searchSimilarIdeasSaga);
+  yield takeEvery(ideaActions.clearSimilarIdeas.type, clearSimilarIdeas);
 }
