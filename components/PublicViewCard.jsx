@@ -24,8 +24,9 @@ export default function PublicViewCard({ idea, onClick, voted }) {
           <button
             type="button"
             onClick={upVote}
+            disabled={voted}
             className="inline-flex items-center justify-center">
-            <ChevronUp className={`w-5 h-5${voted ? ' text-indigo-900' : 'text-slate-400'} `} />
+            <ChevronUp className={`w-5 h-5 ${voted ? ' text-indigo-900' : 'text-slate-400'} `} />
           </button>
           <span className="text-indigo-700 text-2xl font-semibold tracking-md">
             {idea?.voteCount}

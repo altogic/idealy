@@ -41,7 +41,6 @@ export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmit
     dispatch(ideaActions.deleteIdea(idea._id));
     setOpen(false);
   };
-  console.log(234);
   return (
     <>
       <Transition.Root show={open} as={Fragment}>
@@ -307,13 +306,13 @@ export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmit
                                   Archived
                                 </span>
                               )}
-                              {idea?.isPrivate && (
+                              {isPrivate && (
                                 <span className="inline-flex items-center rounded-full bg-blue-50 py-1 px-2 text-xs font-medium text-blue-700">
                                   <Eye className="w-3 h-3 mr-1 text-blue-500" />
                                   Private
                                 </span>
                               )}
-                              {idea?.isBug && (
+                              {isBug && (
                                 <span className="inline-flex items-center rounded-full bg-red-50 py-1 px-2 text-xs font-medium text-red-700">
                                   <Bug className="w-3 h-3 mr-1 text-red-500" />
                                   Bug
@@ -397,7 +396,10 @@ export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmit
                                   </div>
                                 </div>
                                 {/* Feedback Detail Status Badge */}
-                                <StatusButton name={idea?.status.name} color={idea?.status.color} />
+                                <StatusButton
+                                  name={selectedStatus?.name}
+                                  color={selectedStatus?.color}
+                                />
                               </div>
                             </div>
                           </div>

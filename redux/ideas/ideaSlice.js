@@ -119,7 +119,12 @@ export const ideaSlice = createSlice({
     clearSimilarIdeas() {},
     clearSimilarIdeasSuccess(state) {
       state.similarIdeas = [];
-    }
+    },
+    createIdeaRealtime() {},
+    voteIdeaRealtime() {},
+    downvoteIdeaRealtime() {},
+    updateIdeaRealtime() {},
+    deleteIdeaRealtime() {}
   },
   extraReducers: {
     [HYDRATE]: (state, action) => ({

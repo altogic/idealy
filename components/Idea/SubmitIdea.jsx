@@ -22,13 +22,13 @@ export default function SubmitIdea({ open, setOpen, idea }) {
 
   const [guestValidation, setGuestValidation] = useState(false);
   const [topics, setTopics] = useState([]);
-  const [value, setValue] = useState('');
+  const [content, setContent] = useState('');
   const [inpTitle, setInpTitle] = useState();
   const dispatch = useDispatch();
   const schema = yup.object().shape({
     title: yup.string().required('Title is required'),
-    content: yup.string().required('Content is required'),
-    topics: yup.array().max(3, 'Maximum 3 topics'),
+    content: yup.string(),
+    topic: yup.array('Choose at least one topic').max(3, 'Maximum 3 topics'),
     guestName: yup.string().when([], {
       is: () => guestValidation && !user,
       then: yup.string().required('Name is required')
@@ -48,6 +48,7 @@ export default function SubmitIdea({ open, setOpen, idea }) {
     handleSubmit,
     control,
     reset,
+    setValue,
     formState: { errors }
   } = useForm({
     defaultValues: {
@@ -57,12 +58,17 @@ export default function SubmitIdea({ open, setOpen, idea }) {
     mode: 'all'
   });
   const onSubmit = (data) => {
+    console.log(data);
     const reqData = {
       ...data,
-      content: value,
+      content,
       topics
     };
     delete reqData.privacyPolicy;
+    if (user) {
+      reqData.author = user._id;
+    }
+    reqData.companySubdomain = company.subdomain;
     if (idea) {
       dispatch(ideaActions.updateIdea({ _id: idea._id, ...reqData }));
     } else {
@@ -85,7 +91,6 @@ export default function SubmitIdea({ open, setOpen, idea }) {
     }
   }, [open]);
   useEffect(() => {
-    console.log(idea);
     if (!_.isNil(idea)) {
       reset({
         title: idea?.title,
@@ -94,18 +99,18 @@ export default function SubmitIdea({ open, setOpen, idea }) {
         guestName: idea?.guestName,
         guestEmail: idea?.guestEmail
       });
-      setValue(idea?.content);
+      setContent(idea?.content);
       setTopics(idea?.topics);
     } else {
       reset({
-        title: '',
-        content: '',
-        topics: '',
-        guestName: '',
-        guestEmail: ''
+        title: undefined,
+        content: undefined,
+        topics: undefined,
+        guestName: undefined,
+        guestEmail: undefined
       });
       setTopics([]);
-      setValue('');
+      setContent('');
       setInpTitle('');
     }
   }, [idea]);
@@ -121,6 +126,18 @@ export default function SubmitIdea({ open, setOpen, idea }) {
       clearTimeout(timer);
     };
   }, [inpTitle]);
+
+  useEffect(() => {
+    if (content) {
+      setValue('content', content);
+    }
+  }, [content]);
+
+  useEffect(() => {
+    if (topics) {
+      setValue('topics', topics);
+    }
+  }, [topics]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -225,8 +242,8 @@ export default function SubmitIdea({ open, setOpen, idea }) {
                             render={() => (
                               <ReactQuill
                                 theme="snow"
-                                value={value}
-                                onChange={setValue}
+                                value={content}
+                                onChange={setContent}
                                 className={` border ${
                                   !errors?.content?.message
                                     ? 'border-gray-300 focus:border-blue-300'
