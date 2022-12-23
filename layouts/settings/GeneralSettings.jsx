@@ -8,7 +8,7 @@ import CompanySiteNavigation from './GeneralSettings/CompanySiteNavigation';
 export default function GeneralFunctions() {
   return (
     <>
-      <div className="pb-4 mb-11 border-b border-slate-200">
+      <div className="pb-4 mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-aa-400">
         <SectionTitle
           sectionTitle="General Settings"
           sectionDescription="Manage your company settings."

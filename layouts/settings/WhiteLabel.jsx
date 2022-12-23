@@ -29,7 +29,7 @@ export default function WhiteLabel() {
   };
   return (
     <div>
-      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200">
+      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
         <SectionTitle
           sectionTitle="White Label"
           sectionDescription="Personalize Frill to be your own."
@@ -37,16 +37,16 @@ export default function WhiteLabel() {
         />
       </div>
       <div className="max-w-2xl">
-        <div className="bg-slate-100 text-slate-500 py-6 px-8 text-sm font-semibold tracking-sm rounded-lg">
+        <div className="bg-slate-100 dark:bg-aa-600 purple:bg-pt-800 text-slate-500 dark:text-aa-100 purple:text-pt-100 py-6 px-8 text-sm font-semibold tracking-sm rounded-lg">
           White Labelling features are a paid Add-on.{' '}
-          <a href="#" className="text-indigo-700">
+          <a href="#" className="text-indigo-700 dark:text-aa-400 purple:text-pt-400">
             Compare plans
           </a>
         </div>
-        <h2 className="text-slate-800 py-6 text-xl font-semibold tracking-md border-b border-slate-200">
+        <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 py-6 text-xl font-semibold tracking-md border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
           White Labeling settings
         </h2>
-        <div className="py-6 border-b border-slate-200">
+        <div className="py-6 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
           <Toggle
             title={`Powered by ${process.env.appName}`}
             description

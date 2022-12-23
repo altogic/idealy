@@ -117,7 +117,7 @@ export default function SettingsActionCard({
 
   const getContent = (provided) => (
     <div
-      className="group flex items-center justify-between gap-4 hover:bg-slate-50 h-[76px] rounded-lg "
+      className="group flex items-center justify-between gap-4 bg-white dark:bg-aa-900 purple:bg-pt-1000 hover:bg-slate-50 dark:hover:bg-aa-700 purple:hover:bg-pt-800 h-[76px] rounded-lg "
       ref={!isColorModalOpen && canDnd ? provided.innerRef : null}
       {...provided?.draggableProps}
       {...provided?.dragHandleProps}
@@ -187,7 +187,7 @@ export default function SettingsActionCard({
                 name="name"
                 error={errors.name}
                 register={register('name')}
-                className="bg-transparent w-full text-slate-700 text-sm lg:text-base tracking-sm border-0 focus:outline-none focus:ring-0"
+                className="bg-transparent w-full text-slate-700 dark:text-aa-100 purple:text-pt-100 text-sm lg:text-base tracking-sm border-0 focus:outline-none focus:ring-0"
                 onBlur={(e) => {
                   handleEdit(e.target.value, 'name', !roadMapDescription);
                 }}
@@ -204,7 +204,7 @@ export default function SettingsActionCard({
                   name="name"
                   error={errors.description}
                   register={register('description')}
-                  className="bg-transparent w-full text-slate-700 tracking-sm border-0 focus:outline-none focus:ring-0 mt-2"
+                  className="bg-transparent w-full text-slate-700 dark:text-aa-100 purple:text-pt-100 tracking-sm border-0 focus:outline-none focus:ring-0 mt-2"
                   onBlur={(e) => {
                     handleEdit(e.target.value, 'description', false);
                   }}
@@ -219,7 +219,7 @@ export default function SettingsActionCard({
           ) : (
             <div className="flex flex-col">
               <h6
-                className="max-w-[200px] lg:max-w-[500px] text-slate-700 text-sm lg:text-base tracking-sm truncate"
+                className="max-w-[200px] lg:max-w-[500px] text-slate-700 dark:text-aa-100 purple:text-pt-100 text-sm lg:text-base tracking-sm truncate"
                 title={name}>
                 {name}
               </h6>
@@ -235,7 +235,7 @@ export default function SettingsActionCard({
           <div className="flex items-center justify-between gap-2 lg:gap-4 transition opacity-0 group-hover:opacity-100">
             <Button
               type="button"
-              icon={<Pen className="w-5 h-5 text-slate-500" />}
+              icon={<Pen className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400" />}
               variant="icon"
               onClick={(e) => {
                 e.stopPropagation();
@@ -244,7 +244,9 @@ export default function SettingsActionCard({
             />
             <Button
               type="button"
-              icon={<Trash className="w-5 h-5 text-slate-500" />}
+              icon={
+                <Trash className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400" />
+              }
               variant="icon"
               onClick={() => setIsDelete(!isDelete)}
             />

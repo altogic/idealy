@@ -31,7 +31,7 @@ export default function Privacy() {
   };
   return (
     <div>
-      <div className="pb-4 mb-11 border-b border-slate-200">
+      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
         <SectionTitle
           sectionTitle="Privacy"
           sectionDescription="Fine tune who has access to your company."
@@ -39,7 +39,7 @@ export default function Privacy() {
         />
       </div>
       <div className="max-w-2xl">
-        <div className="divide-y divide-slate-200">
+        <div className="divide-y divide-slate-200 dark:divide-aa-400 purple:divide-pt-400">
           <div className="pb-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <SectionTitle

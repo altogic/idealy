@@ -118,7 +118,7 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
 
   return (
     <>
-      <div className="group flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-4 transition hover:bg-slate-50">
+      <div className="group flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white dark:bg-aa-900 purple:bg-pt-1000 p-4 transition hover:bg-slate-50 dark:hover:bg-aa-700 purple:hover:bg-pt-800">
         <div className="flex items-center gap-3">
           {isRegistered ? (
             <Avatar className="w-[50px] h-[50px] rounded-full" src={avatar} alt={name} />
@@ -126,16 +126,20 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
             <CircleUser className="w-[50px] h-[50px] rounded-full text-slate-400" />
           )}
           <div className={cn(email ? 'space-y-1' : null)}>
-            <h6 className="text-slate-700 text-base font-medium tracking-sm whitespace-nowrap">
+            <h6 className="text-slate-700 dark:text-aa-100 purple:text-pt-100 text-base font-medium tracking-sm whitespace-nowrap">
               {name}
             </h6>
             {email && (
-              <p className="text-slate-400 text-sm tracking-sm whitespace-nowrap">{email}</p>
+              <p className="text-slate-400 dark:text-aa-300 purple:text-pt-300 text-sm tracking-sm whitespace-nowrap">
+                {email}
+              </p>
             )}
           </div>
         </div>
         {status && (
-          <div className="text-slate-400 text-sm tracking-sm lg:text-center">{status}</div>
+          <div className="text-slate-400 dark:text-aa-300 purple:text-pt-300 text-sm tracking-sm lg:text-center">
+            {status}
+          </div>
         )}
         <div className="flex items-center gap-4">
           <Listbox
@@ -200,7 +204,9 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
           {(email !== user?.email && role !== company?.role) || company?.role === 'Owner' ? (
             <Button
               type="button"
-              icon={<Trash className="w-5 h-5 text-slate-500 transition hover:text-red-500" />}
+              icon={
+                <Trash className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-red-500 dark:hover:text-red-500 purple:hover:text-red-500" />
+              }
               variant="icon"
               onClick={() => setIsDelete(!isDelete)}
             />
