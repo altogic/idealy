@@ -1,7 +1,7 @@
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { DateTime } from 'luxon';
 import { useDispatch } from 'react-redux';
-import { ChevronDown, ChevronUp } from './icons';
+import { Archive, Bug, ChevronDown, ChevronUp, Eye, Thumbtack } from './icons';
 import StatusButton from './StatusButton';
 import TopicBadges from './TopicBadges';
 
@@ -24,8 +24,9 @@ export default function PublicViewCard({ idea, onClick, voted }) {
           <button
             type="button"
             onClick={upVote}
+            disabled={voted}
             className="inline-flex items-center justify-center">
-            <ChevronUp className={`w-5 h-5${voted ? ' text-indigo-900' : 'text-slate-400'} `} />
+            <ChevronUp className={`w-5 h-5 ${voted ? ' text-indigo-900' : 'text-slate-400'} `} />
           </button>
           <span className="text-indigo-700 text-2xl font-semibold tracking-md">
             {idea?.voteCount}
@@ -41,30 +42,31 @@ export default function PublicViewCard({ idea, onClick, voted }) {
         </div>
         <button type="button" onClick={onClick} className="w-full">
           <div className="flex items-center gap-2 mb-2">
-            <span className="inline-flex items-center rounded-full bg-orange-50 py-1 px-2 text-xs font-medium text-orange-700">
-              <svg
-                className="w-3 h-3 mr-1 text-orange-500"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <g clipPath="url(#clip0_1380_17979)">
-                  <path
-                    d="M4.1878 7.80821L1.35938 10.6366M5.84665 3.32097L5.0662 4.10141C5.00254 4.16507 4.97071 4.1969 4.93444 4.2222C4.90225 4.24465 4.86753 4.26323 4.831 4.27756C4.78983 4.29371 4.74569 4.30253 4.65741 4.32019L2.82518 4.68664C2.34903 4.78187 2.11095 4.82948 1.99957 4.95501C1.90254 5.06436 1.85823 5.21071 1.8783 5.35552C1.90135 5.52175 2.07303 5.69343 2.41639 6.03679L5.95925 9.57966C6.30261 9.92301 6.47429 10.0947 6.64052 10.1177C6.78533 10.1378 6.93168 10.0935 7.04103 9.99647C7.16656 9.88509 7.21417 9.64701 7.3094 9.17086L7.67585 7.33863C7.69351 7.25035 7.70234 7.20621 7.71848 7.16504C7.73281 7.12851 7.75139 7.09379 7.77384 7.0616C7.79914 7.02533 7.83097 6.9935 7.89463 6.92984L8.67507 6.1494C8.71578 6.10869 8.73613 6.08834 8.7585 6.07057C8.77837 6.05479 8.79942 6.04054 8.82145 6.02795C8.84626 6.01378 8.87271 6.00244 8.92562 5.97976L10.1728 5.44526C10.5367 5.28932 10.7186 5.21136 10.8012 5.08536C10.8735 4.97519 10.8993 4.84094 10.8732 4.7118C10.8432 4.56413 10.7033 4.42417 10.4234 4.14426L7.85178 1.57269C7.57187 1.29278 7.43191 1.15282 7.28424 1.12288C7.1551 1.09671 7.02086 1.12256 6.91068 1.19483C6.78469 1.27746 6.70672 1.45939 6.55078 1.82324L6.01628 3.07042C5.9936 3.12333 5.98226 3.14978 5.96809 3.17459C5.9555 3.19662 5.94125 3.21767 5.92547 3.23754C5.9077 3.25991 5.88735 3.28027 5.84665 3.32097Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_1380_17979">
-                    <rect width="12" height="12" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
-              Pinned
-            </span>
             <h2 className="text-slate-800 text-xl font-semibold tracking-md">{idea?.title}</h2>
+            {idea?.isPinned && (
+              <span className="inline-flex items-center rounded-full bg-orange-50 py-1 px-2 text-xs font-medium text-orange-700">
+                <Thumbtack className="w-3 h-3 mr-1 text-orange-500" />
+                Pinned
+              </span>
+            )}
+            {idea?.isArchived && (
+              <span className="inline-flex items-center rounded-full bg-yellow-50 py-1 px-2 text-xs font-medium text-yellow-700">
+                <Archive className="w-3 h-3 mr-1 text-yellow-500" />
+                Archived
+              </span>
+            )}
+            {idea?.isPrivate && (
+              <span className="inline-flex items-center rounded-full bg-blue-50 py-1 px-2 text-xs font-medium text-blue-700">
+                <Eye className="w-3 h-3 mr-1 text-blue-500" />
+                Private
+              </span>
+            )}
+            {idea?.isBug && (
+              <span className="inline-flex items-center rounded-full bg-red-50 py-1 px-2 text-xs font-medium text-red-700">
+                <Bug className="w-3 h-3 mr-1 text-red-500" />
+                Bug
+              </span>
+            )}
           </div>
           <p
             className="max-w-3xl text-slate-500 mb-6 text-sm tracking-sm text-left line-clamp-3"
@@ -76,7 +78,11 @@ export default function PublicViewCard({ idea, onClick, voted }) {
               <div className="flex items-center gap-3">
                 {/* User */}
                 <span className="text-slate-700 text-sm font-medium tracking-sm">
-                  {idea?.author ? idea?.author.name : idea?.guestName}
+                  {idea?.author
+                    ? idea?.author.name
+                    : idea?.guestName
+                    ? idea?.guestName
+                    : 'Anonymous'}
                 </span>
                 <svg className="h-1 w-1 text-slate-500" fill="currentColor" viewBox="0 0 8 8">
                   <circle cx={4} cy={4} r={3} />

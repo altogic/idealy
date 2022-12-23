@@ -1,4 +1,4 @@
-import { endpoint } from '@/utils/altogic';
+import { db, endpoint } from '@/utils/altogic';
 
 const ideaService = {
   getIdeasByCompany: (params) => endpoint.get('/idea', params),
@@ -8,6 +8,9 @@ const ideaService = {
   getIdeaVotes: (filter) =>
     endpoint.get(`/ideaVote`, {
       filter
-    })
+    }),
+  updateIdea: (req) => endpoint.put('/idea', req),
+  deleteIdea: (id) => db.model('ideas').object(id).delete(),
+  searchSimilarIdeas: (title) => endpoint.get('/idea/search', { title })
 };
 export default ideaService;

@@ -6,6 +6,7 @@ import { COMPANY_TABS } from 'constants';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { Email } from './icons';
 import { generateUrl } from '../utils';
 
@@ -132,6 +133,22 @@ export default function Realtime() {
       dispatch(companyActions.updateCompanySubListsOrderRealtime(data.message));
     }
   }
+  function createIdeasHandler({ message }) {
+    dispatch(ideaActions.createIdeaRealtime(message));
+  }
+  function updateIdeaHandler({ message }) {
+    dispatch(ideaActions.updateIdeaRealtime(message));
+  }
+  function deleteIdeaHandler({ message }) {
+    dispatch(ideaActions.deleteIdeaRealtime(message));
+  }
+  function voteIdeaHandler({ message }) {
+    dispatch(ideaActions.voteIdeaRealtime(message));
+  }
+  function downVoteIdeaHandler({ message }) {
+    dispatch(ideaActions.downvoteIdeaRealtime(message));
+  }
+
   useEffect(() => {
     if (user && company) {
       realtime.join(user._id);
@@ -155,9 +172,19 @@ export default function Realtime() {
       realtime.on('update-company', updateCompanyHandler);
       realtime.on('accept-invitation', acceptedInvitationHandler);
       realtime.on('update-sublist', updateSublistHandler);
+      realtime.on('create-idea', createIdeasHandler);
+      realtime.on('update-idea', updateIdeaHandler);
+      realtime.on('delete-idea', deleteIdeaHandler);
+      realtime.on('vote-idea', voteIdeaHandler);
+      realtime.on('downvote-idea', downVoteIdeaHandler);
     } else if (company) {
       realtime.join(company._id);
       realtime.on('update-company', updateCompanyHandler);
+      realtime.on('create-idea', createIdeasHandler);
+      realtime.on('update-idea', updateIdeaHandler);
+      realtime.on('delete-idea', deleteIdeaHandler);
+      realtime.on('vote-idea', voteIdeaHandler);
+      realtime.on('downvote-idea', downVoteIdeaHandler);
     }
     return () => {
       realtime.off('delete-membership', deleteMembershipHandler);
@@ -174,6 +201,11 @@ export default function Realtime() {
       realtime.off('update-company', updateCompanyHandler);
       realtime.off('accept-invitation', acceptedInvitationHandler);
       realtime.off('update-sublist', updateSublistHandler);
+      realtime.off('create-idea', createIdeasHandler);
+      realtime.off('update-idea', updateIdeaHandler);
+      realtime.off('delete-idea', deleteIdeaHandler);
+      realtime.off('vote-idea', voteIdeaHandler);
+      realtime.off('downvote-idea', downVoteIdeaHandler);
     };
   }, [user, companies, company]);
 

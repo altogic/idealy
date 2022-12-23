@@ -26,10 +26,10 @@ export default function SavedFilter() {
           big
         />
       </div>
-      <div className={cn(user?.savedFilters.length > 0 ? `max-w-lg` : `max-w-full`)}>
-        {user?.savedFilters.length > 0 ? (
+      <div className={cn(user?.savedFilters?.length > 0 ? `max-w-lg` : `max-w-full`)}>
+        {user?.savedFilters?.length > 0 ? (
           <div>
-            {user?.savedFilters.map((filter) => (
+            {user?.savedFilters?.map((filter) => (
               <SettingsActionCard
                 key={filter._id}
                 id={filter._id}
