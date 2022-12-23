@@ -3,12 +3,13 @@ import { realtime } from '@/utils/altogic';
 import { call, put, takeEvery, select } from 'redux-saga/effects';
 import { ideaActions } from './ideaSlice';
 
-function* getIdeasByCompanySaga({ payload: { subdomain, limit, page } }) {
+function* getIdeasByCompanySaga({ payload: { subdomain, limit, page, sort, type } }) {
   try {
     const { data: ideas, errors } = yield call(ideaService.getIdeasByCompany, {
       subdomain,
       limit,
-      page
+      page,
+      sort
     });
     let filter = '';
     ideas.result.forEach((idea, index) => {
@@ -27,7 +28,9 @@ function* getIdeasByCompanySaga({ payload: { subdomain, limit, page } }) {
     yield put(
       ideaActions.getIdeasByCompanySuccess({
         ideas,
-        votes
+        votes,
+        type,
+        page
       })
     );
   } catch (error) {
