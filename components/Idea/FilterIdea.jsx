@@ -1,21 +1,26 @@
 import { UpDown } from '@/components/icons';
 import { Listbox, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
+import Router from 'next/router';
+import { Fragment, useEffect } from 'react';
+import { IDEA_SORT_TYPES } from 'constants';
 
-const filter = [
-  { name: 'Trending' },
-  { name: 'Top' },
-  { name: 'Newest' },
-  { name: 'Status Changed' }
-];
 export default function FilterIdea({ isFiltered, setIsFiltered }) {
+  useEffect(() => {
+    setIsFiltered(IDEA_SORT_TYPES[0]);
+  }, []);
+
   return (
     <div className="mb-9">
-      <Listbox value={isFiltered} onChange={setIsFiltered}>
+      <Listbox
+        value={isFiltered}
+        onChange={(value) => {
+          setIsFiltered(value);
+          Router.push(`/public-view?sort=${value.url}`);
+        }}>
         <div className="relative mt-1">
           <Listbox.Button className="relative w-full inline-flex max-w-[195px] bg-white py-3.5 px-[14px] border border-slate-300 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
             <UpDown className="w-5 h-5 text-slate-500 mr-2" />
-            <span className="block text-slate-800 truncate">{isFiltered.name}</span>
+            <span className="block text-slate-800 truncate">{isFiltered?.name}</span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5">
               <svg
                 className="w-5 h-5 text-slate-500"
@@ -38,7 +43,7 @@ export default function FilterIdea({ isFiltered, setIsFiltered }) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0">
             <Listbox.Options className="absolute mt-1 max-h-60 max-w-[195px] w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-              {filter.map((item) => (
+              {IDEA_SORT_TYPES?.map((item) => (
                 <Listbox.Option
                   key={item.name}
                   className={({ active }) =>
