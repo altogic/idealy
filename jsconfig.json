@@ -9,7 +9,9 @@
       "@/services/*": ["services/*"],
       "@/utils/*": ["utils/*"],
       "@/features/*": ["features/*"],
-      "@/redux/*": ["redux/*"]
+      "@/redux/*": ["redux/*"],
+      "@/hooks/*": ["hooks/*"],
+      "@/contstants/*": ["contstants/*"]
     }
   }
 }
