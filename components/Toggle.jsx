@@ -15,14 +15,16 @@ export default function Toggle({
         <Switch.Label
           as="span"
           className={cn(
-            `text-slate-800 dark:text-aa-300 purple:text-pt-300 text-base tracking-sm`,
+            `text-slate-800 dark:text-aa-100 purple:text-pt-100 text-base tracking-sm`,
             description ? 'mb-1' : null
           )}
           passive>
           {title}
         </Switch.Label>
         {description && (
-          <Switch.Description as="span" className="text-slate-500 text-sm tracking-sm">
+          <Switch.Description
+            as="span"
+            className="text-slate-500 dark:text-aa-300 purple:text-pt-300 text-sm tracking-sm">
             {descriptionText}
           </Switch.Description>
         )}

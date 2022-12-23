@@ -117,7 +117,7 @@ export default function SettingsActionCard({
 
   const getContent = (provided) => (
     <div
-      className="group flex items-center justify-between gap-4 bg-white dark:bg-aa-900 purple:bg-pt-900 hover:bg-slate-50 dark:hover:bg-aa-700 purple:hover:bg-pt-800 h-[76px] rounded-lg "
+      className="group flex items-center justify-between gap-4 bg-white dark:bg-aa-900 purple:bg-pt-1000 hover:bg-slate-50 dark:hover:bg-aa-700 purple:hover:bg-pt-800 h-[76px] rounded-lg "
       ref={!isColorModalOpen && canDnd ? provided.innerRef : null}
       {...provided?.draggableProps}
       {...provided?.dragHandleProps}

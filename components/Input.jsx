@@ -34,7 +34,9 @@ export default function Input({
               error && 'text-red-900 pr-11 border-red-600 placeholder-red-300 focus:ring-red-600',
               icon ? 'pl-[42px] pr-3.5' : 'px-3.5',
               postfix && 'rounded-r-none',
-              disabled ? 'bg-gray-100 opacity-50 cursor-not-allowed' : '',
+              disabled
+                ? 'bg-gray-100 dark:bg-aa-50 purple:bg-pt-50 bg-opacity-90 dark:bg-opacity-40 purple:bg-opacity-40 dark:text-aa-100 purple:text-aa-100 cursor-not-allowed'
+                : '',
               error && postfix ? 'border-r-gray-300' : ''
             )}
             type={type}
