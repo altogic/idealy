@@ -6,10 +6,20 @@ import { Dialog, Disclosure, RadioGroup, Switch, Transition } from '@headlessui/
 import { DateTime } from 'luxon';
 import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Avatar from '../Avatar';
+import CommentForm from '../CommentForm';
 import DeleteModal from '../DeleteModal';
 import { Archive, Bug, ChevronUp, CircleCheck, Danger, Eye, Pen, Thumbtack, Trash } from '../icons';
 
-export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmitFeedbackModal }) {
+export default function IdeaDetail({
+  open,
+  setOpen,
+  idea,
+  company,
+  setOpenSubmitFeedbackModal,
+  isCommentFormOpen,
+  setOpenDetailFeedbackModal
+}) {
   const dispatch = useDispatch();
   const [selectedStatus, setSelectedStatus] = useState();
   const [isPrivate, setIsPrivate] = useState();
@@ -66,7 +76,7 @@ export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmit
                   leave="transform transition ease-in-out duration-500 sm:duration-700"
                   leaveFrom="translate-x-0"
                   leaveTo="translate-x-full">
-                  <Dialog.Panel className="pointer-events-auto max-w-screen-lg w-screen flex">
+                  <Dialog.Panel className="pointer-events-auto max-w-screen-lg w-screen flex bg-white">
                     {user && (company?.role === 'Owner' || company?.role === 'Admin') && (
                       <div className="flex-shrink-0 w-72 bg-gray-50 border-r-2 border-gray-200">
                         <div className="flex flex-col h-full">
@@ -245,7 +255,7 @@ export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmit
                                     <Trash className="w-4 h-4 hover:text-red-500" />
                                   </button>
                                 </div>
-                                <div className="inline-flex relative">
+                                <div className="inline-flex relative" aria-labelledby="idea-menu">
                                   <button
                                     type="button"
                                     className="flex p-2 rounded border border-slate-400"
@@ -355,28 +365,14 @@ export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmit
                                 </svg>
                                 <div className="flex items-center gap-2">
                                   <div className="isolate flex -space-x-1 overflow-hidden">
-                                    <img
-                                      className="relative z-30 inline-block h-6 w-6 rounded-full ring-2 ring-white"
-                                      src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                      alt=""
-                                    />
-                                    <img
-                                      className="relative z-20 inline-block h-6 w-6 rounded-full ring-2 ring-white"
-                                      src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                      alt=""
-                                    />
-                                    <img
-                                      className="relative z-10 inline-block h-6 w-6 rounded-full ring-2 ring-white"
-                                      src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80"
-                                      alt=""
-                                    />
-                                    <img
-                                      className="relative z-0 inline-block h-6 w-6 rounded-full ring-2 ring-white"
-                                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                      alt=""
-                                    />
+                                    {idea?.recentUsers.map((user) => (
+                                      <Avatar
+                                        key={user}
+                                        src={user?.profilePicture}
+                                        alt={user?.name}
+                                      />
+                                    ))}
                                   </div>
-                                  <span className="text-slate-500 text-sm tracking-sm">+45</span>
                                 </div>
                               </div>
                               <div className="flex items-center justify-between gap-4">
@@ -407,11 +403,19 @@ export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmit
                         {/* Card Detail Bottom */}
                         <div>
                           {/* Comment Card */}
-                          <CommentCard
-                            nameFirstLetter="O"
-                            userName="Olivia Rhye"
-                            timeAgo="3 days ago"
-                          />
+                          {isCommentFormOpen ? (
+                            <CommentForm
+                              ideaId={idea?._id}
+                              company={company}
+                              setOpenDetailFeedbackModal={setOpenDetailFeedbackModal}
+                            />
+                          ) : (
+                            <CommentCard
+                              nameFirstLetter="O"
+                              userName="Olivia Rhye"
+                              timeAgo="3 days ago"
+                            />
+                          )}
                         </div>
                       </div>
                     </div>

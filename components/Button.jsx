@@ -24,9 +24,8 @@ export default function Button({
       type={type === 'submit' ? 'submit' : 'button'}
       className={cn(
         `inline-flex items-center justify-center gap-2 py-2.5 px-4 tracking-sm border rounded-md transition focus:outline-none`,
-        size === 'sm' ? 'text-sm' : '',
-        size === 'base' ? 'text-base' : '',
-        height === '44' ? 'h-11' : '',
+        `text-${size}`,
+        height ? `h-${height}` : '',
         fullWidth ? 'w-full' : '',
         loading ? 'opacity-50 cursor-not-allowed' : null,
         disabled ? 'opacity-50 cursor-not-allowed' : '',
@@ -53,7 +52,7 @@ Button.propTypes = {
   text: PropTypes.string,
   icon: PropTypes.node,
   variant: PropTypes.oneOf(['blank', 'blankRed', 'red', 'indigo', 'icon']),
-  size: PropTypes.oneOf(['sm', 'base']),
+  size: PropTypes.oneOf(['sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl']),
   type: PropTypes.oneOf(['button', 'submit', 'reset']),
   height: PropTypes.string,
   fullWidth: PropTypes.bool,
@@ -65,7 +64,7 @@ Button.defaultProps = {
   variant: 'blank',
   size: 'base',
   type: 'button',
-  height: '44',
+  height: '11',
   fullWidth: false,
   disabled: false
 };
