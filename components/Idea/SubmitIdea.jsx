@@ -2,18 +2,16 @@ import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { Dialog, Disclosure, Transition } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import _ from 'lodash';
-import dynamic from 'next/dynamic';
 import { Fragment, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import Button from '../Button';
+import Editor from '../Editor';
 import { ChevronUp } from '../icons';
 import Input from '../Input';
 import SimilarIdeaCard from '../SimilarIdeaCard';
 import TopicButton from '../TopicButton';
-
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 export default function SubmitIdea({ open, setOpen, idea }) {
   const company = useSelector((state) => state.company.company);
@@ -58,7 +56,6 @@ export default function SubmitIdea({ open, setOpen, idea }) {
     mode: 'all'
   });
   const onSubmit = (data) => {
-    console.log(data);
     const reqData = {
       ...data,
       content,
@@ -234,21 +231,16 @@ export default function SubmitIdea({ open, setOpen, idea }) {
                             </div>
                           )}
                         </div>
-                        <div className="mb-8">
+                        <div className="mb-8 relative">
                           <Controller
                             name="content"
                             control={control}
                             rules={{ required: true }}
                             render={() => (
-                              <ReactQuill
-                                theme="snow"
-                                value={content}
-                                onChange={setContent}
-                                className={` border ${
-                                  !errors?.content?.message
-                                    ? 'border-gray-300 focus:border-blue-300'
-                                    : 'border-red-300 focus:border-red-300'
-                                }  rounded-md`}
+                              <Editor
+                                content={content}
+                                setContent={setContent}
+                                errors={errors.content}
                               />
                             )}
                           />
