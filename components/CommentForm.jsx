@@ -17,6 +17,7 @@ export default function CommentForm({ ideaId, company, setOpenDetailFeedbackModa
   const guestValidation = useGuestValidation({ company, fieldName: 'commentIdea' });
 
   const schema = yup.object().shape({
+    text: yup.string(),
     guestName: yup.string().when([], {
       is: () => guestValidation && !user,
       then: yup.string().required('Name is required')
@@ -57,13 +58,21 @@ export default function CommentForm({ ideaId, company, setOpenDetailFeedbackModa
   useEffect(() => {
     setComment('');
   }, []);
-
   return (
     <form onSubmit={handleSubmit(submitComment)} className="p-8">
       <Controller
         control={control}
-        name="guestName"
-        render={() => <Editor content={comment} setContent={setComment} />}
+        name="text"
+        render={() => (
+          <div className="relative">
+            <Editor
+              content={comment}
+              setContent={setComment}
+              errors={errors.text}
+              placeholder="Type a comment"
+            />
+          </div>
+        )}
       />
       {guestValidation && <GuestForm register={register} errors={errors} />}
       <div className="flex justify-end gap-4 mt-4">

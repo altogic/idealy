@@ -1,6 +1,7 @@
 import CommentCard from '@/components/CommentCard';
 import StatusButton from '@/components/StatusButton';
 import TopicBadges from '@/components/TopicBadges';
+import { commentActions } from '@/redux/comments/commentsSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { Dialog, Disclosure, RadioGroup, Switch, Transition } from '@headlessui/react';
 import { DateTime } from 'luxon';
@@ -28,7 +29,7 @@ export default function IdeaDetail({
   const [isBug, setIsBug] = useState();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const user = useSelector((state) => state.auth.user);
-
+  const comments = useSelector((state) => state.comments.comments);
   const updateIdea = (req) => {
     dispatch(
       ideaActions.updateIdea({
@@ -45,8 +46,10 @@ export default function IdeaDetail({
       setIsPinned(idea.isPinned);
       setIsArchived(idea.isArchived);
       setIsBug(idea.isBug);
+      dispatch(commentActions.getComments(idea._id));
     }
   }, [idea]);
+
   const handleDelete = () => {
     dispatch(ideaActions.deleteIdea(idea._id));
     setOpen(false);
@@ -357,7 +360,7 @@ export default function IdeaDetail({
                                       day: 'numeric'
                                     })}
                                 </span>
-                                <svg
+                                {/* <svg
                                   className="h-1 w-1 text-slate-500"
                                   fill="currentColor"
                                   viewBox="0 0 8 8">
@@ -365,7 +368,7 @@ export default function IdeaDetail({
                                 </svg>
                                 <div className="flex items-center gap-2">
                                   <div className="isolate flex -space-x-1 overflow-hidden">
-                                    {idea?.recentUsers.map((user) => (
+                                    {idea?.recentUsers?.map((user) => (
                                       <Avatar
                                         key={user}
                                         src={user?.profilePicture}
@@ -373,7 +376,7 @@ export default function IdeaDetail({
                                       />
                                     ))}
                                   </div>
-                                </div>
+                                </div> */}
                               </div>
                               <div className="flex items-center justify-between gap-4">
                                 {/* Feedback Detail Topic Badges */}
@@ -410,11 +413,9 @@ export default function IdeaDetail({
                               setOpenDetailFeedbackModal={setOpenDetailFeedbackModal}
                             />
                           ) : (
-                            <CommentCard
-                              nameFirstLetter="O"
-                              userName="Olivia Rhye"
-                              timeAgo="3 days ago"
-                            />
+                            comments?.map((comment) => (
+                              <CommentCard key={comment._id} comment={comment} />
+                            ))
                           )}
                         </div>
                       </div>

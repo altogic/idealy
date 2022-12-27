@@ -22,7 +22,7 @@ export default function SubmitIdea({ open, setOpen, idea }) {
 
   const guestValidation = useGuestValidation({
     company,
-    fieldName: 'submitIdea'
+    fieldName: 'submitIdeas'
   });
 
   const [topics, setTopics] = useState([]);

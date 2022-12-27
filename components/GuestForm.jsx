@@ -4,7 +4,7 @@ import Input from './Input';
 export default function GuestForm({ register, errors }) {
   return (
     <>
-      <div className="flex gap-4 mb-4 relative max-h-[46px]">
+      <div className="flex gap-4 my-4 relative max-h-[46px]">
         <span className="inline-block text-slate-600 text-base tracking-sm whitespace-nowrap m-auto">
           Your details
         </span>

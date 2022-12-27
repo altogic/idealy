@@ -41,8 +41,7 @@ export default function PublicView() {
       req.type = 'sort';
     }
     if (!user && !company?.role) {
-      req.filter =
-        'this.isArchived == false && this.isPrivate == false && this.status.isCompletedStatus == false';
+      req.filter = 'this.isArchived == false && this.isPrivate == false';
     }
     dispatch(ideaActions.getIdeasByCompany(req));
   }, [page, sortQuery]);

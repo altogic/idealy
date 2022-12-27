@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 export default function useGuestValidation({ company, fieldName }) {
-  console.log('company', company);
   const [guestValidation, setGuestValidation] = useState(false);
+  const user = useSelector((state) => state.auth.user);
   useEffect(() => {
     if (company) {
       setGuestValidation(
@@ -12,5 +13,5 @@ export default function useGuestValidation({ company, fieldName }) {
       );
     }
   }, [company]);
-  return guestValidation;
+  return !user && guestValidation;
 }

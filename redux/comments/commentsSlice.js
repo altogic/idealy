@@ -5,6 +5,7 @@ export const commentsSlice = createSlice({
   name: 'comments',
   initialState: {
     comments: [],
+    countInfo: {},
     isLoading: false,
     error: null
   },
@@ -17,6 +18,18 @@ export const commentsSlice = createSlice({
       state.comments.push(action.payload);
     },
     addCommentFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    getComments: (state) => {
+      state.isLoading = true;
+    },
+    getCommentsSuccess: (state, action) => {
+      state.isLoading = false;
+      state.comments = action.payload.result;
+      state.countInfo = action.payload.countInfo;
+    },
+    getCommentsFailure: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     }
