@@ -40,7 +40,8 @@ export default function PublicView() {
       req.type = 'sort';
     }
     if (!user && !company?.role) {
-      req.filter = 'this.isArchived == false && this.isPrivate == false';
+      req.filter =
+        'this.isArchived == false && this.isPrivate == false && this.status.isCompletedStatus == false';
     }
     dispatch(ideaActions.getIdeasByCompany(req));
   }, [page, sortQuery]);
