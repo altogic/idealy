@@ -121,7 +121,7 @@ export default function PublicViewCard({ idea, onClick, voted, setIsCommentFormO
                   setIsCommentFormOpen(true);
                 }}>
                 <Comment className="w-6 h-6" />
-                {idea.commentCount}
+                {idea?.commentCount}
               </button>
             </div>
           </div>

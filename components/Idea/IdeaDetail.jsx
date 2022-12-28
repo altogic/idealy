@@ -7,7 +7,6 @@ import { Dialog, Disclosure, RadioGroup, Switch, Transition } from '@headlessui/
 import { DateTime } from 'luxon';
 import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Avatar from '../Avatar';
 import CommentForm from '../CommentForm';
 import DeleteModal from '../DeleteModal';
 import { Archive, Bug, ChevronUp, CircleCheck, Danger, Eye, Pen, Thumbtack, Trash } from '../icons';
