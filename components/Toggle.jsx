@@ -40,7 +40,7 @@ export default function Toggle({
           aria-hidden="true"
           className={cn(
             enabled ? 'translate-x-5' : 'translate-x-0',
-            'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white dark:bg-aa-300 purple:bg-pt-300 shadow ring-0 transition duration-200 ease-in-out'
+            'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white dark:bg-aa-50 purple:bg-pt-300 shadow ring-0 transition duration-200 ease-in-out'
           )}
         />
       </Switch>
