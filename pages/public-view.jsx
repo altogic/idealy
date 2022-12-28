@@ -20,6 +20,7 @@ export default function PublicView() {
   const [openSubmitFeedbackModal, setOpenSubmitFeedbackModal] = useState(false);
   const [sortQuery, setSortQuery] = useState();
   const [isFiltered, setIsFiltered] = useState();
+  const [isCommentFormOpen, setIsCommentFormOpen] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -40,8 +41,7 @@ export default function PublicView() {
       req.type = 'sort';
     }
     if (!user && !company?.role) {
-      req.filter =
-        'this.isArchived == false && this.isPrivate == false && this.status.isCompletedStatus == false';
+      req.filter = 'this.isArchived == false && this.isPrivate == false';
     }
     dispatch(ideaActions.getIdeasByCompany(req));
   }, [page, sortQuery]);
@@ -148,6 +148,7 @@ export default function PublicView() {
                     setOpenDetailFeedbackModal(!openDetailFeedbackModal);
                   }}
                   voted={ideaVotes.some((vote) => vote.ideaId === idea._id)}
+                  setIsCommentFormOpen={setIsCommentFormOpen}
                 />
               </div>
             ))}
@@ -159,6 +160,8 @@ export default function PublicView() {
           idea={selectedIdea}
           company={company}
           setOpenSubmitFeedbackModal={setOpenSubmitFeedbackModal}
+          isCommentFormOpen={isCommentFormOpen}
+          setOpenDetailFeedbackModal={setOpenDetailFeedbackModal}
         />
       </Layout>
     </>

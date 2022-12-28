@@ -3,7 +3,7 @@ import EditorToolbar, { modules, formats } from './EditorToolbar';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
-export default function Editor({ content, setContent, errors }) {
+export default function Editor({ content, setContent, errors, ...props }) {
   return (
     <div>
       <EditorToolbar />
@@ -18,6 +18,7 @@ export default function Editor({ content, setContent, errors }) {
             ? 'border-gray-300 focus:border-blue-300'
             : 'border-red-300 focus:border-red-300'
         }  rounded-md`}
+        {...props}
       />
     </div>
   );
