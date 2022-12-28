@@ -235,7 +235,9 @@ export default function SettingsActionCard({
           <div className="flex items-center justify-between gap-2 lg:gap-4 transition opacity-0 group-hover:opacity-100">
             <Button
               type="button"
-              icon={<Pen className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400" />}
+              icon={
+                <Pen className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-slate-600 dark:hover:text-aa-500 purple:hover:text-pt-500" />
+              }
               variant="icon"
               onClick={(e) => {
                 e.stopPropagation();
@@ -245,7 +247,7 @@ export default function SettingsActionCard({
             <Button
               type="button"
               icon={
-                <Trash className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400" />
+                <Trash className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-slate-600 dark:hover:text-aa-500 purple:hover:text-pt-500" />
               }
               variant="icon"
               onClick={() => setIsDelete(!isDelete)}
