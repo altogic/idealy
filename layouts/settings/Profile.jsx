@@ -47,15 +47,15 @@ export default function Profile() {
       </div>
       <div className="max-w-lg">
         <PersonalInformation user={user} />
-        <hr className="my-6 lg:my-8 border-slate-200" />
+        <hr className="my-6 lg:my-8 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
         <Avatar user={user} />
-        <hr className="my-6 lg:my-8 border-slate-200" />
+        <hr className="my-6 lg:my-8 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
         {user?.provider === 'altogic' && (
           <>
             <ChangeEmail user={user} />
-            <hr className="my-6 lg:my-8 border-slate-200" />
+            <hr className="my-6 lg:my-8 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
             <ChangePassword />
-            <hr className="my-6 lg:my-8 border-slate-200" />
+            <hr className="my-6 lg:my-8 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
           </>
         )}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-50 dark:bg-aa-600 purple:bg-pt-800 p-6 rounded-lg">
