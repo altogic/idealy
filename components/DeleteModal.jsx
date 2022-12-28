@@ -36,7 +36,7 @@ export default function DeleteModal({
               leaveTo="opacity-0 scale-95">
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-aa-900 purple:bg-pt-1000 p-6 text-left align-middle shadow-xl transition-all">
                 <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-6 mb-8 lg:mb-4">
-                  <span className="inline-flex items-center justify-center flex-shrink-0 w-10 h-10 bg-red-100 dark:bg-aa-200 purple:bg-pt-200 rounded-full">
+                  <span className="inline-flex items-center justify-center flex-shrink-0 w-10 h-10 bg-red-100 dark:bg-aa-300 purple:bg-pt-300 rounded-full ring-8 ring-red-50 dark:ring-aa-200 purple:ring-pt-200">
                     {icon}
                   </span>
                   <div className="text-center lg:text-left space-y-2">

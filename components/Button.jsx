@@ -30,11 +30,13 @@ export default function Button({
         loading ? 'opacity-50 cursor-not-allowed' : null,
         disabled ? 'opacity-50 cursor-not-allowed' : '',
         variant === 'icon' ? 'border-0 px-0 py-0' : '',
-        variant === 'blank' ? 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100' : '',
+        variant === 'blank'
+          ? 'bg-white dark:bg-aa-400 purple:bg-pt-400 text-gray-700 dark:text-aa-100 purple:text-pt-100 border-gray-300 hover:bg-gray-100'
+          : '',
         variant === 'blankRed' ? 'bg-white text-red-700 border-red-300 hover:bg-red-100' : '',
         variant === 'red' ? 'bg-red-600 text-white border-transparent hover:bg-red-700' : '',
         variant === 'indigo'
-          ? 'bg-indigo-700 text-white border-transparent hover:bg-indigo-600'
+          ? 'bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white border-transparent hover:bg-indigo-600'
           : ''
       )}
       {...props}

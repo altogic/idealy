@@ -73,7 +73,7 @@ export default function ChangeEmail({ user }) {
 
   return (
     <>
-      <div className="pb-6 lg:pb-4 mb-6 lg:mb-11 border-b border-slate-200">
+      <div className="pb-6 lg:pb-4 mb-6 lg:mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
         <SectionTitle
           sectionTitle="Change Email"
           sectionDescription="Please enter your current password and new email to change your email."
@@ -97,7 +97,7 @@ export default function ChangeEmail({ user }) {
           register={register('newEmail')}
           error={errors.newEmail}
           placeholder="Enter your new email"
-          icon={<Email className="w-5 h-5 text-gray-500" />}
+          icon={<Email className="w-5 h-5 text-gray-500 dark:text-aa-100 purple:text-pt-100" />}
         />
         <Input
           label="Current Password"
@@ -106,7 +106,7 @@ export default function ChangeEmail({ user }) {
           id="password"
           register={register('password')}
           error={errors.password}
-          icon={<Key className="w-5 h-5 text-gray-500" />}
+          icon={<Key className="w-5 h-5 text-gray-500 dark:text-aa-100 purple:text-pt-100" />}
           placeholder="Enter your current password"
         />
         <div className="flex items-center justify-end gap-3">

@@ -47,8 +47,8 @@ export default function Miscellaneous() {
           big
         />
       </div>
-      <div className="max-w-2xl divide-y divide-slate-200">
-        <div className="divide-y divide-slate-200">
+      <div className="max-w-2xl divide-y divide-slate-200 dark:divide-aa-400 purple:divide-pt-400">
+        <div className="divide-y divide-slate-200 dark:divide-aa-400 purple:divide-pt-400">
           <div className="pb-6">
             <SectionTitle sectionTitle="Company settings" />
           </div>
@@ -79,8 +79,8 @@ export default function Miscellaneous() {
         </div>
         {/* <div className="flex items-center justify-between gap-4 py-14">
           <div>
-            <h2 className="text-slate-800 text-base font-semibold tracking-sm">Import Ideas</h2>
-            <p className="text-slate-500 text-sm">
+            <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-base font-semibold tracking-sm">Import Ideas</h2>
+            <p className="text-slate-500 dark:text-aa-300 purple:text-pt-300 text-sm">
               Kick-start your board by importing the{' '}
               <span className="text-indigo-700 font-medium">Starter Template.</span>
             </p>
@@ -88,13 +88,13 @@ export default function Miscellaneous() {
           <Button text="Import template" variant="blank" />
         </div> */}
         {company?.role === 'Owner' && (
-          <div className="py-14 divide-y divide-slate-200">
+          <div className="py-14 divide-y divide-slate-200 dark:divide-aa-400 purple:divide-pt-400">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-6">
               <div>
-                <h2 className="text-slate-800 text-base font-semibold tracking-sm">
+                <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-base font-semibold tracking-sm">
                   Delete all ideas
                 </h2>
-                <p className="text-slate-500 text-sm">
+                <p className="text-slate-500 dark:text-aa-300 purple:text-pt-300 text-sm">
                   Once you delete Ideas, there is no going back. Please be certain.
                 </p>
               </div>
@@ -107,10 +107,10 @@ export default function Miscellaneous() {
             </div>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-6">
               <div>
-                <h2 className="text-slate-800 text-base font-semibold tracking-sm">
+                <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-base font-semibold tracking-sm">
                   Delete company
                 </h2>
-                <p className="text-slate-500 text-sm">
+                <p className="text-slate-500 dark:text-aa-300 purple:text-pt-300 text-sm">
                   Including all Ideas and Announcements. This cannot be undone.
                 </p>
               </div>
