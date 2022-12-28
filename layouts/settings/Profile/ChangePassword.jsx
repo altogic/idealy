@@ -77,7 +77,7 @@ export default function ChangePassword() {
 
   return (
     <>
-      <div className="pb-6 lg:pb-4 mb-6 lg:mb-11 border-b border-slate-200">
+      <div className="pb-6 lg:pb-4 mb-6 lg:mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
         <SectionTitle
           sectionTitle="Password"
           sectionDescription="Please enter your current password to change your password."
@@ -91,7 +91,7 @@ export default function ChangePassword() {
           register={register('currentPassword')}
           error={errors.currentPassword}
           placeholder="Current Password"
-          icon={<Key className="w-5 h-5 text-gray-500" />}
+          icon={<Key className="w-5 h-5 text-gray-500 dark:text-aa-100 purple:text-pt-100" />}
           autoComplete="off"
         />
         <Input
@@ -101,7 +101,7 @@ export default function ChangePassword() {
           register={register('newPassword')}
           error={errors.newPassword}
           placeholder="New Password"
-          icon={<Key className="w-5 h-5 text-gray-500" />}
+          icon={<Key className="w-5 h-5 text-gray-500 dark:text-aa-100 purple:text-pt-100" />}
           autoComplete="off"
         />
         <Input
@@ -111,7 +111,7 @@ export default function ChangePassword() {
           register={register('confirmNewPassword')}
           error={errors.confirmNewPassword}
           placeholder="Confirm New Password"
-          icon={<Key className="w-5 h-5 text-gray-500" />}
+          icon={<Key className="w-5 h-5 text-gray-500 dark:text-aa-100 purple:text-pt-100" />}
           autoComplete="off"
         />
         <div className="flex items-center justify-end gap-3">

@@ -151,51 +151,55 @@ export default function InviteTeam() {
                     leave="ease-in duration-200"
                     leaveFrom="opacity-100 scale-100"
                     leaveTo="opacity-0 scale-95">
-                    <Dialog.Panel className="w-full max-w-[620px] transform rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                    <Dialog.Panel className="w-full max-w-[620px] transform rounded-2xl bg-white dark:bg-aa-900 purple:bg-pt-1000 p-6 text-left align-middle shadow-xl transition-all">
                       <div>
                         <div className="absolute top-8 right-8">
                           <Button
                             variant="icon"
-                            icon={<Close className="w-6 h-6 text-slate-500" />}
+                            icon={
+                              <Close className="w-6 h-6 text-slate-500 dark:text-aa-400 purple:text-pt-400" />
+                            }
                             onClick={() => setIsInvite(!isInvite)}
                           />
                         </div>
-                        <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100 mb-8 ring-8 ring-indigo-50">
-                          <PlusPeople className="w-7 h-7 text-indigo-600" />
+                        <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100 dark:bg-aa-300 purple:bg-pt-300 mb-8 ring-8 ring-indigo-50 dark:ring-aa-200 purple:ring-pt-200">
+                          <PlusPeople className="w-7 h-7 text-indigo-600 dark:text-aa-600 purple:text-pt-600" />
                         </span>
                         <div className="mb-5">
-                          <h2 className="text-slate-900 mb-2 text-lg font-medium tracking-sm">
+                          <h2 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-lg font-medium tracking-sm">
                             Invite admins to {company.name}
                           </h2>
-                          <p className="text-slate-500 text-sm tracking-sm">
+                          <p className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-sm tracking-sm">
                             Invite a new team member to your company
                           </p>
                         </div>
                         <form onSubmit={handleSubmit(formSubmit)}>
                           <div className="flex flex-col md:flex-row md:items-center gap-3">
                             <div className="flex-1 md:max-h-[4.5rem]">
+                              <Label label="Email address" />
                               <Input
-                                label="Email address"
                                 type="text"
                                 name="email"
                                 id="email"
                                 placeholder="you@domain.com"
                                 register={register('email')}
                                 error={errors.email}
-                                icon={<Email className="w-5 h-5 text-slate-500" />}
+                                icon={
+                                  <Email className="w-5 h-5 text-gray-500 dark:text-aa-100 purple:text-pt-100" />
+                                }
                               />
                             </div>
                             <div>
                               <Label label="Role" />
                               <Listbox value={roleSelected} onChange={setRoleSelected}>
                                 <div className="relative">
-                                  <Listbox.Button className="flex items-center relative w-full md:w-[150px] h-11 bg-white py-3 px-[14px] border border-gray-300 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                                    <span className="block text-gray-500 text-sm tracking-sm truncate">
+                                  <Listbox.Button className="flex items-center relative w-full md:w-[150px] h-11 bg-white dark:bg-aa-800 purple:bg-pt-800 py-3 px-[14px] border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                                    <span className="block text-gray-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm truncate">
                                       {roleSelected.name}
                                     </span>
                                     <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5">
                                       <svg
-                                        className="w-5 h-5 text-gray-500"
+                                        className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200"
                                         viewBox="0 0 20 20"
                                         fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -214,13 +218,15 @@ export default function InviteTeam() {
                                     leave="transition ease-in duration-100"
                                     leaveFrom="opacity-100"
                                     leaveTo="opacity-0">
-                                    <Listbox.Options className="absolute mt-1 w-full md:w-[150px] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-[9999]">
+                                    <Listbox.Options className="absolute mt-1 w-full md:w-[150px] overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 py-1 text-base shadow-lg focus:outline-none sm:text-sm z-[9999]">
                                       {ROLE.map((item) => (
                                         <Listbox.Option
                                           key={item.id}
                                           className={({ active }) =>
-                                            `relative flex items-center justify-between cursor-default select-none py-2 px-3.5 ${
-                                              active ? 'bg-slate-100' : 'text-slate-900'
+                                            `relative flex items-center justify-between cursor-default select-none py-2 px-3.5 transition hover:text-slate-900 dark:hover:text-aa-100 purple:hover:text-pt-100 ${
+                                              active
+                                                ? 'bg-slate-100 dark:bg-aa-700 purple:bg-pt-700'
+                                                : 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
                                             }`
                                           }
                                           value={item}>
@@ -228,12 +234,14 @@ export default function InviteTeam() {
                                             <>
                                               <span
                                                 className={`block truncate ${
-                                                  selected ? 'font-medium' : 'font-normal'
+                                                  selected
+                                                    ? 'text-slate-900 dark:text-aa-100 purple:text-pt-100'
+                                                    : 'font-normal'
                                                 }`}>
                                                 {item.name}
                                               </span>
                                               {selected ? (
-                                                <span className="flex items-center pl-3 text-indigo-700">
+                                                <span className="flex items-center pl-3 text-indigo-700 dark:text-aa-200 purple:text-pt-200">
                                                   <svg
                                                     className="w-5 h-5"
                                                     viewBox="0 0 20 20"
@@ -259,7 +267,7 @@ export default function InviteTeam() {
                               </Listbox>
                             </div>
                           </div>
-                          <div className="flex items-center min-h-[60px] bg-slate-100 text-slate-500 my-8 py-2 px-4 text-sm tracking-sm rounded-lg">
+                          <div className="flex items-center min-h-[60px] bg-slate-100 dark:bg-aa-600 purple:bg-pt-800 text-slate-500 dark:text-aa-100 purple:text-pt-100 my-8 py-2 px-4 text-sm tracking-sm rounded-lg">
                             {setRoleDescription(roleSelected)}
                           </div>
                           {/* <div className="text-indigo-700">
