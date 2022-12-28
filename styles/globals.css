@@ -44,3 +44,6 @@
     word-break: break-word;
   }
 }
+.ql-snow {
+  border: none !important;
+}

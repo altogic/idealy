@@ -19,11 +19,28 @@ export const ideaSlice = createSlice({
     },
     getIdeasByCompanySuccess: (state, action) => {
       state.isLoading = false;
-      state.ideas = [...state.ideas, ...action.payload.ideas.result];
       state.countInfo = action.payload.ideas.countInfo;
       state.ideaVotes = [...state.ideaVotes, ...action.payload.votes];
+      if (action.payload.type === 'sort' && action.payload.page === 1) {
+        state.ideas = action.payload.ideas.result;
+      } else {
+        state.ideas = [...state.ideas, ...action.payload.ideas.result];
+      }
     },
     getIdeasByCompanyFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    sortIdeas: (state) => {
+      state.isLoading = true;
+    },
+    sortIdeasSuccess: (state, action) => {
+      state.isLoading = false;
+      state.ideas = action.payload.ideas.result;
+      state.countInfo = action.payload.ideas.countInfo;
+      state.ideaVotes = action.payload.votes;
+    },
+    sortIdeasFailure: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },
@@ -32,7 +49,7 @@ export const ideaSlice = createSlice({
     },
     createIdeaSuccess(state, action) {
       state.isLoading = false;
-      state.ideas = [...state.ideas, action.payload];
+      state.ideas = [action.payload, ...state.ideas];
     },
     createIdeaFailure(state, action) {
       state.isLoading = false;
@@ -119,13 +136,37 @@ export const ideaSlice = createSlice({
     clearSimilarIdeas() {},
     clearSimilarIdeasSuccess(state) {
       state.similarIdeas = [];
-    }
+    },
+    addedNewComment(state, action) {
+      try {
+        state.ideas = state.ideas.map((idea) => {
+          if (idea._id === action.payload.ideaId) {
+            const recentUsers = idea.recentUsers
+              ? idea.recentUsers?.filter((rc) => rc?.user !== action.payload.data?.user)
+              : [];
+            return {
+              ...idea,
+              commentCount: idea.commentCount + 1,
+              recentUsers: [...recentUsers, action.payload.data]
+            };
+          }
+          return idea;
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    createIdeaRealtime() {},
+    voteIdeaRealtime() {},
+    downvoteIdeaRealtime() {},
+    updateIdeaRealtime() {},
+    deleteIdeaRealtime() {}
   },
-  extraReducers: {
-    [HYDRATE]: (state, action) => ({
+  extraReducers: (builder) => {
+    builder.addCase([HYDRATE], (state, action) => ({
       ...state,
-      ...action.payload.idea
-    })
+      ...action.payload.auth
+    }));
   }
 });
 

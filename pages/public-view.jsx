@@ -6,25 +6,22 @@ import Layout from '@/components/Layout';
 import PublicViewCard from '@/components/PublicViewCard';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import Head from 'next/head';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '@/components/Button';
 import { Plus } from '@/components/icons';
+import { IDEA_SORT_TYPES } from 'constants';
 
-const filter = [
-  { name: 'Trending' },
-  { name: 'Top' },
-  { name: 'Newest' },
-  { name: 'Status Changed' }
-];
 export default function PublicView() {
-  const [isFiltered, setIsFiltered] = useState(filter[0]);
   const [page, setPage] = useState(1);
   const [openDetailFeedbackModal, setOpenDetailFeedbackModal] = useState(false);
   const [selectedIdea, setSelectedIdea] = useState();
   const [openSubmitFeedbackModal, setOpenSubmitFeedbackModal] = useState(false);
-
+  const [sortQuery, setSortQuery] = useState();
+  const [isFiltered, setIsFiltered] = useState();
+  const [isCommentFormOpen, setIsCommentFormOpen] = useState(false);
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const company = useSelector((state) => state.company.company);
@@ -34,18 +31,38 @@ export default function PublicView() {
   const ideaVotes = useSelector((state) => state.idea.ideaVotes);
 
   const getIdeasByCompany = useCallback(() => {
-    dispatch(
-      ideaActions.getIdeasByCompany({
-        subdomain: window.location.hostname.split('.')[0],
-        limit: 10,
-        page
-      })
-    );
-  }, [page]);
+    const req = {
+      subdomain: window.location.hostname.split('.')[0],
+      limit: 10,
+      page
+    };
+    if (sortQuery) {
+      req.sort = sortQuery;
+      req.type = 'sort';
+    }
+    if (!user && !company?.role) {
+      req.filter =
+        'this.isArchived == false && this.isPrivate == false && this.isCompleted == false';
+    }
+    dispatch(ideaActions.getIdeasByCompany(req));
+  }, [page, sortQuery]);
+
+  useEffect(() => {
+    if (router) {
+      const { sort } = router.query;
+      if (sort) {
+        const sortType = IDEA_SORT_TYPES.find((s) => s.url === sort);
+        setSortQuery(sortType?.query);
+        setIsFiltered(sortType);
+      } else {
+        setIsFiltered(IDEA_SORT_TYPES[0]);
+      }
+    }
+  }, [router]);
 
   useEffect(() => {
     getIdeasByCompany();
-  }, [page]);
+  }, [page, sortQuery]);
 
   const isSubmitIdeaVisible = useMemo(() => {
     if (!company) {
@@ -69,14 +86,13 @@ export default function PublicView() {
   useEffect(() => {
     if (company) {
       if (!company.privacy.isPublic && !company.privacy.isPublic.userApproval) {
-        Router.push('/404');
+        router.push('/404');
       }
     }
   }, [company]);
   useEffect(() => {
     const isModalOpen = openDetailFeedbackModal || openSubmitFeedbackModal;
     if (!isModalOpen) {
-      console.log(1);
       setSelectedIdea();
       dispatch(ideaActions.clearSimilarIdeas());
     }
@@ -133,6 +149,7 @@ export default function PublicView() {
                     setOpenDetailFeedbackModal(!openDetailFeedbackModal);
                   }}
                   voted={ideaVotes.some((vote) => vote.ideaId === idea._id)}
+                  setIsCommentFormOpen={setIsCommentFormOpen}
                 />
               </div>
             ))}
@@ -144,6 +161,8 @@ export default function PublicView() {
           idea={selectedIdea}
           company={company}
           setOpenSubmitFeedbackModal={setOpenSubmitFeedbackModal}
+          isCommentFormOpen={isCommentFormOpen}
+          setOpenDetailFeedbackModal={setOpenDetailFeedbackModal}
         />
       </Layout>
     </>

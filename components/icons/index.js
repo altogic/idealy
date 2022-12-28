@@ -11,6 +11,7 @@ export { default as ChevronUp } from './ChevronUp';
 export { default as CircleCheck } from './CircleCheck';
 export { default as CircleUser } from './CircleUser';
 export { default as Close } from './Close';
+export { default as Comment } from './Comment';
 export { default as Copy } from './Copy';
 export { default as Danger } from './Danger';
 export { default as Email } from './Email';

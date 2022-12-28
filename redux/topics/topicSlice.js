@@ -35,11 +35,11 @@ export const topicSlice = createSlice({
       state.error = action.payload;
     }
   },
-  extraReducers: {
-    [HYDRATE]: (state, action) => ({
+  extraReducers: (builder) => {
+    builder.addCase([HYDRATE], (state, action) => ({
       ...state,
-      ...action.payload.topic
-    })
+      ...action.payload.auth
+    }));
   }
 });
 
