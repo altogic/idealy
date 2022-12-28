@@ -239,11 +239,11 @@ export const authSlice = createSlice({
       state.isAuthenticated = true;
     }
   },
-  extraReducers: {
-    [HYDRATE]: (state, action) => ({
+  extraReducers: (builder) => {
+    builder.addCase([HYDRATE], (state, action) => ({
       ...state,
       ...action.payload.auth
-    })
+    }));
   }
 });
 

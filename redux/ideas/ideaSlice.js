@@ -143,11 +143,11 @@ export const ideaSlice = createSlice({
     updateIdeaRealtime() {},
     deleteIdeaRealtime() {}
   },
-  extraReducers: {
-    [HYDRATE]: (state, action) => ({
+  extraReducers: (builder) => {
+    builder.addCase([HYDRATE], (state, action) => ({
       ...state,
-      ...action.payload.idea
-    })
+      ...action.payload.auth
+    }));
   }
 });
 

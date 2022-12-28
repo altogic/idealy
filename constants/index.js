@@ -41,5 +41,5 @@ export const IDEA_SORT_TYPES = [
   { name: 'Trending', url: 'trending', query: 'trending' },
   { name: 'Top', url: 'top', query: 'voteCount:desc' },
   { name: 'Newest', url: 'newest', query: 'createdAt:desc' },
-  { name: 'Status Changed', url: 'status_changed' }
+  { name: 'Status Changed', url: 'status_changed', query: 'statusUpdatedAt:desc' }
 ];

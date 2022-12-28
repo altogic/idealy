@@ -94,7 +94,10 @@ export default function IdeaDetail({ open, setOpen, idea, company, setOpenSubmit
                                       <RadioGroup
                                         value={selectedStatus}
                                         onChange={(status) => {
-                                          updateIdea({ status: status._id });
+                                          updateIdea({
+                                            status: status._id,
+                                            statusUpdatedAt: Date.now()
+                                          });
                                           setSelectedStatus(status);
                                         }}>
                                         <RadioGroup.Label className="sr-only">
