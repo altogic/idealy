@@ -1,26 +1,30 @@
+import useGuestValidation from '@/hooks/useGuestValidation';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { Dialog, Disclosure, Transition } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import _ from 'lodash';
-import dynamic from 'next/dynamic';
 import { Fragment, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import Button from '../Button';
+import Editor from '../Editor';
+import GuestForm from '../GuestForm';
 import { ChevronUp } from '../icons';
 import Input from '../Input';
 import SimilarIdeaCard from '../SimilarIdeaCard';
 import TopicButton from '../TopicButton';
-
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 export default function SubmitIdea({ open, setOpen, idea }) {
   const company = useSelector((state) => state.company.company);
   const user = useSelector((state) => state.auth.user);
   const similarIdeas = useSelector((state) => state.idea.similarIdeas);
 
-  const [guestValidation, setGuestValidation] = useState(false);
+  const guestValidation = useGuestValidation({
+    company,
+    fieldName: 'submitIdeas'
+  });
+
   const [topics, setTopics] = useState([]);
   const [content, setContent] = useState('');
   const [inpTitle, setInpTitle] = useState();
@@ -75,15 +79,7 @@ export default function SubmitIdea({ open, setOpen, idea }) {
     }
     setOpen(false);
   };
-  useEffect(() => {
-    if (company) {
-      setGuestValidation(
-        company?.authentication.type === 'Guest Authentication' ||
-          (company.authentication.type === 'Custom' &&
-            company.authentication.submitIdeas === 'Guest Authentication')
-      );
-    }
-  }, [company]);
+
   useEffect(() => {
     if (open) {
       reset();
@@ -233,21 +229,16 @@ export default function SubmitIdea({ open, setOpen, idea }) {
                             </div>
                           )}
                         </div>
-                        <div className="mb-8">
+                        <div className="mb-8 relative">
                           <Controller
                             name="content"
                             control={control}
                             rules={{ required: true }}
                             render={() => (
-                              <ReactQuill
-                                theme="snow"
-                                value={content}
-                                onChange={setContent}
-                                className={` border ${
-                                  !errors?.content?.message
-                                    ? 'border-gray-300 focus:border-blue-300'
-                                    : 'border-red-300 focus:border-red-300'
-                                }  rounded-md`}
+                              <Editor
+                                content={content}
+                                setContent={setContent}
+                                errors={errors.content}
                               />
                             )}
                           />
@@ -295,47 +286,8 @@ export default function SubmitIdea({ open, setOpen, idea }) {
                         </div>
                         <hr className="my-8 border-slate-200" />
                         <div>
-                          {((idea?.guestName && idea?.guestEmail) ||
-                            company?.authentication.type === 'Guest Authentication' ||
-                            (company?.authentication.type === 'Custom' &&
-                              company?.authentication.submitIdeas === 'Guest Authentication')) && (
-                            <>
-                              <div className="flex gap-4 mb-4 relative max-h-[46px]">
-                                <span className="inline-block text-slate-600 text-base tracking-sm whitespace-nowrap m-auto">
-                                  Your details
-                                </span>
-                                <Input
-                                  type="text"
-                                  name="guestName"
-                                  id="guestName"
-                                  placeholder="Name"
-                                  register={register('guestName')}
-                                  error={errors.guestName}
-                                />
-                                <Input
-                                  type="email"
-                                  name="guestEmail"
-                                  id="guestEmail"
-                                  register={register('guestEmail')}
-                                  error={errors.guestEmail}
-                                  placeholder="Email"
-                                />
-                              </div>
-                              <div className="flex items-center mt-10">
-                                <Input
-                                  id="privacyPolicy"
-                                  aria-describedby="privacyPolicy"
-                                  name="privacyPolicy"
-                                  type="checkbox"
-                                  register={register('privacyPolicy')}
-                                  error={errors.privacyPolicy}
-                                  label="I consent to my information being stored and used according to
-                                      the Privacy Policy."
-                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                />
-                              </div>
-                              <hr className="mt-8 mb-20" />
-                            </>
+                          {((idea?.guestName && idea?.guestEmail) || guestValidation) && (
+                            <GuestForm register={register} errors={errors} />
                           )}
                         </div>
                         <div className="flex justify-end">

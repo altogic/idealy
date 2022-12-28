@@ -105,22 +105,22 @@ export const fileSlice = createSlice({
       state.isLoading = true;
     }
   },
-  extraReducers: {
-    [HYDRATE]: (state, action) => ({
+  extraReducers: (builder) => {
+    builder.addCase([HYDRATE], (state, action) => ({
       ...state,
-      ...action.payload.file
-    }),
-    [uploadFile.pending]: (state) => {
+      ...action.payload.auth
+    }));
+    builder.addCase(uploadFile.pending, (state) => {
       state.isLoading = true;
-    },
-    [uploadFile.fulfilled]: (state, action) => {
+    });
+    builder.addCase(uploadFile.fulfilled, (state, action) => {
       state.isLoading = false;
       state.fileLink = action.payload;
-    },
-    [uploadFile.rejected]: (state, action) => {
+    });
+    builder.addCase(uploadFile.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
-    }
+    });
   }
 });
 

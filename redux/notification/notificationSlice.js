@@ -59,11 +59,11 @@ export const notificationSlice = createSlice({
       state.isLoading = false;
     }
   },
-  extraReducers: {
-    [HYDRATE]: (state, action) => ({
+  extraReducers: (builder) => {
+    builder.addCase([HYDRATE], (state, action) => ({
       ...state,
-      ...action.payload.notification
-    })
+      ...action.payload.auth
+    }));
   }
 });
 

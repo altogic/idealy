@@ -137,17 +137,36 @@ export const ideaSlice = createSlice({
     clearSimilarIdeasSuccess(state) {
       state.similarIdeas = [];
     },
+    addedNewComment(state, action) {
+      try {
+        state.ideas = state.ideas.map((idea) => {
+          if (idea._id === action.payload.ideaId) {
+            const recentUsers = idea.recentUsers
+              ? idea.recentUsers?.filter((rc) => rc?.user !== action.payload.data?.user)
+              : [];
+            return {
+              ...idea,
+              commentCount: idea.commentCount + 1,
+              recentUsers: [...recentUsers, action.payload.data]
+            };
+          }
+          return idea;
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
     createIdeaRealtime() {},
     voteIdeaRealtime() {},
     downvoteIdeaRealtime() {},
     updateIdeaRealtime() {},
     deleteIdeaRealtime() {}
   },
-  extraReducers: {
-    [HYDRATE]: (state, action) => ({
+  extraReducers: (builder) => {
+    builder.addCase([HYDRATE], (state, action) => ({
       ...state,
-      ...action.payload.idea
-    })
+      ...action.payload.auth
+    }));
   }
 });
 
