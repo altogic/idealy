@@ -4,7 +4,7 @@ import Providers from '@/components/Providers';
 import { authActions } from '@/redux/auth/authSlice';
 import { companyActions } from '@/redux/company/companySlice';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { getCookie } from 'cookies-next';
+import { getCookie, deleteCookie } from 'cookies-next';
 import _ from 'lodash';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -192,7 +192,10 @@ export default function Login({ invitation }) {
 }
 export async function getServerSideProps({ req, res }) {
   const invitation = JSON.parse(getCookie('invitation-token', { req, res }) || null);
-
+  deleteCookie('invitation-token', { req, res });
+  deleteCookie('user', { req, res });
+  deleteCookie('session', { req, res });
+  deleteCookie('session_token', { req, res });
   if (invitation) {
     return {
       props: {

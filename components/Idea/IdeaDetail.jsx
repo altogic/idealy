@@ -108,7 +108,8 @@ export default function IdeaDetail({
                                         onChange={(status) => {
                                           updateIdea({
                                             status: status._id,
-                                            statusUpdatedAt: Date.now()
+                                            statusUpdatedAt: Date.now(),
+                                            isCompleted: status.isCompletedStatus
                                           });
                                           setSelectedStatus(status);
                                         }}>
