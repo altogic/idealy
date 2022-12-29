@@ -33,7 +33,7 @@ export const modules = {
     matchVisual: false
   },
   toolbar: {
-    container: '#toolbar',
+    container: [['bold', 'italic', 'underline', 'strike', 'link', 'image']],
     handlers: {
       image: imageHandler
     }
@@ -48,15 +48,5 @@ export const modules = {
 export const formats = ['bold', 'italic', 'underline', 'align', 'strike', 'image'];
 
 export default function EditorToolbar() {
-  return (
-    <div id="toolbar" className="border-none absolute bottom-0 right-0 z-50">
-      <span className="ql-formats">
-        <button type="button" tabIndex={-1} className="ql-bold" />
-        <button type="button" tabIndex={-1} className="ql-italic" />
-        <button type="button" tabIndex={-1} className="ql-underline" />
-        <button type="button" tabIndex={-1} className="ql-strike" />
-        <button type="button" tabIndex={-1} className="ql-image" />
-      </span>
-    </div>
-  );
+  return <></>;
 }
