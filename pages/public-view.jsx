@@ -9,10 +9,8 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Button from '@/components/Button';
-import { Plus } from '@/components/icons';
 import { IDEA_SORT_TYPES } from 'constants';
-import { toggleFeedBackDetailModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
+import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 
 export default function PublicView() {
   const [page, setPage] = useState(1);
@@ -29,14 +27,15 @@ export default function PublicView() {
   const ideaVotes = useSelector((state) => state.idea.ideaVotes);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
-  const commentFormModal = useSelector((state) => state.general.commentFormModal);
+
   const getIdeasByCompany = useCallback(() => {
+    const { sort } = router.query;
     const req = {
       subdomain: window.location.hostname.split('.')[0],
       limit: 10,
       page
     };
-    if (sortQuery) {
+    if (sort) {
       req.sort = sortQuery;
       req.type = 'sort';
     }
@@ -45,7 +44,7 @@ export default function PublicView() {
         'this.isArchived == false && this.isPrivate == false && this.isCompleted == false &&';
     }
     dispatch(ideaActions.getIdeasByCompany(req));
-  }, [page, sortQuery]);
+  }, [page, router.query]);
   useEffect(() => {
     if (!ideas || !selectedIdea) {
       return;
@@ -59,6 +58,7 @@ export default function PublicView() {
   useEffect(() => {
     if (router) {
       const { sort } = router.query;
+      const { idea } = router.query;
       if (sort) {
         const sortType = IDEA_SORT_TYPES.find((s) => s.url === sort);
         setSortQuery(sortType?.query);
@@ -66,11 +66,21 @@ export default function PublicView() {
       } else {
         setIsFiltered(IDEA_SORT_TYPES[0]);
       }
+
+      if (idea) {
+        const ideaDetail = ideas.find((i) => i._id === idea);
+        if (ideaDetail) {
+          setSelectedIdea(ideaDetail);
+          dispatch(toggleFeedBackDetailModal());
+        }
+      }
     }
-  }, [router]);
+  }, [router, ideas]);
 
   useEffect(() => {
-    getIdeasByCompany();
+    if (sortQuery) {
+      getIdeasByCompany();
+    }
   }, [page, sortQuery]);
 
   const isSubmitIdeaVisible = useMemo(() => {
@@ -140,6 +150,9 @@ export default function PublicView() {
                   onClick={() => {
                     setSelectedIdea(idea);
                     dispatch(toggleFeedBackDetailModal());
+                    router.push('/public-view', {
+                      query: { idea: idea._id, sort: isFiltered?.url }
+                    });
                   }}
                   voted={ideaVotes.some((vote) => vote.ideaId === idea._id)}
                 />

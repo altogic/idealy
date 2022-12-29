@@ -6,6 +6,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { DateTime } from 'luxon';
 import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Router from 'next/router';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import CommentForm from '../CommentForm';
 import { Archive, Bug, Eye, Thumbtack } from '../icons';
@@ -31,7 +32,12 @@ export default function IdeaDetail({ idea, company }) {
       <Dialog
         as="div"
         className="relative z-10"
-        onClose={() => dispatch(toggleFeedBackDetailModal())}>
+        onClose={() => {
+          dispatch(toggleFeedBackDetailModal(false));
+          setSelectedStatus(null);
+          const { sort } = Router.query;
+          Router.push(`/public-view?sort=${sort}`);
+        }}>
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-500"
