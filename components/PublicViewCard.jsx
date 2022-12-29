@@ -1,46 +1,18 @@
-import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { DateTime } from 'luxon';
 import { useDispatch } from 'react-redux';
-import { Archive, Bug, ChevronDown, ChevronUp, Comment, Eye, Thumbtack } from './icons';
+import { Archive, Bug, Comment, Eye, Thumbtack } from './icons';
 import StatusButton from './StatusButton';
 import TopicBadges from './TopicBadges';
 import { toggleCommentFormModal } from '@/redux/general/generalSlice';
+import VoteIdea from '@/components/Idea/VoteIdea';
 
 export default function PublicViewCard({ idea, onClick, voted }) {
   const dispatch = useDispatch();
 
-  const upVote = () => {
-    dispatch(ideaActions.voteIdea(idea._id));
-  };
-  const downVote = () => {
-    dispatch(ideaActions.downvoteIdea(idea._id));
-  };
   return (
     <div className="px-2 py-6 lg:p-6 rounded-lg transition hover:bg-slate-50 ]">
       <div className="flex items-start lg:items-center gap-6">
-        <div
-          className={`flex flex-col items-center bg-white px-3 md:px-5 border rounded-lg h-20 ${
-            voted ? 'border-indigo-500' : 'border-gray-400'
-          }`}>
-          <button
-            type="button"
-            onClick={upVote}
-            disabled={voted}
-            className="inline-flex items-center justify-center">
-            <ChevronUp className={`w-5 h-5 ${voted ? ' text-indigo-900' : 'text-slate-400'} `} />
-          </button>
-          <span className="text-indigo-700 text-2xl font-semibold tracking-md">
-            {idea?.voteCount}
-          </span>
-          {idea?.voteCount > 0 && (
-            <button
-              type="button"
-              onClick={downVote}
-              className="inline-flex items-center justify-center">
-              <ChevronDown className="w-5 h-5 text-slate-400" />
-            </button>
-          )}
-        </div>
+        <VoteIdea voted={voted} voteCount={idea?.voteCount} />
         <button type="button" onClick={onClick} className="w-full">
           <div className="flex items-center gap-2 mb-2">
             <h2 className="text-slate-800 text-xl font-semibold tracking-md w-2/3 truncate">

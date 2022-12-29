@@ -11,6 +11,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IDEA_SORT_TYPES } from 'constants';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
+import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 
 export default function PublicView() {
   const [page, setPage] = useState(1);
@@ -83,24 +84,7 @@ export default function PublicView() {
     }
   }, [page, sortQuery]);
 
-  const isSubmitIdeaVisible = useMemo(() => {
-    if (!company) {
-      return false;
-    }
-
-    if (company.authentication.type === 'Registered Users') {
-      return !!user;
-    }
-
-    if (company.authentication.type === 'Custom') {
-      return (
-        (company.authentication.submitIdeas === 'Registered Users' && !!user) ||
-        company.authentication.submitIdeas !== 'Registered Users'
-      );
-    }
-
-    return true;
-  }, [company, user]);
+  const isSubmitIdeaVisible = useRegisteredUserValidation('submitIdea');
 
   useEffect(() => {
     if (company) {
