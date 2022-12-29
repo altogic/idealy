@@ -38,10 +38,13 @@ export default function SubmitIdea({ idea }) {
       is: () => guestValidation && !user,
       then: yup.string().required('Name is required')
     }),
-    guestEmail: yup.string().when([], {
-      is: () => guestValidation && !user,
-      then: yup.string().required('Email is required')
-    }),
+    guestEmail: yup
+      .string()
+      .email("That doesn't look like an email address")
+      .when([], {
+        is: () => guestValidation && !user,
+        then: yup.string().required('Email is required')
+      }),
     privacyPolicy: yup.boolean().when([], {
       is: () => guestValidation && !user,
       then: yup.boolean().oneOf([true], 'Privacy Policy is required')
