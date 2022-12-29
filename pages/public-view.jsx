@@ -12,15 +12,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import Button from '@/components/Button';
 import { Plus } from '@/components/icons';
 import { IDEA_SORT_TYPES } from 'constants';
+import { toggleFeedBackDetailModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 
 export default function PublicView() {
   const [page, setPage] = useState(1);
-  const [openDetailFeedbackModal, setOpenDetailFeedbackModal] = useState(false);
   const [selectedIdea, setSelectedIdea] = useState();
-  const [openSubmitFeedbackModal, setOpenSubmitFeedbackModal] = useState(false);
   const [sortQuery, setSortQuery] = useState();
   const [isFiltered, setIsFiltered] = useState();
-  const [isCommentFormOpen, setIsCommentFormOpen] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -29,7 +27,9 @@ export default function PublicView() {
   const ideas = useSelector((state) => state.idea.ideas);
   const countInfo = useSelector((state) => state.idea.countInfo);
   const ideaVotes = useSelector((state) => state.idea.ideaVotes);
-
+  const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
+  const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
+  const commentFormModal = useSelector((state) => state.general.commentFormModal);
   const getIdeasByCompany = useCallback(() => {
     const req = {
       subdomain: window.location.hostname.split('.')[0],
@@ -42,11 +42,20 @@ export default function PublicView() {
     }
     if (!user && !company?.role) {
       req.filter =
-        'this.isArchived == false && this.isPrivate == false && this.isCompleted == false';
+        'this.isArchived == false && this.isPrivate == false && this.isCompleted == false &&';
     }
     dispatch(ideaActions.getIdeasByCompany(req));
   }, [page, sortQuery]);
-
+  useEffect(() => {
+    if (!ideas || !selectedIdea) {
+      return;
+    }
+    const idea = ideas.find((i) => i.id === selectedIdea.id);
+    if (!idea) {
+      return;
+    }
+    setSelectedIdea(idea);
+  }, [ideas]);
   useEffect(() => {
     if (router) {
       const { sort } = router.query;
@@ -91,12 +100,12 @@ export default function PublicView() {
     }
   }, [company]);
   useEffect(() => {
-    const isModalOpen = openDetailFeedbackModal || openSubmitFeedbackModal;
+    const isModalOpen = feedBackDetailModal || feedbackSubmitModal;
     if (!isModalOpen) {
       setSelectedIdea();
       dispatch(ideaActions.clearSimilarIdeas());
     }
-  }, [openDetailFeedbackModal, openSubmitFeedbackModal]);
+  }, [feedBackDetailModal, feedbackSubmitModal]);
 
   return (
     <>
@@ -115,23 +124,7 @@ export default function PublicView() {
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.{' '}
               </p>
             </div>
-            {isSubmitIdeaVisible && (
-              <>
-                <Button
-                  type="button"
-                  text="Submit Feedback"
-                  icon={<Plus className="w-5 h-5" />}
-                  variant="indigo"
-                  size="sm"
-                  onClick={() => setOpenSubmitFeedbackModal(!openSubmitFeedbackModal)}
-                />
-                <SubmitIdea
-                  open={openSubmitFeedbackModal}
-                  setOpen={setOpenSubmitFeedbackModal}
-                  idea={selectedIdea}
-                />
-              </>
-            )}
+            {isSubmitIdeaVisible && <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />}
           </div>
           <FilterIdea isFiltered={isFiltered} setIsFiltered={setIsFiltered} />
           <InfiniteScroll
@@ -146,24 +139,15 @@ export default function PublicView() {
                   idea={idea}
                   onClick={() => {
                     setSelectedIdea(idea);
-                    setOpenDetailFeedbackModal(!openDetailFeedbackModal);
+                    dispatch(toggleFeedBackDetailModal());
                   }}
                   voted={ideaVotes.some((vote) => vote.ideaId === idea._id)}
-                  setIsCommentFormOpen={setIsCommentFormOpen}
                 />
               </div>
             ))}
           </InfiniteScroll>
         </div>
-        <IdeaDetail
-          open={openDetailFeedbackModal}
-          setOpen={setOpenDetailFeedbackModal}
-          idea={selectedIdea}
-          company={company}
-          setOpenSubmitFeedbackModal={setOpenSubmitFeedbackModal}
-          isCommentFormOpen={isCommentFormOpen}
-          setOpenDetailFeedbackModal={setOpenDetailFeedbackModal}
-        />
+        <IdeaDetail idea={selectedIdea} company={company} />
       </Layout>
     </>
   );

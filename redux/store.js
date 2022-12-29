@@ -9,6 +9,7 @@ import { notificationSlice } from './notification/notificationSlice';
 import rootSaga from './rootSaga';
 import { ideaSlice } from './ideas/ideaSlice';
 import { commentsSlice } from './comments/commentsSlice';
+import { generalSlice } from '@/redux/general/generalSlice';
 
 const sagaMiddleware = createSagaMiddleware();
 const makeStore = () => {
@@ -20,7 +21,8 @@ const makeStore = () => {
       [fileSlice.name]: fileSlice.reducer,
       [notificationSlice.name]: notificationSlice.reducer,
       [ideaSlice.name]: ideaSlice.reducer,
-      [commentsSlice.name]: commentsSlice.reducer
+      [commentsSlice.name]: commentsSlice.reducer,
+      [generalSlice.name]: generalSlice.reducer
     },
     devTools: true,
     middleware: (getDefaultMiddleware) =>

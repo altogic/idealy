@@ -4,8 +4,9 @@ import { useDispatch } from 'react-redux';
 import { Archive, Bug, ChevronDown, ChevronUp, Comment, Eye, Thumbtack } from './icons';
 import StatusButton from './StatusButton';
 import TopicBadges from './TopicBadges';
+import { toggleCommentFormModal } from '@/redux/general/generalSlice';
 
-export default function PublicViewCard({ idea, onClick, voted, setIsCommentFormOpen }) {
+export default function PublicViewCard({ idea, onClick, voted }) {
   const dispatch = useDispatch();
 
   const upVote = () => {
@@ -42,7 +43,9 @@ export default function PublicViewCard({ idea, onClick, voted, setIsCommentFormO
         </div>
         <button type="button" onClick={onClick} className="w-full">
           <div className="flex items-center gap-2 mb-2">
-            <h2 className="text-slate-800 text-xl font-semibold tracking-md">{idea?.title}</h2>
+            <h2 className="text-slate-800 text-xl font-semibold tracking-md w-2/3 truncate">
+              {idea?.title}
+            </h2>
             {idea?.isPinned && (
               <span className="inline-flex items-center rounded-full bg-orange-50 py-1 px-2 text-xs font-medium text-orange-700">
                 <Thumbtack className="w-3 h-3 mr-1 text-orange-500" />
@@ -118,7 +121,7 @@ export default function PublicViewCard({ idea, onClick, voted, setIsCommentFormO
                 onClick={(e) => {
                   e.stopPropagation();
                   onClick();
-                  setIsCommentFormOpen(true);
+                  dispatch(toggleCommentFormModal());
                 }}>
                 <Comment className="w-6 h-6" />
                 {idea?.commentCount}

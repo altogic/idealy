@@ -8,8 +8,9 @@ import useGuestValidation from '@/hooks/useGuestValidation';
 import Editor from './Editor';
 import Button from './Button';
 import GuestForm from './GuestForm';
+import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 
-export default function CommentForm({ ideaId, company, setOpenDetailFeedbackModal }) {
+export default function CommentForm({ ideaId, company }) {
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.comments.isLoading);
   const user = useSelector((state) => state.auth.user);
@@ -82,7 +83,7 @@ export default function CommentForm({ ideaId, company, setOpenDetailFeedbackModa
           variant="blank"
           size="sm"
           height="10"
-          onClick={() => setOpenDetailFeedbackModal(false)}
+          onClick={() => dispatch(toggleFeedBackDetailModal())}
         />
         <Button
           type="submit"
