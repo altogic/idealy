@@ -6,7 +6,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { DateTime } from 'luxon';
 import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import CommentForm from '../CommentForm';
 import { Archive, Bug, Eye, Thumbtack } from '../icons';
@@ -14,6 +14,7 @@ import IdeaDetailAdmin from './IdeaDetailAdmin';
 
 export default function IdeaDetail({ idea, company }) {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [selectedStatus, setSelectedStatus] = useState();
 
   const user = useSelector((state) => state.auth.user);
@@ -33,10 +34,10 @@ export default function IdeaDetail({ idea, company }) {
         as="div"
         className="relative z-10"
         onClose={() => {
+          const { sort } = router.query;
+          router.push(`/public-view?sort=${sort}`);
           dispatch(toggleFeedBackDetailModal(false));
           setSelectedStatus(null);
-          const { sort } = Router.query;
-          Router.push(`/public-view?sort=${sort}`);
         }}>
         <Transition.Child
           as={Fragment}
