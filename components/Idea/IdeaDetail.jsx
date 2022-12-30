@@ -1,22 +1,22 @@
 import CommentCard from '@/components/CommentCard';
+import ImageList from '@/components/ImageList';
 import StatusButton from '@/components/StatusButton';
 import TopicBadges from '@/components/TopicBadges';
 import { commentActions } from '@/redux/comments/commentsSlice';
+import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { Dialog, Transition } from '@headlessui/react';
 import { DateTime } from 'luxon';
 import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import CommentForm from '../CommentForm';
 import { Archive, Bug, Eye, Thumbtack } from '../icons';
 import IdeaDetailAdmin from './IdeaDetailAdmin';
 
 export default function IdeaDetail({ idea, company }) {
   const dispatch = useDispatch();
-  const router = useRouter();
   const [selectedStatus, setSelectedStatus] = useState();
-
+  const router = useRouter();
   const user = useSelector((state) => state.auth.user);
   const comments = useSelector((state) => state.comments.comments);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
@@ -27,7 +27,6 @@ export default function IdeaDetail({ idea, company }) {
       dispatch(commentActions.getComments(idea._id));
     }
   }, [idea]);
-
   return (
     <Transition.Root show={feedBackDetailModal} as={Fragment}>
       <Dialog
@@ -190,6 +189,7 @@ export default function IdeaDetail({ idea, company }) {
                               )}
                             </div>
                           </div>
+                          <ImageList images={idea?.images} isPreview />
                         </div>
                       </div>
                       {/* Card Detail Bottom */}
