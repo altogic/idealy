@@ -1,24 +1,23 @@
 import AuthService from '@/services/auth';
 import FileService from '@/services/file';
 import companyService from '@/services/company';
-import _ from 'lodash';
 import { takeEvery, put, call, all, select } from 'redux-saga/effects';
 import { realtime } from '@/utils/altogic';
 import { authActions } from '../auth/authSlice';
 import { fileActions } from './fileSlice';
 import { companyActions } from '../company/companySlice';
 
-function* uploadFileSaga({ payload }) {
+function* uploadFileSaga({ payload: { existingFile, file, name } }) {
   try {
-    if (payload.existingFile) {
-      yield call(FileService.deleteFile, payload.existingFile);
+    if (existingFile) {
+      yield call(FileService.deleteFile, existingFile);
     }
-    const { data, errors } = yield call(FileService.uploadFile, payload.file, payload.name);
+    const { data, errors } = yield call(FileService.uploadFile, file, name);
     if (data) {
       yield put(fileActions.uploadFileSuccess(data.publicPath));
       yield put(
         fileActions.uploadFilesSuccess({
-          name: payload.name.split('-')[1],
+          name: name.split('-')[1],
           data: data.publicPath
         })
       );
@@ -48,11 +47,13 @@ function* uploadFaviconSaga({ payload }) {
 }
 
 function* deleteFileSaga({ payload }) {
-  yield put(fileActions.clearFileLink({ name: _.get(payload, 'name') }));
-}
-
-export function* clearFileLink() {
-  yield put(fileActions.clearFileLink());
+  try {
+    const { errors } = yield call(FileService.deleteFile, payload);
+    if (errors) throw errors;
+    yield put(fileActions.deleteFileSuccess(payload));
+  } catch (error) {
+    yield put(fileActions.deleteFileFailure(error));
+  }
 }
 
 function* deleteAvatarFileSaga({ payload: userId }) {
@@ -125,19 +126,10 @@ function* setFileLinkByCompanyFaviconPictureSaga() {
 export default function* fileSaga() {
   yield all([
     takeEvery(fileActions.uploadFileRequest.type, uploadFileSaga),
-    takeEvery(fileActions.deleteFileRequest.type, deleteFileSaga),
+    takeEvery(fileActions.deleteFile.type, deleteFileSaga),
     takeEvery(fileActions.deleteUserAvatar.type, deleteAvatarFileSaga),
     takeEvery(fileActions.deleteCompanyLogo.type, deleteCompanyLogoFileSaga),
     takeEvery(fileActions.deleteCompanyFavicon.type, deleteCompanyFaviconFileSaga),
-    takeEvery(fileActions.setFileLinkByProfilePictureRequest.type, setFileLinkByProfilePictureSaga),
-    takeEvery(
-      fileActions.setFileLinkByCompanyLogoRequest.type,
-      setFileLinkByCompanyLogoPictureSaga
-    ),
-    takeEvery(
-      fileActions.setFileLinkByCompanyFaviconRequest.type,
-      setFileLinkByCompanyFaviconPictureSaga
-    ),
     takeEvery(fileActions.uploadFavicon.type, uploadFaviconSaga)
   ]);
 }

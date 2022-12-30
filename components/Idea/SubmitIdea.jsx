@@ -6,21 +6,26 @@ import _ from 'lodash';
 import { Fragment, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
+import { fileActions } from '@/redux/file/fileSlice';
 import * as yup from 'yup';
+import ImageList from '@/components/ImageList';
 import Button from '../Button';
 import Editor from '../Editor';
 import GuestForm from '../GuestForm';
-import { ChevronUp, Plus } from '../icons';
+import { ChevronUp, Photo, Plus } from '../icons';
 import Input from '../Input';
 import SimilarIdeaCard from '../SimilarIdeaCard';
 import TopicButton from '../TopicButton';
-import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 
 export default function SubmitIdea({ idea }) {
   const company = useSelector((state) => state.company.company);
   const user = useSelector((state) => state.auth.user);
   const similarIdeas = useSelector((state) => state.idea.similarIdeas);
+  const loading = useSelector((state) => state.file.isLoading);
+  const fileLinks = useSelector((state) => state.file.fileLinks);
   const open = useSelector((state) => state.general.feedBackSubmitModal);
+  const [images, setImages] = useState([]);
   const guestValidation = useGuestValidation({
     company,
     fieldName: 'submitIdeas'
@@ -69,7 +74,8 @@ export default function SubmitIdea({ idea }) {
     const reqData = {
       ...data,
       content,
-      topics
+      topics,
+      images: fileLinks
     };
     delete reqData.privacyPolicy;
     if (user) {
@@ -84,6 +90,24 @@ export default function SubmitIdea({ idea }) {
     dispatch(toggleFeedBackSubmitModal());
   };
 
+  function imageHandler() {
+    const input = document.createElement('input');
+
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files[0];
+      setImages((prev) => [...prev, URL.createObjectURL(file)]);
+      dispatch(fileActions.uploadFileRequest({ file, name: file.name }));
+    };
+  }
+
+  const removeImage = (index) => {
+    setImages(images.filter((_, i) => i !== index));
+    dispatch(fileActions.deleteFile(fileLinks[index]));
+  };
   useEffect(() => {
     if (open) {
       reset();
@@ -125,13 +149,11 @@ export default function SubmitIdea({ idea }) {
       clearTimeout(timer);
     };
   }, [inpTitle]);
-
   useEffect(() => {
     if (content) {
       setValue('content', content);
     }
   }, [content]);
-
   useEffect(() => {
     if (topics) {
       setValue('topics', topics);
@@ -254,16 +276,33 @@ export default function SubmitIdea({ idea }) {
                                 <Editor
                                   content={content}
                                   setContent={setContent}
-                                  errors={errors.content}
-                                />
+                                  errors={errors.content}>
+                                  {images.length < 5 && (
+                                    <button
+                                      type="button"
+                                      className="absolute bottom-0 right-0 p-2 z-50"
+                                      onClick={imageHandler}>
+                                      <Photo className="w-6 h-6 hover:text-[#06c]" />
+                                    </button>
+                                  )}
+                                </Editor>
                               )}
                             />
+
                             {errors?.content?.message && (
                               <span className="inline-block text-sm text-red-600">
                                 {errors.content.message}
                               </span>
                             )}
                           </div>
+                          {images?.length > 0 && (
+                            <ImageList
+                              images={images}
+                              onRemove={removeImage}
+                              removable
+                              loading={loading}
+                            />
+                          )}
                           <div className="mt-8">
                             <span className="inline-block text-slate-600 mb-4 text-base tracking-sm">
                               Choose up to 3 Topics for this Idea (optional)
@@ -272,7 +311,10 @@ export default function SubmitIdea({ idea }) {
                               name="topics"
                               control={control}
                               defaultValue={[]}
-                              rules={{ required: false, validate: (value) => value.length <= 3 }}
+                              rules={{
+                                required: false,
+                                validate: (value) => value.length <= 3
+                              }}
                               render={() => (
                                 <div className="flex flex-wrap items-center gap-4">
                                   {company?.topics.map((topic) => (
@@ -309,7 +351,7 @@ export default function SubmitIdea({ idea }) {
                           <div className="flex justify-end">
                             <Button
                               type="submit"
-                              className="flex items-center justify-center text-white py-3 px-4 text-sm font-medium tracking-sm border border-transparent rounded-lg bg-indigo-700 hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              className="flex items-center justify-center text-white py-3 px-4 text-sm font-medium tracking-sm border border-transparent rounded-lg bg-indigo-700 hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-4"
                               text={`${idea ? 'Update' : 'Submit'} Feedback`}
                             />
                           </div>
