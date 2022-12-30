@@ -49,7 +49,9 @@ export const ideaSlice = createSlice({
     },
     createIdeaSuccess(state, action) {
       state.isLoading = false;
-      state.ideas = [action.payload, ...state.ideas];
+      if (!state.ideas.some((idea) => idea._id === action.payload._id)) {
+        state.ideas = [action.payload, ...state.ideas];
+      }
     },
     createIdeaFailure(state, action) {
       state.isLoading = false;
@@ -59,17 +61,23 @@ export const ideaSlice = createSlice({
       state.isLoading = true;
     },
     voteIdeaSuccess(state, action) {
-      state.isLoading = false;
-      state.ideaVotes = [...state.ideaVotes, action.payload];
-      state.ideas = state.ideas.map((idea) => {
-        if (idea._id === action.payload.ideaId) {
-          return {
-            ...idea,
-            voteCount: idea.voteCount + 1
-          };
+      try {
+        state.isLoading = false;
+        if (!state.ideaVotes.some((vote) => vote._id === action.payload._id)) {
+          state.ideaVotes = [...state.ideaVotes, action.payload];
         }
-        return idea;
-      });
+        state.ideas = state.ideas.map((idea) => {
+          if (idea._id === action.payload.ideaId) {
+            return {
+              ...idea,
+              voteCount: state.ideaVotes.filter((vote) => vote.ideaId === idea._id).length
+            };
+          }
+          return idea;
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
     voteIdeaFailure(state, action) {
       state.isLoading = false;
