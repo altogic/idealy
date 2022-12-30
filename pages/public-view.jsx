@@ -4,14 +4,14 @@ import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfiniteScroll from '@/components/InfiniteScroll';
 import Layout from '@/components/Layout';
 import PublicViewCard from '@/components/PublicViewCard';
+import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
+import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
+import { IDEA_SORT_TYPES } from 'constants';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { IDEA_SORT_TYPES } from 'constants';
-import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
-import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 
 export default function PublicView() {
   const [page, setPage] = useState(1);
@@ -45,7 +45,7 @@ export default function PublicView() {
         'this.isArchived == false && this.isPrivate == false && this.isCompleted == false &&';
     }
     dispatch(ideaActions.getIdeasByCompany(req));
-  }, [page, router.query]);
+  }, [page, sortQuery]);
   useEffect(() => {
     if (!ideas || !selectedIdea) {
       return;
@@ -60,6 +60,7 @@ export default function PublicView() {
     if (router) {
       const { sort } = router.query;
       const { idea } = router.query;
+
       if (sort) {
         const sortType = IDEA_SORT_TYPES.find((s) => s.url === sort);
         setSortQuery(sortType?.query);

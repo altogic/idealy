@@ -1,10 +1,10 @@
+import VoteIdea from '@/components/Idea/VoteIdea';
+import { toggleCommentFormModal } from '@/redux/general/generalSlice';
 import { DateTime } from 'luxon';
 import { useDispatch } from 'react-redux';
 import { Archive, Bug, Comment, Eye, Thumbtack } from './icons';
 import StatusButton from './StatusButton';
 import TopicBadges from './TopicBadges';
-import { toggleCommentFormModal } from '@/redux/general/generalSlice';
-import VoteIdea from '@/components/Idea/VoteIdea';
 
 export default function PublicViewCard({ idea, onClick, voted }) {
   const dispatch = useDispatch();
@@ -15,9 +15,7 @@ export default function PublicViewCard({ idea, onClick, voted }) {
         <VoteIdea voted={voted} voteCount={idea?.voteCount} />
         <button type="button" onClick={onClick} className="w-full">
           <div className="flex items-center gap-2 mb-2">
-            <h2 className="text-slate-800 text-xl font-semibold tracking-md w-2/3 truncate">
-              {idea?.title}
-            </h2>
+            <h2 className="text-slate-800 text-xl font-semibold tracking-md">{idea?.title}</h2>
             {idea?.isPinned && (
               <span className="inline-flex items-center rounded-full bg-orange-50 py-1 px-2 text-xs font-medium text-orange-700">
                 <Thumbtack className="w-3 h-3 mr-1 text-orange-500" />

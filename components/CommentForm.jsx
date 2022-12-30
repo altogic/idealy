@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { commentActions } from '@/redux/comments/commentsSlice';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import useGuestValidation from '@/hooks/useGuestValidation';
-import Editor from './Editor';
-import Button from './Button';
-import GuestForm from './GuestForm';
+import { commentActions } from '@/redux/comments/commentsSlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import * as yup from 'yup';
+import Button from './Button';
+import Editor from './Editor';
+import GuestForm from './GuestForm';
 
 export default function CommentForm({ ideaId, company }) {
   const dispatch = useDispatch();
