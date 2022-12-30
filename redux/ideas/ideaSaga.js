@@ -10,7 +10,10 @@ function* getIdeasByCompanySaga({ payload: { subdomain, limit, page, sort, filte
       limit,
       page,
       sort,
-      filter
+      pinnedFilter: `${
+        filter || ''
+      } this.companySubdomain == '${subdomain}' && this.isPinned == true`,
+      filter: `${filter || ''} this.companySubdomain == '${subdomain}' && this.isPinned == false`
     });
     let voteFilter = '';
     ideas.result.forEach((idea, index) => {
