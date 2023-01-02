@@ -304,7 +304,7 @@ export default function SubmitIdea({ idea }) {
                             />
                           )}
                           <div className="mt-8">
-                            <span className="inline-block text-slate-600 mb-4 text-base tracking-sm">
+                            <span className="inline-block text-slate-600 dark:text-aa-300 purple:text-pt-300 mb-4 text-base tracking-sm">
                               Choose up to 3 Topics for this Idea (optional)
                             </span>
                             <Controller
@@ -342,7 +342,7 @@ export default function SubmitIdea({ idea }) {
                               )}
                             />
                           </div>
-                          <hr className="my-8 border-slate-200" />
+                          <hr className="my-8 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
                           <div>
                             {((idea?.guestName && idea?.guestEmail) || guestValidation) && (
                               <GuestForm register={register} errors={errors} />
@@ -351,7 +351,7 @@ export default function SubmitIdea({ idea }) {
                           <div className="flex justify-end">
                             <Button
                               type="submit"
-                              className="flex items-center justify-center text-white py-3 px-4 text-sm font-medium tracking-sm border border-transparent rounded-lg bg-indigo-700 hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-4"
+                              className="flex items-center justify-center bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white py-3 px-4 text-sm font-medium tracking-sm border border-transparent rounded-lg hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600 focus:outline-none"
                               text={`${idea ? 'Update' : 'Submit'} Feedback`}
                             />
                           </div>

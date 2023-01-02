@@ -23,7 +23,7 @@ export default function Button({
     <button
       type={type === 'submit' ? 'submit' : 'button'}
       className={cn(
-        `inline-flex items-center justify-center gap-2 py-2.5 px-4 tracking-sm border rounded-md transition focus:outline-none`,
+        `inline-flex items-center justify-center gap-2 py-2.5 px-4 tracking-sm border rounded-md transition ease-linear duration-200 focus:outline-none`,
         `text-${size}`,
         height ? `h-${height}` : '',
         fullWidth ? 'w-full' : '',
@@ -36,7 +36,7 @@ export default function Button({
         variant === 'blankRed' ? 'bg-white text-red-700 border-red-300 hover:bg-red-100' : '',
         variant === 'red' ? 'bg-red-600 text-white border-transparent hover:bg-red-700' : '',
         variant === 'indigo'
-          ? 'bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white border-transparent hover:bg-indigo-600'
+          ? 'bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white border-transparent hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600'
           : ''
       )}
       {...props}
