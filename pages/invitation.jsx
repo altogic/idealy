@@ -23,9 +23,9 @@ export default function Invitation({ invitation, errors, companies }) {
   }, [errors]);
   useEffect(() => {
     if (!errors) {
-      if (user?.email !== invitation?.email) {
+      if (user && user?.email !== invitation?.email) {
         dispatch(authActions.logout());
-      } else {
+      } else if (user) {
         dispatch(companyActions.updateMemberStatus({ companyId: invitation.companyId }));
         const company = companies.find((c) => c._id === invitation.companyId);
         router.push(generateUrl('public-view', company.subdomain));

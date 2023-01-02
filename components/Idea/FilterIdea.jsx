@@ -8,22 +8,21 @@ export default function FilterIdea({ isFiltered, setIsFiltered }) {
   useEffect(() => {
     setIsFiltered(IDEA_SORT_TYPES[0]);
   }, []);
-
   return (
-    <div className="mb-9">
+    <div className="mb-9 flex justify-between">
       <Listbox
         value={isFiltered}
         onChange={(value) => {
           setIsFiltered(value);
           Router.push(`/public-view?sort=${value.url}`);
         }}>
-        <div className="relative mt-1">
+        <div className="relative mt-1 flex-1">
           <Listbox.Button className="relative w-full inline-flex max-w-[195px] bg-white py-3.5 px-[14px] border border-slate-300 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
             <UpDown className="w-5 h-5 text-slate-500 mr-2" />
             <span className="block text-slate-800 truncate">{isFiltered?.name}</span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5">
               <svg
-                className="w-5 h-5 text-slate-500"
+                className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200"
                 viewBox="0 0 20 20"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg">
@@ -42,24 +41,30 @@ export default function FilterIdea({ isFiltered, setIsFiltered }) {
             leave="transition ease-in duration-100"
             leaveFrom="opacity-100"
             leaveTo="opacity-0">
-            <Listbox.Options className="absolute mt-1 max-h-60 max-w-[195px] w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            <Listbox.Options className="absolute mt-1 max-h-60 max-w-[195px] w-full overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
               {IDEA_SORT_TYPES?.map((item) => (
                 <Listbox.Option
                   key={item.name}
                   className={({ active }) =>
-                    `relative flex items-center justify-between cursor-default select-none py-2 px-3.5 ${
-                      active ? 'bg-slate-100' : 'text-slate-900'
+                    `relative flex items-center justify-between cursor-default select-none py-2 px-3.5 transition hover:text-slate-900 dark:hover:text-aa-100 purple:hover:text-pt-100 ${
+                      active
+                        ? 'bg-slate-100 dark:bg-aa-700 purple:bg-pt-700'
+                        : 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
                     }`
                   }
                   value={item}>
-                  {({ isFiltered }) => (
+                  {({ selected }) => (
                     <>
                       <span
-                        className={`block truncate ${isFiltered ? 'font-medium' : 'font-normal'}`}>
+                        className={`block truncate ${
+                          selected
+                            ? 'text-slate-900 dark:text-aa-100 purple:text-pt-100'
+                            : 'font-normal'
+                        }`}>
                         {item.name}
                       </span>
-                      {isFiltered ? (
-                        <span className="flex items-center pl-3 text-indigo-700">
+                      {selected ? (
+                        <span className="flex items-center pl-3 text-indigo-700 dark:text-aa-200 purple:text-pt-200">
                           <svg
                             className="w-5 h-5"
                             viewBox="0 0 20 20"

@@ -47,3 +47,9 @@
 .ql-snow {
   border: none !important;
 }
+.ql-toolbar.ql-snow {
+  position: absolute;
+  bottom: 0;
+  right: 10px;
+  z-index: 40;
+}

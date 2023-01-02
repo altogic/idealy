@@ -1,11 +1,11 @@
-import { authActions } from '@/redux/auth/authSlice';
-import { wrapper } from '@/redux/store';
+import {authActions} from '@/redux/auth/authSlice';
+import {wrapper} from '@/redux/store';
 import 'animate.css/animate.min.css';
-import { getCookie } from 'cookies-next';
-import { useEffect } from 'react';
+import {getCookie} from 'cookies-next';
+import {useEffect} from 'react';
 import 'react-quill/dist/quill.snow.css';
-import { useDispatch } from 'react-redux';
-import { cssTransition, ToastContainer } from 'react-toastify';
+import {useDispatch} from 'react-redux';
+import {cssTransition, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/globals.css';
 
