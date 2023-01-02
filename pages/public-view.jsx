@@ -4,7 +4,10 @@ import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfiniteScroll from '@/components/InfiniteScroll';
 import Layout from '@/components/Layout';
 import PublicViewCard from '@/components/PublicViewCard';
+import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
+import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
+import { IDEA_SORT_TYPES } from 'constants';
 import Head from 'next/head';
 import { Listbox, Transition } from '@headlessui/react';
 import { useRouter } from 'next/router';
@@ -38,10 +41,8 @@ export default function PublicView() {
   const [isStatuss, setIsStatuss] = useState([statuss[0], statuss[1]]);
   const [openDetailFeedbackModal, setOpenDetailFeedbackModal] = useState(false);
   const [selectedIdea, setSelectedIdea] = useState();
-  const [openSubmitFeedbackModal, setOpenSubmitFeedbackModal] = useState(false);
   const [sortQuery, setSortQuery] = useState();
   const [isFiltered, setIsFiltered] = useState();
-  const [isCommentFormOpen, setIsCommentFormOpen] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -50,27 +51,41 @@ export default function PublicView() {
   const ideas = useSelector((state) => state.idea.ideas);
   const countInfo = useSelector((state) => state.idea.countInfo);
   const ideaVotes = useSelector((state) => state.idea.ideaVotes);
+  const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
+  const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
 
   const getIdeasByCompany = useCallback(() => {
+    const { sort } = router.query;
     const req = {
       subdomain: window.location.hostname.split('.')[0],
       limit: 10,
       page
     };
-    if (sortQuery) {
+    if (sort) {
       req.sort = sortQuery;
       req.type = 'sort';
     }
     if (!user && !company?.role) {
       req.filter =
-        'this.isArchived == false && this.isPrivate == false && this.isCompleted == false';
+        'this.isArchived == false && this.isPrivate == false && this.isCompleted == false &&';
     }
     dispatch(ideaActions.getIdeasByCompany(req));
   }, [page, sortQuery]);
-
+  useEffect(() => {
+    if (!ideas || !selectedIdea) {
+      return;
+    }
+    const idea = ideas.find((i) => i.id === selectedIdea.id);
+    if (!idea) {
+      return;
+    }
+    setSelectedIdea(idea);
+  }, [ideas]);
   useEffect(() => {
     if (router) {
       const { sort } = router.query;
+      const { idea } = router.query;
+
       if (sort) {
         const sortType = IDEA_SORT_TYPES.find((s) => s.url === sort);
         setSortQuery(sortType?.query);
@@ -78,31 +93,24 @@ export default function PublicView() {
       } else {
         setIsFiltered(IDEA_SORT_TYPES[0]);
       }
+
+      if (idea) {
+        const ideaDetail = ideas.find((i) => i._id === idea);
+        if (ideaDetail) {
+          setSelectedIdea(ideaDetail);
+          dispatch(toggleFeedBackDetailModal());
+        }
+      }
     }
-  }, [router]);
+  }, [router, ideas]);
 
   useEffect(() => {
-    getIdeasByCompany();
+    if (sortQuery) {
+      getIdeasByCompany();
+    }
   }, [page, sortQuery]);
 
-  const isSubmitIdeaVisible = useMemo(() => {
-    if (!company) {
-      return false;
-    }
-
-    if (company.authentication.type === 'Registered Users') {
-      return !!user;
-    }
-
-    if (company.authentication.type === 'Custom') {
-      return (
-        (company.authentication.submitIdeas === 'Registered Users' && !!user) ||
-        company.authentication.submitIdeas !== 'Registered Users'
-      );
-    }
-
-    return true;
-  }, [company, user]);
+  const isSubmitIdeaVisible = useRegisteredUserValidation('submitIdea');
 
   useEffect(() => {
     if (company) {
@@ -112,12 +120,12 @@ export default function PublicView() {
     }
   }, [company]);
   useEffect(() => {
-    const isModalOpen = openDetailFeedbackModal || openSubmitFeedbackModal;
+    const isModalOpen = feedBackDetailModal || feedbackSubmitModal;
     if (!isModalOpen) {
       setSelectedIdea();
       dispatch(ideaActions.clearSimilarIdeas());
     }
-  }, [openDetailFeedbackModal, openSubmitFeedbackModal]);
+  }, [feedBackDetailModal, feedbackSubmitModal]);
 
   return (
     <>
@@ -136,23 +144,7 @@ export default function PublicView() {
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.{' '}
               </p>
             </div>
-            {isSubmitIdeaVisible && (
-              <>
-                <Button
-                  type="button"
-                  text="Submit Feedback"
-                  icon={<Plus className="w-5 h-5" />}
-                  variant="indigo"
-                  size="sm"
-                  onClick={() => setOpenSubmitFeedbackModal(!openSubmitFeedbackModal)}
-                />
-                <SubmitIdea
-                  open={openSubmitFeedbackModal}
-                  setOpen={setOpenSubmitFeedbackModal}
-                  idea={selectedIdea}
-                />
-              </>
-            )}
+            {isSubmitIdeaVisible && <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />}
           </div>
           <div className="flex items-start justify-between">
             <div className="flex-shrink-0 w-[195px]">
@@ -329,24 +321,18 @@ export default function PublicView() {
                   idea={idea}
                   onClick={() => {
                     setSelectedIdea(idea);
-                    setOpenDetailFeedbackModal(!openDetailFeedbackModal);
+                    dispatch(toggleFeedBackDetailModal());
+                    router.push('/public-view', {
+                      query: { idea: idea._id, sort: isFiltered?.url }
+                    });
                   }}
                   voted={ideaVotes.some((vote) => vote.ideaId === idea._id)}
-                  setIsCommentFormOpen={setIsCommentFormOpen}
                 />
               </div>
             ))}
           </InfiniteScroll>
         </div>
-        <IdeaDetail
-          open={openDetailFeedbackModal}
-          setOpen={setOpenDetailFeedbackModal}
-          idea={selectedIdea}
-          company={company}
-          setOpenSubmitFeedbackModal={setOpenSubmitFeedbackModal}
-          isCommentFormOpen={isCommentFormOpen}
-          setOpenDetailFeedbackModal={setOpenDetailFeedbackModal}
-        />
+        <IdeaDetail idea={selectedIdea} company={company} />
       </Layout>
     </>
   );

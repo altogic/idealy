@@ -28,6 +28,7 @@ export { default as Notification } from './Notification';
 export { default as Ok } from './Ok';
 export { default as Pen } from './Pen';
 export { default as People } from './People';
+export { default as Photo } from './Photo';
 export { default as PlusPeople } from './PlusPeople';
 export { default as Plus } from './Plus';
 export { default as Reply } from './Reply';

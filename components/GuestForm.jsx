@@ -17,7 +17,7 @@ export default function GuestForm({ register, errors }) {
           error={errors.guestName}
         />
         <Input
-          type="email"
+          type="text"
           name="guestEmail"
           id="guestEmail"
           register={register('guestEmail')}

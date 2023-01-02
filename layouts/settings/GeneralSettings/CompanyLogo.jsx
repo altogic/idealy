@@ -56,7 +56,6 @@ export default function CompanyLogo() {
 
   useEffect(() => {
     setDidMount(true);
-    dispatch(fileActions.setFileLinkByCompanyLogoRequest());
   }, []);
 
   return (

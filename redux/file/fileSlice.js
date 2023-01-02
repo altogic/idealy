@@ -12,7 +12,7 @@ const initialState = {
   error: null,
   fileLink: null,
   faviconFile: null,
-  fileLinks: {}
+  fileLinks: []
 };
 
 export const fileSlice = createSlice({
@@ -39,29 +39,23 @@ export const fileSlice = createSlice({
     },
     uploadFilesSuccess(state, action) {
       state.isLoading = false;
-      state.fileLinks = {
-        ...state.fileLinks,
-        [action.payload.name]: action.payload.data
-      };
+      state.fileLinks = [...state.fileLinks, action.payload.data];
     },
     uploadFileFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
     },
-    setUploadedFiles(state, action) {
-      state.fileLinks = action.payload;
-    },
-    clearFileLink(state, action) {
+    clearFileLink(state) {
       state.fileLink = null;
-      if (action.payload && action.payload.name) {
-        state.fileLinks = {
-          ...state.fileLinks,
-          [action.payload.name]: null
-        };
-      }
     },
-    deleteFileRequest() {},
-
+    deleteFile() {},
+    deleteFileSuccess(state, action) {
+      state.fileLink = null;
+      state.fileLinks = state.fileLinks.filter((file) => file !== action.payload);
+    },
+    deleteFileFailure(state, action) {
+      state.error = action.payload;
+    },
     deleteUserAvatar(state) {
       state.isLoading = true;
     },
@@ -94,15 +88,6 @@ export const fileSlice = createSlice({
     deleteCompanyFaviconFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-    },
-    setFileLinkByProfilePictureRequest(state) {
-      state.isLoading = true;
-    },
-    setFileLinkByCompanyLogoRequest(state) {
-      state.isLoading = true;
-    },
-    setFileLinkByCompanyFaviconRequest(state) {
-      state.isLoading = true;
     }
   },
   extraReducers: (builder) => {
