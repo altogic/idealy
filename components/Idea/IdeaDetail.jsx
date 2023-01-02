@@ -21,23 +21,26 @@ export default function IdeaDetail({ idea, company }) {
   const comments = useSelector((state) => state.comments.comments);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const commentFormModal = useSelector((state) => state.general.commentFormModal);
-
+  const [sortState, setSortState] = useState();
   useEffect(() => {
     if (idea) {
       dispatch(commentActions.getComments(idea._id));
     }
   }, [idea]);
+
+  useEffect(() => {
+    const { sort } = router.query;
+    if (sort) setSortState(sort);
+  }, [router.query]);
+
+  function handleClose() {
+    router.push(`/public-view?sort=${sortState}`);
+    dispatch(toggleFeedBackDetailModal());
+    setSelectedStatus(null);
+  }
   return (
     <Transition.Root show={feedBackDetailModal} as={Fragment}>
-      <Dialog
-        as="div"
-        className="relative z-10"
-        onClose={() => {
-          const { sort } = router.query;
-          router.push(`/public-view?sort=${sort}`);
-          dispatch(toggleFeedBackDetailModal(false));
-          setSelectedStatus(null);
-        }}>
+      <Dialog as="div" className="relative z-10" onClose={() => handleClose()}>
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-500"

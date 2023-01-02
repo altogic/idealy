@@ -6,18 +6,20 @@ import { setCookie as nextCookie } from 'cookies-next';
 export function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-export function setCookie(name, value, days) {
+export function setCookie(name, value, days, req, res) {
   nextCookie(name, value, {
+    req,
+    res,
     maxAge: days * 24 * 60 * 60,
     path: '/',
     sameSite: 'lax',
     domain: process.env.NEXT_PUBLIC_DOMAIN
   });
 }
-export async function setSessionCookie(session, user) {
-  setCookie('session', session, 30);
-  setCookie('user', user, 30);
-  setCookie('session_token', session.token, 30);
+export async function setSessionCookie(session, user, req, res) {
+  setCookie('session', session, 30, req, res);
+  setCookie('user', user, 30, req, res);
+  setCookie('session_token', session.token, 30, req, res);
 }
 
 export function randomHexColor() {
