@@ -43,13 +43,13 @@ export default function CompanyDisplay() {
             updateCompanyDisplay('showCompanyName', selected === 'Show logo & company name');
           }}>
           <div className="relative">
-            <Listbox.Button className="relative w-full inline-flex bg-white py-3.5 px-[14px] border border-slate-300 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-              <span className="block text-gray-500 text-sm tracking-sm truncate">
+            <Listbox.Button className="relative w-full inline-flex bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+              <span className="block text-gray-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm truncate">
                 {displaySelected}
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5">
                 <svg
-                  className="w-5 h-5 text-gray-500"
+                  className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200"
                   viewBox="0 0 20 20"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg">
@@ -68,24 +68,30 @@ export default function CompanyDisplay() {
               leave="transition ease-in duration-100"
               leaveFrom="opacity-100"
               leaveTo="opacity-0">
-              <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50">
+              <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50">
                 {DISPLAY_COMPANY_ASSETS.map((item) => (
                   <Listbox.Option
                     key={item}
                     className={({ active }) =>
-                      `relative flex items-center justify-between cursor-default select-none py-2 px-3.5 ${
-                        active ? 'bg-slate-100' : 'text-slate-900'
+                      `relative flex items-center justify-between cursor-default select-none py-2 px-3.5 transition hover:text-slate-900 dark:hover:text-aa-100 purple:hover:text-pt-100 ${
+                        active
+                          ? 'bg-slate-100 dark:bg-aa-700 purple:bg-pt-700'
+                          : 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
                       }`
                     }
                     value={item}>
                     {({ selected }) => (
                       <>
                         <span
-                          className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
+                          className={`block truncate ${
+                            selected
+                              ? 'text-slate-900 dark:text-aa-100 purple:text-pt-100'
+                              : 'font-normal'
+                          }`}>
                           {item}
                         </span>
                         {selected ? (
-                          <span className="flex items-center pl-3 text-indigo-700">
+                          <span className="flex items-center pl-3 text-indigo-700 dark:text-aa-200 purple:text-pt-200">
                             <Check className="w-5 h-5" />
                           </span>
                         ) : null}
