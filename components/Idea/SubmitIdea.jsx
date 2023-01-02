@@ -282,7 +282,7 @@ export default function SubmitIdea({ idea }) {
                                       type="button"
                                       className="absolute bottom-0 right-0 p-2 z-50"
                                       onClick={imageHandler}>
-                                      <Photo className="w-6 h-6 hover:text-[#06c]" />
+                                      <Photo className="w-6 h-6 text-slate-500 dark:text-aa-200 purple:text-pt-200 hover:text-[#06c] dark:hover:text-[#06c] purple:hover:text-[#06c]" />
                                     </button>
                                   )}
                                 </Editor>
