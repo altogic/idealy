@@ -50,6 +50,7 @@ export default function InviteTeam() {
         companyId: company._id,
         companyName: company.name,
         canCreateCompany: company.whiteLabel.canCreateCompany,
+        companySubdomain: company.subdomain,
         onSuccess: (userId) => {
           setIsInvite(false);
           if (userId) {
