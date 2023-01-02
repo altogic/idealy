@@ -6,7 +6,7 @@ import { companyActions } from '@/redux/company/companySlice';
 import companyService from '@/services/company';
 import { realtime } from '@/utils/altogic';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { getCookie } from 'cookies-next';
+import { deleteCookie, getCookie } from 'cookies-next';
 import _ from 'lodash';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -15,7 +15,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
-import { generateUrl } from '../utils';
+import { generateUrl, setSessionCookie } from '../utils';
 
 export default function CreateAnAccount({ company, invitation }) {
   const dispatch = useDispatch();
@@ -47,22 +47,24 @@ export default function CreateAnAccount({ company, invitation }) {
         ...data,
         emailVerified: !_.isNil(invitation),
         company,
-        onSuccess: (user) => {
+        onSuccess: (user, session) => {
           if (!_.isNil(invitation)) {
             dispatch(
               companyActions.addNewMember({
-                user,
+                user: user._id,
                 companyId: invitation.companyId,
                 role: invitation.role,
                 status: 'Active'
               })
             );
-            realtime.send(invitation.company._id, 'new-member', {
+            realtime.send(invitation.companyId, 'new-member', {
               ...invitation,
               userId: user._id,
               isAccepted: true
             });
+            setSessionCookie(session, user);
             router.push(generateUrl('public-view?sort=newest', company.subdomain));
+            deleteCookie('invitation');
           } else {
             router.push(`/mail-verification-message?email=${data.email}`);
           }

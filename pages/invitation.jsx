@@ -23,12 +23,12 @@ export default function Invitation({ invitation, errors, companies }) {
   }, [errors]);
   useEffect(() => {
     if (!errors) {
-      if (user && user?.email !== invitation?.email) {
+      if (user?.email !== invitation?.email) {
         dispatch(authActions.logout());
-      } else if (user) {
+      } else {
         dispatch(companyActions.updateMemberStatus({ companyId: invitation.companyId }));
         const company = companies.find((c) => c._id === invitation.companyId);
-        router.push(generateUrl('public-view', company.subdomain));
+        router.push(generateUrl('public-view', company?.subdomain));
         deleteCookie('invitation');
       }
     }
@@ -113,7 +113,10 @@ export async function getServerSideProps({ req, res, query }) {
     setCookie('invitation-token', data, {
       req,
       res,
-      maxAge: 60 * 60 * 24 * 30
+      maxAge: 60 * 60 * 24 * 30,
+      path: '/',
+      sameSite: 'lax',
+      domain: process.env.NEXT_PUBLIC_DOMAIN
     });
     return {
       props: {
