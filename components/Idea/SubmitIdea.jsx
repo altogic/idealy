@@ -224,7 +224,7 @@ export default function SubmitIdea({ idea }) {
                       </div>
                       <div>
                         <div className="flex items-start justify-between">
-                          <Dialog.Title className="text-slate-800 mb-8 text-xl font-semibold">
+                          <Dialog.Title className="text-slate-800 dark:text-aa-100 purple:text-pt-100 mb-8 text-xl font-semibold">
                             Tell us your Idea!
                           </Dialog.Title>
                         </div>
