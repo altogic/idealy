@@ -14,6 +14,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { FilterHamburger } from '@/components/icons';
 
 const topics = [
   { name: 'Development' },
@@ -139,7 +140,7 @@ export default function PublicView() {
               <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
                 Feature Ideas
               </h1>
-              <p className="text-slate-600 text-base tracking-sm">
+              <p className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-base tracking-sm">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.{' '}
               </p>
             </div>
