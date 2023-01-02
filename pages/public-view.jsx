@@ -1,4 +1,3 @@
-import { FilterHamburger } from '@/components/icons';
 import FilterIdea from '@/components/Idea/FilterIdea';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
 import SubmitIdea from '@/components/Idea/SubmitIdea';
