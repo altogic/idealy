@@ -68,7 +68,9 @@ export default function PublicView() {
       req.filter =
         'this.isArchived == false && this.isPrivate == false && this.isCompleted == false &&';
     }
-    dispatch(ideaActions.getIdeasByCompany(req));
+    if (!ideas.length) {
+      dispatch(ideaActions.getIdeasByCompany(req));
+    }
   }, [page, sortQuery]);
   useEffect(() => {
     if (!ideas || !selectedIdea) {
