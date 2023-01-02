@@ -67,7 +67,9 @@ export default function PublicView() {
       req.filter =
         'this.isArchived == false && this.isPrivate == false && this.isCompleted == false &&';
     }
-    dispatch(ideaActions.getIdeasByCompany(req));
+    if (!ideas.length) {
+      dispatch(ideaActions.getIdeasByCompany(req));
+    }
   }, [page, sortQuery]);
   useEffect(() => {
     if (!ideas || !selectedIdea) {
@@ -139,7 +141,7 @@ export default function PublicView() {
               <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
                 Feature Ideas
               </h1>
-              <p className="text-slate-600 text-base tracking-sm">
+              <p className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-base tracking-sm">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.{' '}
               </p>
             </div>

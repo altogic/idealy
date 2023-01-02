@@ -32,10 +32,12 @@ export default function Layout({ children }) {
         })
       );
     }
+  }, []);
+  useEffect(() => {
     if (user) {
       dispatch(companyActions.getUserCompanies(user?._id));
     }
-  }, []);
+  }, [user]);
   useEffect(() => {
     const invitation = JSON.parse(getCookie('invitation-token') || null);
     if (invitation) {
