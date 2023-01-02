@@ -53,3 +53,7 @@
   right: 10px;
   z-index: 40;
 }
+
+.ql-editor p {
+  @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 text-base tracking-sm;
+}
