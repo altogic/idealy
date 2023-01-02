@@ -19,6 +19,7 @@ export { default as Error } from './Error';
 export { default as Exclamation } from './Exclamation';
 export { default as Eye } from './Eye';
 export { default as Feedback } from './Feedback';
+export { default as FilterHamburger } from './FilterHamburger';
 export { default as Filter } from './Filter';
 export { default as HamburgerMenu } from './HamburgerMenu';
 export { default as Key } from './Key';
