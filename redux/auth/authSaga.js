@@ -62,12 +62,13 @@ function* registerSaga({ payload: req }) {
       } else {
         yield put(authActions.registerSuccess(user));
       }
-      req.onSuccess(user._id);
+      req.onSuccess(user, session);
     }
     if (errors) {
       throw errors.items;
     }
   } catch (e) {
+    console.log(e);
     yield put(authActions.registerFailure(e));
   }
 }

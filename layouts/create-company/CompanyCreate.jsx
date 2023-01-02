@@ -55,14 +55,21 @@ export default function FirstWizard() {
     let timer;
     if (inpSubdomain) {
       timer = setTimeout(() => {
-        if (SUBDOMAIN_REGEX.test(inpSubdomain)) {
+        if (SUBDOMAIN_REGEX.test(inpSubdomain) && inpSubdomain !== 'app') {
           clearErrors('subdomain');
           handleSubdomainChange(inpSubdomain);
-        } else {
+        }
+        if (!SUBDOMAIN_REGEX.test(inpSubdomain)) {
           setError('subdomain', {
             type: 'manual',
             message:
               'Subdomain can only contain lowercase letters, numbers - , _ and must be between 3 and 20 characters long'
+          });
+        }
+        if (inpSubdomain === 'app') {
+          setError('subdomain', {
+            type: 'manual',
+            message: 'Subdomain can not be app'
           });
         }
       }, 500);
