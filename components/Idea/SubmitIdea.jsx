@@ -198,7 +198,7 @@ export default function SubmitIdea({ idea }) {
                   leaveFrom="translate-x-0"
                   leaveTo="translate-x-full">
                   <Dialog.Panel className="pointer-events-auto max-w-screen-lg w-screen">
-                    <div className="flex h-full flex-col overflow-y-scroll bg-white p-14 shadow-xl">
+                    <div className="flex h-full flex-col overflow-y-scroll bg-white dark:bg-aa-900 purple:bg-pt-1000 p-14 shadow-xl">
                       {/* Close Button Submit Feedback Modal */}
                       <div className="absolute top-8 right-8 flex items-center justify-center w-8 h-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         <button

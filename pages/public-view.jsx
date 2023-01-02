@@ -11,11 +11,9 @@ import { IDEA_SORT_TYPES } from 'constants';
 import Head from 'next/head';
 import { Listbox, Transition } from '@headlessui/react';
 import { useRouter } from 'next/router';
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Button from '@/components/Button';
-import { Plus, FilterHamburger } from '@/components/icons';
-import { IDEA_SORT_TYPES } from 'constants';
+import { FilterHamburger } from '@/components/icons';
 
 const topics = [
   { name: 'Development' },
@@ -39,7 +37,6 @@ export default function PublicView() {
   const [page, setPage] = useState(1);
   const [isTopics, setIsTopics] = useState([topics[0], topics[1]]);
   const [isStatuss, setIsStatuss] = useState([statuss[0], statuss[1]]);
-  const [openDetailFeedbackModal, setOpenDetailFeedbackModal] = useState(false);
   const [selectedIdea, setSelectedIdea] = useState();
   const [sortQuery, setSortQuery] = useState();
   const [isFiltered, setIsFiltered] = useState();
@@ -140,7 +137,7 @@ export default function PublicView() {
               <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
                 Feature Ideas
               </h1>
-              <p className="text-slate-600 text-base tracking-sm">
+              <p className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-base tracking-sm">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.{' '}
               </p>
             </div>
