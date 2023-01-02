@@ -9,7 +9,7 @@ import { getCookie, setCookie } from 'cookies-next';
 import BackToLogin from '@/components/BackToLogin';
 import { Danger } from '@/components/icons';
 import { realtime } from '@/utils/altogic';
-import { generateUrl } from '../utils';
+import { generateUrl, setSessionCookie } from '../utils';
 
 export default function AuthRedirect({ error, session, user, companies }) {
   const router = useRouter();
@@ -143,6 +143,7 @@ export const getServerSideProps = async ({ query, req, res }) => {
     if (user) {
       AuthService.setSessionCookie(session.token, req, res);
       AuthService.setSession(session);
+      setSessionCookie(user, session, req, res);
       return {
         props
       };

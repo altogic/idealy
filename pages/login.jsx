@@ -3,6 +3,7 @@ import Input from '@/components/Input';
 import Providers from '@/components/Providers';
 import { authActions } from '@/redux/auth/authSlice';
 import { companyActions } from '@/redux/company/companySlice';
+import { realtime } from '@/utils/altogic';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { getCookie, deleteCookie } from 'cookies-next';
 import _ from 'lodash';
@@ -56,6 +57,11 @@ export default function Login({ invitation }) {
     } else {
       const company = companies.find((c) => c._id === invitation.companyId);
       dispatch(companyActions.updateMemberStatus({ companyId: invitation.companyId }));
+      realtime.send(invitation.company._id, 'new-member', {
+        ...invitation,
+        userId: user._id,
+        isAccepted: true
+      });
       router.push(generateUrl('public-view', company.subdomain));
     }
   };

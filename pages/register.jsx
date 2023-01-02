@@ -1,19 +1,20 @@
-import { useEffect } from 'react';
-import Head from 'next/head';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { useDispatch, useSelector } from 'react-redux';
-import Link from 'next/link';
+import Button from '@/components/Button';
 import Input from '@/components/Input';
+import Providers from '@/components/Providers';
 import { authActions } from '@/redux/auth/authSlice';
-import { useRouter } from 'next/router';
 import { companyActions } from '@/redux/company/companySlice';
+import companyService from '@/services/company';
+import { realtime } from '@/utils/altogic';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { getCookie } from 'cookies-next';
 import _ from 'lodash';
-import Providers from '@/components/Providers';
-import Button from '@/components/Button';
-import companyService from '@/services/company';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import * as yup from 'yup';
 import { generateUrl } from '../utils';
 
 export default function CreateAnAccount({ company, invitation }) {
@@ -56,7 +57,12 @@ export default function CreateAnAccount({ company, invitation }) {
                 status: 'Active'
               })
             );
-            router.push(generateUrl('public-view', company.subdomain));
+            realtime.send(invitation.company._id, 'new-member', {
+              ...invitation,
+              userId: user._id,
+              isAccepted: true
+            });
+            router.push(generateUrl('public-view?sort=newest', company.subdomain));
           } else {
             router.push(`/mail-verification-message?email=${data.email}`);
           }
@@ -196,7 +202,9 @@ export default function CreateAnAccount({ company, invitation }) {
 export async function getServerSideProps({ req, res }) {
   const invitation = JSON.parse(getCookie('invitation-token', { req, res }) || null);
   if (invitation) {
-    const { data, errors } = await companyService.getCompanyById(invitation.companyId);
+    const { data, errors } = await companyService.getCompanyBySubdomain(
+      invitation.companySubdomain
+    );
     if (errors) {
       return {
         redirect: {

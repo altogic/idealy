@@ -1,3 +1,4 @@
+import { FilterHamburger } from '@/components/icons';
 import FilterIdea from '@/components/Idea/FilterIdea';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
 import SubmitIdea from '@/components/Idea/SubmitIdea';
@@ -7,15 +8,12 @@ import PublicViewCard from '@/components/PublicViewCard';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
+import { Listbox, Transition } from '@headlessui/react';
 import { IDEA_SORT_TYPES } from 'constants';
 import Head from 'next/head';
-import { Listbox, Transition } from '@headlessui/react';
 import { useRouter } from 'next/router';
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Button from '@/components/Button';
-import { Plus, FilterHamburger } from '@/components/icons';
-import { IDEA_SORT_TYPES } from 'constants';
 
 const topics = [
   { name: 'Development' },
@@ -39,10 +37,10 @@ export default function PublicView() {
   const [page, setPage] = useState(1);
   const [isTopics, setIsTopics] = useState([topics[0], topics[1]]);
   const [isStatuss, setIsStatuss] = useState([statuss[0], statuss[1]]);
-  const [openDetailFeedbackModal, setOpenDetailFeedbackModal] = useState(false);
   const [selectedIdea, setSelectedIdea] = useState();
   const [sortQuery, setSortQuery] = useState();
   const [isFiltered, setIsFiltered] = useState();
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -91,7 +89,8 @@ export default function PublicView() {
         setSortQuery(sortType?.query);
         setIsFiltered(sortType);
       } else {
-        setIsFiltered(IDEA_SORT_TYPES[0]);
+        setIsFiltered(IDEA_SORT_TYPES[2]);
+        setSortQuery(IDEA_SORT_TYPES[2].query);
       }
 
       if (idea) {
@@ -183,7 +182,7 @@ export default function PublicView() {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0">
                     <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                      {topics.map((item) => (
+                      {company?.topics.map((item) => (
                         <Listbox.Option
                           key={item.name}
                           className={({ active }) =>
@@ -234,7 +233,7 @@ export default function PublicView() {
                   <Listbox.Button className="relative w-full min-w-[160px] inline-flex bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                     <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200 mr-2" />
                     <span className="block text-gray-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm truncate">
-                      Statuss{' '}
+                      Status{' '}
                       <span className="inline-flex items-center justify-center w-5 h-5 bg-indigo-700 dark:bg-aa-600 purple:bg-pt-600 text-white dark:text-aa-200 rounded-full">
                         5
                       </span>
@@ -261,7 +260,7 @@ export default function PublicView() {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0">
                     <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                      {statuss.map((item) => (
+                      {company?.statuses.map((item) => (
                         <Listbox.Option
                           key={item.name}
                           className={({ active }) =>
