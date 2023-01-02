@@ -56,17 +56,17 @@ export default function FilterIdea({ isFiltered, setIsFiltered }) {
                     }`
                   }
                   value={item}>
-                  {({ isFiltered }) => (
+                  {({ selected }) => (
                     <>
                       <span
                         className={`block truncate ${
-                          isFiltered
+                          selected
                             ? 'text-slate-900 dark:text-aa-100 purple:text-pt-100'
                             : 'font-normal'
                         }`}>
                         {item.name}
                       </span>
-                      {isFiltered ? (
+                      {selected ? (
                         <span className="flex items-center pl-3 text-indigo-700 dark:text-aa-200 purple:text-pt-200">
                           <svg
                             className="w-5 h-5"
