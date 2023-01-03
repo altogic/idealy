@@ -1,4 +1,3 @@
-import { FilterHamburger } from '@/components/icons';
 import FilterIdea from '@/components/Idea/FilterIdea';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
 import SubmitIdea from '@/components/Idea/SubmitIdea';
@@ -8,37 +7,18 @@ import PublicViewCard from '@/components/PublicViewCard';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import { Listbox, Transition } from '@headlessui/react';
 import { IDEA_SORT_TYPES } from 'constants';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { Fragment, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-const topics = [
-  { name: 'Development' },
-  { name: 'Bug' },
-  { name: 'Design' },
-  { name: 'Misc' },
-  { name: 'Integrations' },
-  { name: 'Coding' }
-];
-
-const statuss = [
-  { name: 'Under Consideration' },
-  { name: 'Planned' },
-  { name: 'In Development' },
-  { name: 'Shipped' },
-  { name: 'Complete' },
-  { name: 'Closed' }
-];
 
 export default function PublicView() {
   const [page, setPage] = useState(1);
-  const [isTopics, setIsTopics] = useState([topics[0], topics[1]]);
-  const [isStatuss, setIsStatuss] = useState([statuss[0], statuss[1]]);
+  const [filterTopics, setFilterTopics] = useState([]);
+  const [filterStatus, setFilterStatus] = useState([]);
   const [selectedIdea, setSelectedIdea] = useState();
-  const [sortQuery, setSortQuery] = useState();
+
   const [isFiltered, setIsFiltered] = useState();
 
   const router = useRouter();
@@ -52,25 +32,53 @@ export default function PublicView() {
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
 
-  const getIdeasByCompany = useCallback(() => {
-    const { sort } = router.query;
-    const req = {
-      subdomain: window.location.hostname.split('.')[0],
-      limit: 10,
-      page
-    };
+  const handleFilter = (filterTopics, filterStatus) => {
+    if (filterTopics?.length || filterStatus?.length) {
+      const topicsFilter = [];
+      const statusFilter = [];
+      if (filterTopics?.length) {
+        filterTopics.forEach((topic) => {
+          topicsFilter.push(`IN(this.topics,'${topic}')`);
+        });
+      }
+      if (filterStatus?.length) {
+        filterStatus.forEach((status) => {
+          statusFilter.push(`this.status._id == '${status}'`);
+        });
+      }
+      return `${topicsFilter.length ? `(${topicsFilter.join(' || ')})` : ''} ${
+        topicsFilter.length && statusFilter.length ? '&&' : ''
+      }  ${statusFilter.length ? `(${statusFilter.join(' || ')})` : ''} &&`;
+    }
+    return '';
+  };
+  const handleSort = (sort) => {
     if (sort) {
-      req.sort = sortQuery;
-      req.type = 'sort';
+      const sortType = IDEA_SORT_TYPES.find((s) => s.url === sort);
+      setIsFiltered(sortType);
+      return sortType?.query;
     }
-    if (!user && !company?.role) {
-      req.filter =
-        'this.isArchived == false && this.isPrivate == false && this.isCompleted == false &&';
-    }
-    if (!ideas.length) {
+    setIsFiltered(IDEA_SORT_TYPES[2]);
+    return IDEA_SORT_TYPES[2].query;
+  };
+
+  const getIdeasByCompany = useCallback(() => {
+    if (router.isReady) {
+      const req = {
+        subdomain: window.location.hostname.split('.')[0],
+        limit: 10,
+        page,
+        filter: handleFilter(router.query.topics?.split(','), router.query.status?.split(',')),
+        sort: handleSort(router.query.sort)
+      };
+      if (!user && !company?.role) {
+        req.filter +=
+          'this.isArchived == false && this.isPrivate == false && this.isCompleted == false &&';
+      }
+
       dispatch(ideaActions.getIdeasByCompany(req));
     }
-  }, [page, sortQuery]);
+  }, [page, router]);
   useEffect(() => {
     if (!ideas || !selectedIdea) {
       return;
@@ -83,20 +91,23 @@ export default function PublicView() {
   }, [ideas]);
   useEffect(() => {
     if (router) {
-      const { sort } = router.query;
-      const { idea } = router.query;
-
+      const { topics, status, sort, feedback } = router.query;
       if (sort) {
         const sortType = IDEA_SORT_TYPES.find((s) => s.url === sort);
-        setSortQuery(sortType?.query);
+
         setIsFiltered(sortType);
       } else {
         setIsFiltered(IDEA_SORT_TYPES[2]);
-        setSortQuery(IDEA_SORT_TYPES[2].query);
       }
-
-      if (idea) {
-        const ideaDetail = ideas.find((i) => i._id === idea);
+      if (topics) {
+        setFilterTopics(topics.split(','));
+      }
+      if (status) {
+        setFilterStatus(status.split(','));
+      }
+      console.log('idea', feedback, router.query);
+      if (feedback && !feedBackDetailModal) {
+        const ideaDetail = ideas.find((i) => i._id === feedback);
         if (ideaDetail) {
           setSelectedIdea(ideaDetail);
           dispatch(toggleFeedBackDetailModal());
@@ -106,10 +117,8 @@ export default function PublicView() {
   }, [router, ideas]);
 
   useEffect(() => {
-    if (sortQuery) {
-      getIdeasByCompany();
-    }
-  }, [page, sortQuery]);
+    getIdeasByCompany();
+  }, [page, getIdeasByCompany]);
 
   const isSubmitIdeaVisible = useRegisteredUserValidation('submitIdea');
 
@@ -148,167 +157,14 @@ export default function PublicView() {
             {isSubmitIdeaVisible && <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />}
           </div>
           <div className="flex items-start justify-between">
-            <div className="flex-shrink-0 w-[195px]">
-              <FilterIdea isFiltered={isFiltered} setIsFiltered={setIsFiltered} />
-            </div>
-            <div className="flex items-center gap-4">
-              <Listbox value={isTopics} onChange={setIsTopics} multiple>
-                <div className="relative">
-                  <Listbox.Button className="relative w-full min-w-[160px] inline-flex bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                    <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200 mr-2" />
-                    <span className="block text-gray-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm truncate">
-                      Topics{' '}
-                      <span className="inline-flex items-center justify-center w-5 h-5 bg-indigo-700 dark:bg-aa-600 purple:bg-pt-600 text-white dark:text-aa-200 rounded-full">
-                        5
-                      </span>
-                    </span>
-                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5">
-                      <svg
-                        className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M5 7.5L10 12.5L15 7.5"
-                          stroke="currentColor"
-                          strokeWidth="1.66667"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                  </Listbox.Button>
-                  <Transition
-                    as={Fragment}
-                    leave="transition ease-in duration-100"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0">
-                    <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                      {company?.topics.map((item) => (
-                        <Listbox.Option
-                          key={item.name}
-                          className={({ active }) =>
-                            `relative flex items-center justify-between cursor-default select-none py-2 px-3.5 transition hover:text-slate-900 dark:hover:text-aa-100 purple:hover:text-pt-100 ${
-                              active
-                                ? 'bg-slate-100 dark:bg-aa-700 purple:bg-pt-700'
-                                : 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
-                            }`
-                          }
-                          value={item}>
-                          {({ selected }) => (
-                            <>
-                              <span
-                                className={`block truncate ${
-                                  selected
-                                    ? 'text-slate-900 dark:text-aa-100 purple:text-pt-100'
-                                    : 'font-normal'
-                                }`}>
-                                {item.name}
-                              </span>
-                              {selected ? (
-                                <span className="flex items-center pl-3 text-indigo-700 dark:text-aa-200 purple:text-pt-200">
-                                  <svg
-                                    className="w-5 h-5"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                      d="M16.6673 5L7.50065 14.1667L3.33398 10"
-                                      stroke="currentColor"
-                                      strokeWidth="1.66667"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                    />
-                                  </svg>
-                                </span>
-                              ) : null}
-                            </>
-                          )}
-                        </Listbox.Option>
-                      ))}
-                    </Listbox.Options>
-                  </Transition>
-                </div>
-              </Listbox>
-              <Listbox value={isStatuss} onChange={setIsStatuss} multiple>
-                <div className="relative">
-                  <Listbox.Button className="relative w-full min-w-[160px] inline-flex bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                    <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200 mr-2" />
-                    <span className="block text-gray-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm truncate">
-                      Status{' '}
-                      <span className="inline-flex items-center justify-center w-5 h-5 bg-indigo-700 dark:bg-aa-600 purple:bg-pt-600 text-white dark:text-aa-200 rounded-full">
-                        5
-                      </span>
-                    </span>
-                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5">
-                      <svg
-                        className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M5 7.5L10 12.5L15 7.5"
-                          stroke="currentColor"
-                          strokeWidth="1.66667"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                  </Listbox.Button>
-                  <Transition
-                    as={Fragment}
-                    leave="transition ease-in duration-100"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0">
-                    <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                      {company?.statuses.map((item) => (
-                        <Listbox.Option
-                          key={item.name}
-                          className={({ active }) =>
-                            `relative flex items-center justify-between cursor-default select-none py-2 px-3.5 transition hover:text-slate-900 dark:hover:text-aa-100 purple:hover:text-pt-100 ${
-                              active
-                                ? 'bg-slate-100 dark:bg-aa-700 purple:bg-pt-700'
-                                : 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
-                            }`
-                          }
-                          value={item}>
-                          {({ selected }) => (
-                            <>
-                              <span
-                                className={`block truncate ${
-                                  selected
-                                    ? 'text-slate-900 dark:text-aa-100 purple:text-pt-100'
-                                    : 'font-normal'
-                                }`}>
-                                {item.name}
-                              </span>
-                              {selected ? (
-                                <span className="flex items-center pl-3 text-indigo-700 dark:text-aa-200 purple:text-pt-200">
-                                  <svg
-                                    className="w-5 h-5"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                      d="M16.6673 5L7.50065 14.1667L3.33398 10"
-                                      stroke="currentColor"
-                                      strokeWidth="1.66667"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                    />
-                                  </svg>
-                                </span>
-                              ) : null}
-                            </>
-                          )}
-                        </Listbox.Option>
-                      ))}
-                    </Listbox.Options>
-                  </Transition>
-                </div>
-              </Listbox>
-            </div>
+            <FilterIdea
+              isFiltered={isFiltered}
+              setIsFiltered={setIsFiltered}
+              filterTopics={filterTopics}
+              filterStatus={filterStatus}
+              setFilterTopics={setFilterTopics}
+              setFilterStatus={setFilterStatus}
+            />
           </div>
           <InfiniteScroll
             items={ideas}
@@ -324,7 +180,10 @@ export default function PublicView() {
                     setSelectedIdea(idea);
                     dispatch(toggleFeedBackDetailModal());
                     router.push('/public-view', {
-                      query: { idea: idea._id, sort: isFiltered?.url }
+                      query: {
+                        ...router.query,
+                        feedback: idea._id
+                      }
                     });
                   }}
                   voted={ideaVotes.some((vote) => vote.ideaId === idea._id)}

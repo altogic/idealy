@@ -6,7 +6,7 @@ import { companyActions } from '@/redux/company/companySlice';
 import companyService from '@/services/company';
 import { realtime } from '@/utils/altogic';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { deleteCookie, getCookie } from 'cookies-next';
+import { getCookie } from 'cookies-next';
 import _ from 'lodash';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -22,6 +22,7 @@ export default function CreateAnAccount({ company, invitation }) {
   const router = useRouter();
   const loading = useSelector((state) => state.auth.isLoading);
   const error = useSelector((state) => state.auth.registerError);
+  const companyMembers = useSelector((state) => state.company.companyMembers);
   const registerSchema = yup.object().shape({
     email: yup.string().email('Wrong Email.').required('Email is required.'),
     password: yup
@@ -47,7 +48,7 @@ export default function CreateAnAccount({ company, invitation }) {
         ...data,
         emailVerified: !_.isNil(invitation),
         company,
-        onSuccess: (user, session) => {
+        onSuccess: async (user, session) => {
           if (!_.isNil(invitation)) {
             dispatch(
               companyActions.addNewMember({
@@ -63,8 +64,6 @@ export default function CreateAnAccount({ company, invitation }) {
               isAccepted: true
             });
             setSessionCookie(session, user);
-            router.push(generateUrl('public-view?sort=newest', company.subdomain));
-            deleteCookie('invitation');
           } else {
             router.push(`/mail-verification-message?email=${data.email}`);
           }
@@ -87,6 +86,12 @@ export default function CreateAnAccount({ company, invitation }) {
       });
     }
   }, [error, setError]);
+  useEffect(() => {
+    if (companyMembers.length > 0) {
+      router.push(generateUrl('public-view?sort=newest', company.subdomain));
+    }
+  }, [companyMembers]);
+
   useEffect(
     () => () => {
       dispatch(authActions.clearError());

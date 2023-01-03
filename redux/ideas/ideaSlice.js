@@ -21,7 +21,7 @@ export const ideaSlice = createSlice({
       state.isLoading = false;
       state.countInfo = action.payload.ideas.countInfo;
       state.ideaVotes = [...state.ideaVotes, ...action.payload.votes];
-      if (action.payload.type === 'sort' && action.payload.page === 1) {
+      if (action.payload.page === 1) {
         state.ideas = action.payload.ideas.result;
       } else {
         state.ideas = [...state.ideas, ...action.payload.ideas.result];

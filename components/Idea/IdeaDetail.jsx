@@ -6,9 +6,9 @@ import { commentActions } from '@/redux/comments/commentsSlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { Dialog, Transition } from '@headlessui/react';
 import { DateTime } from 'luxon';
+import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 import CommentForm from '../CommentForm';
 import { Archive, Bug, Eye, Thumbtack } from '../icons';
 import IdeaDetailAdmin from './IdeaDetailAdmin';
@@ -20,8 +20,7 @@ export default function IdeaDetail({ idea, company }) {
   const user = useSelector((state) => state.auth.user);
   const comments = useSelector((state) => state.comments.comments);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
-  const commentFormModal = useSelector((state) => state.general.commentFormModal);
-  const [sortState, setSortState] = useState();
+  const [routerQuery, setRouterQuery] = useState();
   useEffect(() => {
     if (idea) {
       dispatch(commentActions.getComments(idea._id));
@@ -29,12 +28,19 @@ export default function IdeaDetail({ idea, company }) {
   }, [idea]);
 
   useEffect(() => {
-    const { sort } = router.query;
-    if (sort) setSortState(sort);
-  }, [router.query]);
+    if (router.isReady) {
+      delete router.query.feedback;
+      setRouterQuery(router.query);
+    }
+  }, [router.isReady]);
 
   function handleClose() {
-    router.push(`/public-view?sort=${sortState}`);
+    router.push(`/public-view`, {
+      query: {
+        ...routerQuery
+      }
+    });
+
     dispatch(toggleFeedBackDetailModal());
     setSelectedStatus(null);
   }
@@ -72,7 +78,7 @@ export default function IdeaDetail({ idea, company }) {
                       <button
                         type="button"
                         className="inline-flex items-center justify-center w-full h-full text-slate-500 rounded-md transition hover:bg-slate-100"
-                        onClick={() => dispatch(toggleFeedBackDetailModal())}>
+                        onClick={handleClose}>
                         <span className="sr-only">Close panel</span>
                         <svg
                           className="w-4 h-4"
@@ -198,13 +204,11 @@ export default function IdeaDetail({ idea, company }) {
                       {/* Card Detail Bottom */}
                       <div>
                         {/* Comment Card */}
-                        {commentFormModal ? (
-                          <CommentForm ideaId={idea?._id} company={company} />
-                        ) : (
+                        <CommentForm ideaId={idea?._id} company={company} />
+                        {comments?.length > 0 &&
                           comments?.map((comment) => (
                             <CommentCard key={comment._id} comment={comment} />
-                          ))
-                        )}
+                          ))}
                       </div>
                     </div>
                   </div>

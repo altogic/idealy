@@ -53,3 +53,35 @@
   right: 10px;
   z-index: 40;
 }
+
+.ql-editor {
+  overflow: hidden !important;
+}
+
+.ql-snow .ql-stroke {
+  stroke: #64748b;
+}
+
+.ql-snow .ql-fill {
+  fill: #64748b;
+}
+
+.dark .ql-snow .ql-stroke {
+  stroke: #cdcecf;
+}
+
+.dark .ql-snow .ql-fill {
+  fill: #cdcecf;
+}
+
+.theme-purple .ql-snow .ql-stroke {
+  stroke: #d7d6ea;
+}
+
+.theme-purple .ql-snow .ql-fill {
+  fill: #d7d6ea;
+}
+
+.ql-editor p {
+  @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 text-base tracking-sm;
+}

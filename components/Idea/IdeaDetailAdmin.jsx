@@ -8,7 +8,7 @@ import { Archive, Bug, ChevronUp, CircleCheck, Danger, Pen, Thumbtack, Trash } f
 
 export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatus }) {
   const dispatch = useDispatch();
-  const company = useSelector((state) => state.company);
+  const company = useSelector((state) => state.company.company);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isPrivate, setIsPrivate] = useState();
   const [isPinned, setIsPinned] = useState();
