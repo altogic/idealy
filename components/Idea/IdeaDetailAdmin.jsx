@@ -109,7 +109,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                                     </div>
                                   </div>
                                   {(checked || selectedStatus?._id === status._id) && (
-                                    <div className={`flex-shrink-0 text-slate-900`}>
+                                    <div className="flex-shrink-0 text-slate-900">
                                       <CircleCheck className="h-6 w-6" />
                                     </div>
                                   )}
