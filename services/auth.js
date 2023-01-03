@@ -6,6 +6,7 @@ const AuthService = {
   getAuthGrant: (token) => auth.getAuthGrant(token),
   logout: () => auth.signOut(),
   authStateChange(newUser, newSession) {
+    console.log('authStateChange', newUser, newSession);
     auth.setSession(newSession);
     auth.setUser(newUser);
   },
