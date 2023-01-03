@@ -12,7 +12,6 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FilterHamburger } from '@/components/icons';
 
 export default function PublicView() {
   const [page, setPage] = useState(1);
