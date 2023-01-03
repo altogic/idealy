@@ -66,7 +66,7 @@ export default function IdeaDetail({ idea, company }) {
                   {user && (company?.role === 'Owner' || company?.role === 'Admin') && (
                     <IdeaDetailAdmin idea={idea} setSelectedStatus={setSelectedStatus} />
                   )}
-                  <div className="flex h-full flex-col overflow-y-scroll bg-white p-8">
+                  <div className="flex w-full h-full flex-col bg-white p-8">
                     {/* Close Button Submit Feedback Modal */}
                     <div className="absolute top-8 right-8 flex items-center justify-center w-8 h-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                       <button

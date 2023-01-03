@@ -4,11 +4,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import DeleteModal from '@/components/DeleteModal';
 import { toggleFeedBackDetailModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
-import { Archive, Bug, ChevronUp, CircleCheck, Danger, Pen, Thumbtack, Trash } from '../icons';
+import {
+  Archive,
+  Bug,
+  ChevronUp,
+  CircleCheck,
+  Danger,
+  Pen,
+  Thumbtack,
+  Trash,
+  Merge
+} from '../icons';
 
 export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatus }) {
   const dispatch = useDispatch();
-  const company = useSelector((state) => state.company);
+  const company = useSelector((state) => state.company.company);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isPrivate, setIsPrivate] = useState();
   const [isPinned, setIsPinned] = useState();
@@ -38,26 +48,24 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
   };
   return (
     <>
-      <div className="flex-shrink-0 w-72 bg-gray-50 border-r-2 border-gray-200">
+      <div className="flex-shrink-0 w-72 bg-gray-50 border-r border-slate-200">
         <div className="flex flex-col h-full">
-          <div className="flex-shrink-0 px-4 py-6 bg-white border-b-2 border-gray-200">
-            <div className="flex items-center">
-              <h2 className="text-lg font-medium text-slate-900 dark:text-aa-200 purple:text-pt-200">
-                Admin
-              </h2>
-            </div>
+          <div className="flex-shrink-0 bg-white px-4 py-9 border-b border-slate-200">
+            <h2 className="text-xl font-semibold text-slate-800 dark:text-aa-200 purple:text-pt-200">
+              Admin
+            </h2>
           </div>
-          <div className="flex-1 flex flex-col overflow-y-scroll p-4">
+          <div className="flex-1 flex flex-col p-4">
             <Disclosure className="">
               {({ open }) => (
                 <>
                   <Disclosure.Button className="-mx-2 p-2 flex items-center justify-between rounded transition-colors duration-300 hover:bg-surface-10 outline-none cursor-pointer">
-                    <span>Statuses</span>
+                    <span className="text-slate-900 text-lg font-medium tracking-sm">Statuses</span>
                     <ChevronUp
                       className={`${open ? 'rotate-180 transform' : ''} h-5 w-5 text-slate-500`}
                     />
                   </Disclosure.Button>
-                  <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-slate-500">
+                  <Disclosure.Panel className="">
                     <div className="flex flex-col gap-4">
                       <RadioGroup
                         value={selectedStatus}
@@ -75,33 +83,33 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                             <RadioGroup.Option
                               key={status._id}
                               value={status}
-                              className={({ active, checked }) => `${
-                                active || selectedStatus?._id === status._id
-                                  ? 'ring-2 ring-white ring-opacity-60 ring-offset-2 ring-offset-indigo-300'
-                                  : ''
+                              className={({ active }) => `${
+                                active || selectedStatus?._id === status._id ? '' : ''
                               }
-                                        ${
-                                          checked || selectedStatus?._id === status._id
-                                            ? 'bg-indigo-500 text-white'
-                                            : 'bg-white'
-                                        } relative flex cursor-pointer rounded-lg p-2 shadow-md focus:outline-none`}>
+                                         relative flex cursor-pointer p-2 focus:outline-none`}>
                               {({ checked }) => (
                                 <div className="flex w-full items-center justify-between">
                                   <div className="flex items-center">
+                                    <svg
+                                      className="h-2.5 w-2.5 mr-1.5"
+                                      fill={status.color}
+                                      viewBox="0 0 8 8">
+                                      <circle cx={4} cy={4} r={3} />
+                                    </svg>
                                     <div className="text-sm">
                                       <RadioGroup.Label
                                         as="p"
                                         className={`font-medium  ${
                                           checked || selectedStatus?._id === status._id
-                                            ? 'text-white'
-                                            : 'text-gray-900'
+                                            ? ''
+                                            : 'text-slate-900'
                                         }`}>
                                         {status.name}
                                       </RadioGroup.Label>
                                     </div>
                                   </div>
                                   {(checked || selectedStatus?._id === status._id) && (
-                                    <div className="shrink-0 text-white">
+                                    <div className={`flex-shrink-0 text-slate-900`}>
                                       <CircleCheck className="h-6 w-6" />
                                     </div>
                                   )}
@@ -116,20 +124,23 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                 </>
               )}
             </Disclosure>
+            <hr className="my-8 border-slate-200" />
             <Disclosure>
               {({ open }) => (
                 <>
                   <Disclosure.Button>
                     <div className="-mx-2 p-2 flex items-center justify-between rounded transition-colors duration-300 hover:bg-surface-10 outline-none cursor-pointer">
-                      <span>Visibility</span>
+                      <span className="text-slate-900 text-lg font-medium tracking-sm">
+                        Visibility
+                      </span>
                       <ChevronUp
                         className={`${open ? 'rotate-180 transform' : ''} h-5 w-5 text-slate-500`}
                       />
                     </div>
                   </Disclosure.Button>
-                  <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-slate-500">
+                  <Disclosure.Panel>
                     <div className="flex justify-between gap-4">
-                      <span className="text-xs font-medium text-gray-900">
+                      <span className="text-slate-600 text-sm font-medium">
                         Make {isPrivate ? 'Public' : 'Private'}
                       </span>
                       <Switch
@@ -141,13 +152,15 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                           setIsPrivate(!isPrivate);
                         }}
                         className={`${
-                          isPrivate ? 'bg-indigo-600' : 'bg-gray-200'
-                        } relative inline-flex h-6 w-11 items-center rounded-full`}>
+                          isPrivate
+                            ? 'bg-indigo-600 dark:bg-aa-500 purple:bg-pt-600'
+                            : 'bg-gray-200'
+                        } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-aa-500 purple:focus:ring-pt-600 focus:ring-offset-2`}>
                         <span className="sr-only">Make Private</span>
                         <span
                           className={`${
-                            isPrivate ? 'translate-x-6' : 'translate-x-1'
-                          } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                            isPrivate ? 'translate-x-5' : 'translate-x-0'
+                          } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white dark:bg-aa-50 purple:bg-pt-300 shadow ring-0 transition duration-200 ease-in-out`}
                         />
                       </Switch>
                     </div>
@@ -156,78 +169,93 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
               )}
             </Disclosure>
           </div>
-          <div className="flex p-4 sm:px-8">
-            <div className="flex flex-col space-y-2">
-              <p className="text-0.75 font-semibold text-text-medium">Actions</p>
-              <div className="flex w-full flex-row space-x-2">
-                <div className="inline-flex relative">
-                  <button type="button" className="flex p-2 rounded border border-slate-400">
-                    <Thumbtack
-                      className={`w-4 h-4 hover:text-orange-500 ${
-                        isPinned ? 'text-orange-500' : 'text-slate-500'
-                      }`}
-                      onClick={() => {
-                        updateIdea({
-                          isPinned: !isPinned
-                        });
-                        setIsPinned(!isPinned);
-                      }}
-                    />
-                  </button>
-                </div>
-                <div className="inline-flex relative">
-                  <button
-                    type="button"
-                    className="flex p-2 rounded border border-slate-400"
+          <div className="p-6">
+            <p className="text-slate-900 text-lg font-medium tracking-sm">Actions</p>
+            <hr className="my-2 border-slate-200" />
+            <div className="flex w-full flex-row space-x-2">
+              <div className="inline-flex relative">
+                <button
+                  type="button"
+                  className="flex items-center justify-center w-8 h-8"
+                  title="Pin">
+                  <Thumbtack
+                    className={`w-4 h-4 hover:text-orange-500 ${
+                      isPinned ? 'text-orange-500' : 'text-slate-600'
+                    }`}
                     onClick={() => {
                       updateIdea({
-                        isArchived: !isArchived
+                        isPinned: !isPinned
                       });
-                      setIsArchived(!isArchived);
-                    }}>
-                    <Archive
-                      className={`w-4 h-4 hover:text-yellow-500 ${
-                        isArchived ? 'text-yellow-500' : 'text-slate-500'
-                      }`}
-                    />
-                  </button>
-                </div>
-                <div className="inline-flex relative">
-                  <button
-                    type="button"
-                    className="flex p-2 rounded border border-slate-400"
-                    onClick={() => {
-                      updateIdea({
-                        isBug: !isBug
-                      });
-                      setIsBug(!isBug);
-                    }}>
-                    <Bug
-                      className={`w-4 h-4 hover:text-red-500 ${
-                        isBug ? 'text-red-500' : 'text-slate-500'
-                      }`}
-                    />
-                  </button>
-                </div>
-                <div className="inline-flex relative">
-                  <button
-                    type="button"
-                    className="flex p-2 rounded border border-slate-400"
-                    onClick={() => setIsDeleteModalOpen(!isDeleteModalOpen)}>
-                    <Trash className="w-4 h-4 hover:text-red-500" />
-                  </button>
-                </div>
-                <div className="inline-flex relative" aria-labelledby="idea-menu">
-                  <button
-                    type="button"
-                    className="flex p-2 rounded border border-slate-400"
-                    onClick={() => {
-                      dispatch(toggleFeedBackDetailModal());
-                      dispatch(toggleFeedBackSubmitModal());
-                    }}>
-                    <Pen className="w-4 h-4 hover:text-indigo-500" />
-                  </button>
-                </div>
+                      setIsPinned(!isPinned);
+                    }}
+                  />
+                </button>
+              </div>
+              <div className="inline-flex relative">
+                <button
+                  type="button"
+                  className="flex items-center justify-center w-8 h-8"
+                  onClick={() => {
+                    updateIdea({
+                      isArchived: !isArchived
+                    });
+                    setIsArchived(!isArchived);
+                  }}
+                  title="Archive">
+                  <Archive
+                    className={`w-4 h-4 hover:text-yellow-500 ${
+                      isArchived ? 'text-yellow-500' : 'text-slate-600'
+                    }`}
+                  />
+                </button>
+              </div>
+              <div className="inline-flex relative">
+                <button
+                  type="button"
+                  className="flex items-center justify-center w-8 h-8"
+                  onClick={() => {
+                    updateIdea({
+                      isBug: !isBug
+                    });
+                    setIsBug(!isBug);
+                  }}
+                  title="Bug">
+                  <Bug
+                    className={`w-4 h-4 hover:text-red-500 ${
+                      isBug ? 'text-red-500' : 'text-slate-600'
+                    }`}
+                  />
+                </button>
+              </div>
+              <div className="inline-flex relative">
+                <button
+                  type="button"
+                  className="flex items-center justify-center w-8 h-8"
+                  onClick={() => setIsDeleteModalOpen(!isDeleteModalOpen)}
+                  title="Merge">
+                  <Merge className="w-5 h-5 text-slate-600 hover:text-red-500" />
+                </button>
+              </div>
+              <div className="inline-flex relative">
+                <button
+                  type="button"
+                  className="flex items-center justify-center w-8 h-8"
+                  onClick={() => setIsDeleteModalOpen(!isDeleteModalOpen)}
+                  title="Trash">
+                  <Trash className="w-4 h-4 text-slate-600 hover:text-red-500" />
+                </button>
+              </div>
+              <div className="inline-flex relative" aria-labelledby="idea-menu">
+                <button
+                  type="button"
+                  className="flex items-center justify-center w-8 h-8"
+                  onClick={() => {
+                    dispatch(toggleFeedBackDetailModal());
+                    dispatch(toggleFeedBackSubmitModal());
+                  }}
+                  title="Edit">
+                  <Pen className="w-4 h-4 text-slate-600 hover:text-indigo-500" />
+                </button>
               </div>
             </div>
           </div>
