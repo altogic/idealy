@@ -24,6 +24,7 @@ export { default as Filter } from './Filter';
 export { default as HamburgerMenu } from './HamburgerMenu';
 export { default as Key } from './Key';
 export { default as Logout } from './Logout';
+export { default as Merge } from './Merge';
 export { default as Notification } from './Notification';
 export { default as Ok } from './Ok';
 export { default as Pen } from './Pen';
