@@ -211,7 +211,7 @@ export default function IdeaDetail({ idea, company }) {
                                 </div>
                               </div>
                               {/* Feedback Detail Status Badge */}
-                              {idea?.status && (
+                              {selectedStatus && (
                                 <StatusButton
                                   name={selectedStatus?.name}
                                   color={selectedStatus?.color}
