@@ -15,9 +15,9 @@ export function setCookie(name, value, req, res) {
   });
 }
 export async function setSessionCookie(session, user, req, res) {
-  setCookie('session', session, 30, req, res);
-  setCookie('user', user, 30, req, res);
-  setCookie('session_token', session.token, 30, req, res);
+  setCookie('session', session, req, res);
+  setCookie('user', user, req, res);
+  setCookie('session_token', session.token, req, res);
 }
 export async function deleteSessionCookies() {
   deleteCookie('session', SESSION_COOKIE_OPTIONS);
