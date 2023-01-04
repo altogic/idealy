@@ -39,7 +39,7 @@ export default function AuthRedirect({ error, session, user, companies }) {
     }
   }
   useEffect(() => {
-    checkProps();
+    // checkProps();
     if (router.query.status === 401) {
       alert(router.query.error);
       router.push(generateUrl('login'));
