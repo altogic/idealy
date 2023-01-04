@@ -19,6 +19,7 @@ export default function Header() {
   const companies = useSelector((state) => state.company.companies);
   const companyLoading = useSelector((state) => state.company.getCompanyLoading);
   const notifications = useSelector((state) => state.notification.notifications);
+  const loading = useSelector((state) => state.auth.isLoading);
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userCompanies, setUserCompanies] = useState();
@@ -197,18 +198,20 @@ export default function Header() {
               <UserDropdown companies={userCompanies} />
             </>
           ) : (
-            <ul className="flex items-center gap-4">
-              <li>
-                <Link href={generateUrl('login')}>
-                  <a className="inline-flex text-indigo-50 text-sm tracking-sm">Login</a>
-                </Link>
-              </li>
-              <li>
-                <Link href={generateUrl('register')}>
-                  <a className="inline-flex text-indigo-400 text-sm tracking-sm">Signup</a>
-                </Link>
-              </li>
-            </ul>
+            !loading && (
+              <ul className="flex items-center gap-4">
+                <li>
+                  <Link href={generateUrl('login')}>
+                    <a className="inline-flex text-indigo-50 text-sm tracking-sm">Login</a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href={generateUrl('register')}>
+                    <a className="inline-flex text-indigo-400 text-sm tracking-sm">Signup</a>
+                  </Link>
+                </li>
+              </ul>
+            )
           )}
         </div>
       </header>
