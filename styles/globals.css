@@ -89,3 +89,7 @@
 .ql-editor p {
   @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 text-base tracking-sm;
 }
+
+.ql-editor {
+  @apply bg-white dark:bg-aa-800 purple:bg-pt-800 rounded-md;
+}
