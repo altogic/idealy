@@ -561,7 +561,12 @@ export const companySlice = createSlice({
         return member;
       });
     },
-
+    acceptInvitation(state, action) {
+      state.companyMembers = [...state.companyMembers, action.payload];
+      state.unregisteredCompanyMembers = state.unregisteredCompanyMembers.filter(
+        (member) => member.email !== action.payload.user.email
+      );
+    },
     updateCompanySubListsOrderRealtime(state, action) {
       if (action.payload.property === 'roadmaps') {
         state.company.roadmaps = action.payload.data;
