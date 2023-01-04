@@ -6,37 +6,40 @@ import { realtime } from '@/utils/altogic';
 import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { authActions } from '@/redux/auth/authSlice';
+import { companyActions } from '@/redux/company/companySlice';
 import { generateUrl, setSessionCookie } from '../utils';
 
 export default function AuthRedirect({ error, session, user, companies }) {
   const router = useRouter();
-  // const dispatch = useDispatch();
-  // async function checkProps() {
-  //   if (!error) {
-  //     dispatch(
-  //       authActions.getAuthGrant({
-  //         session,
-  //         user,
-  //         error
-  //       })
-  //     );
-  //     if (companies?.length) {
-  //       dispatch(companyActions.setCompanies(companies));
-  //     }
+  const dispatch = useDispatch();
+  async function checkProps() {
+    if (!error) {
+      dispatch(
+        authActions.getAuthGrant({
+          session,
+          user,
+          error
+        })
+      );
+      if (companies?.length) {
+        dispatch(companyActions.setCompanies(companies));
+      }
 
-  //     if (companies && !companies?.length) {
-  //       router.push(generateUrl('create-new-company'));
-  //     } else if (companies?.length === 1) {
-  //       router.push(generateUrl('dashboard', companies[0].subdomain));
-  //     } else if (companies?.length > 1) {
-  //       router.push(generateUrl('select-company'));
-  //     } else {
-  //       router.push('/');
-  //     }
-  //   }
-  // }
+      if (companies && !companies?.length) {
+        router.push(generateUrl('create-new-company'));
+      } else if (companies?.length === 1) {
+        router.push(generateUrl('dashboard', companies[0].subdomain));
+      } else if (companies?.length > 1) {
+        router.push(generateUrl('select-company'));
+      } else {
+        router.push('/');
+      }
+    }
+  }
   useEffect(() => {
-    // checkProps();
+    checkProps();
     if (router.query.status === 401) {
       alert(router.query.error);
       router.push(generateUrl('login'));
