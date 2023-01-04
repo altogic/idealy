@@ -11,7 +11,10 @@ export function setCookie(name, value, req, res) {
   nextCookie(name, value, {
     req,
     res,
-    ...SESSION_COOKIE_OPTIONS
+    maxAge: 30 * 24 * 60 * 60,
+    path: '/',
+    sameSite: 'lax',
+    domain: process.env.NEXT_PUBLIC_DOMAIN
   });
 }
 export async function setSessionCookie(session, user, req, res) {
