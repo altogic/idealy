@@ -34,15 +34,14 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
         )}>
         {voteCount}
       </span>
-      {voteCount > 0 ||
-        (canVote && (
-          <button
-            type="button"
-            onClick={downVote}
-            className="inline-flex items-center justify-center">
-            <ChevronDown className="w-5 h-5 text-slate-400" />
-          </button>
-        ))}
+      {voteCount > 0 && canVote && (
+        <button
+          type="button"
+          onClick={downVote}
+          className="inline-flex items-center justify-center">
+          <ChevronDown className="w-5 h-5 text-slate-400" />
+        </button>
+      )}
     </div>
   );
 }
