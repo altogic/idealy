@@ -142,8 +142,8 @@ export const getServerSideProps = async ({ query, req, res }) => {
       props.companies = data;
     }
     if (user) {
-      // AuthService.setSessionCookie(session.token, req, res);
-      // AuthService.setSession(session);
+      AuthService.setSessionCookie(session.token, req, res);
+      AuthService.setSession(session);
       // setSessionCookie(session, user, req, res);
       return {
         props
