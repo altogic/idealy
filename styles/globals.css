@@ -17,6 +17,10 @@
     scroll-behavior: smooth;
   }
 
+  body {
+    @apply antialiased;
+  }
+
   [contenteditable='true'] {
     min-height: 200px !important;
     max-height: 300px;
