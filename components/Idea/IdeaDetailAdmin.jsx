@@ -46,6 +46,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
       })
     );
   };
+
   return (
     <>
       <div className="flex-shrink-0 w-72 bg-white dark:bg-aa-900 purple:bg-pt-1000 border-r border-slate-200 dark:border-aa-400 purple:border-pt-400">
@@ -87,10 +88,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                             <RadioGroup.Option
                               key={status._id}
                               value={status}
-                              className={({ active }) => `${
-                                active || selectedStatus?._id === status._id ? '' : ''
-                              }
-                                         relative flex cursor-pointer py-3 focus:outline-none`}>
+                              className="relative flex cursor-pointer py-3 focus:outline-none">
                               {({ checked }) => (
                                 <div className="flex w-full items-center justify-between">
                                   <div className="flex items-center">
@@ -104,7 +102,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                                       <RadioGroup.Label
                                         as="p"
                                         className={`font-medium  ${
-                                          checked || selectedStatus?._id === status._id
+                                          checked || idea?.status?.name === status.name
                                             ? 'text-slate-400 dark:text-aa-400 purple:text-pt-400'
                                             : 'text-slate-900 dark:text-aa-100 purple:text-pt-100'
                                         }`}>
@@ -112,7 +110,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                                       </RadioGroup.Label>
                                     </div>
                                   </div>
-                                  {(checked || selectedStatus?._id === status._id) && (
+                                  {(checked || idea?.status?.name === status.name) && (
                                     <div className="flex-shrink-0 text-slate-900 dark:text-aa-100 purple:text-pt-100">
                                       <CircleCheck className="h-5 w-5" />
                                     </div>

@@ -120,24 +120,6 @@ function* searchSimilarIdeasSaga({ payload: title }) {
     yield put(ideaActions.searchSimilarIdeasFailure(error));
   }
 }
-function* clearSimilarIdeas() {
-  yield put(ideaActions.clearSimilarIdeasSuccess());
-}
-function* createIdeaRealtimeSaga({ payload: idea }) {
-  yield put(ideaActions.createIdeaSuccess(idea));
-}
-function* voteIdeaRealtimeSaga({ payload: vote }) {
-  yield put(ideaActions.voteIdeaSuccess(vote));
-}
-function* downvoteIdeaRealtimeSaga({ payload: id }) {
-  yield put(ideaActions.downvoteIdeaSuccess(id));
-}
-function* updateIdeaRealtimeSaga({ payload: idea }) {
-  yield put(ideaActions.updateIdeaSuccess(idea));
-}
-function* deleteIdeaRealtimeSaga({ payload: id }) {
-  yield put(ideaActions.deleteIdeaSuccess(id));
-}
 
 export default function* ideaSaga() {
   yield takeEvery(ideaActions.getIdeasByCompany.type, getIdeasByCompanySaga);
@@ -147,10 +129,4 @@ export default function* ideaSaga() {
   yield takeEvery(ideaActions.updateIdea.type, updateIdeaSaga);
   yield takeEvery(ideaActions.deleteIdea.type, deleteIdeaSaga);
   yield takeEvery(ideaActions.searchSimilarIdeas.type, searchSimilarIdeasSaga);
-  yield takeEvery(ideaActions.clearSimilarIdeas.type, clearSimilarIdeas);
-  yield takeEvery(ideaActions.createIdeaRealtime, createIdeaRealtimeSaga);
-  yield takeEvery(ideaActions.voteIdeaRealtime, voteIdeaRealtimeSaga);
-  yield takeEvery(ideaActions.downvoteIdeaRealtime, downvoteIdeaRealtimeSaga);
-  yield takeEvery(ideaActions.updateIdeaRealtime, updateIdeaRealtimeSaga);
-  yield takeEvery(ideaActions.deleteIdeaRealtime, deleteIdeaRealtimeSaga);
 }

@@ -1,8 +1,7 @@
 import { CircleCheck, Logout, People, Plus, Settings, Switch } from '@/components/icons';
 import { authActions } from '@/redux/auth/authSlice';
-import { generateUrl } from '@/utils/index';
+import { deleteSessionCookies, generateUrl } from '@/utils/index';
 import { Menu, Transition } from '@headlessui/react';
-import { deleteCookie } from 'cookies-next';
 import Link from 'next/link';
 import Router from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
@@ -17,10 +16,7 @@ export default function UserDropdown({ companies }) {
     dispatch(
       authActions.logout({
         onSuccess: () => {
-          deleteCookie('invitation-token');
-          deleteCookie('user');
-          deleteCookie('session');
-          deleteCookie('session_token');
+          deleteSessionCookies();
           Router.push(generateUrl('login'));
         }
       })

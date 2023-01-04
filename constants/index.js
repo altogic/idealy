@@ -63,3 +63,9 @@ export const EDITOR_MODULES = {
 };
 
 export const EDITOR_FORMATS = ['bold', 'italic', 'underline', 'align', 'strike'];
+export const SESSION_COOKIE_OPTIONS = {
+  maxAge: 30 * 24 * 60 * 60,
+  path: '/',
+  sameSite: 'lax',
+  domain: process.env.NEXT_PUBLIC_DOMAIN
+};

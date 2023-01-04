@@ -134,19 +134,19 @@ export default function Realtime() {
     }
   }
   function createIdeasHandler({ message }) {
-    dispatch(ideaActions.createIdeaRealtime(message));
+    dispatch(ideaActions.createIdeaSuccess(message));
   }
   function updateIdeaHandler({ message }) {
-    dispatch(ideaActions.updateIdeaRealtime(message));
+    dispatch(ideaActions.updateIdeaSuccess(message));
   }
   function deleteIdeaHandler({ message }) {
-    dispatch(ideaActions.deleteIdeaRealtime(message));
+    dispatch(ideaActions.deleteIdeaSuccess(message));
   }
   function voteIdeaHandler({ message }) {
-    dispatch(ideaActions.voteIdeaRealtime(message));
+    dispatch(ideaActions.voteIdeaSuccess(message));
   }
   function downVoteIdeaHandler({ message }) {
-    dispatch(ideaActions.downvoteIdeaRealtime(message));
+    dispatch(ideaActions.downvoteIdeaSuccess(message));
   }
 
   useEffect(() => {

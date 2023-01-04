@@ -1,25 +1,28 @@
 /* eslint-disable no-param-reassign */
 
-import { setCookie as nextCookie } from 'cookies-next';
+import { SESSION_COOKIE_OPTIONS } from 'constants';
+import { deleteCookie, setCookie as nextCookie } from 'cookies-next';
 
 /* eslint-disable no-bitwise */
 export function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-export function setCookie(name, value, days, req, res) {
+export function setCookie(name, value, req, res) {
   nextCookie(name, value, {
     req,
     res,
-    maxAge: days * 24 * 60 * 60,
-    path: '/',
-    sameSite: 'lax',
-    domain: process.env.NEXT_PUBLIC_DOMAIN
+    ...SESSION_COOKIE_OPTIONS
   });
 }
 export async function setSessionCookie(session, user, req, res) {
   setCookie('session', session, 30, req, res);
   setCookie('user', user, 30, req, res);
   setCookie('session_token', session.token, 30, req, res);
+}
+export async function deleteSessionCookies() {
+  deleteCookie('session', SESSION_COOKIE_OPTIONS);
+  deleteCookie('user', SESSION_COOKIE_OPTIONS);
+  deleteCookie('session_token', SESSION_COOKIE_OPTIONS);
 }
 
 export function randomHexColor() {
@@ -28,30 +31,19 @@ export function randomHexColor() {
 export function generateUrl(link, subdomain = 'app') {
   return `http://${subdomain}.${process.env.NEXT_PUBLIC_DOMAIN}/${link}`;
 }
-export function LightenDarkenColor(col, amt) {
-  let usePound = false;
-
-  if (col[0] === '#') {
-    col = col.slice(1);
-    usePound = true;
-  }
-
-  const num = parseInt(col, 16);
-
-  let r = (num >> 16) + amt;
-
-  if (r > 255) r = 255;
-  else if (r < 0) r = 0;
-
-  let b = ((num >> 8) & 0x00ff) + amt;
-
-  if (b > 255) b = 255;
-  else if (b < 0) b = 0;
-
-  let g = (num & 0x0000ff) + amt;
-
-  if (g > 255) g = 255;
-  else if (g < 0) g = 0;
-
-  return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
+export function shadeHexColor(color, percent) {
+  const f = parseInt(color.slice(1), 16);
+  const t = percent < 0 ? 0 : 255;
+  const p = percent < 0 ? percent * -1 : percent;
+  const R = f >> 16;
+  const G = (f >> 8) & 0x00ff;
+  const B = f & 0x0000ff;
+  return `#${(
+    0x1000000 +
+    (Math.round((t - R) * p) + R) * 0x10000 +
+    (Math.round((t - G) * p) + G) * 0x100 +
+    (Math.round((t - B) * p) + B)
+  )
+    .toString(16)
+    .slice(1)}`;
 }
