@@ -1,5 +1,7 @@
 import BackToLogin from '@/components/BackToLogin';
 import { Danger } from '@/components/icons';
+import { authActions } from '@/redux/auth/authSlice';
+import { companyActions } from '@/redux/company/companySlice';
 import AuthService from '@/services/auth';
 import companyService from '@/services/company';
 import { realtime } from '@/utils/altogic';
@@ -7,9 +9,7 @@ import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { authActions } from '@/redux/auth/authSlice';
-import { companyActions } from '@/redux/company/companySlice';
-import { generateUrl, setSessionCookie } from '../utils';
+import { generateUrl } from '../utils';
 
 export default function AuthRedirect({ error, session, user, companies }) {
   const router = useRouter();
