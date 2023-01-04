@@ -14,30 +14,30 @@ import { generateUrl, setSessionCookie } from '../utils';
 export default function AuthRedirect({ error, session, user, companies }) {
   const router = useRouter();
   const dispatch = useDispatch();
-  async function checkProps() {
-    if (!error) {
-      dispatch(
-        authActions.getAuthGrant({
-          session,
-          user,
-          error
-        })
-      );
-      if (companies?.length) {
-        dispatch(companyActions.setCompanies(companies));
-      }
+  // async function checkProps() {
+  //   if (!error) {
+  //     dispatch(
+  //       authActions.getAuthGrant({
+  //         session,
+  //         user,
+  //         error
+  //       })
+  //     );
+  //     if (companies?.length) {
+  //       dispatch(companyActions.setCompanies(companies));
+  //     }
 
-      if (companies && !companies?.length) {
-        router.push(generateUrl('create-new-company'));
-      } else if (companies?.length === 1) {
-        router.push(generateUrl('dashboard', companies[0].subdomain));
-      } else if (companies?.length > 1) {
-        router.push(generateUrl('select-company'));
-      } else {
-        router.push('/');
-      }
-    }
-  }
+  //     if (companies && !companies?.length) {
+  //       router.push(generateUrl('create-new-company'));
+  //     } else if (companies?.length === 1) {
+  //       router.push(generateUrl('dashboard', companies[0].subdomain));
+  //     } else if (companies?.length > 1) {
+  //       router.push(generateUrl('select-company'));
+  //     } else {
+  //       router.push('/');
+  //     }
+  //   }
+  // }
   useEffect(() => {
     // checkProps();
     if (router.query.status === 401) {
