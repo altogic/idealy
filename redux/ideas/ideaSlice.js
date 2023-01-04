@@ -49,7 +49,9 @@ export const ideaSlice = createSlice({
     },
     createIdeaSuccess(state, action) {
       state.isLoading = false;
-      state.ideas = [action.payload, ...state.ideas];
+      if (!state.ideas.find((idea) => idea._id === action.payload._id)) {
+        state.ideas = [action.payload, ...state.ideas];
+      }
     },
     createIdeaFailure(state, action) {
       state.isLoading = false;
@@ -60,16 +62,18 @@ export const ideaSlice = createSlice({
     },
     voteIdeaSuccess(state, action) {
       state.isLoading = false;
-      state.ideaVotes = [...state.ideaVotes, action.payload];
-      state.ideas = state.ideas.map((idea) => {
-        if (idea._id === action.payload.ideaId) {
-          return {
-            ...idea,
-            voteCount: idea.voteCount + 1
-          };
-        }
-        return idea;
-      });
+      if (!state.ideaVotes.find((vote) => vote.ideaId === action.payload.ideaId)) {
+        state.ideaVotes = [...state.ideaVotes, action.payload];
+        state.ideas = state.ideas.map((idea) => {
+          if (idea._id === action.payload.ideaId) {
+            return {
+              ...idea,
+              voteCount: idea.voteCount + 1
+            };
+          }
+          return idea;
+        });
+      }
     },
     voteIdeaFailure(state, action) {
       state.isLoading = false;
@@ -133,34 +137,24 @@ export const ideaSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    clearSimilarIdeas() {},
-    clearSimilarIdeasSuccess(state) {
+    clearSimilarIdeas(state) {
       state.similarIdeas = [];
     },
     addedNewComment(state, action) {
-      try {
-        state.ideas = state.ideas.map((idea) => {
-          if (idea._id === action.payload.ideaId) {
-            const recentUsers = idea.recentUsers
-              ? idea.recentUsers?.filter((rc) => rc?.user !== action.payload.data?.user)
-              : [];
-            return {
-              ...idea,
-              commentCount: idea.commentCount + 1,
-              recentUsers: [...recentUsers, action.payload.data]
-            };
-          }
-          return idea;
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    createIdeaRealtime() {},
-    voteIdeaRealtime() {},
-    downvoteIdeaRealtime() {},
-    updateIdeaRealtime() {},
-    deleteIdeaRealtime() {}
+      state.ideas = state.ideas.map((idea) => {
+        if (idea._id === action.payload.ideaId) {
+          const recentUsers = idea.recentUsers
+            ? idea.recentUsers?.filter((rc) => rc?.user !== action.payload.data?.user)
+            : [];
+          return {
+            ...idea,
+            commentCount: idea.commentCount + 1,
+            recentUsers: [...recentUsers, action.payload.data]
+          };
+        }
+        return idea;
+      });
+    }
   },
   extraReducers: (builder) => {
     builder.addCase([HYDRATE], (state, action) => ({

@@ -408,16 +408,6 @@ export const companySlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    declineInvitation(state) {
-      state.isLoading = true;
-    },
-    declineInvitationSuccess(state) {
-      state.isLoading = false;
-    },
-    declineInvitationFailed(state, action) {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
     deleteCompanySubListsItem(state) {
       state.isLoading = true;
     },
@@ -442,8 +432,7 @@ export const companySlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    updateMemberStatusRealtime() {},
-    updateMemberStatusRealtimeSuccess(state, action) {
+    updateMemberStatusRealtime(state, action) {
       state.companyMembers = state.companyMembers.map((member) => {
         if (
           member.user._id === action.payload.userId &&
@@ -457,8 +446,8 @@ export const companySlice = createSlice({
         return member;
       });
     },
-    deleteCompanyMemberRealtime() {},
-    deleteCompanyMemberRealtimeSuccess(state, action) {
+
+    deleteCompanyMemberRealtime(state, action) {
       if (action.payload.isRegistered) {
         state.companyMembers = state.companyMembers.filter(
           (member) => member._id !== action.payload.id
@@ -474,8 +463,8 @@ export const companySlice = createSlice({
         );
       }
     },
-    updateCompanyMemberRoleRealtime() {},
-    updateCompanyMemberRoleRealtimeSuccess(state, action) {
+
+    updateCompanyMemberRoleRealtime(state, action) {
       if (action.payload.isRegistered) {
         state.companyMembers = state.companyMembers.map((member) => {
           if (member._id === action.payload.id) {
@@ -512,20 +501,20 @@ export const companySlice = createSlice({
         });
       }
     },
-    acceptInvitationRealtime() {},
-    acceptInvitationRealtimeSuccess(state, action) {
+
+    acceptInvitationRealtime(state, action) {
       state.companies = [...state.companies, action.payload];
+      state.company = action.payload;
     },
-    addNewMemberRealtime() {},
-    addNewMemberRealtimeSuccess(state, action) {
+
+    addNewMemberRealtime(state, action) {
       if (action.payload.profilePicture) {
         state.companyMembers = [...state.companyMembers, action.payload];
       } else {
         state.unregisteredCompanyMembers = [...state.unregisteredCompanyMembers, action.payload];
       }
     },
-    updateCompanyMemberRealtime() {},
-    updateCompanyMemberRealtimeSuccess(state, action) {
+    updateCompanyMemberRealtime(state, action) {
       state.companyMembers = state.companyMembers.map((member) => {
         if (member.user._id === action.payload._id) {
           return {
@@ -548,22 +537,10 @@ export const companySlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    deleteCompanyRealtime() {},
-    deleteCompanyRealtimeSuccess(state, action) {
+    deleteCompanyRealtime(state, action) {
       state.companies = state.companies.filter((company) => company._id !== action.payload);
     },
-    acceptInvitation() {},
-    acceptInvitationSuccess(state, action) {
-      state.companyMembers = [...state.companyMembers, action.payload];
-      state.unregisteredCompanyMembers = state.unregisteredCompanyMembers.filter(
-        (member) => member.email !== action.payload.user.email
-      );
-    },
-    acceptInvitationFailed(state, action) {
-      state.error = action.payload;
-    },
-    updateCompanyRealtime() {},
-    updateCompanyRealtimeSuccess(state, action) {
+    updateCompanyRealtime(state, action) {
       state.company = action.payload;
       state.companies = state.companies.map((company) => {
         if (company._id === action.payload._id) {
@@ -572,8 +549,8 @@ export const companySlice = createSlice({
         return company;
       });
     },
-    declineInvitationRealtime() {},
-    declineInvitationRealtimeSuccess(state, action) {
+
+    declineInvitationRealtime(state, action) {
       state.companyMembers = state.companyMembers.map((member) => {
         if (member.user._id === action.payload) {
           return {
@@ -584,8 +561,8 @@ export const companySlice = createSlice({
         return member;
       });
     },
-    updateCompanySubListsOrderRealtime() {},
-    updateCompanySubListsOrderRealtimeSuccess(state, action) {
+
+    updateCompanySubListsOrderRealtime(state, action) {
       if (action.payload.property === 'roadmaps') {
         state.company.roadmaps = action.payload.data;
       } else {

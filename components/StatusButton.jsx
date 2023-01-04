@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { LightenDarkenColor } from '../utils';
+import { shadeHexColor } from '../utils';
 
 export default function StatusButton({ name, color, className }) {
   const [bgColor, setBgColor] = useState();
 
   useEffect(() => {
     if (color) {
-      setBgColor(LightenDarkenColor(color, 230));
+      setBgColor(shadeHexColor(color, 0.85));
     }
   }, [color]);
 

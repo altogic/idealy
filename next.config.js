@@ -24,6 +24,5 @@ const nextConfig = {
     NEXT_PUBLIC_DOMAIN: `idealy.${process.env.NODE_ENV === 'development' ? 'com' : 'io'}`
   }
 };
-const { withSuperjson } = require('next-superjson');
 
-module.exports = withSuperjson()(nextConfig);
+module.exports = nextConfig;

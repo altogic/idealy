@@ -32,6 +32,9 @@ export default function Layout({ children }) {
         })
       );
     }
+  }, [user]);
+
+  useEffect(() => {
     const userFromCookie = JSON.parse(getCookie('user') || null);
     const session = JSON.parse(getCookie('session') || null);
     if (userFromCookie && session) {
