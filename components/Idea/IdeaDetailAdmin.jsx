@@ -87,10 +87,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                             <RadioGroup.Option
                               key={status?._id}
                               value={status}
-                              className={({ active }) => `${
-                                active || selectedStatus?._id === status?._id ? '' : ''
-                              }
-                                         relative flex cursor-pointer py-3 focus:outline-none`}>
+                              className="relative flex cursor-pointer py-3 focus:outline-none">
                               {({ checked }) => (
                                 <div className="flex w-full items-center justify-between">
                                   <div className="flex items-center">

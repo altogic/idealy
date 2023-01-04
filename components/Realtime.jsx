@@ -134,7 +134,7 @@ export default function Realtime() {
     }
   }
   function createIdeasHandler({ message }) {
-    dispatch(ideaActions.createIdeaRealtime(message));
+    dispatch(ideaActions.createIdeaSuccess(message));
   }
   function updateIdeaHandler({ message }) {
     dispatch(ideaActions.updateIdeaSuccess(message));
