@@ -85,10 +85,10 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                         <div>
                           {company?.statuses?.map((status) => (
                             <RadioGroup.Option
-                              key={status._id}
+                              key={status?._id}
                               value={status}
                               className={({ active }) => `${
-                                active || selectedStatus?._id === status._id ? '' : ''
+                                active || selectedStatus?._id === status?._id ? '' : ''
                               }
                                          relative flex cursor-pointer py-3 focus:outline-none`}>
                               {({ checked }) => (
@@ -104,7 +104,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                                       <RadioGroup.Label
                                         as="p"
                                         className={`font-medium  ${
-                                          checked || selectedStatus?._id === status._id
+                                          checked || selectedStatus?._id === status?._id
                                             ? 'text-slate-400 dark:text-aa-400 purple:text-pt-400'
                                             : 'text-slate-900 dark:text-aa-100 purple:text-pt-100'
                                         }`}>
@@ -112,7 +112,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                                       </RadioGroup.Label>
                                     </div>
                                   </div>
-                                  {(checked || selectedStatus?._id === status._id) && (
+                                  {(checked || selectedStatus?._id === status?._id) && (
                                     <div className="flex-shrink-0 text-slate-900 dark:text-aa-100 purple:text-pt-100">
                                       <CircleCheck className="h-5 w-5" />
                                     </div>
