@@ -48,21 +48,25 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
   };
   return (
     <>
-      <div className="flex-shrink-0 w-72 bg-gray-50 border-r border-slate-200">
+      <div className="flex-shrink-0 w-72 bg-white dark:bg-aa-900 purple:bg-pt-1000 border-r border-slate-200 dark:border-aa-400 purple:border-pt-400">
         <div className="flex flex-col h-full">
-          <div className="flex-shrink-0 bg-white px-4 py-9 border-b border-slate-200">
+          <div className="flex-shrink-0 px-4 py-9 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
             <h2 className="text-xl font-semibold text-slate-800 dark:text-aa-200 purple:text-pt-200">
               Admin
             </h2>
           </div>
-          <div className="flex-1 flex flex-col p-4">
-            <Disclosure className="">
+          <div className="flex flex-col flex-1 bg-slate-50 dark:bg-aa-800 purple:bg-pt-900 p-4">
+            <Disclosure>
               {({ open }) => (
                 <>
                   <Disclosure.Button className="-mx-2 p-2 flex items-center justify-between rounded transition-colors duration-300 hover:bg-surface-10 outline-none cursor-pointer">
-                    <span className="text-slate-900 text-lg font-medium tracking-sm">Statuses</span>
+                    <span className="text-slate-900 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">
+                      Statuses
+                    </span>
                     <ChevronUp
-                      className={`${open ? 'rotate-180 transform' : ''} h-5 w-5 text-slate-500`}
+                      className={`${
+                        open ? 'rotate-180 transform' : ''
+                      } h-5 w-5 text-slate-500 dark:text-aa-200 purple:text-pt-200`}
                     />
                   </Disclosure.Button>
                   <Disclosure.Panel className="">
@@ -78,7 +82,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                           setSelectedStatus(status);
                         }}>
                         <RadioGroup.Label className="sr-only">Server size</RadioGroup.Label>
-                        <div className="space-y-2">
+                        <div>
                           {company?.statuses?.map((status) => (
                             <RadioGroup.Option
                               key={status._id}
@@ -86,7 +90,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                               className={({ active }) => `${
                                 active || selectedStatus?._id === status._id ? '' : ''
                               }
-                                         relative flex cursor-pointer p-2 focus:outline-none`}>
+                                         relative flex cursor-pointer py-3 focus:outline-none`}>
                               {({ checked }) => (
                                 <div className="flex w-full items-center justify-between">
                                   <div className="flex items-center">
@@ -101,16 +105,16 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                                         as="p"
                                         className={`font-medium  ${
                                           checked || selectedStatus?._id === status._id
-                                            ? ''
-                                            : 'text-slate-900'
+                                            ? 'text-slate-400 dark:text-aa-400 purple:text-pt-400'
+                                            : 'text-slate-900 dark:text-aa-100 purple:text-pt-100'
                                         }`}>
                                         {status.name}
                                       </RadioGroup.Label>
                                     </div>
                                   </div>
                                   {(checked || selectedStatus?._id === status._id) && (
-                                    <div className="flex-shrink-0 text-slate-900">
-                                      <CircleCheck className="h-6 w-6" />
+                                    <div className="flex-shrink-0 text-slate-900 dark:text-aa-100 purple:text-pt-100">
+                                      <CircleCheck className="h-5 w-5" />
                                     </div>
                                   )}
                                 </div>
@@ -124,23 +128,25 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                 </>
               )}
             </Disclosure>
-            <hr className="my-8 border-slate-200" />
+            <hr className="my-2 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
             <Disclosure>
               {({ open }) => (
                 <>
                   <Disclosure.Button>
                     <div className="-mx-2 p-2 flex items-center justify-between rounded transition-colors duration-300 hover:bg-surface-10 outline-none cursor-pointer">
-                      <span className="text-slate-900 text-lg font-medium tracking-sm">
+                      <span className="text-slate-900 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">
                         Visibility
                       </span>
                       <ChevronUp
-                        className={`${open ? 'rotate-180 transform' : ''} h-5 w-5 text-slate-500`}
+                        className={`${
+                          open ? 'rotate-180 transform' : ''
+                        } h-5 w-5 text-slate-500 dark:text-aa-200 purple:text-pt-200`}
                       />
                     </div>
                   </Disclosure.Button>
                   <Disclosure.Panel>
-                    <div className="flex justify-between gap-4">
-                      <span className="text-slate-600 text-sm font-medium">
+                    <div className="flex justify-between gap-4 py-3">
+                      <span className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-sm font-medium">
                         Make {isPrivate ? 'Public' : 'Private'}
                       </span>
                       <Switch
@@ -169,9 +175,11 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
               )}
             </Disclosure>
           </div>
-          <div className="p-6">
-            <p className="text-slate-900 text-lg font-medium tracking-sm">Actions</p>
-            <hr className="my-2 border-slate-200" />
+          <div className="bg-slate-50 dark:bg-aa-800 purple:bg-pt-900 p-6">
+            <p className="text-slate-900 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">
+              Actions
+            </p>
+            <hr className="my-2 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
             <div className="flex w-full flex-row space-x-2">
               <div className="inline-flex relative">
                 <button
@@ -180,7 +188,9 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                   title="Pin">
                   <Thumbtack
                     className={`w-4 h-4 hover:text-orange-500 ${
-                      isPinned ? 'text-orange-500' : 'text-slate-600'
+                      isPinned
+                        ? 'text-orange-500'
+                        : 'text-slate-600 dark:text-aa-300 purple:text-pt-300'
                     }`}
                     onClick={() => {
                       updateIdea({
@@ -204,7 +214,9 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                   title="Archive">
                   <Archive
                     className={`w-4 h-4 hover:text-yellow-500 ${
-                      isArchived ? 'text-yellow-500' : 'text-slate-600'
+                      isArchived
+                        ? 'text-yellow-500'
+                        : 'text-slate-600 dark:text-aa-300 purple:text-pt-300'
                     }`}
                   />
                 </button>
@@ -222,7 +234,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                   title="Bug">
                   <Bug
                     className={`w-4 h-4 hover:text-red-500 ${
-                      isBug ? 'text-red-500' : 'text-slate-600'
+                      isBug ? 'text-red-500' : 'text-slate-600 dark:text-aa-300 purple:text-pt-300'
                     }`}
                   />
                 </button>
@@ -233,7 +245,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                   className="flex items-center justify-center w-8 h-8"
                   onClick={() => setIsDeleteModalOpen(!isDeleteModalOpen)}
                   title="Merge">
-                  <Merge className="w-5 h-5 text-slate-600 hover:text-red-500" />
+                  <Merge className="w-5 h-5 text-slate-600 dark:text-aa-300 purple:text-pt-300 hover:text-red-500" />
                 </button>
               </div>
               <div className="inline-flex relative">
@@ -242,7 +254,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                   className="flex items-center justify-center w-8 h-8"
                   onClick={() => setIsDeleteModalOpen(!isDeleteModalOpen)}
                   title="Trash">
-                  <Trash className="w-4 h-4 text-slate-600 hover:text-red-500" />
+                  <Trash className="w-4 h-4 text-slate-600 dark:text-aa-300 purple:text-pt-300 hover:text-red-500" />
                 </button>
               </div>
               <div className="inline-flex relative" aria-labelledby="idea-menu">
@@ -254,7 +266,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                     dispatch(toggleFeedBackSubmitModal());
                   }}
                   title="Edit">
-                  <Pen className="w-4 h-4 text-slate-600 hover:text-indigo-500" />
+                  <Pen className="w-4 h-4 text-slate-600 dark:text-aa-300 purple:text-pt-300 hover:text-indigo-500" />
                 </button>
               </div>
             </div>
