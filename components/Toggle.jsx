@@ -39,8 +39,10 @@ export default function Toggle({
         <span
           aria-hidden="true"
           className={cn(
-            enabled ? 'translate-x-5' : 'translate-x-0',
-            'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white dark:bg-aa-50 purple:bg-pt-300 shadow ring-0 transition duration-200 ease-in-out'
+            enabled
+              ? 'translate-x-5 bg-white dark:bg-aa-50 purple:bg-pt-300'
+              : 'translate-x-0 bg-white dark:bg-aa-500 purple:bg-pt-500',
+            'pointer-events-none inline-block h-5 w-5 transform rounded-full shadow ring-0 transition duration-200 ease-in-out'
           )}
         />
       </Switch>
