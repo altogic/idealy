@@ -40,6 +40,7 @@ export default function AuthRedirect({ error, session, user, companies }) {
   }
   useEffect(() => {
     checkProps();
+    console.log('*********1');
     if (router.query.status === 401) {
       alert(router.query.error);
       router.push(generateUrl('login'));
@@ -141,9 +142,9 @@ export const getServerSideProps = async ({ query, req, res }) => {
       props.companies = data;
     }
     if (user) {
-      AuthService.setSessionCookie(session.token, req, res);
-      AuthService.setSession(session);
-      setSessionCookie(session, user, req, res);
+      // AuthService.setSessionCookie(session.token, req, res);
+      // AuthService.setSession(session);
+      // setSessionCookie(session, user, req, res);
       return {
         props
       };
