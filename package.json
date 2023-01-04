@@ -33,7 +33,7 @@
     "luxon": "^3.1.1",
     "next": "12.1.6",
     "next-redux-wrapper": "^8.0.0",
-    "next-superjson": "^0.0.4",
+    "prop-types": "^15.8.1",
     "quill": "^1.3.7",
     "quill-blot-formatter": "^1.0.5",
     "react": "18.1.0",
@@ -49,7 +49,6 @@
     "react-spinners": "^0.13.6",
     "react-toastify": "^9.0.8",
     "recharts": "2.1.12",
-    "redux-persist": "^6.0.0",
     "redux-saga": "^1.2.1",
     "tailwindcss-multi-theme": "^1.0.4",
     "yup": "^0.32.11"
