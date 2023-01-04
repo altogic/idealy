@@ -1,19 +1,16 @@
-import { useEffect } from 'react';
-import AuthService from '@/services/auth';
-import companyService from '@/services/company';
-import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
-import { authActions } from '@/redux/auth/authSlice';
-import { companyActions } from '@/redux/company/companySlice';
-import { getCookie, setCookie } from 'cookies-next';
 import BackToLogin from '@/components/BackToLogin';
 import { Danger } from '@/components/icons';
+import AuthService from '@/services/auth';
+import companyService from '@/services/company';
 import { realtime } from '@/utils/altogic';
+import { getCookie, setCookie } from 'cookies-next';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { generateUrl, setSessionCookie } from '../utils';
 
 export default function AuthRedirect({ error, session, user, companies }) {
   const router = useRouter();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   // async function checkProps() {
   //   if (!error) {
   //     dispatch(
