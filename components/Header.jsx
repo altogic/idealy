@@ -68,7 +68,13 @@ export default function Header() {
           {companyLoading || (
             <ul className="hidden lg:flex items-center gap-2">
               {selectedCompany?.siteNavigation?.feedback && (
-                <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
+                <li
+                  className={cn(
+                    `flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900`,
+                    router.pathname === '/public-view'
+                      ? 'bg-indigo-800 dark:bg-aa-700 purple:bg-pt-900'
+                      : ''
+                  )}>
                   <Link href={generateUrl('public-view', selectedCompany.subdomain)}>
                     <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
                       <Feedback className="w-6 h-6 text-indigo-50 mr-3" />
