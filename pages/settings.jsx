@@ -7,6 +7,7 @@ import Profile from '@/layouts/settings/Profile';
 import Notification from '@/layouts/settings/Notification';
 import SavedFilter from '@/layouts/settings/SavedFilter';
 import GeneralSettings from '@/layouts/settings/GeneralSettings';
+import Theme from '@/layouts/settings/Theme';
 import Topics from '@/layouts/settings/Topics';
 import Statuses from '@/layouts/settings/Statuses';
 import Categories from '@/layouts/settings/Categories';
@@ -161,7 +162,9 @@ export default function Settings() {
                   )}
                   {company?.role !== 'Moderator' && (
                     <>
-                      <Tab.Panel>Themes</Tab.Panel>
+                      <Tab.Panel>
+                        <Theme />
+                      </Tab.Panel>
                       {/* Invite Team" */}
                       <Tab.Panel>
                         <InviteTeam />
