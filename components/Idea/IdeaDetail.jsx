@@ -2,7 +2,6 @@ import CommentCard from '@/components/CommentCard';
 import ImageList from '@/components/ImageList';
 import StatusButton from '@/components/StatusButton';
 import TopicBadges from '@/components/TopicBadges';
-import Avatar from '@/components/Avatar';
 import { commentActions } from '@/redux/comments/commentsSlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { Dialog, Transition } from '@headlessui/react';
@@ -22,24 +21,19 @@ export default function IdeaDetail({ idea, company }) {
   const comments = useSelector((state) => state.comments.comments);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const [routerQuery, setRouterQuery] = useState();
-  useEffect(() => {
-    if (idea) {
-      dispatch(commentActions.getComments(idea._id));
-    }
-  }, [idea]);
 
   useEffect(() => {
-    if (router.isReady) {
-      delete router.query.feedback;
+    if (router.isReady && feedBackDetailModal) {
       setRouterQuery(router.query);
+      dispatch(commentActions.getComments(router.query.feedback));
     }
   }, [router.isReady]);
 
   function handleClose() {
-    router.push(`/public-view`, {
-      query: {
-        ...routerQuery
-      }
+    delete routerQuery?.feedback;
+    router.push({
+      pathname: router.pathname,
+      query: routerQuery
     });
 
     dispatch(toggleFeedBackDetailModal());
@@ -73,7 +67,7 @@ export default function IdeaDetail({ idea, company }) {
                   {user && (company?.role === 'Owner' || company?.role === 'Admin') && (
                     <IdeaDetailAdmin idea={idea} setSelectedStatus={setSelectedStatus} />
                   )}
-                  <div className="flex w-full h-full flex-col bg-white dark:bg-aa-900 purple:bg-pt-1000 p-8">
+                  <div className="flex w-full h-full flex-col bg-white dark:bg-aa-900 purple:bg-pt-1000 p-8 overflow-y-auto">
                     {/* Close Button Submit Feedback Modal */}
                     <div className="absolute top-8 right-8 flex items-center justify-center w-8 h-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                       <button
@@ -164,7 +158,8 @@ export default function IdeaDetail({ idea, company }) {
                                 viewBox="0 0 8 8">
                                 <circle cx={4} cy={4} r={3} />
                               </svg>
-                              <div className="flex items-center gap-2">
+                              {/* <div className="flex items-center gap-2">
+                              // Todo: Add Recent Users
                                 <div className="isolate flex -space-x-1 overflow-hidden">
                                   {idea?.recentUsers?.map((user) => (
                                     <Avatar
@@ -179,8 +174,8 @@ export default function IdeaDetail({ idea, company }) {
                                 <span className="text-slate-500 dark:text-aa-300 purple:text-pt-300 text-sm tracking-sm">
                                   +45
                                 </span>
-                              </div>
-                              <svg
+                              </div> */}
+                              {/* <svg
                                 className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
                                 fill="currentColor"
                                 viewBox="0 0 8 8">
@@ -190,7 +185,7 @@ export default function IdeaDetail({ idea, company }) {
                                 type="button"
                                 className="text-indigo-700 dark:text-aa-200 purple:text-pt-200 text-sm font-medium tracking-sm">
                                 Add a voter
-                              </button>
+                              </button> */}
                             </div>
                             <div className="flex items-center justify-between gap-4">
                               {/* Feedback Detail Topic Badges */}

@@ -17,7 +17,6 @@ export default function PublicView() {
   const [page, setPage] = useState(1);
   const [filterTopics, setFilterTopics] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const [selectedIdea, setSelectedIdea] = useState();
 
   const [isFiltered, setIsFiltered] = useState();
 
@@ -29,6 +28,7 @@ export default function PublicView() {
   const ideas = useSelector((state) => state.idea.ideas);
   const countInfo = useSelector((state) => state.idea.countInfo);
   const ideaVotes = useSelector((state) => state.idea.ideaVotes);
+  const selectedIdea = useSelector((state) => state.idea.selectedIdea);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
 
@@ -87,7 +87,7 @@ export default function PublicView() {
     if (!idea) {
       return;
     }
-    setSelectedIdea(idea);
+    dispatch(ideaActions.setSelectedIdea(idea));
   }, [ideas]);
   useEffect(() => {
     if (router) {
@@ -105,11 +105,11 @@ export default function PublicView() {
       if (status) {
         setFilterStatus(status.split(','));
       }
-      console.log('idea', feedback, router.query);
+
       if (feedback && !feedBackDetailModal) {
         const ideaDetail = ideas.find((i) => i._id === feedback);
         if (ideaDetail) {
-          setSelectedIdea(ideaDetail);
+          dispatch(ideaActions.setSelectedIdea(ideaDetail));
           dispatch(toggleFeedBackDetailModal());
         }
       }
@@ -117,7 +117,9 @@ export default function PublicView() {
   }, [router, ideas]);
 
   useEffect(() => {
-    getIdeasByCompany();
+    if (!feedBackDetailModal) {
+      getIdeasByCompany();
+    }
   }, [page, getIdeasByCompany]);
 
   const isSubmitIdeaVisible = useRegisteredUserValidation('submitIdea');
@@ -132,7 +134,7 @@ export default function PublicView() {
   useEffect(() => {
     const isModalOpen = feedBackDetailModal || feedbackSubmitModal;
     if (!isModalOpen) {
-      setSelectedIdea();
+      dispatch(ideaActions.setSelectedIdea(null));
       dispatch(ideaActions.clearSimilarIdeas());
     }
   }, [feedBackDetailModal, feedbackSubmitModal]);
@@ -177,7 +179,7 @@ export default function PublicView() {
                 <PublicViewCard
                   idea={idea}
                   onClick={() => {
-                    setSelectedIdea(idea);
+                    dispatch(ideaActions.setSelectedIdea(idea));
                     dispatch(toggleFeedBackDetailModal());
                     router.push('/public-view', {
                       query: {
