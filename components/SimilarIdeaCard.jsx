@@ -1,9 +1,20 @@
 import React from 'react';
 import { DateTime } from 'luxon';
+import { toggleFeedBackDetailModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
+import { useDispatch } from 'react-redux';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
 
 export default function SimilarIdeaCard({ idea }) {
+  const dispatch = useDispatch();
   return (
-    <div className="px-2 py-6 lg:p-6 rounded-lg transition hover:bg-slate-200 ]">
+    <button
+      type="button"
+      className="px-2 py-6 lg:p-6 rounded-lg transition hover:bg-slate-200"
+      onClick={() => {
+        dispatch(ideaActions.setSelectedIdea(idea));
+        dispatch(toggleFeedBackSubmitModal());
+        dispatch(toggleFeedBackDetailModal());
+      }}>
       <div className="flex items-start lg:items-center gap-6">
         <div className="flex flex-col items-center justify-center bg-white px-3 md:px-5 border rounded-lg border-gray-400">
           <span className="text-indigo-700 text-xl font-semibold tracking-md">
@@ -24,7 +35,11 @@ export default function SimilarIdeaCard({ idea }) {
               <div className="flex items-center gap-3">
                 {/* User */}
                 <span className="text-slate-700 text-sm font-medium tracking-sm">
-                  {idea?.author ? idea?.author.name : idea?.guestName}
+                  {idea?.author
+                    ? idea?.author.name
+                    : idea?.guestName
+                    ? idea?.guestName
+                    : 'Anonymous'}
                 </span>
                 <svg className="h-1 w-1 text-slate-500" fill="currentColor" viewBox="0 0 8 8">
                   <circle cx={4} cy={4} r={3} />
@@ -38,6 +53,6 @@ export default function SimilarIdeaCard({ idea }) {
           </div>
         </div>
       </div>
-    </div>
+    </button>
   );
 }

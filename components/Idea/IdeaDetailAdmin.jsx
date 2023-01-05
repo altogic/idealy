@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import DeleteModal from '@/components/DeleteModal';
 import { toggleFeedBackDetailModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
+import { fileActions } from '@/redux/file/fileSlice';
 import {
   Archive,
   Bug,
@@ -23,6 +24,8 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
   const [isPrivate, setIsPrivate] = useState();
   const [isPinned, setIsPinned] = useState();
   const [isArchived, setIsArchived] = useState();
+  const [showOnRoadMap, setShowOnRoadMap] = useState();
+  const coverImage = useSelector((state) => state.file.fileLink);
   const [isBug, setIsBug] = useState();
   const handleDelete = () => {
     dispatch(ideaActions.deleteIdea(idea._id));
@@ -35,6 +38,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
       setIsPinned(idea.isPinned);
       setIsArchived(idea.isArchived);
       setIsBug(idea.isBug);
+      setShowOnRoadMap(idea.showOnRoadMap);
     }
   }, [idea]);
 
@@ -46,7 +50,23 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
       })
     );
   };
+  const handleAddCoverImage = () => {
+    const input = document.createElement('input');
 
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files[0];
+      dispatch(fileActions.uploadFileRequest({ file, name: `${idea.title}-coverImage` }));
+    };
+  };
+  useEffect(() => {
+    if (coverImage) {
+      updateIdea({ coverImage });
+    }
+  }, [coverImage]);
   return (
     <>
       <div className="flex-shrink-0 w-72 bg-white dark:bg-aa-900 purple:bg-pt-1000 border-r border-slate-200 dark:border-aa-400 purple:border-pt-400">
@@ -167,6 +187,44 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
                           } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white dark:bg-aa-50 purple:bg-pt-300 shadow ring-0 transition duration-200 ease-in-out`}
                         />
                       </Switch>
+                    </div>
+                    <div className="flex justify-between gap-4 py-3">
+                      <span className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-sm font-medium">
+                        Show Idea on Roadmap
+                      </span>
+                      <Switch
+                        checked={isPrivate}
+                        onChange={() => {
+                          updateIdea({
+                            showOnRoadMap: !showOnRoadMap
+                          });
+                          setShowOnRoadMap(!showOnRoadMap);
+                        }}
+                        className={`${
+                          showOnRoadMap
+                            ? 'bg-indigo-600 dark:bg-aa-500 purple:bg-pt-600'
+                            : 'bg-gray-200'
+                        } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-aa-500 purple:focus:ring-pt-600 focus:ring-offset-2`}>
+                        <span className="sr-only">Make Private</span>
+                        <span
+                          className={`${
+                            showOnRoadMap ? 'translate-x-5' : 'translate-x-0'
+                          } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white dark:bg-aa-50 purple:bg-pt-300 shadow ring-0 transition duration-200 ease-in-out`}
+                        />
+                      </Switch>
+                    </div>
+                    <div className="flex justify-between items-center gap-4 py-3">
+                      <span className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-sm font-medium">
+                        Cover Image
+                      </span>
+                      <button
+                        type="button"
+                        className="border border-slate-600 rounded px-2 py-1"
+                        onClick={handleAddCoverImage}>
+                        <span className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-sm font-medium">
+                          Upload
+                        </span>
+                      </button>
                     </div>
                   </Disclosure.Panel>
                 </>

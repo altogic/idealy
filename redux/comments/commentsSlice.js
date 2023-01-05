@@ -7,18 +7,19 @@ export const commentsSlice = createSlice({
     comments: [],
     countInfo: {},
     isLoading: false,
+    createCommentLoading: false,
     error: null
   },
   reducers: {
     addComment: (state) => {
-      state.isLoading = true;
+      state.createCommentLoading = true;
     },
     addCommentSuccess: (state, action) => {
-      state.isLoading = false;
+      state.createCommentLoading = false;
       state.comments.push(action.payload);
     },
     addCommentFailure: (state, action) => {
-      state.isLoading = false;
+      state.createCommentLoading = false;
       state.error = action.payload;
     },
     getComments: (state) => {

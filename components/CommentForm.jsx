@@ -12,7 +12,7 @@ import GuestForm from './GuestForm';
 
 export default function CommentForm({ ideaId, company }) {
   const dispatch = useDispatch();
-  const isLoading = useSelector((state) => state.comments.isLoading);
+  const isLoading = useSelector((state) => state.comments.createCommentLoading);
   const user = useSelector((state) => state.auth.user);
   const [comment, setComment] = useState('');
   const guestValidation = useGuestValidation({ company, fieldName: 'commentIdea' });

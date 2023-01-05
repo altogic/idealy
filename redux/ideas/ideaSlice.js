@@ -7,7 +7,8 @@ const initialState = {
   error: null,
   countInfo: null,
   ideaVotes: [],
-  similarIdeas: []
+  similarIdeas: [],
+  selectedIdea: null
 };
 
 export const ideaSlice = createSlice({
@@ -154,6 +155,9 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
+    },
+    setSelectedIdea(state, action) {
+      state.selectedIdea = action.payload;
     }
   },
   extraReducers: (builder) => {
