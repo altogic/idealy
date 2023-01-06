@@ -2,43 +2,36 @@ import CommentCard from '@/components/CommentCard';
 import ImageList from '@/components/ImageList';
 import StatusButton from '@/components/StatusButton';
 import TopicBadges from '@/components/TopicBadges';
-import { commentActions } from '@/redux/comments/commentsSlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { Dialog, Transition } from '@headlessui/react';
 import { DateTime } from 'luxon';
 import { useRouter } from 'next/router';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CommentForm from '../CommentForm';
 import { Archive, Bug, Eye, Thumbtack } from '../icons';
 import IdeaDetailAdmin from './IdeaDetailAdmin';
 
-export default function IdeaDetail({ idea, company }) {
+export default function IdeaDetail({ idea, company, query }) {
   const dispatch = useDispatch();
   const [selectedStatus, setSelectedStatus] = useState();
   const router = useRouter();
   const user = useSelector((state) => state.auth.user);
   const comments = useSelector((state) => state.comments.comments);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
-  const [routerQuery, setRouterQuery] = useState();
-
-  useEffect(() => {
-    if (router.isReady && feedBackDetailModal) {
-      setRouterQuery(router.query);
-      dispatch(commentActions.getComments(router.query.feedback));
-    }
-  }, [router.isReady]);
 
   function handleClose() {
-    delete routerQuery?.feedback;
+    const temp = query;
+    delete temp?.feedback;
     router.push({
       pathname: router.pathname,
-      query: routerQuery
+      query: temp
     });
 
     dispatch(toggleFeedBackDetailModal());
     setSelectedStatus(null);
   }
+
   return (
     <Transition.Root show={feedBackDetailModal} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={() => handleClose()}>
