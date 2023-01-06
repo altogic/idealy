@@ -73,7 +73,7 @@ export default function Header() {
                   className={cn(
                     `flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900`,
                     router.pathname === '/public-view'
-                      ? 'bg-indigo-800 dark:bg-aa-700 purple:bg-pt-900'
+                      ? 'bg-indigo-700 dark:bg-aa-700 purple:bg-pt-900'
                       : ''
                   )}>
                   <Link href={generateUrl('public-view', selectedCompany.subdomain)}>

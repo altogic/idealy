@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { authActions } from '@/redux/auth/authSlice';
 import { companyActions } from '@/redux/company/companySlice';
 import _ from 'lodash';
+import useIsomorphicLayoutEffect from '@/hooks/useIsomorphicLayoutEffect';
 import Realtime from './Realtime';
 import Header from './Header';
 import { generateUrl, setCookie } from '../utils';
@@ -19,22 +20,6 @@ export default function Layout({ children }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const wildcard = window.location.hostname.split('.')[0];
-    if (company?.subdomain !== wildcard && (wildcard !== 'www' || wildcard !== 'app')) {
-      dispatch(
-        companyActions.getCompanyBySubdomain({
-          subdomain: wildcard,
-          userId: user?._id,
-          onSuccess: (subdomain) => {
-            setCookie('subdomain', subdomain, 30);
-          },
-          onFail: () => {}
-        })
-      );
-    }
-  }, [user]);
-
-  useEffect(() => {
     const userFromCookie = JSON.parse(getCookie('user') || null);
     const session = JSON.parse(getCookie('session') || null);
     if (userFromCookie && session) {
@@ -43,11 +28,7 @@ export default function Layout({ children }) {
       localStorage.setItem('session', JSON.stringify(session));
     }
   }, []);
-  useEffect(() => {
-    if (user) {
-      dispatch(companyActions.getUserCompanies(user?._id));
-    }
-  }, [user]);
+
   useEffect(() => {
     const invitation = JSON.parse(getCookie('invitation-token') || null);
     if (invitation) {
@@ -72,6 +53,23 @@ export default function Layout({ children }) {
       router.push(generateUrl('create-new-company'));
     }
   }, [companies]);
+
+  useIsomorphicLayoutEffect(() => {
+    dispatch(companyActions.getUserCompanies(user?._id));
+    const wildcard = window.location.hostname.split('.')[0];
+    if (company?.subdomain !== wildcard && (wildcard !== 'www' || wildcard !== 'app')) {
+      dispatch(
+        companyActions.getCompanyBySubdomain({
+          subdomain: wildcard,
+          userId: user?._id,
+          onSuccess: (subdomain) => {
+            setCookie('subdomain', subdomain, 30);
+          },
+          onFail: () => {}
+        })
+      );
+    }
+  }, []);
 
   return (
     <div className="bg-white dark:bg-aa-900 purple:bg-pt-1000">
