@@ -5,6 +5,7 @@ import InfiniteScroll from '@/components/InfiniteScroll';
 import Layout from '@/components/Layout';
 import PublicViewCard from '@/components/PublicViewCard';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
+import { commentActions } from '@/redux/comments/commentsSlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { IDEA_SORT_TYPES } from 'constants';
@@ -17,7 +18,7 @@ export default function PublicView() {
   const [page, setPage] = useState(1);
   const [filterTopics, setFilterTopics] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-
+  const [routerQuery, setRouterQuery] = useState();
   const [isFiltered, setIsFiltered] = useState();
 
   const router = useRouter();
@@ -94,7 +95,6 @@ export default function PublicView() {
       const { topics, status, sort, feedback } = router.query;
       if (sort) {
         const sortType = IDEA_SORT_TYPES.find((s) => s.url === sort);
-
         setIsFiltered(sortType);
       } else {
         setIsFiltered(IDEA_SORT_TYPES[2]);
@@ -114,7 +114,7 @@ export default function PublicView() {
         }
       }
     }
-  }, [router, ideas]);
+  }, [router, ideas, feedBackDetailModal]);
 
   useEffect(() => {
     if (!feedBackDetailModal) {
@@ -179,8 +179,10 @@ export default function PublicView() {
                 <PublicViewCard
                   idea={idea}
                   onClick={() => {
+                    dispatch(commentActions.getComments(idea._id));
                     dispatch(ideaActions.setSelectedIdea(idea));
                     dispatch(toggleFeedBackDetailModal());
+                    setRouterQuery(router.query);
                     router.push('/public-view', {
                       query: {
                         ...router.query,
@@ -194,7 +196,7 @@ export default function PublicView() {
             ))}
           </InfiniteScroll>
         </div>
-        <IdeaDetail idea={selectedIdea} company={company} />
+        <IdeaDetail idea={selectedIdea} company={company} query={routerQuery} />
       </Layout>
     </>
   );
