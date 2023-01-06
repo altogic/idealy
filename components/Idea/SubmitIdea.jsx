@@ -1,4 +1,7 @@
+import ImageList from '@/components/ImageList';
 import useGuestValidation from '@/hooks/useGuestValidation';
+import { fileActions } from '@/redux/file/fileSlice';
+import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { Dialog, Disclosure, Transition } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -6,10 +9,7 @@ import _ from 'lodash';
 import { Fragment, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleFeedBackDetailModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
-import { fileActions } from '@/redux/file/fileSlice';
 import * as yup from 'yup';
-import ImageList from '@/components/ImageList';
 import Button from '../Button';
 import Editor from '../Editor';
 import GuestForm from '../GuestForm';
@@ -25,6 +25,7 @@ export default function SubmitIdea({ idea }) {
   const loading = useSelector((state) => state.file.isLoading);
   const fileLinks = useSelector((state) => state.file.fileLinks);
   const open = useSelector((state) => state.general.feedBackSubmitModal);
+  const userIp = useSelector((state) => state.auth.userIp);
   const [images, setImages] = useState([]);
   const guestValidation = useGuestValidation({
     company,
@@ -75,13 +76,13 @@ export default function SubmitIdea({ idea }) {
       ...data,
       content,
       topics,
-      images: fileLinks
+      images: fileLinks,
+      author: user._id,
+      company: company._id,
+      companySubdomain: company.subdomain,
+      ip: userIp
     };
     delete reqData.privacyPolicy;
-    if (user) {
-      reqData.author = user._id;
-    }
-    reqData.companySubdomain = company.subdomain;
     if (idea) {
       dispatch(ideaActions.updateIdea({ _id: idea._id, ...reqData }));
     } else {
@@ -112,9 +113,7 @@ export default function SubmitIdea({ idea }) {
   };
   const handleClose = () => {
     dispatch(toggleFeedBackSubmitModal());
-    if (idea) {
-      dispatch(toggleFeedBackDetailModal());
-    }
+    dispatch(ideaActions.clearSimilarIdeas());
   };
   useEffect(() => {
     if (open) {
@@ -150,7 +149,7 @@ export default function SubmitIdea({ idea }) {
     let timer;
     if (inpTitle) {
       timer = setTimeout(() => {
-        dispatch(ideaActions.searchSimilarIdeas(inpTitle));
+        dispatch(ideaActions.searchSimilarIdeas({ title: inpTitle, companyId: company._id }));
       }, 500);
     }
 

@@ -15,7 +15,7 @@ export default function CommentForm({ ideaId, company }) {
   const user = useSelector((state) => state.auth.user);
   const [comment, setComment] = useState('');
   const guestValidation = useGuestValidation({ company, fieldName: 'commentIdea' });
-
+  const userIp = useSelector((state) => state.auth.userIp);
   const schema = yup.object().shape({
     text: yup.string(),
     guestName: yup.string().when([], {
@@ -53,7 +53,8 @@ export default function CommentForm({ ideaId, company }) {
         user: user?._id,
         profilePicture: user?.profilePicture,
         name: user?.name || data.guestName,
-        email: user?.email || data.guestEmail
+        email: user?.email || data.guestEmail,
+        ip: userIp
       })
     );
     setComment('');

@@ -2,14 +2,19 @@ import CommentCard from '@/components/CommentCard';
 import ImageList from '@/components/ImageList';
 import StatusButton from '@/components/StatusButton';
 import TopicBadges from '@/components/TopicBadges';
-import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
+import {
+  toggleDeleteFeedBackModal,
+  toggleFeedBackDetailModal,
+  toggleFeedBackSubmitModal
+} from '@/redux/general/generalSlice';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { Dialog, Transition } from '@headlessui/react';
 import { DateTime } from 'luxon';
 import { useRouter } from 'next/router';
 import { Fragment, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CommentForm from '../CommentForm';
-import { Archive, Bug, Eye, Thumbtack } from '../icons';
+import { Archive, Bug, Eye, Pen, Thumbtack, Trash } from '../icons';
 import IdeaDetailAdmin from './IdeaDetailAdmin';
 
 export default function IdeaDetail({ idea, company, query }) {
@@ -19,8 +24,9 @@ export default function IdeaDetail({ idea, company, query }) {
   const user = useSelector((state) => state.auth.user);
   const comments = useSelector((state) => state.comments.comments);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
-
+  const userIp = useSelector((state) => state.auth.userIp);
   function handleClose() {
+    dispatch(toggleFeedBackDetailModal());
     const temp = query;
     delete temp?.feedback;
     router.push(
@@ -32,9 +38,7 @@ export default function IdeaDetail({ idea, company, query }) {
       { scroll: false }
     );
     setSelectedStatus(null);
-    dispatch(toggleFeedBackDetailModal());
   }
-
   return (
     <Transition.Root show={feedBackDetailModal} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={() => handleClose()}>
@@ -154,6 +158,38 @@ export default function IdeaDetail({ idea, company, query }) {
                                 viewBox="0 0 8 8">
                                 <circle cx={4} cy={4} r={3} />
                               </svg>
+                              {userIp === idea?.ip && (
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      dispatch(ideaActions.setSelectedIdea(idea));
+                                      dispatch(toggleFeedBackSubmitModal());
+                                    }}>
+                                    <Pen className="w-3 h-3 text-slate-600 dark:text-aa-300 purple:text-pt-300 hover:text-indigo-700" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => dispatch(toggleDeleteFeedBackModal())}>
+                                    <Trash className="w-3 h-3 text-slate-600 dark:text-aa-300 purple:text-pt-300 hover:text-red-500" />
+                                  </button>
+                                  <button type="button">
+                                    <Thumbtack
+                                      onClick={() =>
+                                        dispatch(
+                                          ideaActions.updateIdea({
+                                            _id: idea._id,
+                                            isPinned: !idea.isPinned
+                                          })
+                                        )
+                                      }
+                                      className={`w-3 h-3 text-slate-600 dark:text-aa-300 purple:text-pt-300 hover:text-orange-500 ${
+                                        idea.isPinned ? 'text-orange-500' : ''
+                                      }`}
+                                    />
+                                  </button>
+                                </div>
+                              )}
                               {/* <div className="flex items-center gap-2">
                               // Todo: Add Recent Users
                                 <div className="isolate flex -space-x-1 overflow-hidden">

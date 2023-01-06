@@ -38,7 +38,7 @@ export default function Layout({ children }) {
       );
       deleteCookie('invitation-token');
     }
-    if (isAuthenticated && !user) {
+    if (isAuthenticated) {
       dispatch(authActions.setUser());
     }
   }, [isAuthenticated]);

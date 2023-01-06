@@ -109,9 +109,9 @@ function* deleteIdeaSaga({ payload: id }) {
     yield put(ideaActions.deleteIdeaFailure(error));
   }
 }
-function* searchSimilarIdeasSaga({ payload: title }) {
+function* searchSimilarIdeasSaga({ payload: { title, companyId } }) {
   try {
-    const { data, errors } = yield call(ideaService.searchSimilarIdeas, title);
+    const { data, errors } = yield call(ideaService.searchSimilarIdeas, title, companyId);
     if (errors) {
       throw new Error(errors);
     }
