@@ -11,7 +11,7 @@ import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { Dialog, Transition } from '@headlessui/react';
 import { DateTime } from 'luxon';
 import { useRouter } from 'next/router';
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CommentForm from '../CommentForm';
 import { Archive, Bug, Eye, Pen, Thumbtack, Trash } from '../icons';
@@ -19,7 +19,7 @@ import IdeaDetailAdmin from './IdeaDetailAdmin';
 
 export default function IdeaDetail({ idea, company, query }) {
   const dispatch = useDispatch();
-  const [selectedStatus, setSelectedStatus] = useState();
+
   const router = useRouter();
   const user = useSelector((state) => state.auth.user);
   const comments = useSelector((state) => state.comments.comments);
@@ -37,7 +37,6 @@ export default function IdeaDetail({ idea, company, query }) {
       undefined,
       { scroll: false }
     );
-    setSelectedStatus(null);
   }
   return (
     <Transition.Root show={feedBackDetailModal} as={Fragment}>
@@ -65,7 +64,7 @@ export default function IdeaDetail({ idea, company, query }) {
                 leaveTo="translate-x-full">
                 <Dialog.Panel className="pointer-events-auto max-w-screen-lg w-screen flex bg-white">
                   {user && (company?.role === 'Owner' || company?.role === 'Admin') && (
-                    <IdeaDetailAdmin idea={idea} setSelectedStatus={setSelectedStatus} />
+                    <IdeaDetailAdmin />
                   )}
                   <div className="flex w-full h-full flex-col bg-white dark:bg-aa-900 purple:bg-pt-1000 p-8 overflow-y-auto">
                     {/* Close Button Submit Feedback Modal */}
@@ -238,11 +237,8 @@ export default function IdeaDetail({ idea, company, query }) {
                                 </div>
                               </div>
                               {/* Feedback Detail Status Badge */}
-                              {selectedStatus && (
-                                <StatusButton
-                                  name={selectedStatus?.name}
-                                  color={selectedStatus?.color}
-                                />
+                              {idea?.status && (
+                                <StatusButton name={idea?.status.name} color={idea?.status.color} />
                               )}
                             </div>
                           </div>
