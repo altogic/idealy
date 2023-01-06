@@ -111,6 +111,7 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
+      state.selectedIdea = action.payload;
     },
     updateIdeaFailure(state, action) {
       state.isLoading = false;

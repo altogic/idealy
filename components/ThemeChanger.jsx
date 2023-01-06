@@ -8,7 +8,6 @@ export default function ThemeChanger() {
     setTheme(newTheme);
     document.body.className = newTheme;
   };
-  console.log(theme);
   return (
     <>
       {/* The current theme is: {theme} */}

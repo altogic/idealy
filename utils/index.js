@@ -26,6 +26,7 @@ export async function deleteSessionCookies() {
   deleteCookie('session', SESSION_COOKIE_OPTIONS);
   deleteCookie('user', SESSION_COOKIE_OPTIONS);
   deleteCookie('session_token', SESSION_COOKIE_OPTIONS);
+  deleteCookie('subdomain', SESSION_COOKIE_OPTIONS);
 }
 
 export function randomHexColor() {

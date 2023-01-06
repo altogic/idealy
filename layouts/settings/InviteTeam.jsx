@@ -67,7 +67,10 @@ export default function InviteTeam() {
       })
     );
   }
-
+  const handleCloseDialog = () => {
+    setIsInvite(!isInvite);
+    setRoleSelected(ROLE[0]);
+  };
   useEffect(() => {
     if (company) {
       dispatch(companyActions.getCompanyMembers(company));
@@ -78,6 +81,7 @@ export default function InviteTeam() {
       reset();
     }
   }, [isInvite]);
+
   const setRoleDescription = (value) => {
     switch (value.name) {
       case 'Owner':
@@ -130,7 +134,7 @@ export default function InviteTeam() {
             />
           </div>
           <Transition appear show={isInvite} as={Fragment}>
-            <Dialog as="div" className="relative z-50" onClose={() => setIsInvite(!isInvite)}>
+            <Dialog as="div" className="relative z-50" onClose={() => handleCloseDialog()}>
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -160,7 +164,7 @@ export default function InviteTeam() {
                             icon={
                               <Close className="w-6 h-6 text-slate-500 dark:text-aa-400 purple:text-pt-400" />
                             }
-                            onClick={() => setIsInvite(!isInvite)}
+                            onClick={handleCloseDialog}
                           />
                         </div>
                         <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100 dark:bg-aa-300 purple:bg-pt-300 mb-8 ring-8 ring-indigo-50 dark:ring-aa-200 purple:ring-pt-200">
@@ -284,7 +288,7 @@ export default function InviteTeam() {
                               text="Cancel"
                               variant="blank"
                               height="44"
-                              onClick={() => setIsInvite(!isInvite)}
+                              onClick={() => handleCloseDialog()}
                             />
                             <Button
                               type="submit"

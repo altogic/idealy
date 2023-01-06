@@ -79,17 +79,8 @@ export default function PublicView() {
 
       dispatch(ideaActions.getIdeasByCompany(req));
     }
-  }, [page, router]);
-  useEffect(() => {
-    if (!ideas || !selectedIdea) {
-      return;
-    }
-    const idea = ideas.find((i) => i.id === selectedIdea.id);
-    if (!idea) {
-      return;
-    }
-    dispatch(ideaActions.setSelectedIdea(idea));
-  }, [ideas]);
+  }, [page, router.query.sort, router.query.status, router.query.topics]);
+
   useEffect(() => {
     if (router) {
       const { topics, status, sort, feedback } = router.query;
@@ -105,7 +96,7 @@ export default function PublicView() {
       if (status) {
         setFilterStatus(status.split(','));
       }
-
+      console.log('feedback', feedback);
       if (feedback && !feedBackDetailModal) {
         const ideaDetail = ideas.find((i) => i._id === feedback);
         if (ideaDetail) {
@@ -114,7 +105,7 @@ export default function PublicView() {
         }
       }
     }
-  }, [router, ideas, feedBackDetailModal]);
+  }, [router, ideas]);
 
   useEffect(() => {
     if (!feedBackDetailModal) {
@@ -183,12 +174,17 @@ export default function PublicView() {
                     dispatch(ideaActions.setSelectedIdea(idea));
                     dispatch(toggleFeedBackDetailModal());
                     setRouterQuery(router.query);
-                    router.push('/public-view', {
-                      query: {
-                        ...router.query,
-                        feedback: idea._id
-                      }
-                    });
+                    router.push(
+                      {
+                        pathname: router.pathname,
+                        query: {
+                          ...router.query,
+                          feedback: idea._id
+                        }
+                      },
+                      undefined,
+                      { scroll: false }
+                    );
                   }}
                   voted={ideaVotes.some((vote) => vote.ideaId === idea._id)}
                 />

@@ -93,3 +93,6 @@
 .ql-editor {
   @apply bg-white dark:bg-aa-800 purple:bg-pt-800 rounded-md;
 }
+.ql-snow .ql-tooltip {
+  left: 0 !important;
+}

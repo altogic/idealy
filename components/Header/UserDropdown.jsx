@@ -17,7 +17,7 @@ export default function UserDropdown({ companies }) {
       authActions.logout({
         onSuccess: () => {
           deleteSessionCookies();
-          Router.push(generateUrl('login'));
+          Router.push(generateUrl('login?clearSession=true'));
         }
       })
     );
