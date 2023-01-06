@@ -4,7 +4,8 @@ import { HYDRATE } from 'next-redux-wrapper';
 const initialState = {
   feedBackDetailModal: false,
   feedBackSubmitModal: false,
-  commentFormModal: false
+  commentFormModal: false,
+  deleteFeedBackModal: false
 };
 
 export const generalSlice = createSlice({
@@ -19,17 +20,22 @@ export const generalSlice = createSlice({
     },
     toggleCommentFormModal: (state) => {
       state.commentFormModal = !state.commentFormModal;
+    },
+    toggleDeleteFeedBackModal: (state) => {
+      state.deleteFeedBackModal = !state.deleteModal;
     }
   },
   extraReducers: (builder) => {
-    builder.addCase(HYDRATE, (state, action) => {
-      return {
-        ...state,
-        ...action.payload.general
-      };
-    });
+    builder.addCase(HYDRATE, (state, action) => ({
+      ...state,
+      ...action.payload.general
+    }));
   }
 });
-export const { toggleFeedBackDetailModal, toggleFeedBackSubmitModal, toggleCommentFormModal } =
-  generalSlice.actions;
+export const {
+  toggleFeedBackDetailModal,
+  toggleFeedBackSubmitModal,
+  toggleCommentFormModal,
+  toggleDeleteFeedBackModal
+} = generalSlice.actions;
 export default generalSlice.reducer;
