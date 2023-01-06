@@ -23,13 +23,16 @@ export default function IdeaDetail({ idea, company, query }) {
   function handleClose() {
     const temp = query;
     delete temp?.feedback;
-    router.push({
-      pathname: router.pathname,
-      query: temp
-    });
-
-    dispatch(toggleFeedBackDetailModal());
+    router.push(
+      {
+        pathname: router.pathname,
+        query: temp
+      },
+      undefined,
+      { scroll: false }
+    );
     setSelectedStatus(null);
+    dispatch(toggleFeedBackDetailModal());
   }
 
   return (

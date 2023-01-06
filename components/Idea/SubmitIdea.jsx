@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { Fragment, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
+import { toggleFeedBackDetailModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { fileActions } from '@/redux/file/fileSlice';
 import * as yup from 'yup';
 import ImageList from '@/components/ImageList';
@@ -87,6 +87,8 @@ export default function SubmitIdea({ idea }) {
     } else {
       dispatch(ideaActions.createIdea(reqData));
     }
+    setTopics([]);
+    setContent('');
     dispatch(toggleFeedBackSubmitModal());
   };
 
@@ -107,6 +109,12 @@ export default function SubmitIdea({ idea }) {
   const removeImage = (index) => {
     setImages(images.filter((_, i) => i !== index));
     dispatch(fileActions.deleteFile(fileLinks[index]));
+  };
+  const handleClose = () => {
+    dispatch(toggleFeedBackSubmitModal());
+    if (idea) {
+      dispatch(toggleFeedBackDetailModal());
+    }
   };
   useEffect(() => {
     if (open) {
@@ -137,6 +145,7 @@ export default function SubmitIdea({ idea }) {
       setInpTitle('');
     }
   }, [idea]);
+
   useEffect(() => {
     let timer;
     if (inpTitle) {
@@ -171,10 +180,7 @@ export default function SubmitIdea({ idea }) {
         onClick={() => dispatch(toggleFeedBackSubmitModal())}
       />
       <Transition.Root show={open} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-10"
-          onClose={() => dispatch(toggleFeedBackSubmitModal())}>
+        <Dialog as="div" className="relative z-10" onClose={() => handleClose()}>
           <Transition.Child
             as={Fragment}
             enter="ease-in-out duration-500"
@@ -204,7 +210,7 @@ export default function SubmitIdea({ idea }) {
                         <button
                           type="button"
                           className="inline-flex items-center justify-center w-full h-full text-slate-500 rounded-md transition hover:bg-slate-100"
-                          onClick={() => dispatch(toggleFeedBackSubmitModal())}>
+                          onClick={handleClose}>
                           <span className="sr-only">Close panel</span>
                           <svg
                             className="w-4 h-4"
@@ -348,7 +354,15 @@ export default function SubmitIdea({ idea }) {
                               <GuestForm register={register} errors={errors} />
                             )}
                           </div>
-                          <div className="flex justify-end">
+                          <div className="flex justify-end gap-4 mt-4">
+                            {idea && (
+                              <Button
+                                type="button"
+                                text="Cancel"
+                                variant="blank"
+                                onClick={handleClose}
+                              />
+                            )}
                             <Button
                               type="submit"
                               className="flex items-center justify-center bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white py-3 px-4 text-sm font-medium tracking-sm border border-transparent rounded-lg hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600 focus:outline-none"

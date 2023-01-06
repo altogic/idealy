@@ -24,8 +24,6 @@ export default function Layout({ children }) {
     const session = JSON.parse(getCookie('session') || null);
     if (userFromCookie && session) {
       dispatch(authActions.authStateChange({ user: userFromCookie, session }));
-      localStorage.setItem('user', JSON.stringify(userFromCookie));
-      localStorage.setItem('session', JSON.stringify(session));
     }
   }, []);
 
@@ -40,12 +38,9 @@ export default function Layout({ children }) {
       );
       deleteCookie('invitation-token');
     }
-    if (isAuthenticated) {
+    if (isAuthenticated && !user) {
       dispatch(authActions.setUser());
     }
-    // else {
-    //   router.push(generateUrl('public-view', company.subdomain));
-    // }
   }, [isAuthenticated]);
 
   useEffect(() => {
@@ -57,13 +52,13 @@ export default function Layout({ children }) {
   useIsomorphicLayoutEffect(() => {
     dispatch(companyActions.getUserCompanies(user?._id));
     const wildcard = window.location.hostname.split('.')[0];
-    if (company?.subdomain !== wildcard && (wildcard !== 'www' || wildcard !== 'app')) {
+    if (company?.subdomain !== wildcard) {
       dispatch(
         companyActions.getCompanyBySubdomain({
           subdomain: wildcard,
           userId: user?._id,
           onSuccess: (subdomain) => {
-            setCookie('subdomain', subdomain, 30);
+            setCookie('subdomain', subdomain);
           },
           onFail: () => {}
         })

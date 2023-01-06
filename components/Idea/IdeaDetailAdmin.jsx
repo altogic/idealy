@@ -77,7 +77,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
             </h2>
           </div>
           <div className="flex flex-col flex-1 bg-slate-50 dark:bg-aa-800 purple:bg-pt-900 p-4">
-            <Disclosure>
+            <Disclosure defaultOpen>
               {({ open }) => (
                 <>
                   <Disclosure.Button className="-mx-2 p-2 flex items-center justify-between rounded transition-colors duration-300 hover:bg-surface-10 outline-none cursor-pointer">
@@ -147,7 +147,7 @@ export default function IdeaDetailAdmin({ idea, setSelectedStatus, selectedStatu
               )}
             </Disclosure>
             <hr className="my-2 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
-            <Disclosure>
+            <Disclosure defaultOpen>
               {({ open }) => (
                 <>
                   <Disclosure.Button>

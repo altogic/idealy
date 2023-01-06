@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { generateUrl, setSessionCookie } from '../utils';
 
-export default function Login({ invitation }) {
+export default function Login({ invitation, clearSession }) {
   const loginSchema = new yup.ObjectSchema({
     email: yup.string().email().required('Email is required'),
     password: yup.string().required('Password is required')
@@ -95,6 +95,12 @@ export default function Login({ invitation }) {
       dispatch(authActions.clearError());
     };
   }, []);
+
+  useEffect(() => {
+    if (clearSession) {
+      localStorage.clear();
+    }
+  }, [clearSession]);
 
   return (
     <div>
@@ -196,7 +202,7 @@ export default function Login({ invitation }) {
     </div>
   );
 }
-export async function getServerSideProps({ req, res }) {
+export async function getServerSideProps({ req, res, query }) {
   const invitation = JSON.parse(getCookie('invitation-token', { req, res }) || null);
   deleteCookie('invitation-token', { req, res });
   deleteCookie('user', { req, res });
@@ -210,6 +216,9 @@ export async function getServerSideProps({ req, res }) {
     };
   }
   return {
-    props: {}
+    props: {
+      invitation: null,
+      clearSession: query.clearSession || false
+    }
   };
 }

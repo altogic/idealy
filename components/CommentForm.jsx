@@ -1,6 +1,5 @@
 import useGuestValidation from '@/hooks/useGuestValidation';
 import { commentActions } from '@/redux/comments/commentsSlice';
-import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -80,14 +79,6 @@ export default function CommentForm({ ideaId, company }) {
       />
       {guestValidation && <GuestForm register={register} errors={errors} />}
       <div className="flex justify-end gap-4 mt-4">
-        <Button
-          type="button"
-          text="Cancel"
-          variant="blank"
-          size="sm"
-          height="10"
-          onClick={() => dispatch(toggleFeedBackDetailModal())}
-        />
         <Button
           type="submit"
           text="Add a comment"
