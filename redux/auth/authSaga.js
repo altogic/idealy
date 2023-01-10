@@ -102,7 +102,6 @@ function* loginSaga({ payload: { email, password, onSuccess } }) {
     if (user) {
       const { data } = yield call(companyService.getUserCompanies, user._id);
       yield put(authActions.loginSuccess(user));
-      yield put(companyActions.setCompaniesSuccess(data));
       onSuccess(data, session, user);
     }
     if (errors) {
@@ -209,6 +208,19 @@ function* updateNotificationSaga({ payload }) {
     yield put(authActions.updateNotificationSettingsFailure(e));
   }
 }
+function* disableAllNotificationsSaga({ payload: { id, value } }) {
+  try {
+    const { data, errors } = yield call(AuthService.disableAllNotifications, id, value);
+    if (errors) throw errors;
+    if (data) {
+      yield put(authActions.disableAllNotificationsSuccess(data));
+      const { user } = yield call(AuthService.getUserFromDb);
+      yield call(AuthService.setUser, user);
+    }
+  } catch (e) {
+    yield put(authActions.disableAllNotificationsFailure(e));
+  }
+}
 function* updateSavedFilterSaga({ payload }) {
   try {
     const { data, errors } = yield call(AuthService.updateSavedFilters, payload);
@@ -300,6 +312,7 @@ export default function* rootSaga() {
     takeEvery(authActions.deleteProfile.type, deleteProfileSaga),
     takeEvery(authActions.getUserCompanies.type, getUserCompaniesSaga),
     takeEvery(authActions.updateUserProfile.type, updateUserProfileSaga),
-    takeEvery(authActions.authStateChange.type, authStateChangeSaga)
+    takeEvery(authActions.authStateChange.type, authStateChangeSaga),
+    takeEvery(authActions.disableAllNotifications.type, disableAllNotificationsSaga)
   ]);
 }

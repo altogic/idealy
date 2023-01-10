@@ -76,14 +76,14 @@ export default function Invitation({ invitation, errors, companies }) {
               )}
               <p className="text-slate-500 mb-8 text-center text-sm tracking-sm">
                 Do you have an account?{' '}
-                <Link href={generateUrl('login')}>
+                <Link href={generateUrl('login?isInvited=true')}>
                   <a className="font-medium text-indigo-700 tracking-sm hover:text-indigo-500">
                     Click to login
                   </a>
                 </Link>
               </p>
               <p className="text-slate-500 mb-8 text-center text-sm tracking-sm">
-                <Link href={generateUrl('register')}>
+                <Link href={generateUrl('register?isInvited=true')}>
                   <a className="font-medium text-indigo-700 tracking-sm hover:text-indigo-500">
                     Create an account
                   </a>

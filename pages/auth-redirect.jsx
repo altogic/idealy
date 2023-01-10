@@ -73,12 +73,8 @@ export default function AuthRedirect({ error, session, user, companies }) {
                   <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-red-100 mb-6 ring-8 ring-red-50">
                     <Danger className="w-8 h-8 text-red-600" />
                   </span>
-                  <h1 className="text-slate-800 mb-3 text-3xl font-semibold">
-                    Verification token expired
-                  </h1>
-                  <p className="text-slate-500 text-lg">
-                    This email verification token has already been used or has expired.
-                  </p>
+                  <h1 className="text-slate-800 mb-3 text-3xl font-semibold">Error</h1>
+                  <p className="text-slate-500 text-lg"> {router.query.error}</p>
                   <BackToLogin />
                 </div>
               </div>
@@ -110,7 +106,8 @@ export const getServerSideProps = async ({ query, req, res }) => {
     if (query.error) {
       return {
         props: {
-          error: query.error
+          error: query.error,
+          action: query.action
         }
       };
     }

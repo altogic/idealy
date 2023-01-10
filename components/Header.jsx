@@ -71,10 +71,10 @@ export default function Header() {
               {selectedCompany?.siteNavigation?.feedback && (
                 <li
                   className={cn(
-                    `flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900`,
+                    `flex items-center justify-center py-2 px-3 rounded-md transition`,
                     router.pathname === '/public-view'
                       ? 'bg-indigo-700 dark:bg-aa-700 purple:bg-pt-900'
-                      : ''
+                      : 'hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900'
                   )}>
                   <Link href={generateUrl('public-view', selectedCompany.subdomain)}>
                     <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">

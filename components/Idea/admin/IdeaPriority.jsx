@@ -7,8 +7,8 @@ import IdeaAdminTab from './IdeaAdminTab';
 
 export default function IdeaPriority() {
   const idea = useSelector((state) => state.idea.selectedIdea);
-  const [benefitFactor, setBenefitFactor] = useState();
-  const [costFactor, setCostFactor] = useState();
+  const [benefitFactor, setBenefitFactor] = useState(2);
+  const [costFactor, setCostFactor] = useState(2);
   const company = useSelector((state) => state.company.company);
   return (
     <IdeaAdminTab title="Priority">

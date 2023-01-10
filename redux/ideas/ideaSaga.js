@@ -3,7 +3,7 @@ import { realtime } from '@/utils/altogic';
 import { call, put, takeEvery, select } from 'redux-saga/effects';
 import { ideaActions } from './ideaSlice';
 
-function* getIdeasByCompanySaga({ payload: { subdomain, limit, page, sort, filter, type } }) {
+function* getIdeasByCompanySaga({ payload: { subdomain, limit, page, sort, filter } }) {
   try {
     const { data: ideas, errors } = yield call(ideaService.getIdeasByCompany, {
       subdomain,
@@ -15,28 +15,11 @@ function* getIdeasByCompanySaga({ payload: { subdomain, limit, page, sort, filte
       } this.companySubdomain == '${subdomain}' && this.isPinned == true`,
       filter: `${filter || ''} this.companySubdomain == '${subdomain}' && this.isPinned == false`
     });
-    let voteFilter = '';
-    ideas.result.forEach((idea, index) => {
-      const { _id } = idea;
-      if (index === ideas.result.length - 1) {
-        voteFilter += `this.ideaId == '${_id}'`;
-      } else {
-        voteFilter += `this.ideaId == '${_id}' || `;
-      }
-    });
-    const { data: votes } = yield call(ideaService.getIdeaVotes, voteFilter);
     if (errors) {
       throw new Error(errors);
     }
 
-    yield put(
-      ideaActions.getIdeasByCompanySuccess({
-        ideas,
-        votes,
-        type,
-        page
-      })
-    );
+    yield put(ideaActions.getIdeasByCompanySuccess(ideas));
   } catch (error) {
     yield put(ideaActions.getIdeasByCompanyFailure(error));
   }
@@ -55,9 +38,9 @@ function* createIdeaSaga({ payload: req }) {
     yield put(ideaActions.createIdeaFailure(error));
   }
 }
-function* voteIdeaSaga({ payload: ideaId }) {
+function* voteIdeaSaga({ payload }) {
   try {
-    const { data, errors } = yield call(ideaService.voteIdea, { ideaId });
+    const { data, errors } = yield call(ideaService.voteIdea, payload);
     if (errors) {
       throw new Error(errors);
     }
@@ -68,18 +51,18 @@ function* voteIdeaSaga({ payload: ideaId }) {
     yield put(ideaActions.voteIdeaFailure(error));
   }
 }
-function* downvoteIdeaSaga({ payload: id }) {
+function* downVoteIdeaSaga({ payload }) {
   try {
-    const { errors } = yield call(ideaService.downvoteIdea, id);
+    const { errors } = yield call(ideaService.downVoteIdea, payload);
     if (errors) {
       throw new Error(errors);
     }
 
-    yield put(ideaActions.downvoteIdeaSuccess(id));
+    yield put(ideaActions.downVoteIdeaSuccess(payload.ideaId));
     const company = yield select((state) => state.company.company);
-    realtime.send(company._id, 'downvote-idea', id);
+    realtime.send(company._id, 'downVote-idea', payload.ideaId);
   } catch (error) {
-    yield put(ideaActions.downvoteIdeaFailure(error));
+    yield put(ideaActions.downVoteIdeaFailure(error));
   }
 }
 function* updateIdeaSaga({ payload: idea }) {
@@ -131,14 +114,26 @@ function* deleteIdeaCoverImage({ payload: id }) {
     yield put(ideaActions.deleteIdeaCoverImageFailure(error));
   }
 }
+function* getUserVotesSaga({ payload: { userIp, companyId } }) {
+  try {
+    const { data, errors } = yield call(ideaService.getUserVotes, userIp, companyId);
+    if (errors) {
+      throw new Error(errors);
+    }
+    yield put(ideaActions.getUserVotesSuccess(data));
+  } catch (error) {
+    yield put(ideaActions.getUserVotesFailure(error));
+  }
+}
 
 export default function* ideaSaga() {
   yield takeEvery(ideaActions.getIdeasByCompany.type, getIdeasByCompanySaga);
   yield takeEvery(ideaActions.createIdea.type, createIdeaSaga);
   yield takeEvery(ideaActions.voteIdea.type, voteIdeaSaga);
-  yield takeEvery(ideaActions.downvoteIdea.type, downvoteIdeaSaga);
+  yield takeEvery(ideaActions.downVoteIdea.type, downVoteIdeaSaga);
   yield takeEvery(ideaActions.updateIdea.type, updateIdeaSaga);
   yield takeEvery(ideaActions.deleteIdea.type, deleteIdeaSaga);
   yield takeEvery(ideaActions.searchSimilarIdeas.type, searchSimilarIdeasSaga);
   yield takeEvery(ideaActions.deleteIdeaCoverImage.type, deleteIdeaCoverImage);
+  yield takeEvery(ideaActions.getUserVotes.type, getUserVotesSaga);
 }

@@ -1,44 +1,18 @@
 import VoteIdea from '@/components/Idea/VoteIdea';
-import { toggleCommentFormModal } from '@/redux/general/generalSlice';
-import { DateTime } from 'luxon';
-import { useDispatch } from 'react-redux';
-import { Archive, Bug, Comment, Eye, Thumbtack } from './icons';
-import StatusButton from './StatusButton';
+import { Comment } from './icons';
+import IdeaBadges from './Idea/IdeaBadges';
+import IdeaInfo from './Idea/IdeaInfo';
+import StatusBadge from './StatusBadge';
 import TopicBadges from './TopicBadges';
 
 export default function PublicViewCard({ idea, onClick, voted }) {
-  const dispatch = useDispatch();
-
   return (
     <div className="px-2 py-6 lg:p-6 rounded-lg transition hover:bg-slate-50 dark:hover:bg-aa-800 purple:hover:bg-pt-900">
       <div className="flex items-start lg:items-center gap-6">
         <VoteIdea voted={voted} voteCount={idea?.voteCount} ideaId={idea?._id} />
         <button type="button" onClick={onClick} className="w-full">
           <div className="flex items-center gap-2 mb-2">
-            {idea?.isPinned && (
-              <span className="inline-flex items-center rounded-full bg-orange-50 py-1 px-2 text-xs font-medium text-orange-700">
-                <Thumbtack className="w-3 h-3 mr-1 text-orange-500" />
-                Pinned
-              </span>
-            )}
-            {idea?.isArchived && (
-              <span className="inline-flex items-center rounded-full bg-yellow-50 py-1 px-2 text-xs font-medium text-yellow-700">
-                <Archive className="w-3 h-3 mr-1 text-yellow-500" />
-                Archived
-              </span>
-            )}
-            {idea?.isPrivate && (
-              <span className="inline-flex items-center rounded-full bg-blue-50 py-1 px-2 text-xs font-medium text-blue-700">
-                <Eye className="w-3 h-3 mr-1 text-blue-500" />
-                Private
-              </span>
-            )}
-            {idea?.isBug && (
-              <span className="inline-flex items-center rounded-full bg-red-50 py-1 px-2 text-xs font-medium text-red-700">
-                <Bug className="w-3 h-3 mr-1 text-red-500" />
-                Bug
-              </span>
-            )}
+            <IdeaBadges idea={idea} />
             <h2 className="max-w-[500px] text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left truncate">
               {idea?.title}
             </h2>
@@ -50,23 +24,7 @@ export default function PublicViewCard({ idea, onClick, voted }) {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             {/* Bottom Left */}
             <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-3">
-              <div className="flex items-center gap-3">
-                {/* User */}
-                <span className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm font-medium tracking-sm">
-                  {idea?.author
-                    ? idea?.author.name
-                    : idea?.guestName
-                    ? idea?.guestName
-                    : 'Anonymous'}
-                </span>
-                <svg className="h-1 w-1 text-slate-500" fill="currentColor" viewBox="0 0 8 8">
-                  <circle cx={4} cy={4} r={3} />
-                </svg>
-                {/* Date */}
-                <span className="text-slate-500 dark:text-aa-300 purple:text-pt-300 text-sm tracking-sm">
-                  {DateTime.fromISO(idea?.createdAt).setLocale('en').toRelative()}
-                </span>
-              </div>
+              <IdeaInfo idea={idea} />
               <svg
                 className="hidden lg:block h-1 w-1 text-slate-500"
                 fill="currentColor"
@@ -84,20 +42,15 @@ export default function PublicViewCard({ idea, onClick, voted }) {
             <div className="flex items-center justify-between lg:justify-start gap-3">
               {/* Badges */}
               {idea?.status && (
-                <StatusButton name={idea?.status?.name} color={idea?.status?.color} />
+                <StatusBadge name={idea?.status?.name} color={idea?.status?.color} />
               )}
               {/* Comments Button */}
-              <button
+              <div
                 type="button"
-                className="inline-flex items-center gap-1 text-slate-400 dark:text-aa-400 purple:text-pt-400"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onClick();
-                  dispatch(toggleCommentFormModal());
-                }}>
+                className="inline-flex items-center gap-1 text-slate-400 dark:text-aa-400 purple:text-pt-400">
                 <Comment className="w-6 h-6" />
                 {idea?.commentCount}
-              </button>
+              </div>
             </div>
           </div>
         </button>

@@ -4,7 +4,7 @@ import TopicBadges from '@/components/TopicBadges';
 import { useSelector, useDispatch } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
 import _ from 'lodash';
-import StatusButton from '@/components/StatusButton';
+import StatusBadge from '@/components/StatusBadge';
 
 export default function FourthWizard() {
   const companyTopics = useSelector((state) => state.company.companyTopics);
@@ -120,7 +120,7 @@ export default function FourthWizard() {
                 <TopicBadges key={topic._id} badgeName={topic.name} />
               ))}
             </div>
-            {status && <StatusButton name={status?.name} color={status?.color} />}
+            {status && <StatusBadge name={status?.name} color={status?.color} />}
           </div>
         </div>
       </div>

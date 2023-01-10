@@ -23,7 +23,7 @@ export default function PublicView({ userIp }) {
   const [filterTopics, setFilterTopics] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [routerQuery, setRouterQuery] = useState();
-  const [isFiltered, setIsFiltered] = useState();
+  const [sortType, setSortType] = useState();
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -41,7 +41,6 @@ export default function PublicView({ userIp }) {
   const handleDelete = () => {
     dispatch(ideaActions.deleteIdea(selectedIdea._id));
     dispatch(toggleFeedBackDetailModal());
-    dispatch(toggleDeleteFeedBackModal());
   };
 
   const handleFilter = (filterTopics, filterStatus) => {
@@ -67,11 +66,29 @@ export default function PublicView({ userIp }) {
   const handleSort = (sort) => {
     if (sort) {
       const sortType = IDEA_SORT_TYPES.find((s) => s.url === sort);
-      setIsFiltered(sortType);
+      setSortType(sortType);
       return sortType?.query;
     }
-    setIsFiltered(IDEA_SORT_TYPES[2]);
+    setSortType(IDEA_SORT_TYPES[2]);
     return IDEA_SORT_TYPES[2].query;
+  };
+
+  const handleClickIdea = (idea) => {
+    dispatch(commentActions.getComments(idea._id));
+    dispatch(ideaActions.setSelectedIdea(idea));
+    dispatch(toggleFeedBackDetailModal());
+    setRouterQuery(router.query);
+    router.push(
+      {
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          feedback: idea._id
+        }
+      },
+      undefined,
+      { scroll: false }
+    );
   };
 
   const getIdeasByCompany = useCallback(() => {
@@ -79,9 +96,9 @@ export default function PublicView({ userIp }) {
       const req = {
         subdomain: window.location.hostname.split('.')[0],
         limit: 10,
-        page,
         filter: handleFilter(router.query.topics?.split(','), router.query.status?.split(',')),
-        sort: handleSort(router.query.sort)
+        sort: handleSort(router.query.sort),
+        page
       };
       if (!user && !company?.role) {
         req.filter +=
@@ -97,9 +114,9 @@ export default function PublicView({ userIp }) {
       const { topics, status, sort, feedback } = router.query;
       if (sort) {
         const sortType = IDEA_SORT_TYPES.find((s) => s.url === sort);
-        setIsFiltered(sortType);
+        setSortType(sortType);
       } else {
-        setIsFiltered(IDEA_SORT_TYPES[2]);
+        setSortType(IDEA_SORT_TYPES[2]);
       }
       if (topics) {
         setFilterTopics(topics.split(','));
@@ -130,6 +147,7 @@ export default function PublicView({ userIp }) {
       if (!company.privacy.isPublic && !company.privacy.isPublic.userApproval) {
         router.push('/404');
       }
+      dispatch(ideaActions.getUserVotes({ userIp, companyId: company._id }));
     }
   }, [company]);
 
@@ -152,16 +170,13 @@ export default function PublicView({ userIp }) {
               <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
                 Feature Ideas
               </h1>
-              <p className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-base tracking-sm">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.{' '}
-              </p>
             </div>
             {isSubmitIdeaVisible && <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />}
           </div>
           <div className="flex items-start justify-between">
             <FilterIdea
-              isFiltered={isFiltered}
-              setIsFiltered={setIsFiltered}
+              sortType={sortType}
+              setSortType={setSortType}
               filterTopics={filterTopics}
               filterStatus={filterStatus}
               setFilterTopics={setFilterTopics}
@@ -180,24 +195,10 @@ export default function PublicView({ userIp }) {
                     className="inline-block w-full py-6 border-b border-slate-200 last:border-0 first:pt-0">
                     <PublicViewCard
                       idea={idea}
-                      onClick={() => {
-                        dispatch(commentActions.getComments(idea._id));
-                        dispatch(ideaActions.setSelectedIdea(idea));
-                        dispatch(toggleFeedBackDetailModal());
-                        setRouterQuery(router.query);
-                        router.push(
-                          {
-                            pathname: router.pathname,
-                            query: {
-                              ...router.query,
-                              feedback: idea._id
-                            }
-                          },
-                          undefined,
-                          { scroll: false }
-                        );
-                      }}
-                      voted={ideaVotes.some((vote) => vote.ideaId === idea._id)}
+                      onClick={() => handleClickIdea(idea)}
+                      voted={ideaVotes.some(
+                        (vote) => vote.ip === userIp && vote.ideaId === idea._id
+                      )}
                     />
                   </div>
                 ))}

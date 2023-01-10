@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { shadeHexColor } from '../utils';
 
-export default function StatusButton({ name, color, className }) {
+export default function StatusBadge({ name, color, className }) {
   const [bgColor, setBgColor] = useState();
 
   useEffect(() => {
@@ -11,8 +11,7 @@ export default function StatusButton({ name, color, className }) {
   }, [color]);
 
   return (
-    <button
-      type="button"
+    <div
       className={
         className || 'inline-flex items-center rounded-full px-3 py-0.5 text-xs font-medium'
       }
@@ -21,6 +20,6 @@ export default function StatusButton({ name, color, className }) {
         <circle cx={4} cy={4} r={3} />
       </svg>
       {name}
-    </button>
+    </div>
   );
 }

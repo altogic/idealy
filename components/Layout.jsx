@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react';
-import Head from 'next/head';
-import { deleteCookie, getCookie } from 'cookies-next';
-import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux';
 import { authActions } from '@/redux/auth/authSlice';
 import { companyActions } from '@/redux/company/companySlice';
+import { deleteCookie, getCookie } from 'cookies-next';
 import _ from 'lodash';
-import useIsomorphicLayoutEffect from '@/hooks/useIsomorphicLayoutEffect';
-import Realtime from './Realtime';
-import Header from './Header';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { generateUrl, setCookie } from '../utils';
+import Header from './Header';
+import Realtime from './Realtime';
 
 export default function Layout({ children }) {
   const router = useRouter();
@@ -53,8 +52,10 @@ export default function Layout({ children }) {
     }
   }, [companies]);
 
-  useIsomorphicLayoutEffect(() => {
-    dispatch(companyActions.getUserCompanies(user?._id));
+  useEffect(() => {
+    if (user) {
+      dispatch(companyActions.getUserCompanies(user?._id));
+    }
     const wildcard = window.location.hostname.split('.')[0];
     if (company?.subdomain !== wildcard) {
       dispatch(
@@ -68,7 +69,7 @@ export default function Layout({ children }) {
         })
       );
     }
-  }, []);
+  }, [user]);
 
   return (
     <div className="bg-white dark:bg-aa-900 purple:bg-pt-1000">

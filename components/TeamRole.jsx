@@ -30,9 +30,18 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
           id,
           isRegistered
         });
+        dispatch(
+          notificationActions.sendNotification({
+            user: userId,
+            companyId: company._id,
+            message: `You have been removed from <b>${company?.name}</b>`
+          })
+        );
       }
     } else {
-      dispatch(companyActions.deleteUnregisteredMember({ id, email: name }));
+      dispatch(
+        companyActions.deleteUnregisteredMember({ id, email: name, companyId: company._id })
+      );
     }
     realtime.send(company._id, 'delete-member', {
       companyId: company._id,
@@ -50,13 +59,6 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
       userId,
       companyName: company.name
     });
-    dispatch(
-      notificationActions.sendNotification({
-        user: userId,
-        companyId: company._id,
-        message: `You have been removed from <b>${company?.name}</b>`
-      })
-    );
   };
   const handleRoleChange = (role) => {
     setSelected(role);

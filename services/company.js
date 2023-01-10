@@ -40,8 +40,7 @@ const companyService = {
   getUserCompanies: (userId) => endpoint.get('/user/companies', { userId }),
   updateCompletedStatus: ({ id, companyId }) =>
     endpoint.put(`/company/${companyId}/status`, { id }),
-  deleteAllIdeas: (companyId) =>
-    db.model('company.ideas').filter(`_parent == '${companyId}'`).delete(),
+  deleteAllIdeas: (companyId) => db.model('ideas').filter(`company == '${companyId}'`).delete(),
   deleteCompany: (companyId) => endpoint.delete(`/company/${companyId}`),
   deleteCompanyMember: (companyId, userId) =>
     db

@@ -159,8 +159,12 @@ export const companySlice = createSlice({
       state.isLoading = true;
     },
     addNewMemberSuccess(state, action) {
-      state.isLoading = false;
-      state.companyMembers = [...state.companyMembers, action.payload];
+      try {
+        state.isLoading = false;
+        state.companyMembers = [...state.companyMembers, action.payload];
+      } catch (error) {
+        console.log(error);
+      }
     },
     addNewMemberFailed(state, action) {
       state.isLoading = false;
