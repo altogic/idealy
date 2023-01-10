@@ -6,6 +6,7 @@ import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { Dialog, Disclosure, Transition } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import _ from 'lodash';
+import cn from 'classnames';
 import { Fragment, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -247,28 +248,30 @@ export default function SubmitIdea({ idea }) {
                               onKeyUp={(e) => setInpTitle(e.target.value)}
                             />
                             {!!similarIdeas?.length && (
-                              <div className="w-full mt-8 rounded-md border border-slate-200">
-                                <div className="w-full bg-slate-50">
-                                  <Disclosure defaultOpen>
-                                    {({ open }) => (
-                                      <>
-                                        <Disclosure.Button className="flex w-full justify-between rounded-lg bg-slate-100 px-4 py-2 text-left text-sm font-medium text-slate-900 hover:bg-slate-200 focus:outline-none focus-visible:ring focus-visible:ring-slate-500 focus-visible:ring-opacity-75 border-b border-slate-300">
-                                          <span>{open ? 'Hide' : 'Show'} similar ideas</span>
-                                          <ChevronUp
-                                            className={`${
-                                              open ? 'rotate-180 transform' : ''
-                                            } h-5 w-5 text-slate-500`}
-                                          />
-                                        </Disclosure.Button>
-                                        <Disclosure.Panel className="max-h-40 px-4 pt-4 pb-2 text-sm text-gray-500 overflow-hidden overflow-y-auto overflow-scroll-fix">
-                                          {similarIdeas.map((idea) => (
-                                            <SimilarIdeaCard key={idea?._id} idea={idea} />
-                                          ))}
-                                        </Disclosure.Panel>
-                                      </>
-                                    )}
-                                  </Disclosure>
-                                </div>
+                              <div className="w-full mt-8 rounded-lg border border-slate-200 overflow-hidden">
+                                <Disclosure defaultOpen>
+                                  {({ open }) => (
+                                    <>
+                                      <Disclosure.Button className="flex w-full justify-between bg-slate-100 text-slate-700 dark:text-aa-100 purple:text-pt-100 px-4 py-2 text-left text-sm font-medium hover:bg-slate-200 focus:outline-none focus-visible:ring focus-visible:ring-slate-500 focus-visible:ring-opacity-75">
+                                        <span>{open ? 'Hide' : 'Show'} similar ideas</span>
+                                        <ChevronUp
+                                          className={`${
+                                            open ? 'rotate-180 transform' : ''
+                                          } h-5 w-5 text-slate-500`}
+                                        />
+                                      </Disclosure.Button>
+                                      <Disclosure.Panel
+                                        className={cn(
+                                          similarIdeas.length > 1 ? 'max-h-52' : 'max-h-40',
+                                          `p-4 text-sm text-gray-500 overflow-hidden overflow-y-auto overflow-scroll-fix`
+                                        )}>
+                                        {similarIdeas.map((idea) => (
+                                          <SimilarIdeaCard key={idea?._id} idea={idea} />
+                                        ))}
+                                      </Disclosure.Panel>
+                                    </>
+                                  )}
+                                </Disclosure>
                               </div>
                             )}
                           </div>
