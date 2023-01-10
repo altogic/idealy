@@ -5,7 +5,7 @@ export default function IdeaBadges({ idea }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
-        {IDEA_BADGES.map(
+        {IDEA_BADGES?.map(
           (badge) =>
             idea?.[badge.field] && (
               <Badge
