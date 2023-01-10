@@ -24,6 +24,10 @@ export default function Layout({ children }) {
     const session = JSON.parse(getCookie('session') || null);
     if (userFromCookie && session) {
       dispatch(authActions.authStateChange({ user: userFromCookie, session }));
+      console.log('userFromCookie', JSON.stringify(userFromCookie));
+      console.log('session', JSON.stringify(session));
+      localStorage.setItem('user', JSON.stringify(userFromCookie));
+      localStorage.setItem('session', JSON.stringify(session));
     }
   }, []);
 
