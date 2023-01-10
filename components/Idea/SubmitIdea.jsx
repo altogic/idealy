@@ -180,7 +180,7 @@ export default function SubmitIdea({ idea }) {
         onClick={() => dispatch(toggleFeedBackSubmitModal())}
       />
       <Transition.Root show={open} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={() => handleClose()}>
+        <Dialog as="div" className="relative z-50" onClose={() => handleClose()}>
           <Transition.Child
             as={Fragment}
             enter="ease-in-out duration-500"

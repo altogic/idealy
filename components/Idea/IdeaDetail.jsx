@@ -40,7 +40,7 @@ export default function IdeaDetail({ idea, company, query }) {
   }
   return (
     <Transition.Root show={feedBackDetailModal} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={() => handleClose()}>
+      <Dialog as="div" className="relative z-50" onClose={() => handleClose()}>
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-500"
