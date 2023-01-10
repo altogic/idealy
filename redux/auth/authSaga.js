@@ -68,7 +68,6 @@ function* registerSaga({ payload: req }) {
       throw errors.items;
     }
   } catch (e) {
-    console.log(e);
     yield put(authActions.registerFailure(e));
   }
 }

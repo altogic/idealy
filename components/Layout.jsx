@@ -45,9 +45,6 @@ export default function Layout({ children }) {
     if (isAuthenticated) {
       dispatch(authActions.setUser());
     }
-    // else {
-    //   router.push(generateUrl('public-view', company.subdomain));
-    // }
   }, [isAuthenticated]);
 
   useEffect(() => {
@@ -59,13 +56,13 @@ export default function Layout({ children }) {
   useIsomorphicLayoutEffect(() => {
     dispatch(companyActions.getUserCompanies(user?._id));
     const wildcard = window.location.hostname.split('.')[0];
-    if (company?.subdomain !== wildcard && (wildcard !== 'www' || wildcard !== 'app')) {
+    if (company?.subdomain !== wildcard) {
       dispatch(
         companyActions.getCompanyBySubdomain({
           subdomain: wildcard,
           userId: user?._id,
           onSuccess: (subdomain) => {
-            setCookie('subdomain', subdomain, 30);
+            setCookie('subdomain', subdomain);
           },
           onFail: () => {}
         })
@@ -78,12 +75,13 @@ export default function Layout({ children }) {
       <Head>
         <link rel="icon" href={company?.favicon} />
       </Head>
-      <Header />
-      <main className="px-4">
-        {children}
-        <Realtime />
-      </main>
-      {/* <Footer /> */}
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <main className="pt-[93px] px-4">
+          {children}
+          <Realtime />
+        </main>
+      </div>
       {company?.whiteLabel?.isHideBanner && (
         <a href="https://www.altogic.com/" target="_blank" rel="noopener noreferrer">
           <img className="fixed bottom-8 right-8" src="./powered-by-altogic.svg" alt="" />

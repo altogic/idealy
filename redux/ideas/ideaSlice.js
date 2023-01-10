@@ -111,6 +111,7 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
+      state.selectedIdea = action.payload;
     },
     updateIdeaFailure(state, action) {
       state.isLoading = false;
@@ -158,6 +159,29 @@ export const ideaSlice = createSlice({
     },
     setSelectedIdea(state, action) {
       state.selectedIdea = action.payload;
+    },
+    deleteIdeaCoverImage(state) {
+      state.isLoading = true;
+    },
+    deleteIdeaCoverImageSuccess(state, action) {
+      state.isLoading = false;
+      state.ideas = state.ideas.map((idea) => {
+        if (idea._id === action.payload) {
+          return {
+            ...idea,
+            coverImage: null
+          };
+        }
+        return idea;
+      });
+      state.selectedIdea = {
+        ...state.selectedIdea,
+        coverImage: null
+      };
+    },
+    deleteIdeaCoverImageFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   },
   extraReducers: (builder) => {

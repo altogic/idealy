@@ -21,7 +21,8 @@ const initialState = {
   isMuted: false,
   isAuthenticated: !!AuthService.getUser(),
   sessions: [],
-  foundUsers: []
+  foundUsers: [],
+  userIp: null
 };
 
 export const authSlice = createSlice({
@@ -234,6 +235,9 @@ export const authSlice = createSlice({
     authStateChange(state, action) {
       state.user = action.payload.user;
       state.isAuthenticated = true;
+    },
+    setUserIp(state, action) {
+      state.userIp = action.payload;
     }
   },
   extraReducers: (builder) => {

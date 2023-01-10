@@ -17,7 +17,7 @@ export default function UserDropdown({ companies }) {
       authActions.logout({
         onSuccess: () => {
           deleteSessionCookies();
-          Router.push(generateUrl('login'));
+          Router.push(generateUrl('login?clearSession=true'));
         }
       })
     );
@@ -42,9 +42,9 @@ export default function UserDropdown({ companies }) {
         leave="transition ease-in duration-75"
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95">
-        <Menu.Items className="flex flex-col absolute right-0 mt-2 w-56 origin-top-right rounded-lg bg-white dark:bg-aa-800 purple:bg-pt-900 shadow-lg overflow-hidden focus:outline-none z-50">
+        <Menu.Items className="flex flex-col absolute right-0 mt-2 w-56 origin-top-right rounded-lg bg-white dark:bg-aa-700 purple:bg-pt-900 shadow-lg overflow-hidden focus:outline-none z-50">
           <Menu.Item>
-            <div className="flex items-center w-full px-4 border-b border-gray-200 dark:border-aa-400 purple:border-pt-400">
+            <div className="flex items-center w-full px-4 border-b border-gray-200 dark:border-aa-600 purple:border-pt-800">
               <span className="inline-block">
                 <Avatar src={user?.profilePicture} alt={user?.name} />
               </span>
@@ -61,17 +61,17 @@ export default function UserDropdown({ companies }) {
               </div>
             </div>
           </Menu.Item>
-          <div className="flex flex-col divide-y divide-gray-200 dark:divide-aa-400 purple:divide-pt-400">
+          <div className="flex flex-col divide-y divide-gray-200 dark:divide-aa-600 purple:divide-pt-800">
             {selectedCompany?.role !== 'Moderator' && (
               <Menu.Button onClick={() => Router.push('/settings?tab=general%20settings')}>
-                <span className="inline-flex items-center gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-700 purple:hover:bg-pt-700">
+                <span className="inline-flex items-center gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700">
                   <Settings className="w-4 h-4 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
                   Settings
                 </span>
               </Menu.Button>
             )}
             <Menu.Button onClick={() => Router.push('/settings?tab=profile')}>
-              <span className="inline-flex items-start gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-700 purple:hover:bg-pt-700">
+              <span className="inline-flex items-start gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700">
                 <People className="w-4 h-4 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
                 Profile
               </span>
@@ -84,7 +84,7 @@ export default function UserDropdown({ companies }) {
                   onClick={() => {
                     Router.push(generateUrl('dashboard', company.subdomain));
                   }}>
-                  <span className="flex items-center justify-between gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm hover:bg-slate-50 dark:hover:bg-aa-700 purple:hover:bg-pt-700">
+                  <span className="flex items-center justify-between gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700">
                     <div className="inline-flex items-center gap-3">
                       <CompanyAvatar
                         logoUrl={company.logoUrl}
@@ -104,7 +104,7 @@ export default function UserDropdown({ companies }) {
               {companies?.length > 3 && (
                 <Menu.Item>
                   <Link href={generateUrl('select-company')}>
-                    <a className="inline-flex items-center gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-700 purple:hover:bg-pt-700">
+                    <a className="inline-flex items-center gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700">
                       <Switch className="w-4 h-4 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
                       Select Company
                     </a>
@@ -114,7 +114,7 @@ export default function UserDropdown({ companies }) {
               {user?.canCreateCompany && (
                 <Menu.Item>
                   <Link href={generateUrl('create-new-company')}>
-                    <a className="inline-flex items-center gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-700 purple:hover:bg-pt-700">
+                    <a className="inline-flex items-center gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700">
                       <Plus className="w-4 h-4 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
                       Create a company
                     </a>
@@ -125,7 +125,7 @@ export default function UserDropdown({ companies }) {
             <Menu.Item>
               <button
                 type="button"
-                className="inline-flex items-center gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-700 purple:hover:bg-pt-700"
+                className="inline-flex items-center gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700"
                 onClick={handleLogout}>
                 <Logout className="w-4 h-4 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
                 Log out

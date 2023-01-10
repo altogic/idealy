@@ -11,6 +11,11 @@ const ideaService = {
     }),
   updateIdea: (req) => endpoint.put('/idea', req),
   deleteIdea: (id) => db.model('ideas').object(id).delete(),
-  searchSimilarIdeas: (title) => endpoint.get('/idea/search', { title })
+  searchSimilarIdeas: (title, companyId) => endpoint.get('/idea/search', { title, companyId }),
+  deleteIdeaCoverImage: (id) =>
+    db
+      .model('ideas')
+      .object(id)
+      .updateFields([{ field: 'coverImage', updateType: 'unset' }])
 };
 export default ideaService;

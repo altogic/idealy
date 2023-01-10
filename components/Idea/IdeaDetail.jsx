@@ -2,42 +2,41 @@ import CommentCard from '@/components/CommentCard';
 import ImageList from '@/components/ImageList';
 import StatusButton from '@/components/StatusButton';
 import TopicBadges from '@/components/TopicBadges';
-import { commentActions } from '@/redux/comments/commentsSlice';
-import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
+import {
+  toggleDeleteFeedBackModal,
+  toggleFeedBackDetailModal,
+  toggleFeedBackSubmitModal
+} from '@/redux/general/generalSlice';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { Dialog, Transition } from '@headlessui/react';
 import { DateTime } from 'luxon';
 import { useRouter } from 'next/router';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CommentForm from '../CommentForm';
-import { Archive, Bug, Eye, Thumbtack } from '../icons';
+import { Archive, Bug, Eye, Pen, Thumbtack, Trash } from '../icons';
 import IdeaDetailAdmin from './IdeaDetailAdmin';
 
-export default function IdeaDetail({ idea, company }) {
+export default function IdeaDetail({ idea, company, query }) {
   const dispatch = useDispatch();
-  const [selectedStatus, setSelectedStatus] = useState();
+
   const router = useRouter();
   const user = useSelector((state) => state.auth.user);
   const comments = useSelector((state) => state.comments.comments);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
-  const [routerQuery, setRouterQuery] = useState();
-
-  useEffect(() => {
-    if (router.isReady && feedBackDetailModal) {
-      setRouterQuery(router.query);
-      dispatch(commentActions.getComments(router.query.feedback));
-    }
-  }, [router.isReady]);
-
+  const userIp = useSelector((state) => state.auth.userIp);
   function handleClose() {
-    delete routerQuery?.feedback;
-    router.push({
-      pathname: router.pathname,
-      query: routerQuery
-    });
-
     dispatch(toggleFeedBackDetailModal());
-    setSelectedStatus(null);
+    const temp = query;
+    delete temp?.feedback;
+    router.push(
+      {
+        pathname: router.pathname,
+        query: temp
+      },
+      undefined,
+      { scroll: false }
+    );
   }
   return (
     <Transition.Root show={feedBackDetailModal} as={Fragment}>
@@ -65,7 +64,7 @@ export default function IdeaDetail({ idea, company }) {
                 leaveTo="translate-x-full">
                 <Dialog.Panel className="pointer-events-auto max-w-screen-lg w-screen flex bg-white">
                   {user && (company?.role === 'Owner' || company?.role === 'Admin') && (
-                    <IdeaDetailAdmin idea={idea} setSelectedStatus={setSelectedStatus} />
+                    <IdeaDetailAdmin />
                   )}
                   <div className="flex w-full h-full flex-col bg-white dark:bg-aa-900 purple:bg-pt-1000 p-8 overflow-y-auto">
                     {/* Close Button Submit Feedback Modal */}
@@ -93,7 +92,7 @@ export default function IdeaDetail({ idea, company }) {
                     </div>
                     <div>
                       {/* Card Detail Top */}
-                      <div className="flex gap-6 p-6">
+                      <div>
                         <div>
                           <div className="flex flex-col gap-2 mb-2">
                             <div className="flex items-center gap-2">
@@ -158,6 +157,38 @@ export default function IdeaDetail({ idea, company }) {
                                 viewBox="0 0 8 8">
                                 <circle cx={4} cy={4} r={3} />
                               </svg>
+                              {userIp === idea?.ip && (
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      dispatch(ideaActions.setSelectedIdea(idea));
+                                      dispatch(toggleFeedBackSubmitModal());
+                                    }}>
+                                    <Pen className="w-3 h-3 text-slate-600 dark:text-aa-300 purple:text-pt-300 hover:text-indigo-700" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => dispatch(toggleDeleteFeedBackModal())}>
+                                    <Trash className="w-3 h-3 text-slate-600 dark:text-aa-300 purple:text-pt-300 hover:text-red-500" />
+                                  </button>
+                                  <button type="button">
+                                    <Thumbtack
+                                      onClick={() =>
+                                        dispatch(
+                                          ideaActions.updateIdea({
+                                            _id: idea._id,
+                                            isPinned: !idea.isPinned
+                                          })
+                                        )
+                                      }
+                                      className={`w-3 h-3 text-slate-600 dark:text-aa-300 purple:text-pt-300 hover:text-orange-500 ${
+                                        idea.isPinned ? 'text-orange-500' : ''
+                                      }`}
+                                    />
+                                  </button>
+                                </div>
+                              )}
                               {/* <div className="flex items-center gap-2">
                               // Todo: Add Recent Users
                                 <div className="isolate flex -space-x-1 overflow-hidden">
@@ -206,11 +237,8 @@ export default function IdeaDetail({ idea, company }) {
                                 </div>
                               </div>
                               {/* Feedback Detail Status Badge */}
-                              {selectedStatus && (
-                                <StatusButton
-                                  name={selectedStatus?.name}
-                                  color={selectedStatus?.color}
-                                />
+                              {idea?.status && (
+                                <StatusButton name={idea?.status.name} color={idea?.status.color} />
                               )}
                             </div>
                           </div>

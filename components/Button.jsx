@@ -38,7 +38,7 @@ export default function Button({
           : '',
         variant === 'red' ? 'bg-red-600 text-white border-transparent hover:bg-red-700' : '',
         variant === 'indigo'
-          ? 'bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white border-transparent hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600'
+          ? 'bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white dark:text-aa-100 purple:text-pt-100 border-transparent hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600'
           : ''
       )}
       {...props}

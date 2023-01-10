@@ -16,7 +16,7 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
   return (
     <div
       className={`flex flex-col items-center bg-white px-3 md:px-5 border rounded-lg h-20 ${
-        voted ? 'border-indigo-500' : 'border-gray-400'
+        voted ? 'border-2 border-indigo-500' : 'border-gray-400'
       }`}>
       {canVote && (
         <button

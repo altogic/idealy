@@ -40,7 +40,6 @@ export default function AuthRedirect({ error, session, user, companies }) {
   }
   useEffect(() => {
     checkProps();
-    console.log('*********1');
     if (router.query.status === 401) {
       alert(router.query.error);
       router.push(generateUrl('login'));

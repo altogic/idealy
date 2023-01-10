@@ -5,19 +5,24 @@ import InfiniteScroll from '@/components/InfiniteScroll';
 import Layout from '@/components/Layout';
 import PublicViewCard from '@/components/PublicViewCard';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
-import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
+import { commentActions } from '@/redux/comments/commentsSlice';
+import { toggleDeleteFeedBackModal, toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { IDEA_SORT_TYPES } from 'constants';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { authActions } from '@/redux/auth/authSlice';
+import DeleteModal from '@/components/DeleteModal';
+import { Danger } from '@/components/icons';
+import EmptyState from '@/components/EmptyState';
 
-export default function PublicView() {
+export default function PublicView({ userIp }) {
   const [page, setPage] = useState(1);
   const [filterTopics, setFilterTopics] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-
+  const [routerQuery, setRouterQuery] = useState();
   const [isFiltered, setIsFiltered] = useState();
 
   const router = useRouter();
@@ -31,6 +36,13 @@ export default function PublicView() {
   const selectedIdea = useSelector((state) => state.idea.selectedIdea);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
+  const deleteFeedBackModal = useSelector((state) => state.general.deleteFeedBackModal);
+
+  const handleDelete = () => {
+    dispatch(ideaActions.deleteIdea(selectedIdea._id));
+    dispatch(toggleFeedBackDetailModal());
+    dispatch(toggleDeleteFeedBackModal());
+  };
 
   const handleFilter = (filterTopics, filterStatus) => {
     if (filterTopics?.length || filterStatus?.length) {
@@ -78,23 +90,13 @@ export default function PublicView() {
 
       dispatch(ideaActions.getIdeasByCompany(req));
     }
-  }, [page, router]);
-  useEffect(() => {
-    if (!ideas || !selectedIdea) {
-      return;
-    }
-    const idea = ideas.find((i) => i.id === selectedIdea.id);
-    if (!idea) {
-      return;
-    }
-    dispatch(ideaActions.setSelectedIdea(idea));
-  }, [ideas]);
+  }, [page, router.query.sort, router.query.status, router.query.topics]);
+
   useEffect(() => {
     if (router) {
       const { topics, status, sort, feedback } = router.query;
       if (sort) {
         const sortType = IDEA_SORT_TYPES.find((s) => s.url === sort);
-
         setIsFiltered(sortType);
       } else {
         setIsFiltered(IDEA_SORT_TYPES[2]);
@@ -105,7 +107,6 @@ export default function PublicView() {
       if (status) {
         setFilterStatus(status.split(','));
       }
-
       if (feedback && !feedBackDetailModal) {
         const ideaDetail = ideas.find((i) => i._id === feedback);
         if (ideaDetail) {
@@ -131,13 +132,12 @@ export default function PublicView() {
       }
     }
   }, [company]);
+
   useEffect(() => {
-    const isModalOpen = feedBackDetailModal || feedbackSubmitModal;
-    if (!isModalOpen) {
-      dispatch(ideaActions.setSelectedIdea(null));
-      dispatch(ideaActions.clearSimilarIdeas());
+    if (userIp) {
+      dispatch(authActions.setUserIp(userIp));
     }
-  }, [feedBackDetailModal, feedbackSubmitModal]);
+  }, [userIp]);
 
   return (
     <>
@@ -172,30 +172,63 @@ export default function PublicView() {
             items={ideas}
             countInfo={countInfo}
             endOfList={() => setPage((page) => page + 1)}>
-            {ideas?.map((idea) => (
-              <div
-                key={idea._id}
-                className="inline-block w-full py-6 border-b border-slate-200 last:border-0 first:pt-0">
-                <PublicViewCard
-                  idea={idea}
-                  onClick={() => {
-                    dispatch(ideaActions.setSelectedIdea(idea));
-                    dispatch(toggleFeedBackDetailModal());
-                    router.push('/public-view', {
-                      query: {
-                        ...router.query,
-                        feedback: idea._id
-                      }
-                    });
-                  }}
-                  voted={ideaVotes.some((vote) => vote.ideaId === idea._id)}
-                />
+            {ideas.length > 0 ? (
+              <div>
+                {ideas?.map((idea) => (
+                  <div
+                    key={idea._id}
+                    className="inline-block w-full py-6 border-b border-slate-200 last:border-0 first:pt-0">
+                    <PublicViewCard
+                      idea={idea}
+                      onClick={() => {
+                        dispatch(commentActions.getComments(idea._id));
+                        dispatch(ideaActions.setSelectedIdea(idea));
+                        dispatch(toggleFeedBackDetailModal());
+                        setRouterQuery(router.query);
+                        router.push(
+                          {
+                            pathname: router.pathname,
+                            query: {
+                              ...router.query,
+                              feedback: idea._id
+                            }
+                          },
+                          undefined,
+                          { scroll: false }
+                        );
+                      }}
+                      voted={ideaVotes.some((vote) => vote.ideaId === idea._id)}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <EmptyState
+                title="No data found"
+                description="Your search did not match any data. Please retry or try a new word."
+              />
+            )}
           </InfiniteScroll>
         </div>
-        <IdeaDetail idea={selectedIdea} company={company} />
+        <IdeaDetail idea={selectedIdea} company={company} query={routerQuery} />
+        <DeleteModal
+          show={deleteFeedBackModal}
+          onClose={() => dispatch(toggleDeleteFeedBackModal())}
+          cancelOnClick={() => dispatch(toggleDeleteFeedBackModal())}
+          deleteOnClick={handleDelete}
+          icon={<Danger className="w-6 h-6 text-red-600" />}
+          title="Delete Idea"
+          description="Are you sure you want to delete this idea? This action cannot be undone."
+        />
       </Layout>
     </>
   );
+}
+export async function getServerSideProps() {
+  const { ip } = await fetch('https://api.ipify.org?format=json').then((res) => res.json());
+  return {
+    props: {
+      userIp: ip
+    }
+  };
 }

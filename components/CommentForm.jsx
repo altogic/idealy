@@ -1,6 +1,5 @@
 import useGuestValidation from '@/hooks/useGuestValidation';
 import { commentActions } from '@/redux/comments/commentsSlice';
-import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -16,7 +15,7 @@ export default function CommentForm({ ideaId, company }) {
   const user = useSelector((state) => state.auth.user);
   const [comment, setComment] = useState('');
   const guestValidation = useGuestValidation({ company, fieldName: 'commentIdea' });
-
+  const userIp = useSelector((state) => state.auth.userIp);
   const schema = yup.object().shape({
     text: yup.string(),
     guestName: yup.string().when([], {
@@ -54,7 +53,8 @@ export default function CommentForm({ ideaId, company }) {
         user: user?._id,
         profilePicture: user?.profilePicture,
         name: user?.name || data.guestName,
-        email: user?.email || data.guestEmail
+        email: user?.email || data.guestEmail,
+        ip: userIp
       })
     );
     setComment('');
@@ -63,7 +63,7 @@ export default function CommentForm({ ideaId, company }) {
     setComment('');
   }, []);
   return (
-    <form onSubmit={handleSubmit(submitComment)} className="p-8">
+    <form onSubmit={handleSubmit(submitComment)}>
       <Controller
         control={control}
         name="text"
@@ -79,15 +79,7 @@ export default function CommentForm({ ideaId, company }) {
         )}
       />
       {guestValidation && <GuestForm register={register} errors={errors} />}
-      <div className="flex justify-end gap-4 mt-4">
-        <Button
-          type="button"
-          text="Cancel"
-          variant="blank"
-          size="sm"
-          height="10"
-          onClick={() => dispatch(toggleFeedBackDetailModal())}
-        />
+      <div className="mt-8 text-right">
         <Button
           type="submit"
           text="Add a comment"

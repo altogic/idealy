@@ -1,15 +1,16 @@
+import ImageList from '@/components/ImageList';
 import useGuestValidation from '@/hooks/useGuestValidation';
+import { fileActions } from '@/redux/file/fileSlice';
+import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { Dialog, Disclosure, Transition } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import _ from 'lodash';
+import cn from 'classnames';
 import { Fragment, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
-import { fileActions } from '@/redux/file/fileSlice';
 import * as yup from 'yup';
-import ImageList from '@/components/ImageList';
 import Button from '../Button';
 import Editor from '../Editor';
 import GuestForm from '../GuestForm';
@@ -25,6 +26,7 @@ export default function SubmitIdea({ idea }) {
   const loading = useSelector((state) => state.file.isLoading);
   const fileLinks = useSelector((state) => state.file.fileLinks);
   const open = useSelector((state) => state.general.feedBackSubmitModal);
+  const userIp = useSelector((state) => state.auth.userIp);
   const [images, setImages] = useState([]);
   const guestValidation = useGuestValidation({
     company,
@@ -75,18 +77,20 @@ export default function SubmitIdea({ idea }) {
       ...data,
       content,
       topics,
-      images: fileLinks
+      images: fileLinks,
+      author: user._id,
+      company: company._id,
+      companySubdomain: company.subdomain,
+      ip: userIp
     };
     delete reqData.privacyPolicy;
-    if (user) {
-      reqData.author = user._id;
-    }
-    reqData.companySubdomain = company.subdomain;
     if (idea) {
       dispatch(ideaActions.updateIdea({ _id: idea._id, ...reqData }));
     } else {
       dispatch(ideaActions.createIdea(reqData));
     }
+    setTopics([]);
+    setContent('');
     dispatch(toggleFeedBackSubmitModal());
   };
 
@@ -107,6 +111,10 @@ export default function SubmitIdea({ idea }) {
   const removeImage = (index) => {
     setImages(images.filter((_, i) => i !== index));
     dispatch(fileActions.deleteFile(fileLinks[index]));
+  };
+  const handleClose = () => {
+    dispatch(toggleFeedBackSubmitModal());
+    dispatch(ideaActions.clearSimilarIdeas());
   };
   useEffect(() => {
     if (open) {
@@ -137,11 +145,12 @@ export default function SubmitIdea({ idea }) {
       setInpTitle('');
     }
   }, [idea]);
+
   useEffect(() => {
     let timer;
     if (inpTitle) {
       timer = setTimeout(() => {
-        dispatch(ideaActions.searchSimilarIdeas(inpTitle));
+        dispatch(ideaActions.searchSimilarIdeas({ title: inpTitle, companyId: company._id }));
       }, 500);
     }
 
@@ -171,10 +180,7 @@ export default function SubmitIdea({ idea }) {
         onClick={() => dispatch(toggleFeedBackSubmitModal())}
       />
       <Transition.Root show={open} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-10"
-          onClose={() => dispatch(toggleFeedBackSubmitModal())}>
+        <Dialog as="div" className="relative z-10" onClose={() => handleClose()}>
           <Transition.Child
             as={Fragment}
             enter="ease-in-out duration-500"
@@ -204,7 +210,7 @@ export default function SubmitIdea({ idea }) {
                         <button
                           type="button"
                           className="inline-flex items-center justify-center w-full h-full text-slate-500 rounded-md transition hover:bg-slate-100"
-                          onClick={() => dispatch(toggleFeedBackSubmitModal())}>
+                          onClick={handleClose}>
                           <span className="sr-only">Close panel</span>
                           <svg
                             className="w-4 h-4"
@@ -242,28 +248,30 @@ export default function SubmitIdea({ idea }) {
                               onKeyUp={(e) => setInpTitle(e.target.value)}
                             />
                             {!!similarIdeas?.length && (
-                              <div className="w-full mt-8 rounded-md border border-slate-200">
-                                <div className="w-full bg-slate-50">
-                                  <Disclosure defaultOpen>
-                                    {({ open }) => (
-                                      <>
-                                        <Disclosure.Button className="flex w-full justify-between rounded-lg bg-slate-100 px-4 py-2 text-left text-sm font-medium text-slate-900 hover:bg-slate-200 focus:outline-none focus-visible:ring focus-visible:ring-slate-500 focus-visible:ring-opacity-75 border-b border-slate-300">
-                                          <span>{open ? 'Hide' : 'Show'} similar ideas</span>
-                                          <ChevronUp
-                                            className={`${
-                                              open ? 'rotate-180 transform' : ''
-                                            } h-5 w-5 text-slate-500`}
-                                          />
-                                        </Disclosure.Button>
-                                        <Disclosure.Panel className="max-h-40 px-4 pt-4 pb-2 text-sm text-gray-500 overflow-hidden overflow-y-auto overflow-scroll-fix">
-                                          {similarIdeas.map((idea) => (
-                                            <SimilarIdeaCard key={idea?._id} idea={idea} />
-                                          ))}
-                                        </Disclosure.Panel>
-                                      </>
-                                    )}
-                                  </Disclosure>
-                                </div>
+                              <div className="w-full mt-8 rounded-lg border border-slate-200 overflow-hidden">
+                                <Disclosure defaultOpen>
+                                  {({ open }) => (
+                                    <>
+                                      <Disclosure.Button className="flex w-full justify-between bg-slate-100 text-slate-700 dark:text-aa-100 purple:text-pt-100 px-4 py-2 text-left text-sm font-medium hover:bg-slate-200 focus:outline-none focus-visible:ring focus-visible:ring-slate-500 focus-visible:ring-opacity-75">
+                                        <span>{open ? 'Hide' : 'Show'} similar ideas</span>
+                                        <ChevronUp
+                                          className={`${
+                                            open ? 'rotate-180 transform' : ''
+                                          } h-5 w-5 text-slate-500`}
+                                        />
+                                      </Disclosure.Button>
+                                      <Disclosure.Panel
+                                        className={cn(
+                                          similarIdeas.length > 1 ? 'max-h-52' : 'max-h-40',
+                                          `p-4 text-sm text-gray-500 overflow-hidden overflow-y-auto overflow-scroll-fix`
+                                        )}>
+                                        {similarIdeas.map((idea) => (
+                                          <SimilarIdeaCard key={idea?._id} idea={idea} />
+                                        ))}
+                                      </Disclosure.Panel>
+                                    </>
+                                  )}
+                                </Disclosure>
                               </div>
                             )}
                           </div>
@@ -348,7 +356,15 @@ export default function SubmitIdea({ idea }) {
                               <GuestForm register={register} errors={errors} />
                             )}
                           </div>
-                          <div className="flex justify-end">
+                          <div className="flex justify-end gap-4 mt-4">
+                            {idea && (
+                              <Button
+                                type="button"
+                                text="Cancel"
+                                variant="blank"
+                                onClick={handleClose}
+                              />
+                            )}
                             <Button
                               type="submit"
                               className="flex items-center justify-center bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white py-3 px-4 text-sm font-medium tracking-sm border border-transparent rounded-lg hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600 focus:outline-none"

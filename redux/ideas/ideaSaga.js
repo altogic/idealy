@@ -109,15 +109,26 @@ function* deleteIdeaSaga({ payload: id }) {
     yield put(ideaActions.deleteIdeaFailure(error));
   }
 }
-function* searchSimilarIdeasSaga({ payload: title }) {
+function* searchSimilarIdeasSaga({ payload: { title, companyId } }) {
   try {
-    const { data, errors } = yield call(ideaService.searchSimilarIdeas, title);
+    const { data, errors } = yield call(ideaService.searchSimilarIdeas, title, companyId);
     if (errors) {
       throw new Error(errors);
     }
     yield put(ideaActions.searchSimilarIdeasSuccess(data));
   } catch (error) {
     yield put(ideaActions.searchSimilarIdeasFailure(error));
+  }
+}
+function* deleteIdeaCoverImage({ payload: id }) {
+  try {
+    const { errors } = yield call(ideaService.deleteIdeaCoverImage, id);
+    if (errors) {
+      throw new Error(errors);
+    }
+    yield put(ideaActions.deleteIdeaCoverImageSuccess(id));
+  } catch (error) {
+    yield put(ideaActions.deleteIdeaCoverImageFailure(error));
   }
 }
 
@@ -129,4 +140,5 @@ export default function* ideaSaga() {
   yield takeEvery(ideaActions.updateIdea.type, updateIdeaSaga);
   yield takeEvery(ideaActions.deleteIdea.type, deleteIdeaSaga);
   yield takeEvery(ideaActions.searchSimilarIdeas.type, searchSimilarIdeasSaga);
+  yield takeEvery(ideaActions.deleteIdeaCoverImage.type, deleteIdeaCoverImage);
 }
