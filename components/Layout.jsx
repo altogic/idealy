@@ -71,12 +71,13 @@ export default function Layout({ children }) {
       <Head>
         <link rel="icon" href={company?.favicon} />
       </Head>
-      <Header />
-      <main className="px-4">
-        {children}
-        <Realtime />
-      </main>
-      {/* <Footer /> */}
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <main className="pt-[93px] px-4">
+          {children}
+          <Realtime />
+        </main>
+      </div>
       {company?.whiteLabel?.isHideBanner && (
         <a href="https://www.altogic.com/" target="_blank" rel="noopener noreferrer">
           <img className="fixed bottom-8 right-8" src="./powered-by-altogic.svg" alt="" />
