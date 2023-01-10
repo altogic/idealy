@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { authActions } from '@/redux/auth/authSlice';
 import DeleteModal from '@/components/DeleteModal';
 import { Danger } from '@/components/icons';
+import EmptyState from '@/components/EmptyState';
 
 export default function PublicView({ userIp }) {
   const [page, setPage] = useState(1);
@@ -171,33 +172,42 @@ export default function PublicView({ userIp }) {
             items={ideas}
             countInfo={countInfo}
             endOfList={() => setPage((page) => page + 1)}>
-            {ideas?.map((idea) => (
-              <div
-                key={idea._id}
-                className="inline-block w-full py-6 border-b border-slate-200 last:border-0 first:pt-0">
-                <PublicViewCard
-                  idea={idea}
-                  onClick={() => {
-                    dispatch(commentActions.getComments(idea._id));
-                    dispatch(ideaActions.setSelectedIdea(idea));
-                    dispatch(toggleFeedBackDetailModal());
-                    setRouterQuery(router.query);
-                    router.push(
-                      {
-                        pathname: router.pathname,
-                        query: {
-                          ...router.query,
-                          feedback: idea._id
-                        }
-                      },
-                      undefined,
-                      { scroll: false }
-                    );
-                  }}
-                  voted={ideaVotes.some((vote) => vote.ideaId === idea._id)}
-                />
+            {ideas.length > 0 ? (
+              <div>
+                {ideas?.map((idea) => (
+                  <div
+                    key={idea._id}
+                    className="inline-block w-full py-6 border-b border-slate-200 last:border-0 first:pt-0">
+                    <PublicViewCard
+                      idea={idea}
+                      onClick={() => {
+                        dispatch(commentActions.getComments(idea._id));
+                        dispatch(ideaActions.setSelectedIdea(idea));
+                        dispatch(toggleFeedBackDetailModal());
+                        setRouterQuery(router.query);
+                        router.push(
+                          {
+                            pathname: router.pathname,
+                            query: {
+                              ...router.query,
+                              feedback: idea._id
+                            }
+                          },
+                          undefined,
+                          { scroll: false }
+                        );
+                      }}
+                      voted={ideaVotes.some((vote) => vote.ideaId === idea._id)}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <EmptyState
+                title="No data found"
+                description="Your search did not match any data. Please retry or try a new word."
+              />
+            )}
           </InfiniteScroll>
         </div>
         <IdeaDetail idea={selectedIdea} company={company} query={routerQuery} />
