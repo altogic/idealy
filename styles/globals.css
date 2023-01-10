@@ -86,6 +86,10 @@
   fill: #d7d6ea;
 }
 
+.ql-editor.ql-blank::before {
+  @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 text-base tracking-sm;
+}
+
 .ql-editor p {
   @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 text-base tracking-sm;
 }
