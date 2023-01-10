@@ -6,8 +6,8 @@ import { Fragment, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 export default function FilterIdea({
-  isFiltered,
-  setIsFiltered,
+  sortType,
+  setSortType,
   filterStatus,
   setFilterStatus,
   filterTopics,
@@ -15,15 +15,15 @@ export default function FilterIdea({
 }) {
   const router = useRouter();
   useEffect(() => {
-    setIsFiltered(IDEA_SORT_TYPES[0]);
+    setSortType(IDEA_SORT_TYPES[0]);
   }, []);
   const company = useSelector((state) => state.company.company);
   return (
     <div className="mb-9 flex items-center gap-4 justify-between w-full">
       <Listbox
-        value={isFiltered}
+        value={sortType}
         onChange={(value) => {
-          setIsFiltered(value);
+          setSortType(value);
           router.query.sort = value.url;
           router.push(router);
         }}>
@@ -31,7 +31,7 @@ export default function FilterIdea({
           <Listbox.Button className="relative w-full inline-flex max-w-[195px] bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
             <UpDown className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200 mr-2" />
             <span className="block text-gray-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm truncate">
-              {isFiltered?.name}
+              {sortType?.name}
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5">
               <svg

@@ -108,21 +108,6 @@ function* deleteCompanyFaviconFileSaga({ payload: companyId }) {
   }
 }
 
-function* setFileLinkByProfilePictureSaga() {
-  const user = yield select((state) => state.auth.user);
-  yield put(fileActions.uploadFileSuccess(user.profilePicture));
-}
-
-function* setFileLinkByCompanyLogoPictureSaga() {
-  const company = yield select((state) => state.company.company);
-  yield put(fileActions.uploadFileSuccess(company.logoUrl));
-}
-
-function* setFileLinkByCompanyFaviconPictureSaga() {
-  const company = yield select((state) => state.company.company);
-  yield put(fileActions.uploadFaviconSuccess(company.favicon));
-}
-
 export default function* fileSaga() {
   yield all([
     takeEvery(fileActions.uploadFileRequest.type, uploadFileSaga),

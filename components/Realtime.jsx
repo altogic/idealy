@@ -41,7 +41,7 @@ export default function Realtime() {
       dispatch(
         companyActions.updateMemberStatusRealtime({
           userId: data.message.userId,
-          company: data.message.company
+          company: data.message.companyId
         })
       );
     } else {
@@ -137,7 +137,9 @@ export default function Realtime() {
     dispatch(ideaActions.createIdeaSuccess(message));
   }
   function updateIdeaHandler({ message }) {
-    dispatch(ideaActions.updateIdeaSuccess(message));
+    if (!user && !company?.role) {
+      dispatch(ideaActions.updateIdeaRealtime(message));
+    }
   }
   function deleteIdeaHandler({ message }) {
     dispatch(ideaActions.deleteIdeaSuccess(message));
@@ -146,7 +148,7 @@ export default function Realtime() {
     dispatch(ideaActions.voteIdeaSuccess(message));
   }
   function downVoteIdeaHandler({ message }) {
-    dispatch(ideaActions.downvoteIdeaSuccess(message));
+    dispatch(ideaActions.downVoteIdeaSuccess(message));
   }
 
   useEffect(() => {
@@ -176,7 +178,7 @@ export default function Realtime() {
       realtime.on('update-idea', updateIdeaHandler);
       realtime.on('delete-idea', deleteIdeaHandler);
       realtime.on('vote-idea', voteIdeaHandler);
-      realtime.on('downvote-idea', downVoteIdeaHandler);
+      realtime.on('downVote-idea', downVoteIdeaHandler);
     } else if (company) {
       realtime.join(company._id);
       realtime.on('update-company', updateCompanyHandler);
@@ -184,7 +186,7 @@ export default function Realtime() {
       realtime.on('update-idea', updateIdeaHandler);
       realtime.on('delete-idea', deleteIdeaHandler);
       realtime.on('vote-idea', voteIdeaHandler);
-      realtime.on('downvote-idea', downVoteIdeaHandler);
+      realtime.on('downVote-idea', downVoteIdeaHandler);
     }
     return () => {
       realtime.off('delete-membership', deleteMembershipHandler);
@@ -205,7 +207,7 @@ export default function Realtime() {
       realtime.off('update-idea', updateIdeaHandler);
       realtime.off('delete-idea', deleteIdeaHandler);
       realtime.off('vote-idea', voteIdeaHandler);
-      realtime.off('downvote-idea', downVoteIdeaHandler);
+      realtime.off('downVote-idea', downVoteIdeaHandler);
     };
   }, [user, companies, company]);
 
@@ -270,9 +272,9 @@ export default function Realtime() {
       if (companies.length === 1) {
         dispatch(companyActions.selectCompany(companies[0]));
       } else if (companies.length > 1) {
-        router.push('/admin/select-company');
+        router.push(generateUrl('select-company'));
       } else {
-        router.push('/admin/create-new-company');
+        router.push(generateUrl('create-new-company'));
       }
     }
   };

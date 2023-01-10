@@ -63,7 +63,7 @@ export default function CommentForm({ ideaId, company }) {
     setComment('');
   }, []);
   return (
-    <form onSubmit={handleSubmit(submitComment)}>
+    <form onSubmit={handleSubmit(submitComment)} className="mt-8 mb-6">
       <Controller
         control={control}
         name="text"

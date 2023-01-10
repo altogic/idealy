@@ -22,7 +22,7 @@ export const generalSlice = createSlice({
       state.commentFormModal = !state.commentFormModal;
     },
     toggleDeleteFeedBackModal: (state) => {
-      state.deleteFeedBackModal = !state.deleteModal;
+      state.deleteFeedBackModal = !state.deleteFeedBackModal;
     }
   },
   extraReducers: (builder) => {

@@ -4,10 +4,11 @@ const ideaService = {
   getIdeasByCompany: (params) => endpoint.get('/idea', params),
   createIdea: (req) => endpoint.post('/idea', req),
   voteIdea: (req) => endpoint.post('/idea/vote', req),
-  downvoteIdea: (id) => endpoint.delete(`/idea/downvote?ideaId=${id}`),
-  getIdeaVotes: (filter) =>
+  downVoteIdea: (req) => endpoint.delete(`/idea/downVote}`, req),
+  getUserVotes: (ip, companyId) =>
     endpoint.get(`/ideaVote`, {
-      filter
+      ip,
+      companyId
     }),
   updateIdea: (req) => endpoint.put('/idea', req),
   deleteIdea: (id) => db.model('ideas').object(id).delete(),

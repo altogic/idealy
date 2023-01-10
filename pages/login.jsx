@@ -5,6 +5,7 @@ import { authActions } from '@/redux/auth/authSlice';
 import { companyActions } from '@/redux/company/companySlice';
 import { realtime } from '@/utils/altogic';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { SESSION_COOKIE_OPTIONS } from 'constants';
 import { getCookie, deleteCookie } from 'cookies-next';
 import _ from 'lodash';
 import Head from 'next/head';
@@ -16,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { generateUrl, setSessionCookie } from '../utils';
 
-export default function Login({ invitation, clearSession }) {
+export default function Login({ invitation, clearSession, isInvited }) {
   const loginSchema = new yup.ObjectSchema({
     email: yup.string().email().required('Email is required'),
     password: yup.string().required('Password is required')
@@ -54,7 +55,7 @@ export default function Login({ invitation, clearSession }) {
       } else {
         router.push(generateUrl('select-company'));
       }
-    } else {
+    } else if (isInvited) {
       const company = companies.find((c) => c._id === invitation.companyId);
       dispatch(companyActions.updateMemberStatus({ companyId: invitation.companyId }));
       realtime.send(invitation.company._id, 'new-member', {
@@ -84,8 +85,12 @@ export default function Login({ invitation, clearSession }) {
   }, [error, setError]);
 
   useEffect(() => {
-    setValue('email', invitation?.email);
-  }, [invitation]);
+    if (isInvited) {
+      setValue('email', invitation?.email);
+    } else {
+      deleteCookie('invitation-token', SESSION_COOKIE_OPTIONS);
+    }
+  }, [invitation, isInvited]);
 
   useEffect(() => {
     if (user && company && _.isNil(invitation)) {
@@ -138,7 +143,7 @@ export default function Login({ invitation, clearSession }) {
                       error={errors.email}
                       register={register('email')}
                       placeholder="johndoe@example.com"
-                      disabled={!!invitation?.email}
+                      disabled={!!invitation?.email && isInvited}
                     />
 
                     <Input
@@ -204,21 +209,20 @@ export default function Login({ invitation, clearSession }) {
 }
 export async function getServerSideProps({ req, res, query }) {
   const invitation = JSON.parse(getCookie('invitation-token', { req, res }) || null);
-  deleteCookie('invitation-token', { req, res });
-  deleteCookie('user', { req, res });
-  deleteCookie('session', { req, res });
-  deleteCookie('session_token', { req, res });
+
   if (invitation) {
     return {
       props: {
-        invitation
+        invitation,
+        isInvited: query.isInvited || false
       }
     };
   }
   return {
     props: {
       invitation: null,
-      clearSession: query.clearSession || false
+      clearSession: query.clearSession || false,
+      isInvited: query.isInvited || false
     }
   };
 }

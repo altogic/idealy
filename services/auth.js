@@ -60,6 +60,10 @@ const AuthService = {
       .object(id)
       .updateFields([{ field: fieldName, updateType: 'set', value }]);
   },
+  disableAllNotifications(id, req) {
+    return db.model('users.notifications').object(id).update(req);
+  },
+
   updateSavedFilters({ id, value, fieldName }) {
     return db
       .model('users.savedFilters')

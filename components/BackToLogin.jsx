@@ -6,9 +6,7 @@ export default function BackToLogin() {
   return (
     <div className="text-center mt-8">
       <Link href={generateUrl('login')}>
-        <a
-          href="#"
-          className="inline-flex items-center gap-2 text-sm font-medium tracking-sm text-slate-500">
+        <a className="inline-flex items-center gap-2 text-sm font-medium tracking-sm text-slate-500">
           <svg
             className="w-5 h-5 text-slate-500"
             viewBox="0 0 21 20"

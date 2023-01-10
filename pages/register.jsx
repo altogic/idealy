@@ -4,9 +4,9 @@ import Providers from '@/components/Providers';
 import { authActions } from '@/redux/auth/authSlice';
 import { companyActions } from '@/redux/company/companySlice';
 import companyService from '@/services/company';
-import { realtime } from '@/utils/altogic';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { getCookie } from 'cookies-next';
+import { SESSION_COOKIE_OPTIONS } from 'constants';
+import { deleteCookie, getCookie } from 'cookies-next';
 import _ from 'lodash';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -17,12 +17,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { generateUrl, setSessionCookie } from '../utils';
 
-export default function CreateAnAccount({ company, invitation }) {
+export default function CreateAnAccount({ company, invitation, isInvited }) {
   const dispatch = useDispatch();
   const router = useRouter();
   const loading = useSelector((state) => state.auth.isLoading);
   const error = useSelector((state) => state.auth.registerError);
-  const companyMembers = useSelector((state) => state.company.companyMembers);
   const registerSchema = yup.object().shape({
     email: yup.string().email('Wrong Email.').required('Email is required.'),
     password: yup
@@ -49,20 +48,17 @@ export default function CreateAnAccount({ company, invitation }) {
         emailVerified: !_.isNil(invitation),
         company,
         onSuccess: async (user, session) => {
-          if (!_.isNil(invitation)) {
+          if (!_.isNil(invitation) && isInvited) {
             dispatch(
               companyActions.addNewMember({
                 user: user._id,
                 companyId: invitation.companyId,
                 role: invitation.role,
-                status: 'Active'
+                status: 'Active',
+                onSuccess: async () =>
+                  router.push(generateUrl('public-view?sort=newest', company.subdomain))
               })
             );
-            realtime.send(invitation.companyId, 'new-member', {
-              ...invitation,
-              userId: user._id,
-              isAccepted: true
-            });
             setSessionCookie(session, user);
           } else {
             router.push(`/mail-verification-message?email=${data.email}`);
@@ -73,8 +69,12 @@ export default function CreateAnAccount({ company, invitation }) {
   };
 
   useEffect(() => {
-    setValue('email', invitation?.email);
-  }, [invitation]);
+    if (isInvited) {
+      setValue('email', invitation?.email);
+    } else {
+      deleteCookie('invitation-token', SESSION_COOKIE_OPTIONS);
+    }
+  }, [invitation, isInvited]);
 
   useEffect(() => {
     if (Symbol.iterator in Object(error)) {
@@ -86,11 +86,6 @@ export default function CreateAnAccount({ company, invitation }) {
       });
     }
   }, [error, setError]);
-  useEffect(() => {
-    if (companyMembers.length > 0) {
-      router.push(generateUrl('public-view?sort=newest', company.subdomain));
-    }
-  }, [companyMembers]);
 
   useEffect(
     () => () => {
@@ -145,7 +140,7 @@ export default function CreateAnAccount({ company, invitation }) {
                       register={register('email')}
                       error={errors.email}
                       type="email"
-                      disabled={!!invitation?.email}
+                      disabled={!!invitation?.email && isInvited}
                     />
 
                     <div className="space-y-1">
@@ -206,7 +201,7 @@ export default function CreateAnAccount({ company, invitation }) {
     </div>
   );
 }
-export async function getServerSideProps({ req, res }) {
+export async function getServerSideProps({ req, res, query }) {
   const invitation = JSON.parse(getCookie('invitation-token', { req, res }) || null);
   if (invitation) {
     const { data, errors } = await companyService.getCompanyBySubdomain(
@@ -223,7 +218,8 @@ export async function getServerSideProps({ req, res }) {
     return {
       props: {
         invitation,
-        company: data
+        company: data,
+        isInvited: query.isInvited || false
       }
     };
   }

@@ -20,28 +20,14 @@ export const ideaSlice = createSlice({
     },
     getIdeasByCompanySuccess: (state, action) => {
       state.isLoading = false;
-      state.countInfo = action.payload.ideas.countInfo;
-      state.ideaVotes = [...state.ideaVotes, ...action.payload.votes];
-      if (action.payload.page === 1) {
-        state.ideas = action.payload.ideas.result;
+      state.countInfo = action.payload.countInfo;
+      if (action.payload.countInfo.currentPage === 1) {
+        state.ideas = action.payload.result;
       } else {
-        state.ideas = [...state.ideas, ...action.payload.ideas.result];
+        state.ideas = [...state.ideas, ...action.payload.result];
       }
     },
     getIdeasByCompanyFailure: (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
-    sortIdeas: (state) => {
-      state.isLoading = true;
-    },
-    sortIdeasSuccess: (state, action) => {
-      state.isLoading = false;
-      state.ideas = action.payload.ideas.result;
-      state.countInfo = action.payload.ideas.countInfo;
-      state.ideaVotes = action.payload.votes;
-    },
-    sortIdeasFailure: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },
@@ -80,10 +66,10 @@ export const ideaSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    downvoteIdea(state) {
+    downVoteIdea(state) {
       state.isLoading = true;
     },
-    downvoteIdeaSuccess(state, action) {
+    downVoteIdeaSuccess(state, action) {
       state.isLoading = false;
       state.ideaVotes = state.ideaVotes.filter((vote) => vote.ideaId !== action.payload);
       state.ideas = state.ideas.map((idea) => {
@@ -96,7 +82,7 @@ export const ideaSlice = createSlice({
         return idea;
       });
     },
-    downvoteIdeaFailure(state, action) {
+    downVoteIdeaFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
     },
@@ -182,6 +168,28 @@ export const ideaSlice = createSlice({
     deleteIdeaCoverImageFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    getUserVotes(state) {
+      state.isLoading = true;
+    },
+    getUserVotesSuccess(state, action) {
+      state.isLoading = false;
+      state.ideaVotes = action.payload;
+    },
+    getUserVotesFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    updateIdeaRealtime(state, action) {
+      state.ideas = state.ideas.map((idea) => {
+        if (idea._id === action.payload._id) {
+          return action.payload;
+        }
+        return idea;
+      });
+      state.ideas = state.ideas.filter(
+        (idea) => !(idea.isArchived || idea.isPrivate || idea.isCompleted)
+      );
     }
   },
   extraReducers: (builder) => {
