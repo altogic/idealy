@@ -69,3 +69,7 @@ export const SESSION_COOKIE_OPTIONS = {
   sameSite: 'lax',
   domain: process.env.NEXT_PUBLIC_DOMAIN
 };
+export const PRIORITY_VALUES = {
+  fibonacci: [2, 3, 5, 8, 13, 21],
+  tshirt: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']
+};
