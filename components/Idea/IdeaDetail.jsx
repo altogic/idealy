@@ -92,7 +92,7 @@ export default function IdeaDetail({ idea, company, query }) {
                     </div>
                     <div>
                       {/* Card Detail Top */}
-                      <div className="flex gap-6 p-6">
+                      <div>
                         <div>
                           <div className="flex flex-col gap-2 mb-2">
                             <div className="flex items-center gap-2">

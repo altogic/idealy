@@ -61,9 +61,9 @@ export default function IdeaVisibility({ updateIdea }) {
         </span>
         <button
           type="button"
-          className="border border-slate-600 rounded px-2 py-1"
+          className="inline-flex items-center justify-center gap-2 bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 py-2.5 px-4 tracking-sm border border-transparent rounded-md transition ease-linear duration-200 hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600 focus:outline-none"
           onClick={handleAddCoverImage}>
-          <span className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-sm font-medium">
+          <span className="text-white dark:text-aa-100 purple:text-pt-100 text-sm font-medium">
             Upload
           </span>
         </button>

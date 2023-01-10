@@ -26,8 +26,8 @@ export default function IdeaDetailAdmin() {
           </h2>
         </div>
         <div className="flex flex-col flex-1 bg-slate-50 dark:bg-aa-800 purple:bg-pt-900 p-4 overflow-y-auto">
-          <hr className="my-2 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
           <IdeaStatuses updateIdea={(req) => updateIdea(req)} />
+          <hr className="my-2 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
           <IdeaVisibility updateIdea={(req) => updateIdea(req)} />
         </div>
         <IdeaActions updateIdea={(req) => updateIdea(req)} />

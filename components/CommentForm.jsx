@@ -63,7 +63,7 @@ export default function CommentForm({ ideaId, company }) {
     setComment('');
   }, []);
   return (
-    <form onSubmit={handleSubmit(submitComment)} className="p-8">
+    <form onSubmit={handleSubmit(submitComment)}>
       <Controller
         control={control}
         name="text"
@@ -79,7 +79,7 @@ export default function CommentForm({ ideaId, company }) {
         )}
       />
       {guestValidation && <GuestForm register={register} errors={errors} />}
-      <div className="flex justify-end gap-4 mt-4">
+      <div className="mt-8 text-right">
         <Button
           type="submit"
           text="Add a comment"
