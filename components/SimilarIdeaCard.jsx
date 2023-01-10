@@ -9,7 +9,7 @@ export default function SimilarIdeaCard({ idea }) {
   return (
     <button
       type="button"
-      className="px-2 py-6 lg:p-6 rounded-lg transition hover:bg-slate-200"
+      className="w-full px-2 py-6 lg:p-6 rounded-lg transition hover:bg-slate-200"
       onClick={() => {
         dispatch(ideaActions.setSelectedIdea(idea));
         dispatch(toggleFeedBackSubmitModal());
