@@ -1,17 +1,19 @@
 import { ChevronDown, ChevronUp } from '@/components/icons';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import cn from 'classnames';
 
 export default function VoteIdea({ voted, voteCount, ideaId }) {
   const dispatch = useDispatch();
   const canVote = useRegisteredUserValidation('voteIdea');
+  const userIp = useSelector((state) => state.auth.userIp);
+  const company = useSelector((state) => state.company.company);
   const upVote = () => {
-    dispatch(ideaActions.voteIdea(ideaId));
+    dispatch(ideaActions.voteIdea({ ideaId, ip: userIp, companyId: company._id }));
   };
   const downVote = () => {
-    dispatch(ideaActions.downvoteIdea(ideaId));
+    dispatch(ideaActions.downVoteIdea({ ideaId, ip: userIp }));
   };
   return (
     <div

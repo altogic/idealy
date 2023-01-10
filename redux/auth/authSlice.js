@@ -238,6 +238,22 @@ export const authSlice = createSlice({
     },
     setUserIp(state, action) {
       state.userIp = action.payload;
+    },
+    disableAllNotifications(state) {
+      state.isLoading = true;
+    },
+    disableAllNotificationsSuccess(state, action) {
+      state.isLoading = false;
+      state.user.notifications = state.user.notifications.map((notification) => {
+        if (notification._id === action.payload._id) {
+          return action.payload;
+        }
+        return notification;
+      });
+    },
+    disableAllNotificationsFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   },
   extraReducers: (builder) => {

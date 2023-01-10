@@ -185,13 +185,14 @@ function* addNewMember({ payload }) {
   try {
     const { data, error } = yield call(companyService.registerTeamMember, payload);
     if (error) {
-      throw new Error(error);
+      throw error;
     }
-    yield put(companyActions.addNewMemberSuccess(data));
     realtime.send(data.companyId, 'accept-invitation', {
       sender: data.user._id,
       payload: data
     });
+    yield put(companyActions.addNewMemberSuccess(data));
+    payload.onSuccess();
   } catch (error) {
     yield put(companyActions.addNewMemberFailed(error));
   }
@@ -276,10 +277,10 @@ function* deleteCompanyMember({ payload: { userId, email, companyId } }) {
     yield put(companyActions.deleteCompanyMemberFailed(error));
   }
 }
-function* deleteUnregisteredCompanyMember({ payload: { id, email } }) {
+function* deleteUnregisteredCompanyMember({ payload: { id, email, companyId } }) {
   try {
     const { error } = yield call(companyService.deleteUnregisteredCompanyMember, id);
-    yield call(companyService.deleteInvite, email);
+    yield call(companyService.deleteInvite, email, companyId);
     if (error) {
       throw new Error(error);
     }

@@ -9,6 +9,7 @@ export default function Notification() {
   const user = useSelector((state) => state.auth.user);
   const [selectedNotification, setSelectedNotification] = useState();
   const selectedCompany = useSelector((state) => state.company.company);
+  const [disableAll, setDisableAll] = useState();
   const [dailyDigest, setDailyDigest] = useState(false);
   const [weeklyDigest, setWeeklyDigest] = useState(false);
   const [voteOnIdea, setVoteOnIdea] = useState(false);
@@ -21,9 +22,10 @@ export default function Notification() {
   const [adminAddIdea, setAdminAddIdea] = useState(false);
   const [adminVoteIdea, setAdminVoteIdea] = useState(false);
   const [accountApproval, setAccountApproval] = useState(false);
+  const [ideaStatusChange, setIdeaStatusChange] = useState(false);
 
   useEffect(() => {
-    if (user) {
+    if (user && selectedCompany) {
       const notification = user.notifications?.find((n) => n.companyId === selectedCompany?._id);
       if (notification) {
         setSelectedNotification(notification);
@@ -39,12 +41,63 @@ export default function Notification() {
         setAdminAddIdea(notification.adminAddIdea);
         setAdminVoteIdea(notification.adminVoteIdea);
         setAccountApproval(notification.accountApproval);
+        setIdeaStatusChange(notification.ideaStatusChange);
+        setDisableAll(
+          notification.dailyDigest &&
+            notification.weeklyDigest &&
+            notification.voteOnIdea &&
+            notification.commentOnIdea &&
+            notification.replyOnIdea &&
+            notification.mentionInAComment &&
+            notification.adminEditIdea &&
+            notification.ideaApproved &&
+            notification.ideaRejected &&
+            notification.adminAddIdea &&
+            notification.adminVoteIdea &&
+            notification.accountApproval
+        );
       }
     }
-  }, [user]);
+  }, [user, selectedCompany]);
   const updateNotification = (fieldName, value) => {
     dispatch(
       authActions.updateNotificationSettings({ id: selectedNotification?._id, fieldName, value })
+    );
+  };
+  const toggleAllNotifications = () => {
+    setDailyDigest(!disableAll);
+    setWeeklyDigest(!disableAll);
+    setVoteOnIdea(!disableAll);
+    setCommentOnIdea(!disableAll);
+    setReplyOnIdea(!disableAll);
+    setMentionInAComment(!disableAll);
+    setAdminEditIdea(!disableAll);
+    setIdeaApproved(!disableAll);
+    setIdeaRejected(!disableAll);
+    setAdminAddIdea(!disableAll);
+    setAdminVoteIdea(!disableAll);
+    setAccountApproval(!disableAll);
+    setIdeaStatusChange(!disableAll);
+    setDisableAll(!disableAll);
+    dispatch(
+      authActions.disableAllNotifications({
+        id: selectedNotification?._id,
+        value: {
+          dailyDigest: !disableAll,
+          weeklyDigest: !disableAll,
+          voteOnIdea: !disableAll,
+          commentOnIdea: !disableAll,
+          replyOnIdea: !disableAll,
+          mentionInAComment: !disableAll,
+          adminEditIdea: !disableAll,
+          ideaApproved: !disableAll,
+          ideaRejected: !disableAll,
+          adminAddIdea: !disableAll,
+          adminVoteIdea: !disableAll,
+          accountApproval: !disableAll,
+          ideaStatusChange: !disableAll
+        }
+      })
     );
   };
   return (
@@ -106,7 +159,14 @@ export default function Notification() {
               updateNotification('mentionInAComment', !mentionInAComment);
             }}
           />
-          {/* <Toggle enabled={ideaRejected} title="When the Status of your Idea changes" /> */}
+          <Toggle
+            enabled={ideaStatusChange}
+            title="When the Status of your Idea changes"
+            onChange={() => {
+              setIdeaStatusChange(!ideaStatusChange);
+              updateNotification('ideaStatusChange', !ideaStatusChange);
+            }}
+          />
           <Toggle
             enabled={adminEditIdea}
             title="When an Admin changes the wording of your Idea"
@@ -156,14 +216,15 @@ export default function Notification() {
             }}
           />
         </div>
-        {/* <hr className="mt-6 mb-20 border-slate-200" /> */}
-        {
-          // TODO - complete
-          /* <div className="pb-4 mb-6 border-b border-slate-200">
+        <hr className="mt-6 mb-20 border-slate-200" />
+        <div className="pb-4 mb-6 border-b border-slate-200">
           <SectionTitle sectionTitle="Personal" />
         </div>
-        <Toggle title="Disable all notifications" /> */
-        }
+        <Toggle
+          enabled={disableAll}
+          title={`${!disableAll ? 'Enable' : 'Disable'} all notifications`}
+          onChange={toggleAllNotifications}
+        />
       </div>
     </>
   );

@@ -77,16 +77,6 @@ export default function Miscellaneous() {
             />
           </div>
         </div>
-        {/* <div className="flex items-center justify-between gap-4 py-14">
-          <div>
-            <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-base font-semibold tracking-sm">Import Ideas</h2>
-            <p className="text-slate-500 dark:text-aa-300 purple:text-pt-300 text-sm">
-              Kick-start your board by importing the{' '}
-              <span className="text-indigo-700 font-medium">Starter Template.</span>
-            </p>
-          </div>
-          <Button text="Import template" variant="blank" />
-        </div> */}
         {company?.role === 'Owner' && (
           <div className="py-14 divide-y divide-slate-200 dark:divide-aa-400 purple:divide-pt-400">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-6">
