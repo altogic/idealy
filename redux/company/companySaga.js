@@ -51,7 +51,7 @@ function* removeTopic({ payload: topic }) {
 function* setIdeaStatus({ payload }) {
   yield put(companyActions.setIdeaStatusSuccess(payload));
 }
-function* createCompanySaga({ payload: { userId, onSuccess } }) {
+function* createCompanySaga({ payload: { userId, onSuccess, userIp } }) {
   try {
     const topics = yield select((state) => state.topic.topics);
     const statuses = yield select((state) => state.topic.statuses);
@@ -81,7 +81,9 @@ function* createCompanySaga({ payload: { userId, onSuccess } }) {
         content: yield select((state) => state.company.ideaDescription),
         status: data.company.statuses.find((st) => st.name === status.name)._id,
         author: sessionUser._id,
-        companySubdomain: data.company.subdomain
+        companySubdomain: data.company.subdomain,
+        company: data.company._id,
+        ip: userIp
       });
     }
 
@@ -93,10 +95,10 @@ function* createCompanySaga({ payload: { userId, onSuccess } }) {
       ...company,
       role: 'Owner'
     };
+    onSuccess(companyData);
     yield put(companyActions.createCompanySuccess(companyData));
     yield put(authActions.loginSuccess(user));
     yield call(AuthService.setUser, user);
-    onSuccess(companyData);
   } catch (error) {
     yield put(companyActions.createCompanyFailed(error));
   }

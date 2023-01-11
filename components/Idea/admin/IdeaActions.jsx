@@ -18,36 +18,39 @@ export default function IdeaActions({ updateIdea }) {
           type="Pin"
           onClick={() => updateIdea({ isPinned: !idea.isPinned })}
           Icon={Thumbtack}
-          className={`${idea.isPinned ? 'text-orange-500' : ''}`}
+          color="green"
+          control={idea?.isPinned}
         />
         <IdeaActionButton
           type="Archive"
           onClick={() => updateIdea({ isArchived: !idea.isArchived })}
           Icon={Archive}
-          className={`${idea.isArchived ? 'text-yellow-500' : 'hover:text-yellow-500'}`}
+          color="orange"
+          control={idea?.isArchived}
         />
         <IdeaActionButton
           type="Bug"
           onClick={() => updateIdea({ isBug: !idea.isBug })}
           Icon={Bug}
-          className={`${idea.isBug ? 'text-red-500' : 'hover:text-red-500'}`}
+          control={idea?.isBug}
+          color="red"
         />
         <IdeaActionButton
           type="Merge"
           Icon={Merge}
           onClick={() => dispatch(toggleDeleteFeedBackModal())}
-          className="hover:text-pink-500"
+          color="pink"
         />
         <IdeaActionButton
           type="Delete"
           Icon={Trash}
-          className="hover:text-red-500"
+          color="red"
           onClick={() => dispatch(toggleDeleteFeedBackModal())}
         />
         <IdeaActionButton
           type="Edit"
           Icon={Pen}
-          className="hover:text-sky-500"
+          color="blue"
           onClick={() => dispatch(toggleFeedBackSubmitModal())}
         />
       </div>

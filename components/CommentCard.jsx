@@ -9,9 +9,7 @@ export default function CommentCard({ comment }) {
     <div className="bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 p-8 mt-2 rounded">
       <div className="flex gap-5">
         {/* Name First Letter Icon */}
-        <div>
-          <Avatar src={comment?.profilePicture} alt={comment?.name} />
-        </div>
+        <Avatar src={comment?.profilePicture} alt={comment?.name} />
         <div className="w-full space-y-5">
           <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-base tracking-sm">
             {comment?.name}

@@ -9,7 +9,7 @@ import IdeaCreate from '@/layouts/create-company/IdeaCreate';
 import IdeaTopics from '@/layouts/create-company/IdeaTopics';
 import IdeaStatus from '@/layouts/create-company/IdeaStatus';
 
-export default function CreateNewCompany() {
+export default function CreateNewCompany({ userIp }) {
   const dispatch = useDispatch();
   const [activePageIndex, setActivePageIndex] = useState(0);
   const user = useSelector((state) => state.auth.user);
@@ -40,7 +40,10 @@ export default function CreateNewCompany() {
           </div>
         </div>
         <div className="flex flex-col items-center justify-center md:h-[calc(100%-92px)] max-w-3xl mx-auto px-4 md:p-0">
-          <Wizard activePageIndex={activePageIndex} setActivePageIndex={setActivePageIndex}>
+          <Wizard
+            activePageIndex={activePageIndex}
+            setActivePageIndex={setActivePageIndex}
+            userIp={userIp}>
             <CompanyCreate />
             <IdeaCreate />
             <IdeaTopics />
@@ -50,4 +53,12 @@ export default function CreateNewCompany() {
       </div>
     </div>
   );
+}
+export async function getServerSideProps() {
+  const { ip } = await fetch('https://api.ipify.org?format=json').then((res) => res.json());
+  return {
+    props: {
+      userIp: ip
+    }
+  };
 }

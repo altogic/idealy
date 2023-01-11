@@ -10,7 +10,9 @@ export default function Image({ isPreview, src, alt, loading, onRemove, removabl
     <>
       <div className="relative group border border-slate-400 rounded w-20 h-20 flex items-center justify-center ">
         <button
-          className={`${isPreview} ? 'cursor-pointer' : 'cursor-default`}
+          className={`${
+            isPreview ? 'cursor-pointer' : 'cursor-default'
+          } flex items-center justify-center`}
           type="button"
           onClick={() => {
             if (isPreview) {
@@ -22,7 +24,9 @@ export default function Image({ isPreview, src, alt, loading, onRemove, removabl
             alt={alt || 'image'}
             className={cn('object-contain rounded', loading && 'filter blur-sm')}
           />
-          {loading && <ClipLoader loading={loading} size={20} className="absolute" color="#fff" />}
+          {loading && (
+            <ClipLoader className="absolute" loading={loading} size={20} color="#312e81" />
+          )}
         </button>
         {removable && (
           <button
@@ -57,9 +61,7 @@ export default function Image({ isPreview, src, alt, loading, onRemove, removabl
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95">
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-aa-900 purple:bg-pt-1000 p-6 text-left align-middle shadow-xl transition-all">
-                  <div>
-                    <img src={src} alt="preview" className="w-full h-full" />
-                  </div>
+                  <img src={src} alt="preview" className="w-full h-full" />
                 </Dialog.Panel>
               </Transition.Child>
             </div>
