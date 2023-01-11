@@ -40,6 +40,7 @@ export default function IdeaDetail({ idea, company, query }) {
       undefined,
       { scroll: false }
     );
+    dispatch(ideaActions.setSelectedIdea(null));
   }
   return (
     <Drawer
@@ -59,40 +60,42 @@ export default function IdeaDetail({ idea, company, query }) {
       <div className="flex items-center gap-3 mb-8">
         {/* User */}
         <IdeaInfo idea={idea} />
-        {userIp === idea?.ip && (
-          <div className="flex">
+        {(userIp === idea?.ip || user?._id === idea?.author?._id) && (
+          <>
             <svg
               className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
               fill="currentColor"
               viewBox="0 0 8 8">
               <circle cx={4} cy={4} r={3} />
             </svg>
-            <IdeaActionButton
-              type="Pin"
-              onClick={() =>
-                dispatch(
-                  ideaActions.updateIdea({
-                    _id: idea._id,
-                    isPinned: !idea.isPinned
-                  })
-                )
-              }
-              Icon={Thumbtack}
-              className={`${idea.isPinned ? 'text-orange-500' : ''}`}
-            />
-            <IdeaActionButton
-              type="Delete"
-              Icon={Trash}
-              className="hover:text-red-500"
-              onClick={() => dispatch(toggleDeleteFeedBackModal())}
-            />
-            <IdeaActionButton
-              type="Edit"
-              Icon={Pen}
-              className="hover:text-sky-500"
-              onClick={() => dispatch(toggleFeedBackSubmitModal())}
-            />
-          </div>
+            <div className="flex">
+              <IdeaActionButton
+                type="Pin"
+                onClick={() =>
+                  dispatch(
+                    ideaActions.updateIdea({
+                      _id: idea._id,
+                      isPinned: !idea.isPinned
+                    })
+                  )
+                }
+                Icon={Thumbtack}
+                className={`${idea?.isPinned ? 'text-green-500' : 'hover:text-green-500'}`}
+              />
+              <IdeaActionButton
+                type="Delete"
+                Icon={Trash}
+                className="hover:text-red-500"
+                onClick={() => dispatch(toggleDeleteFeedBackModal())}
+              />
+              <IdeaActionButton
+                type="Edit"
+                Icon={Pen}
+                className="hover:text-sky-500"
+                onClick={() => dispatch(toggleFeedBackSubmitModal())}
+              />
+            </div>
+          </>
         )}
       </div>
 
@@ -122,7 +125,7 @@ export default function IdeaDetail({ idea, company, query }) {
 
       {canComment && <CommentForm ideaId={idea?._id} company={company} />}
       {comments?.length > 0 &&
-        comments?.map((comment) => <CommentCard key={comment._id} comment={comment} />)}
+        comments?.map((comment) => <CommentCard key={comment?._id} comment={comment} />)}
     </Drawer>
   );
 }

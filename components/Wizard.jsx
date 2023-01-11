@@ -9,7 +9,7 @@ import { SUBDOMAIN_REGEX } from 'constants';
 import Button from './Button';
 import { generateUrl } from '../utils';
 
-export default function Wizard({ children, activePageIndex, setActivePageIndex }) {
+export default function Wizard({ children, activePageIndex, setActivePageIndex, userIp }) {
   const pages = React.Children.toArray(children);
   const currentPage = pages[activePageIndex];
   const companyWillBeCreated = useSelector((state) => state.company.companyWillBeCreated);
@@ -30,6 +30,7 @@ export default function Wizard({ children, activePageIndex, setActivePageIndex }
     dispatch(
       companyActions.createCompany({
         userId: user._id,
+        userIp,
         onSuccess: (company) => Router.push(generateUrl('public-view', company.subdomain))
       })
     );
@@ -76,7 +77,7 @@ export default function Wizard({ children, activePageIndex, setActivePageIndex }
       (activePageIndex === 1 && idea) ||
       activePageIndex > 1
     ) {
-      setActivePageIndex((index) => index + 1);
+      setActivePageIndex((index) => (index === 5 ? 5 : index + 1));
     }
 
     if (activePageIndex >= 3) {

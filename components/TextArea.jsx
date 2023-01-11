@@ -19,7 +19,7 @@ export default function TextArea({ id, label, error, register, rows, ...props })
           <textarea
             id={id}
             className={cn(
-              'block w-full text-slate-500 text-base tracking-sm border border-gray-300 rounded-lg placeholder-slate-500 focus:border-indigo-500 focus:ring-indigo-500',
+              'block w-full text-slate-900 text-base tracking-sm border border-gray-300 rounded-lg placeholder-slate-500 focus:border-indigo-500 focus:ring-indigo-500',
               error && 'text-red-900 pr-11 border-red-600 placeholder-red-300 focus:ring-red-600'
             )}
             rows={rows}

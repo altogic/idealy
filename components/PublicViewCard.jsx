@@ -25,18 +25,21 @@ export default function PublicViewCard({ idea, onClick, voted }) {
             {/* Bottom Left */}
             <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-3">
               <IdeaInfo idea={idea} />
-              <svg
-                className="hidden lg:block h-1 w-1 text-slate-500"
-                fill="currentColor"
-                viewBox="0 0 8 8">
-                <circle cx={4} cy={4} r={3} />
-              </svg>
-              {/* Badges */}
-              <div className="flex flex-wrap items-center gap-3">
-                {idea?.topics.map((topic) => (
-                  <TopicBadges key={topic} badgeName={topic} />
-                ))}
-              </div>
+              {idea?.topics.length > 0 && (
+                <>
+                  <svg
+                    className="hidden lg:block h-1 w-1 text-slate-500"
+                    fill="currentColor"
+                    viewBox="0 0 8 8">
+                    <circle cx={4} cy={4} r={3} />
+                  </svg>
+                  <div className="flex flex-wrap items-center gap-3">
+                    {idea?.topics.map((topic) => (
+                      <TopicBadges key={topic} badgeName={topic} />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
             {/* Bottom Right */}
             <div className="flex items-center justify-between lg:justify-start gap-3">

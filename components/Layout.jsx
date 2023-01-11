@@ -23,10 +23,6 @@ export default function Layout({ children }) {
     const session = JSON.parse(getCookie('session') || null);
     if (userFromCookie && session) {
       dispatch(authActions.authStateChange({ user: userFromCookie, session }));
-      console.log('userFromCookie', JSON.stringify(userFromCookie));
-      console.log('session', JSON.stringify(session));
-      localStorage.setItem('user', JSON.stringify(userFromCookie));
-      localStorage.setItem('session', JSON.stringify(session));
     }
   }, []);
 
@@ -53,11 +49,11 @@ export default function Layout({ children }) {
   }, [companies]);
 
   useEffect(() => {
-    if (user) {
+    if (user && _.isNil(companies)) {
       dispatch(companyActions.getUserCompanies(user?._id));
     }
     const wildcard = window.location.hostname.split('.')[0];
-    if (company?.subdomain !== wildcard) {
+    if (company?.subdomain !== wildcard && _.isNil(company)) {
       dispatch(
         companyActions.getCompanyBySubdomain({
           subdomain: wildcard,
