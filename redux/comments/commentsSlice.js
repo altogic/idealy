@@ -33,6 +33,33 @@ export const commentsSlice = createSlice({
     getCommentsFailure: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    deleteComment: (state) => {
+      state.isLoading = true;
+    },
+    deleteCommentSuccess: (state, action) => {
+      state.isLoading = false;
+      state.comments = state.comments.filter((comment) => comment._id !== action.payload);
+    },
+    deleteCommentFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    updateComment: (state) => {
+      state.isLoading = true;
+    },
+    updateCommentSuccess: (state, action) => {
+      state.isLoading = false;
+      state.comments = state.comments.map((comment) => {
+        if (comment._id === action.payload._id) {
+          return action.payload;
+        }
+        return comment;
+      });
+    },
+    updateCommentFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   },
   extraReducers: (builder) => {

@@ -9,10 +9,11 @@ import Button from './Button';
 import Editor from './Editor';
 import GuestForm from './GuestForm';
 
-export default function CommentForm({ ideaId, company }) {
+export default function CommentForm({ ideaId, editedComment, setEditComment }) {
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.comments.createCommentLoading);
   const user = useSelector((state) => state.auth.user);
+  const company = useSelector((state) => state.company.company);
   const [comment, setComment] = useState('');
   const guestValidation = useGuestValidation({ company, fieldName: 'commentIdea' });
   const userIp = useSelector((state) => state.auth.userIp);
@@ -38,6 +39,7 @@ export default function CommentForm({ ideaId, company }) {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
     control
   } = useForm({
     resolver: yupResolver(schema)
@@ -46,22 +48,42 @@ export default function CommentForm({ ideaId, company }) {
     if (comment.trim() === '') {
       return;
     }
-    dispatch(
-      commentActions.addComment({
-        ideaId,
-        text: comment,
-        user: user?._id,
-        profilePicture: user?.profilePicture,
-        name: user?.name || data.guestName,
-        email: user?.email || data.guestEmail,
-        ip: userIp
-      })
-    );
+    if (editedComment) {
+      dispatch(
+        commentActions.updateComment({
+          _id: editedComment._id,
+          text: comment,
+          name: user?.name || data.guestName,
+          email: user?.email || data.guestEmail
+        })
+      );
+      setEditComment(false);
+    } else {
+      dispatch(
+        commentActions.addComment({
+          ideaId,
+          text: comment,
+          user: user?._id,
+          name: user?.name || data.guestName,
+          email: user?.email || data.guestEmail,
+          ip: userIp
+        })
+      );
+    }
     setComment('');
   };
   useEffect(() => {
     setComment('');
   }, []);
+  useEffect(() => {
+    if (editedComment) {
+      setComment(editedComment.text);
+      setValue('text', editedComment.text);
+      setValue('guestName', editedComment.name);
+      setValue('guestEmail', editedComment.email);
+      setValue('privacyPolicy', true);
+    }
+  }, [editedComment]);
   return (
     <form onSubmit={handleSubmit(submitComment)} className="mt-8 mb-6">
       <Controller
@@ -79,10 +101,21 @@ export default function CommentForm({ ideaId, company }) {
         )}
       />
       {guestValidation && <GuestForm register={register} errors={errors} />}
-      <div className="mt-8 text-right">
+      <div className="mt-8 text-right flex justify-end gap-2">
+        {editedComment && (
+          <Button
+            type="button"
+            text="Cancel"
+            variant="blank"
+            size="sm"
+            height="10"
+            loading={isLoading}
+            onClick={() => setEditComment(false)}
+          />
+        )}
         <Button
           type="submit"
-          text="Add a comment"
+          text={editedComment ? 'Update' : 'Add a comment'}
           variant="indigo"
           size="sm"
           height="10"

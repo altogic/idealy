@@ -24,8 +24,31 @@ function* getCommentsSaga({ payload: ideaId }) {
     yield put(commentActions.getCommentsFailure(error));
   }
 }
-
+function* deleteCommentSaga({ payload: commentId }) {
+  try {
+    const { errors } = yield call(CommentsService.deleteComment, commentId);
+    if (errors) {
+      throw new Error(errors);
+    }
+    yield put(commentActions.deleteCommentSuccess(commentId));
+  } catch (error) {
+    yield put(commentActions.deleteCommentFailure(error));
+  }
+}
+function* updateCommentSaga({ payload }) {
+  try {
+    const { data, errors } = yield call(CommentsService.updateComment, payload);
+    if (errors) {
+      throw new Error(errors);
+    }
+    yield put(commentActions.updateCommentSuccess(data));
+  } catch (error) {
+    yield put(commentActions.updateCommentFailure(error));
+  }
+}
 export default function* commentSaga() {
   yield takeEvery(commentActions.addComment.type, addCommentSaga);
   yield takeEvery(commentActions.getComments.type, getCommentsSaga);
+  yield takeEvery(commentActions.deleteComment.type, deleteCommentSaga);
+  yield takeEvery(commentActions.updateComment.type, updateCommentSaga);
 }

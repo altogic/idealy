@@ -3,10 +3,11 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { repliesActions } from '@/redux/replies/repliesSlice';
+import { useEffect } from 'react';
 import Button from './Button';
 import TextArea from './TextArea';
 
-export default function ReplyForm({ setIsReplying, commentId }) {
+export default function ReplyForm({ setIsReplying, commentId, reply }) {
   const dispatch = useDispatch();
   const ip = useSelector((state) => state.auth.userIp);
   const user = useSelector((state) => state.auth.user);
@@ -17,6 +18,7 @@ export default function ReplyForm({ setIsReplying, commentId }) {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors }
   } = useForm({
     resolver: yupResolver(schema),
@@ -24,9 +26,19 @@ export default function ReplyForm({ setIsReplying, commentId }) {
   });
 
   const onSubmit = (data) => {
-    dispatch(repliesActions.createReply({ ...data, commentId, ip, user: user._id }));
+    if (reply) {
+      dispatch(repliesActions.updateReply({ ...data, _id: reply._id }));
+      setIsReplying(false);
+    } else {
+      dispatch(repliesActions.createReply({ ...data, commentId, ip, user: user._id }));
+    }
   };
 
+  useEffect(() => {
+    if (reply) {
+      setValue('content', reply.content);
+    }
+  }, [reply]);
   return (
     <div className="w-full relative max-h-[14z0px]">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full">
@@ -47,7 +59,13 @@ export default function ReplyForm({ setIsReplying, commentId }) {
               size="sm"
               height={8}
             />
-            <Button type="submit" variant="indigo" text="Reply" size="sm" height={8} />
+            <Button
+              type="submit"
+              variant="indigo"
+              text={reply ? 'Reply' : 'Edit'}
+              size="sm"
+              height={8}
+            />
           </div>
         </div>
       </form>

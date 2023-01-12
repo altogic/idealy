@@ -38,13 +38,13 @@ function* updateReply({ payload: reply }) {
   }
 }
 
-function* deleteReply({ payload: replyId }) {
+function* deleteReply({ payload: { replyId, commentId } }) {
   try {
     const { errors } = yield call(replyService.deleteReply, replyId);
     if (errors) {
       throw new Error(errors);
     }
-    yield put(repliesActions.deleteReplySuccess(replyId));
+    yield put(repliesActions.deleteReplySuccess({ replyId, commentId }));
   } catch (error) {
     yield put(repliesActions.deleteReplyFailure(error));
   }

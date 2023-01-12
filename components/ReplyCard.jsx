@@ -1,9 +1,23 @@
+import { repliesActions } from '@/redux/replies/repliesSlice';
 import { DateTime } from 'luxon';
+import { useSelector, useDispatch } from 'react-redux';
+import { useState } from 'react';
 import Avatar from './Avatar';
+import DeleteModal from './DeleteModal';
+import { Pen, Trash, Danger } from './icons';
+import ReplyForm from './ReplyForm';
 
 export default function ReplyCard({ reply }) {
-  return (
-    <div className="bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 p-8 mt-2 rounded">
+  const userIp = useSelector((state) => state.auth.userIp);
+  const user = useSelector((state) => state.auth.user);
+  const [isDelete, setIsDelete] = useState(false);
+  const [editReply, setEditReply] = useState();
+  const dispatch = useDispatch();
+
+  return editReply ? (
+    <ReplyForm reply={reply} setIsReplying={setEditReply} />
+  ) : (
+    <div className="group bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 p-8 mt-2 rounded">
       <div className="flex gap-5">
         {/* Name First Letter Icon */}
         <Avatar src={reply?.user?.profilePicture} alt={reply?.user?.name || 'Anonymous'} />
@@ -18,9 +32,41 @@ export default function ReplyCard({ reply }) {
             <span className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-sm tracking-sm">
               {DateTime.fromISO(reply?.createdAt).setLocale('en').toRelative()}
             </span>
+            {(userIp === reply.ip || user._id === reply.user._id) && (
+              <div className=" hidden group-hover:flex items-center gap-3 ">
+                <svg
+                  className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
+                  fill="currentColor"
+                  viewBox="0 0 8 8">
+                  <circle cx={4} cy={4} r={3} />
+                </svg>
+                <button type="button" onClick={() => setEditReply(true)}>
+                  <Pen className="h-4 w-4 text-slate-500 hover:text-blue-600 dark:text-aa-200 purple:text-pt-200" />
+                </button>
+                <button type="button" onClick={() => setIsDelete(true)}>
+                  <Trash className="h-4 w-4 text-slate-500 hover:text-red-600 dark:text-aa-200 purple:text-pt-200" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
+      <DeleteModal
+        show={isDelete}
+        onClose={() => setIsDelete(!isDelete)}
+        cancelOnClick={() => setIsDelete(!isDelete)}
+        deleteOnClick={() =>
+          dispatch(
+            repliesActions.deleteReply({
+              replyId: reply._id,
+              commentId: reply.commentId
+            })
+          )
+        }
+        icon={<Danger className="w-6 h-6 text-red-600" />}
+        title="Delete Reply"
+        description="Are you sure you want to delete this reply? This action cannot be undone."
+      />
     </div>
   );
 }
