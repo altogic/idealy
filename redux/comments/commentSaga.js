@@ -1,7 +1,6 @@
-import { takeEvery, put, call } from 'redux-saga/effects';
 import CommentsService from '@/services/comments';
+import { call, put, takeEvery } from 'redux-saga/effects';
 import { commentActions } from './commentsSlice';
-import { ideaActions } from '../ideas/ideaSlice';
 
 function* addCommentSaga({ payload }) {
   try {
@@ -9,8 +8,7 @@ function* addCommentSaga({ payload }) {
     if (errors) {
       throw new Error(errors);
     }
-    yield put(commentActions.addCommentSuccess(data.comment));
-    yield put(ideaActions.addedNewComment({ data: data.recentUser, ideaId: data.comment.ideaId }));
+    yield put(commentActions.addCommentSuccess(data));
   } catch (error) {
     yield put(commentActions.addCommentFailure(error));
   }

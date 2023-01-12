@@ -126,6 +126,7 @@ export default function PublicView({ userIp }) {
         const ideaDetail = ideas.find((i) => i._id === feedback);
         if (ideaDetail) {
           dispatch(ideaActions.setSelectedIdea(ideaDetail));
+          dispatch(commentActions.getComments(ideaDetail._id));
           dispatch(toggleFeedBackDetailModal());
         }
       }
@@ -146,9 +147,7 @@ export default function PublicView({ userIp }) {
       if (!company.privacy.isPublic && !company.privacy.isPublic.userApproval) {
         router.push('/404');
       }
-      if (!ideaVotes.length) {
-        dispatch(ideaActions.getUserVotes({ userIp, companyId: company?._id }));
-      }
+      dispatch(ideaActions.getUserVotes({ userIp, companyId: company?._id }));
     }
   }, [company]);
 
