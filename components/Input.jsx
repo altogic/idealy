@@ -30,7 +30,7 @@ export default function Input({
           <input
             id={id}
             className={cn(
-              'block w-full bg-white dark:bg-aa-800 purple:bg-pt-800 text-slate-800 dark:text-aa-200 purple:text-pt-200 py-2.5 text-base tracking-sm border border-gray-300 dark:border-aa-400 purple:border-pt-400 rounded-md placeholder:text-slate-800 dark:placeholder-aa-200 purple:placeholder-pt-200 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-aa-400 dark:focus:border-aa-400 purple:focus:ring-pt-400 purple:focus:border-pt-400',
+              'block w-full h-11 bg-white dark:bg-aa-800 purple:bg-pt-800 text-slate-800 dark:text-aa-200 purple:text-pt-200 py-2.5 text-base tracking-sm border border-gray-300 dark:border-aa-400 purple:border-pt-400 rounded-md placeholder:text-slate-800 dark:placeholder-aa-200 purple:placeholder-pt-200 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-aa-400 dark:focus:border-aa-400 purple:focus:ring-pt-400 purple:focus:border-pt-400',
               error && 'text-red-900 pr-11 border-red-600 placeholder-red-300 focus:ring-red-600',
               icon ? 'pl-[42px] pr-3.5' : 'px-3.5',
               postfix && 'rounded-r-none',

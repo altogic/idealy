@@ -58,7 +58,7 @@ export default function DeleteModal({
                   </button>
                   <button
                     type="button"
-                    className="inline-flex items-center justify-center w-full lg:w-auto bg-red-600 text-white py-2.5 px-4 text-sm font-medium tracking-sm border border-transparent rounded-md transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                    className="inline-flex items-center justify-center w-full lg:w-auto bg-red-600 dark:bg-red-900 purple:bg-red-900 text-white py-2.5 px-4 text-sm font-medium tracking-sm border border-transparent rounded-md transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                     onClick={() => {
                       deleteOnClick();
                       cancelOnClick();

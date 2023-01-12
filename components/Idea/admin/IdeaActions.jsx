@@ -8,7 +8,7 @@ export default function IdeaActions({ updateIdea }) {
   const idea = useSelector((state) => state.idea.selectedIdea);
   const dispatch = useDispatch();
   return (
-    <div className="bg-slate-50 dark:bg-aa-800 purple:bg-pt-900 p-6">
+    <div className="bg-slate-50 dark:bg-aa-800 purple:bg-pt-900 p-4">
       <p className="text-slate-900 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">
         Actions
       </p>

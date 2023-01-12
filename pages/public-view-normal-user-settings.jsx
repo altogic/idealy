@@ -136,7 +136,7 @@ export default function PublicViewNormalUserSettings() {
             />
             {/* Submit Feedback */}
             <Transition.Root show={openSubmitFeedbackModal} as={Fragment}>
-              <Dialog as="div" className="relative z-10" onClose={setOpenSubmitFeedbackModal}>
+              <Dialog as="div" className="relative z-50" onClose={setOpenSubmitFeedbackModal}>
                 <Transition.Child
                   as={Fragment}
                   enter="ease-in-out duration-500"
