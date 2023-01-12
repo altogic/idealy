@@ -3,7 +3,7 @@ import { Dialog, Transition } from '@headlessui/react';
 
 export default function Drawer({ open, onClose, title, children, sidebar }) {
   return (
-    <Dialog as="div" className="relative z-10" open={open} onClose={() => onClose()}>
+    <Dialog as="div" className="relative z-50" open={open} onClose={() => onClose()}>
       <Transition
         show={open}
         appear

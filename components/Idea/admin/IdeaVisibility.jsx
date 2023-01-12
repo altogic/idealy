@@ -5,6 +5,7 @@ import Image from '@/components/Image';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import IdeaAdminTab from './IdeaAdminTab';
 import IdeaSwitch from './IdeaSwitch';
+import Button from '@/components/Button';
 
 export default function IdeaVisibility({ updateIdea }) {
   const dispatch = useDispatch();
@@ -69,14 +70,13 @@ export default function IdeaVisibility({ updateIdea }) {
         <span className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-sm font-medium">
           Cover Image
         </span>
-        <button
+        <Button
           type="button"
-          className="border border-slate-600 dark:border-aa-600 purple:border-pt-600 rounded px-2 py-1"
-          onClick={handleAddCoverImage}>
-          <span className="text-slate-600 dark:text-aa-100 purple:text-pt-100 text-sm font-medium">
-            Upload
-          </span>
-        </button>
+          onClick={handleAddCoverImage}
+          loading={loading}
+          text="Upload"
+          variant="indigo"
+        />
       </div>
       {idea?.coverImage && (
         <div className=" w-full">

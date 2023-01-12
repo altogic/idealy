@@ -67,7 +67,7 @@ export default function ConfirmDeleteModal({
               leave="ease-in duration-200"
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95">
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-aa-900 purple:bg-pt-1000 p-6 text-left align-middle shadow-xl transition-all">
                 <div className="absolute top-8 right-8">
                   <Button
                     variant="icon"
@@ -102,14 +102,14 @@ export default function ConfirmDeleteModal({
                   <div className="grid grid-cols-2 gap-3 mt-8">
                     <button
                       type="button"
-                      className="inline-flex items-center justify-center bg-white text-gray-700 py-2.5 px-4 text-sm font-medium tracking-sm border border-gray-300 rounded-md transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                      className="inline-flex items-center justify-center w-full lg:w-auto bg-white dark:bg-aa-400 purple:bg-pt-400 text-gray-700 dark:text-aa-100 purple:text-pt-100 py-2.5 px-4 text-sm font-medium tracking-sm border border-gray-300 rounded-md transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                       onClick={cancelOnClick}
                       {...props}>
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="inline-flex items-center justify-center bg-red-600 text-white py-2.5 px-4 text-sm font-medium tracking-sm border border-transparent rounded-md transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                      className="inline-flex items-center justify-center w-full lg:w-auto bg-red-600 dark:bg-red-900 purple:bg-red-900 text-white py-2.5 px-4 text-sm font-medium tracking-sm border border-transparent rounded-md transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                       {...props}>
                       Delete
                     </button>
