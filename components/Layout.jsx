@@ -49,7 +49,7 @@ export default function Layout({ children }) {
   }, [companies]);
 
   useEffect(() => {
-    if (user && _.isNil(companies)) {
+    if (user && _.isEmpty(companies)) {
       dispatch(companyActions.getUserCompanies(user?._id));
     }
     const wildcard = window.location.hostname.split('.')[0];

@@ -563,7 +563,7 @@ export const companySlice = createSlice({
     },
     acceptInvitation(state, action) {
       state.companyMembers = [...state.companyMembers, action.payload];
-      state.unregisteredCompanyMembers = state.unregisteredCompanyMembers.filter(
+      state.unregisteredCompanyMembers = state.unregisteredCompanyMembers?.filter(
         (member) => member.email !== action.payload.user.email
       );
     },

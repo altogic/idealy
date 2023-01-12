@@ -123,10 +123,8 @@ export default function Realtime() {
       );
     }
   }
-  function acceptedInvitationHandler(data) {
-    if (data.message.sender !== user._id) {
-      dispatch(companyActions.acceptInvitation(data.message.payload));
-    }
+  function acceptedInvitationHandler({ message }) {
+    dispatch(companyActions.acceptInvitation(message));
   }
   function updateSublistHandler(data) {
     if (data.message.sender !== user._id && company._id === data.message.companyId) {
