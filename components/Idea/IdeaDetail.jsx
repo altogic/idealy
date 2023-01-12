@@ -123,7 +123,7 @@ export default function IdeaDetail({ idea, company, query }) {
 
       <ImageList images={idea?.images} isPreview />
 
-      {canComment && <CommentForm ideaId={idea?._id} company={company} />}
+      {canComment && <CommentForm ideaId={idea?._id} />}
       {comments?.length > 0 &&
         comments?.map((comment) => <CommentCard key={comment?._id} comment={comment} />)}
     </Drawer>

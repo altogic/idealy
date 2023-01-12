@@ -52,8 +52,8 @@ export const repliesSlice = createSlice({
     },
     updateReplySuccess: (state, action) => {
       state.loading = false;
-      state.replies = state.replies.map((reply) =>
-        reply.id === action.payload.id ? action.payload : reply
+      state.replies[action.payload.commentId] = state.replies[action.payload.commentId].map(
+        (reply) => (reply._id === action.payload._id ? action.payload : reply)
       );
     },
     updateReplyFailure: (state, action) => {
@@ -65,7 +65,10 @@ export const repliesSlice = createSlice({
     },
     deleteReplySuccess: (state, action) => {
       state.loading = false;
-      state.replies = state.replies.filter((reply) => reply.id !== action.payload);
+      state.replies[action.payload.commentId] = state.replies[action.payload.commentId].filter(
+        (reply) => reply._id !== action.payload.replyId
+      );
+      state.countInfo[action.payload.commentId].count -= 1;
     },
     deleteReplyFailure: (state, action) => {
       state.loading = false;
