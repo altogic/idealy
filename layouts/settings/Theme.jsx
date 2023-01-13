@@ -4,7 +4,7 @@ import SectionTitle from '@/components/SectionTitle';
 export default function Theme() {
   return (
     <>
-      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
+      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
         <SectionTitle
           sectionTitle="Theme"
           sectionDescription="Customize the interface appearance for your customers."

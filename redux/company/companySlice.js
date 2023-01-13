@@ -159,12 +159,8 @@ export const companySlice = createSlice({
       state.isLoading = true;
     },
     addNewMemberSuccess(state, action) {
-      try {
-        state.isLoading = false;
-        state.companyMembers = [...state.companyMembers, action.payload];
-      } catch (error) {
-        console.log(error);
-      }
+      state.isLoading = false;
+      state.companyMembers = [...state.companyMembers, action.payload];
     },
     addNewMemberFailed(state, action) {
       state.isLoading = false;
@@ -567,7 +563,7 @@ export const companySlice = createSlice({
     },
     acceptInvitation(state, action) {
       state.companyMembers = [...state.companyMembers, action.payload];
-      state.unregisteredCompanyMembers = state.unregisteredCompanyMembers.filter(
+      state.unregisteredCompanyMembers = state.unregisteredCompanyMembers?.filter(
         (member) => member.email !== action.payload.user.email
       );
     },

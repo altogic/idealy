@@ -91,7 +91,7 @@ export default function Statuses() {
 
   return (
     <>
-      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
+      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
         <SectionTitle
           sectionTitle="Statuses"
           sectionDescription="Use Statuses to track Ideas on your Roadmap."
@@ -155,7 +155,7 @@ export default function Statuses() {
             </span>
             <Listbox value={status} onChange={(selected) => changeCompletedStatus(selected)}>
               <div className="relative mt-1 flex-[0.6]">
-                <Listbox.Button className="relative w-full inline-flex bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                <Listbox.Button className="relative w-full inline-flex bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-600 purple:border-pt-600 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                   <div className="inline-flex items-center gap-2">
                     {status.color && (
                       <svg className="h-2.5 w-2.5" fill={status.color} viewBox="0 0 8 8">

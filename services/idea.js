@@ -4,7 +4,7 @@ const ideaService = {
   getIdeasByCompany: (params) => endpoint.get('/idea', params),
   createIdea: (req) => endpoint.post('/idea', req),
   voteIdea: (req) => endpoint.post('/idea/vote', req),
-  downVoteIdea: (req) => endpoint.delete(`/idea/downVote}`, req),
+  downVoteIdea: (req) => endpoint.delete(`/idea/downVote`, req),
   getUserVotes: (ip, companyId) =>
     endpoint.get(`/ideaVote`, {
       ip,
@@ -17,6 +17,11 @@ const ideaService = {
     db
       .model('ideas')
       .object(id)
-      .updateFields([{ field: 'coverImage', updateType: 'unset' }])
+      .updateFields([{ field: 'coverImage', updateType: 'unset' }]),
+  deleteIdeaStatus: (id) =>
+    db
+      .model('ideas')
+      .object(id)
+      .updateFields([{ field: 'status', updateType: 'unset', value: null }])
 };
 export default ideaService;

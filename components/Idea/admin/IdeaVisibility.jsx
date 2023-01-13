@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fileActions } from '@/redux/file/fileSlice';
 import Image from '@/components/Image';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
+import Button from '@/components/Button';
 import IdeaAdminTab from './IdeaAdminTab';
 import IdeaSwitch from './IdeaSwitch';
 
@@ -12,6 +13,8 @@ export default function IdeaVisibility({ updateIdea }) {
   const coverImage = useSelector((state) => state.file.fileLink);
   const loading = useSelector((state) => state.file.loading);
   const [file, setFile] = useState();
+  const [showOnRoadMap, setShowOnRoadMap] = useState();
+  const [isPrivate, setIsPrivate] = useState();
   const handleAddCoverImage = () => {
     const input = document.createElement('input');
 
@@ -31,27 +34,35 @@ export default function IdeaVisibility({ updateIdea }) {
     dispatch(ideaActions.deleteIdeaCoverImage(idea._id));
   };
   useEffect(() => {
-    if (coverImage) {
+    if (coverImage && file) {
       updateIdea({ coverImage });
     }
   }, [coverImage]);
+  useEffect(() => {
+    if (idea?.showOnRoadMap) {
+      setShowOnRoadMap(idea.showOnRoadMap);
+      setIsPrivate(idea.isPrivate);
+    }
+  }, [idea]);
   return (
     <IdeaAdminTab title="Visibility">
       <IdeaSwitch
-        checked={idea?.isPrivate}
-        onChange={() =>
+        checked={isPrivate}
+        onChange={() => {
           updateIdea({
             isPrivate: !idea?.isPrivate
-          })
-        }
+          });
+          setIsPrivate(!isPrivate);
+        }}
         text={`Make ${idea?.isPrivate ? 'Public' : 'Private'}`}
       />
       <IdeaSwitch
-        checked={idea?.showOnRoadMap}
+        checked={showOnRoadMap}
         onChange={() => {
           updateIdea({
             showOnRoadMap: !idea?.showOnRoadMap
           });
+          setShowOnRoadMap(!showOnRoadMap);
         }}
         text="Show on Roadmap"
       />
@@ -59,14 +70,13 @@ export default function IdeaVisibility({ updateIdea }) {
         <span className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-sm font-medium">
           Cover Image
         </span>
-        <button
+        <Button
           type="button"
-          className="inline-flex items-center justify-center gap-2 bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 py-2.5 px-4 tracking-sm border border-transparent rounded-md transition ease-linear duration-200 hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600 focus:outline-none"
-          onClick={handleAddCoverImage}>
-          <span className="text-white dark:text-aa-100 purple:text-pt-100 text-sm font-medium">
-            Upload
-          </span>
-        </button>
+          onClick={handleAddCoverImage}
+          loading={loading}
+          text="Upload"
+          variant="indigo"
+        />
       </div>
       {idea?.coverImage && (
         <div className=" w-full">

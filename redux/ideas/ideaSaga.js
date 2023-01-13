@@ -125,6 +125,17 @@ function* getUserVotesSaga({ payload: { userIp, companyId } }) {
     yield put(ideaActions.getUserVotesFailure(error));
   }
 }
+function* deleteIdeaStatusSaga({ payload: id }) {
+  try {
+    const { errors } = yield call(ideaService.deleteIdeaStatus, id);
+    if (errors) {
+      throw new Error(errors);
+    }
+    yield put(ideaActions.deleteIdeaStatusSuccess(id));
+  } catch (error) {
+    yield put(ideaActions.deleteIdeaStatusFailure(error));
+  }
+}
 
 export default function* ideaSaga() {
   yield takeEvery(ideaActions.getIdeasByCompany.type, getIdeasByCompanySaga);
@@ -136,4 +147,5 @@ export default function* ideaSaga() {
   yield takeEvery(ideaActions.searchSimilarIdeas.type, searchSimilarIdeasSaga);
   yield takeEvery(ideaActions.deleteIdeaCoverImage.type, deleteIdeaCoverImage);
   yield takeEvery(ideaActions.getUserVotes.type, getUserVotesSaga);
+  yield takeEvery(ideaActions.deleteIdeaStatus.type, deleteIdeaStatusSaga);
 }

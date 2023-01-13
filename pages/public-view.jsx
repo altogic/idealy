@@ -29,7 +29,6 @@ export default function PublicView({ userIp }) {
   const dispatch = useDispatch();
 
   const company = useSelector((state) => state.company.company);
-  const user = useSelector((state) => state.auth.user);
   const ideas = useSelector((state) => state.idea.ideas);
   const countInfo = useSelector((state) => state.idea.countInfo);
   const ideaVotes = useSelector((state) => state.idea.ideaVotes);
@@ -74,7 +73,7 @@ export default function PublicView({ userIp }) {
   };
 
   const handleClickIdea = (idea) => {
-    dispatch(commentActions.getComments(idea._id));
+    dispatch(commentActions.getComments({ ideaId: idea._id, page: 1 }));
     dispatch(ideaActions.setSelectedIdea(idea));
     dispatch(toggleFeedBackDetailModal());
     setRouterQuery(router.query);
@@ -96,14 +95,13 @@ export default function PublicView({ userIp }) {
       const req = {
         subdomain: window.location.hostname.split('.')[0],
         limit: 10,
-        filter: handleFilter(router.query.topics?.split(','), router.query.status?.split(',')),
+        filter: `this.isArchived == false && this.isPrivate == false && this.isCompleted == false && ${handleFilter(
+          router.query.topics?.split(','),
+          router.query.status?.split(',')
+        )}`,
         sort: handleSort(router.query.sort),
         page
       };
-      if (!user && !company?.role) {
-        req.filter +=
-          'this.isArchived == false && this.isPrivate == false && this.isCompleted == false &&';
-      }
 
       dispatch(ideaActions.getIdeasByCompany(req));
     }
@@ -128,6 +126,7 @@ export default function PublicView({ userIp }) {
         const ideaDetail = ideas.find((i) => i._id === feedback);
         if (ideaDetail) {
           dispatch(ideaActions.setSelectedIdea(ideaDetail));
+          dispatch(commentActions.getComments({ ideaId: ideaDetail._id, page: 1 }));
           dispatch(toggleFeedBackDetailModal());
         }
       }
@@ -144,10 +143,11 @@ export default function PublicView({ userIp }) {
 
   useEffect(() => {
     if (company) {
+      console.log(company, 'company');
       if (!company.privacy.isPublic && !company.privacy.isPublic.userApproval) {
         router.push('/404');
       }
-      dispatch(ideaActions.getUserVotes({ userIp, companyId: company._id }));
+      dispatch(ideaActions.getUserVotes({ userIp, companyId: company?._id }));
     }
   }, [company]);
 
@@ -166,11 +166,10 @@ export default function PublicView({ userIp }) {
       <Layout>
         <div className="max-w-screen-lg mx-auto my-14">
           <div className="flex items-start justify-between mb-16">
-            <div>
-              <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
-                Feature Ideas
-              </h1>
-            </div>
+            <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
+              Feature Ideas
+            </h1>
+
             {isSubmitIdeaVisible && <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />}
           </div>
           <div className="flex items-start justify-between">
@@ -188,21 +187,17 @@ export default function PublicView({ userIp }) {
             countInfo={countInfo}
             endOfList={() => setPage((page) => page + 1)}>
             {ideas.length > 0 ? (
-              <div>
-                {ideas?.map((idea) => (
-                  <div
-                    key={idea._id}
-                    className="inline-block w-full py-6 border-b border-slate-200 last:border-0 first:pt-0">
-                    <PublicViewCard
-                      idea={idea}
-                      onClick={() => handleClickIdea(idea)}
-                      voted={ideaVotes.some(
-                        (vote) => vote.ip === userIp && vote.ideaId === idea._id
-                      )}
-                    />
-                  </div>
-                ))}
-              </div>
+              ideas?.map((idea) => (
+                <div
+                  key={idea._id}
+                  className="inline-block w-full py-6 border-b border-slate-200 last:border-0 first:pt-0">
+                  <PublicViewCard
+                    idea={idea}
+                    onClick={() => handleClickIdea(idea)}
+                    voted={ideaVotes.some((vote) => vote.ip === userIp && vote.ideaId === idea._id)}
+                  />
+                </div>
+              ))
             ) : (
               <EmptyState
                 title="No data found"

@@ -40,7 +40,7 @@ export default function Miscellaneous() {
   }, [company]);
   return (
     <div>
-      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
+      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
         <SectionTitle
           sectionTitle="Miscellaneous"
           sectionDescription="Other company settings."
@@ -140,7 +140,7 @@ export default function Miscellaneous() {
             })
           );
         }}
-        icon={<Trash className="w-6 h-6 text-red-600" />}
+        icon={<Trash className="w-6 h-6 text-red-600 dark:text-red-700 purple:text-red-700" />}
         title="Delete company"
         description="Are you sure you want to delete this company? This action cannot be undone."
         companyName={company.name}

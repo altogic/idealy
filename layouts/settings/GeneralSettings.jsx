@@ -17,13 +17,13 @@ export default function GeneralFunctions() {
       </div>
       <div className="max-w-[510px]">
         <CompanyLogo />
-        <hr className="my-8 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
+        <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
         <CompanyName />
-        <hr className="my-8 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
+        <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
         <CompanyDisplay />
-        <hr className="my-8 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
+        <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
         <CompanyFavicon />
-        <hr className="my-8 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
+        <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
         <CompanySiteNavigation />
       </div>
     </>

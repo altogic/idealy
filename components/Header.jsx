@@ -17,7 +17,6 @@ export default function Header() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const selectedCompany = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
-  const companyLoading = useSelector((state) => state.company.getCompanyLoading);
   const notifications = useSelector((state) => state.notification.notifications);
   const loading = useSelector((state) => state.auth.isLoading);
   const [open, setOpen] = useState(false);
@@ -44,7 +43,7 @@ export default function Header() {
     <>
       <header
         className={cn(
-          `fixed top-0 left-0 flex items-center justify-between w-full bg-indigo-900 dark:bg-aa-900 purple:bg-pt-1000 border-b dark:border-slate-600 p-4 lg:py-6 lg:px-12 z-50`,
+          `fixed top-0 left-0 flex items-center justify-between w-full bg-indigo-900 dark:bg-aa-900 purple:bg-pt-1000 border-b dark:border-aa-600 purple:border-pt-600 p-4 lg:py-6 lg:px-12 z-50`,
           router.asPath.includes('settings') ? 'pl-16' : null
         )}>
         <div className="flex items-center">
@@ -66,46 +65,45 @@ export default function Header() {
               </a>
             </Link>
           ) : null}
-          {companyLoading || (
-            <ul className="hidden lg:flex items-center gap-2">
-              {selectedCompany?.siteNavigation?.feedback && (
-                <li
-                  className={cn(
-                    `flex items-center justify-center py-2 px-3 rounded-md transition`,
-                    router.pathname === '/public-view'
-                      ? 'bg-indigo-700 dark:bg-aa-700 purple:bg-pt-900'
-                      : 'hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900'
-                  )}>
-                  <Link href={generateUrl('public-view', selectedCompany.subdomain)}>
-                    <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
-                      <Feedback className="w-6 h-6 text-indigo-50 mr-3" />
-                      Feedback
-                    </a>
-                  </Link>
-                </li>
-              )}
-              {selectedCompany?.siteNavigation?.roadmap && (
-                <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
-                  <Link href="/">
-                    <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
-                      <Roadmap className="w-6 h-6 text-indigo-50 mr-3" />
-                      Roadmap
-                    </a>
-                  </Link>
-                </li>
-              )}
-              {selectedCompany?.siteNavigation?.announcements && (
-                <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
-                  <Link href="/">
-                    <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
-                      <Announcements className="w-6 h-6 text-indigo-50 mr-3" />
-                      Announcements
-                    </a>
-                  </Link>
-                </li>
-              )}
-            </ul>
-          )}
+
+          <ul className="hidden lg:flex items-center gap-2">
+            {selectedCompany?.siteNavigation?.feedback && (
+              <li
+                className={cn(
+                  `flex items-center justify-center py-2 px-3 rounded-md transition`,
+                  router.pathname === '/public-view'
+                    ? 'bg-indigo-700 dark:bg-aa-700 purple:bg-pt-900'
+                    : 'hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900'
+                )}>
+                <Link href={generateUrl('public-view', selectedCompany.subdomain)}>
+                  <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
+                    <Feedback className="w-6 h-6 text-indigo-50 mr-3" />
+                    Feedback
+                  </a>
+                </Link>
+              </li>
+            )}
+            {selectedCompany?.siteNavigation?.roadmap && (
+              <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
+                <Link href="/">
+                  <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
+                    <Roadmap className="w-6 h-6 text-indigo-50 mr-3" />
+                    Roadmap
+                  </a>
+                </Link>
+              </li>
+            )}
+            {selectedCompany?.siteNavigation?.announcements && (
+              <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
+                <Link href="/">
+                  <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
+                    <Announcements className="w-6 h-6 text-indigo-50 mr-3" />
+                    Announcements
+                  </a>
+                </Link>
+              </li>
+            )}
+          </ul>
         </div>
         <div className="flex items-center gap-4">
           {/* <button

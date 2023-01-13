@@ -102,7 +102,7 @@ export default function Notification() {
   };
   return (
     <>
-      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
+      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
         <SectionTitle
           sectionTitle="Notifications"
           sectionDescription="Keep your inbox under control."

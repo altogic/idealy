@@ -190,6 +190,29 @@ export const ideaSlice = createSlice({
       state.ideas = state.ideas.filter(
         (idea) => !(idea.isArchived || idea.isPrivate || idea.isCompleted)
       );
+    },
+    deleteIdeaStatus(state) {
+      state.isLoading = true;
+    },
+    deleteIdeaStatusSuccess(state, action) {
+      state.isLoading = false;
+      state.ideas = state.ideas.map((idea) => {
+        if (idea._id === action.payload) {
+          return {
+            ...idea,
+            status: null
+          };
+        }
+        return idea;
+      });
+      state.selectedIdea = {
+        ...state.selectedIdea,
+        status: null
+      };
+    },
+    deleteIdeaStatusFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   },
   extraReducers: (builder) => {

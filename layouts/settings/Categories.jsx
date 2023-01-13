@@ -68,7 +68,7 @@ export default function Categories() {
   }, [loading]);
   return (
     <>
-      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
+      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
         <SectionTitle
           sectionTitle="Categories"
           sectionDescription="Organize your ideas into categories. Categories help you internally manage ideas in groups. Unlike topics, which are visible to end users, categories can only be viewed by company admins and moderators."
@@ -78,7 +78,7 @@ export default function Categories() {
       <div className="max-w-2xl">
         <div className="pb-6 mb-11 border-b border-slate-200">
           <form onSubmit={handleSubmit(formSubmit)}>
-            <div className="grid grid-cols-1 md:grid-cols-[1fr,135px] gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-[1fr,135px] items-start gap-4">
               <Input
                 type="text"
                 name="categoriesName"

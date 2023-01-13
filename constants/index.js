@@ -78,13 +78,13 @@ export const IDEA_BADGES = [
   {
     name: 'Pinned',
     icon: Thumbtack,
-    className: 'text-orange-500 bg-orange-50',
+    className: 'text-green-500 bg-green-50',
     field: 'isPinned'
   },
   {
     name: 'Archived',
     icon: Archive,
-    className: 'text-yellow-500 bg-yellow-50',
+    className: 'text-orange-500 bg-orange-50',
     field: 'isArchived'
   },
   {

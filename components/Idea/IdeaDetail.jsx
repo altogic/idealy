@@ -2,6 +2,8 @@ import CommentCard from '@/components/CommentCard';
 import ImageList from '@/components/ImageList';
 import StatusBadge from '@/components/StatusBadge';
 import TopicBadges from '@/components/TopicBadges';
+import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
+import { commentActions } from '@/redux/comments/commentsSlice';
 import {
   toggleDeleteFeedBackModal,
   toggleFeedBackDetailModal,
@@ -10,10 +12,10 @@ import {
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import CommentForm from '../CommentForm';
 import Drawer from '../Drawer';
 import { Pen, Thumbtack, Trash } from '../icons';
+import InfiniteScroll from '../InfiniteScroll';
 import IdeaActionButton from './admin/IdeaActionButton';
 import IdeaBadges from './IdeaBadges';
 import IdeaDetailAdmin from './IdeaDetailAdmin';
@@ -25,9 +27,11 @@ export default function IdeaDetail({ idea, company, query }) {
   const router = useRouter();
   const user = useSelector((state) => state.auth.user);
   const comments = useSelector((state) => state.comments.comments);
+  const commentCountInfo = useSelector((state) => state.comments.countInfo);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const userIp = useSelector((state) => state.auth.userIp);
   const canComment = useRegisteredUserValidation('commentIdea');
+
   function handleClose() {
     dispatch(toggleFeedBackDetailModal());
     const temp = query;
@@ -40,6 +44,7 @@ export default function IdeaDetail({ idea, company, query }) {
       undefined,
       { scroll: false }
     );
+    dispatch(ideaActions.setSelectedIdea(null));
   }
   return (
     <Drawer
@@ -52,47 +57,49 @@ export default function IdeaDetail({ idea, company, query }) {
       <div className="mb-8">
         <IdeaBadges idea={idea} />
       </div>
-      <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-400 purple:prose-p:text-pt-400 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-8 break-words">
+      <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-400 purple:prose-p:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-8 break-words">
         <p dangerouslySetInnerHTML={{ __html: idea?.content }} />
       </div>
 
       <div className="flex items-center gap-3 mb-8">
         {/* User */}
         <IdeaInfo idea={idea} />
-        {userIp === idea?.ip && (
-          <div className="flex">
+        {(userIp === idea?.ip || user?._id === idea?.author?._id) && (
+          <>
             <svg
               className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
               fill="currentColor"
               viewBox="0 0 8 8">
               <circle cx={4} cy={4} r={3} />
             </svg>
-            <IdeaActionButton
-              type="Pin"
-              onClick={() =>
-                dispatch(
-                  ideaActions.updateIdea({
-                    _id: idea._id,
-                    isPinned: !idea.isPinned
-                  })
-                )
-              }
-              Icon={Thumbtack}
-              className={`${idea.isPinned ? 'text-orange-500' : ''}`}
-            />
-            <IdeaActionButton
-              type="Delete"
-              Icon={Trash}
-              className="hover:text-red-500"
-              onClick={() => dispatch(toggleDeleteFeedBackModal())}
-            />
-            <IdeaActionButton
-              type="Edit"
-              Icon={Pen}
-              className="hover:text-sky-500"
-              onClick={() => dispatch(toggleFeedBackSubmitModal())}
-            />
-          </div>
+            <div className="flex">
+              <IdeaActionButton
+                type="Pin"
+                onClick={() =>
+                  dispatch(
+                    ideaActions.updateIdea({
+                      _id: idea._id,
+                      isPinned: !idea.isPinned
+                    })
+                  )
+                }
+                Icon={Thumbtack}
+                className={`${idea?.isPinned ? 'text-green-500' : 'hover:text-green-500'}`}
+              />
+              <IdeaActionButton
+                type="Delete"
+                Icon={Trash}
+                className="hover:text-red-500"
+                onClick={() => dispatch(toggleDeleteFeedBackModal())}
+              />
+              <IdeaActionButton
+                type="Edit"
+                Icon={Pen}
+                className="hover:text-sky-500"
+                onClick={() => dispatch(toggleFeedBackSubmitModal())}
+              />
+            </div>
+          </>
         )}
       </div>
 
@@ -120,9 +127,21 @@ export default function IdeaDetail({ idea, company, query }) {
 
       <ImageList images={idea?.images} isPreview />
 
-      {canComment && <CommentForm ideaId={idea?._id} company={company} />}
-      {comments?.length > 0 &&
-        comments?.map((comment) => <CommentCard key={comment._id} comment={comment} />)}
+      {canComment && <CommentForm ideaId={idea?._id} />}
+      <InfiniteScroll
+        items={comments}
+        countInfo={commentCountInfo}
+        endOfList={() =>
+          dispatch(
+            commentActions.getComments({
+              ideaId: idea?._id,
+              page: commentCountInfo.currentPage + 1
+            })
+          )
+        }>
+        {comments?.length > 0 &&
+          comments?.map((comment) => <CommentCard key={comment?._id} comment={comment} />)}
+      </InfiniteScroll>
     </Drawer>
   );
 }

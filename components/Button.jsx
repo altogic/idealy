@@ -36,9 +36,11 @@ export default function Button({
         variant === 'blankRed'
           ? 'bg-white dark:bg-aa-900 purple:bg-pt-900 text-red-700 dark:text-aa-200 purple:text-pt-200 border-red-300 dark:border-aa-500 purple:border-pt-500 hover:bg-red-100'
           : '',
-        variant === 'red' ? 'bg-red-600 text-white border-transparent hover:bg-red-700' : '',
+        variant === 'red'
+          ? 'bg-red-600 dark:bg-red-900 purple:bg-red-900 text-white border-transparent hover:bg-red-700'
+          : '',
         variant === 'indigo'
-          ? 'bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white dark:text-aa-100 purple:text-pt-100 border-transparent hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600'
+          ? 'bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white dark:text-aa-100 purple:text-pt-100 border-transparent dark:border-aa-600 purple:border-pt-600 hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600'
           : ''
       )}
       {...props}

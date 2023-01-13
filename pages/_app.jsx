@@ -1,6 +1,5 @@
 import { wrapper } from '@/redux/store';
 import 'animate.css/animate.min.css';
-import 'react-quill/dist/quill.snow.css';
 import { cssTransition, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/globals.css';

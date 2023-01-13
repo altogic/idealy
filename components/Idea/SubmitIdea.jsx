@@ -39,7 +39,7 @@ export default function SubmitIdea({ idea }) {
   const [inpTitle, setInpTitle] = useState();
   const dispatch = useDispatch();
   const schema = yup.object().shape({
-    title: yup.string().required('Title is required'),
+    title: yup.string().max(140, 'Title must be under 140 character').required('Title is required'),
     content: yup.string(),
     topic: yup.array('Choose at least one topic').max(3, 'Maximum 3 topics'),
     guestName: yup.string().when([], {
@@ -79,7 +79,7 @@ export default function SubmitIdea({ idea }) {
       content,
       topics,
       images: fileLinks,
-      author: user._id,
+      author: user?._id,
       company: company._id,
       companySubdomain: company.subdomain,
       ip: userIp
@@ -133,6 +133,7 @@ export default function SubmitIdea({ idea }) {
       });
       setContent(idea?.content);
       setTopics(idea?.topics);
+      setImages(idea?.images);
     } else {
       reset({
         title: undefined,
@@ -282,7 +283,7 @@ export default function SubmitIdea({ idea }) {
               )}
             />
           </div>
-          <hr className="my-8 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
+          <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
           <div>
             {((idea?.guestName && idea?.guestEmail) || guestValidation) && (
               <GuestForm register={register} errors={errors} />

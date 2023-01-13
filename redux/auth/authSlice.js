@@ -145,7 +145,6 @@ export const authSlice = createSlice({
       state.user.savedFilters = state.user.savedFilters.filter(
         (filter) => filter._id !== action.payload
       );
-      console.log('state.user', JSON.stringify(state.user));
       localStorage.setItem('user', JSON.stringify(state.user));
     },
     removeFiltersFailure(state, action) {

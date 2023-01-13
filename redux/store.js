@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
 import createSagaMiddleware from 'redux-saga';
+import { generalSlice } from '@/redux/general/generalSlice';
 import { authSlice } from './auth/authSlice';
 import { companySlice } from './company/companySlice';
 import { topicSlice } from './topics/topicSlice';
@@ -9,7 +10,7 @@ import { notificationSlice } from './notification/notificationSlice';
 import rootSaga from './rootSaga';
 import { ideaSlice } from './ideas/ideaSlice';
 import { commentsSlice } from './comments/commentsSlice';
-import { generalSlice } from '@/redux/general/generalSlice';
+import { repliesSlice } from './replies/repliesSlice';
 
 const sagaMiddleware = createSagaMiddleware();
 const makeStore = () => {
@@ -22,7 +23,8 @@ const makeStore = () => {
       [notificationSlice.name]: notificationSlice.reducer,
       [ideaSlice.name]: ideaSlice.reducer,
       [commentsSlice.name]: commentsSlice.reducer,
-      [generalSlice.name]: generalSlice.reducer
+      [generalSlice.name]: generalSlice.reducer,
+      [repliesSlice.name]: repliesSlice.reducer
     },
     devTools: true,
     middleware: (getDefaultMiddleware) =>
