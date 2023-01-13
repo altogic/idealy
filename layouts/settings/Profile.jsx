@@ -38,7 +38,7 @@ export default function Profile() {
 
   return (
     <>
-      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
+      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
         <SectionTitle
           sectionTitle="Profile Settings"
           sectionDescription="Manage your personal account settings."
@@ -47,15 +47,15 @@ export default function Profile() {
       </div>
       <div className="max-w-lg">
         <PersonalInformation user={user} />
-        <hr className="my-6 lg:my-8 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
+        <hr className="my-6 lg:my-8 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
         <Avatar user={user} />
-        <hr className="my-6 lg:my-8 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
+        <hr className="my-6 lg:my-8 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
         {user?.provider === 'altogic' && (
           <>
             <ChangeEmail user={user} />
-            <hr className="my-6 lg:my-8 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
+            <hr className="my-6 lg:my-8 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
             <ChangePassword />
-            <hr className="my-6 lg:my-8 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
+            <hr className="my-6 lg:my-8 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
           </>
         )}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-50 dark:bg-aa-600 purple:bg-pt-800 p-6 rounded-lg">

@@ -43,7 +43,7 @@ export default function Header() {
     <>
       <header
         className={cn(
-          `fixed top-0 left-0 flex items-center justify-between w-full bg-indigo-900 dark:bg-aa-900 purple:bg-pt-1000 border-b dark:border-slate-600 p-4 lg:py-6 lg:px-12 z-50`,
+          `fixed top-0 left-0 flex items-center justify-between w-full bg-indigo-900 dark:bg-aa-900 purple:bg-pt-1000 border-b dark:border-aa-600 purple:border-pt-600 p-4 lg:py-6 lg:px-12 z-50`,
           router.asPath.includes('settings') ? 'pl-16' : null
         )}>
         <div className="flex items-center">

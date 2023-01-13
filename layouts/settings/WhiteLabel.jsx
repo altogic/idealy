@@ -29,7 +29,7 @@ export default function WhiteLabel() {
   };
   return (
     <div>
-      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
+      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
         <SectionTitle
           sectionTitle="White Label"
           sectionDescription="Personalize Frill to be your own."
@@ -43,10 +43,10 @@ export default function WhiteLabel() {
             Compare plans
           </a>
         </div>
-        <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 py-6 text-xl font-semibold tracking-md border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
+        <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 py-6 text-xl font-semibold tracking-md border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
           White Labeling settings
         </h2>
-        <div className="py-6 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
+        <div className="py-6 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
           <Toggle
             title={`Powered by ${process.env.appName}`}
             description

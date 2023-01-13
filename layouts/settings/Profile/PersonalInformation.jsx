@@ -68,7 +68,7 @@ export default function PersonalInformation() {
 
   return (
     <>
-      <div className="pb-6 lg:pb-4 mb-6 lg:mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
+      <div className="pb-6 lg:pb-4 mb-6 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
         <SectionTitle
           sectionTitle="Personal Information"
           sectionDescription="Update your name and email details here."

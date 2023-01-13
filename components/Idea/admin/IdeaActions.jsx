@@ -12,7 +12,7 @@ export default function IdeaActions({ updateIdea }) {
       <p className="text-slate-900 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">
         Actions
       </p>
-      <hr className="my-2 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
+      <hr className="my-2 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
       <div className="flex w-full flex-row space-x-2">
         <IdeaActionButton
           type="Pin"

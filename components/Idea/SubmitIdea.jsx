@@ -283,7 +283,7 @@ export default function SubmitIdea({ idea }) {
               )}
             />
           </div>
-          <hr className="my-8 border-slate-200 dark:border-aa-400 purple:border-pt-400" />
+          <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
           <div>
             {((idea?.guestName && idea?.guestEmail) || guestValidation) && (
               <GuestForm register={register} errors={errors} />
