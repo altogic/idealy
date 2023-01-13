@@ -16,7 +16,9 @@ export const commentsSlice = createSlice({
     },
     addCommentSuccess: (state, action) => {
       state.createCommentLoading = false;
-      state.comments.push(action.payload);
+      if (!state.comments.find((comment) => comment._id === action.payload._id)) {
+        state.comments = [action.payload, ...state.comments];
+      }
     },
     addCommentFailure: (state, action) => {
       state.createCommentLoading = false;
@@ -27,8 +29,12 @@ export const commentsSlice = createSlice({
     },
     getCommentsSuccess: (state, action) => {
       state.isLoading = false;
-      state.comments = action.payload.result;
       state.countInfo = action.payload.countInfo;
+      if (state.countInfo.currentPage === 1) {
+        state.comments = action.payload.result;
+      } else {
+        state.comments = [...state.comments, ...action.payload.result];
+      }
     },
     getCommentsFailure: (state, action) => {
       state.isLoading = false;

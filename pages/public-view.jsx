@@ -73,7 +73,7 @@ export default function PublicView({ userIp }) {
   };
 
   const handleClickIdea = (idea) => {
-    dispatch(commentActions.getComments(idea._id));
+    dispatch(commentActions.getComments({ ideaId: idea._id, page: 1 }));
     dispatch(ideaActions.setSelectedIdea(idea));
     dispatch(toggleFeedBackDetailModal());
     setRouterQuery(router.query);
@@ -126,7 +126,7 @@ export default function PublicView({ userIp }) {
         const ideaDetail = ideas.find((i) => i._id === feedback);
         if (ideaDetail) {
           dispatch(ideaActions.setSelectedIdea(ideaDetail));
-          dispatch(commentActions.getComments(ideaDetail._id));
+          dispatch(commentActions.getComments({ ideaId: ideaDetail._id, page: 1 }));
           dispatch(toggleFeedBackDetailModal());
         }
       }

@@ -39,10 +39,10 @@ export default function CommentCard({ comment }) {
       ) : (
         <div className="flex gap-5">
           {/* Name First Letter Icon */}
-          <Avatar src={comment?.profilePicture} alt={comment?.name} />
+          <Avatar src={comment?.profilePicture} alt={comment?.name || 'Anonymous'} />
           <div className="w-full space-y-5">
             <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-base tracking-sm">
-              {comment?.name}
+              {comment?.name || 'Anonymous'}
             </h6>
             <div className="prose prose-p:text-slate-500 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
               <div dangerouslySetInnerHTML={{ __html: comment?.text }} />
@@ -68,8 +68,8 @@ export default function CommentCard({ comment }) {
                 onClick={() => {
                   if (!showReplies) {
                     setPage(1);
-                    setIsReplying(!isReplying);
                   }
+                  setIsReplying(!isReplying);
                   setShowReplies(!showReplies);
                 }}
                 className="inline-flex text-slate-500 hover:text-indigo-600 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">

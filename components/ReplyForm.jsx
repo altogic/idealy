@@ -59,13 +59,7 @@ export default function ReplyForm({ setIsReplying, commentId, reply }) {
               size="sm"
               height={8}
             />
-            <Button
-              type="submit"
-              variant="indigo"
-              text={reply ? 'Reply' : 'Edit'}
-              size="sm"
-              height={8}
-            />
+            <Button type="submit" variant="indigo" text="Submit" size="sm" height={8} />
           </div>
         </div>
       </form>

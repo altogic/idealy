@@ -34,13 +34,17 @@ export const repliesSlice = createSlice({
     },
     createReplySuccess: (state, action) => {
       state.loading = false;
-      if (state.replies[action.payload.commentId]) {
-        state.replies[action.payload.commentId] = [
-          ...state.replies[action.payload.commentId],
-          action.payload
-        ];
-      } else {
-        state.replies[action.payload.commentId] = action.payload;
+      if (
+        !state.replies[action.payload.commentId].find((reply) => reply._id === action.payload._id)
+      ) {
+        if (state.replies[action.payload.commentId]) {
+          state.replies[action.payload.commentId] = [
+            ...state.replies[action.payload.commentId],
+            action.payload
+          ];
+        } else {
+          state.replies[action.payload.commentId] = action.payload;
+        }
       }
     },
     createReplyFailure: (state, action) => {
@@ -68,7 +72,6 @@ export const repliesSlice = createSlice({
       state.replies[action.payload.commentId] = state.replies[action.payload.commentId].filter(
         (reply) => reply._id !== action.payload.replyId
       );
-      state.countInfo[action.payload.commentId].count -= 1;
     },
     deleteReplyFailure: (state, action) => {
       state.loading = false;
