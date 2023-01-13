@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import { Close } from '@/components/icons';
 
 export default function Drawer({ open, onClose, title, children, sidebar }) {
   return (
@@ -34,26 +35,13 @@ export default function Drawer({ open, onClose, title, children, sidebar }) {
                 {sidebar}
                 <div className="flex w-full h-full flex-col overflow-y-scroll bg-white dark:bg-aa-900 purple:bg-pt-1000 p-14 drop-shadow-sm">
                   {/* Close Button Submit Feedback Modal */}
-                  <div className="absolute top-8 right-8 flex items-center justify-center w-8 h-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <div className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                     <button
                       type="button"
-                      className="inline-flex items-center justify-center w-full h-full text-slate-500 rounded-md transition hover:bg-slate-100"
+                      className="inline-flex items-center justify-center w-full h-full text-slate-500 rounded-md transition"
                       onClick={onClose}>
                       <span className="sr-only">Close panel</span>
-                      <svg
-                        className="w-4 h-4"
-                        viewBox="0 0 18 18"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true">
-                        <path
-                          d="M17 1L1 17M1 1L17 17"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                      <Close className="w-6 h-6 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
                     </button>
                   </div>
                   <div className="flex items-start justify-between">
