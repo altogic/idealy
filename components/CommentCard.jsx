@@ -75,7 +75,7 @@ export default function CommentCard({ comment }) {
                 className="inline-flex text-slate-500 hover:text-indigo-600 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
                 {showReplies ? 'Hide' : 'Show'} Replies{' '}
               </button>
-              {(userIp === comment.ip || user._id === comment.user._id) && (
+              {(userIp === comment?.ip || user?._id === comment?.user?._id) && (
                 <div className=" hidden group-hover:flex items-center gap-3 ">
                   <svg
                     className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
@@ -94,7 +94,7 @@ export default function CommentCard({ comment }) {
             </div>
             <hr />
             {showReplies &&
-              replies[comment._id]?.map((reply) => (
+              replies[comment?._id]?.map((reply) => (
                 <ReplyCard
                   reply={reply}
                   key={reply?._id}
@@ -110,15 +110,15 @@ export default function CommentCard({ comment }) {
               />
             )}
 
-            {page < countInfo[comment._id]?.totalPages && showReplies && (
+            {page < countInfo[comment?._id]?.totalPages && showReplies && (
               <button
                 type="button"
                 onClick={() => setPage(page + 1)}
                 className="inline-flex text-indigo-600 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
                 {`Show ${
-                  countInfo[comment._id].count - countInfo[comment._id].currentPage * 5
+                  countInfo[comment?._id].count - countInfo[comment?._id].currentPage * 5
                 } more ${
-                  countInfo[comment._id].count - countInfo[comment._id].currentPage * 5 > 1
+                  countInfo[comment?._id].count - countInfo[comment?._id].currentPage * 5 > 1
                     ? 'replies'
                     : 'reply'
                 } `}
