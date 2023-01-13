@@ -140,7 +140,7 @@ export default function Miscellaneous() {
             })
           );
         }}
-        icon={<Trash className="w-6 h-6 text-red-600" />}
+        icon={<Trash className="w-6 h-6 text-red-600 dark:text-red-700 purple:text-red-700" />}
         title="Delete company"
         description="Are you sure you want to delete this company? This action cannot be undone."
         companyName={company.name}

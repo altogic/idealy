@@ -51,7 +51,7 @@ export default function DeleteModal({
                 <div className="flex flex-col lg:flex-row lg:items-center justify-end gap-3">
                   <button
                     type="button"
-                    className="inline-flex items-center justify-center w-full lg:w-auto bg-white dark:bg-aa-400 purple:bg-pt-400 text-gray-700 dark:text-aa-100 purple:text-pt-100 py-2.5 px-4 text-sm font-medium tracking-sm border border-gray-300 rounded-md transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                    className="inline-flex items-center justify-center w-full lg:w-auto bg-white dark:bg-aa-300 purple:bg-pt-300 text-gray-700 dark:text-aa-600 purple:text-pt-600 py-2.5 px-4 text-sm font-medium tracking-sm border border-gray-300 dark:border-aa-400 purple:border-pt-400 rounded-md transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                     onClick={cancelOnClick}
                     {...props}>
                     Cancel
