@@ -53,7 +53,7 @@ export default function IdeaDetail({ idea, company, query }) {
       <div className="mb-8">
         <IdeaBadges idea={idea} />
       </div>
-      <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-400 purple:prose-p:text-pt-400 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-8 break-words">
+      <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-400 purple:prose-p:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-8 break-words">
         <p dangerouslySetInnerHTML={{ __html: idea?.content }} />
       </div>
 
