@@ -78,7 +78,7 @@ export default function Settings() {
               <Tab.Group selectedIndex={tabIndex}>
                 <Tab.List
                   className={cn(
-                    `lg:flex flex-col gap-1 fixed lg:static w-full lg:w-auto pb-10 transform px-2 lg:px-6 lg:border-r lg:border-gray-300 lg:dark:border-aa-400 lg:purple:border-pt-400`,
+                    `lg:flex flex-col gap-1 fixed lg:static w-full lg:w-auto pb-10 transform px-2 lg:px-6 lg:border-r lg:border-gray-300 lg:dark:border-aa-600 lg:purple:border-pt-600`,
                     size.width < BREAKPOINT.TABLET_SIZE && openSidebar
                       ? 'top-0 left-0 flex h-screen bg-white overflow-y-auto z-40'
                       : 'hidden'
@@ -87,7 +87,7 @@ export default function Settings() {
                     onClick={() => setOpenSidebar(!openSidebar)}
                     className="absolute top-3 right-3 lg:hidden w-6 h-6 text-slate-500"
                   />
-                  <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 p-4 mt-3 lg:mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
+                  <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 p-4 mt-3 lg:mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
                     You
                   </h2>
                   {profileTabs?.map((tab) => (
@@ -96,7 +96,7 @@ export default function Settings() {
                         cn(
                           'px-4 py-3 text-sm font-medium tracking-sm border-2 rounded-md text-left focus:outline-none',
                           selected
-                            ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-100 purple:text-pt-100 border-indigo-700 dark:border-aa-400 purple:border-pt-400'
+                            ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-100 purple:text-pt-100 border-indigo-700 dark:border-aa-600 purple:border-pt-600'
                             : 'text-slate-500 dark:text-aa-200 purple:text-pt-200 border-transparent'
                         )
                       }
@@ -109,7 +109,7 @@ export default function Settings() {
                     </Tab>
                   ))}
                   {company?.role !== 'Moderator' && (
-                    <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 p-4 mt-3 lg:mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
+                    <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 p-4 mt-3 lg:mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
                       {company?.name}
                     </h2>
                   )}
@@ -121,7 +121,7 @@ export default function Settings() {
                             cn(
                               'px-4 py-3 text-sm font-medium tracking-sm border-2 rounded-md text-left focus:outline-none',
                               selected
-                                ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-100 purple:text-pt-100 border-indigo-700 dark:border-aa-400 purple:border-pt-400'
+                                ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-100 purple:text-pt-100 border-indigo-700 dark:border-aa-600 purple:border-pt-600'
                                 : 'text-slate-500 dark:text-aa-200 purple:text-pt-200 border-transparent'
                             )
                           }
