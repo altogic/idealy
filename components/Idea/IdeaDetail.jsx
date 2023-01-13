@@ -2,6 +2,8 @@ import CommentCard from '@/components/CommentCard';
 import ImageList from '@/components/ImageList';
 import StatusBadge from '@/components/StatusBadge';
 import TopicBadges from '@/components/TopicBadges';
+import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
+import { commentActions } from '@/redux/comments/commentsSlice';
 import {
   toggleDeleteFeedBackModal,
   toggleFeedBackDetailModal,
@@ -10,10 +12,10 @@ import {
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import CommentForm from '../CommentForm';
 import Drawer from '../Drawer';
 import { Pen, Thumbtack, Trash } from '../icons';
+import InfiniteScroll from '../InfiniteScroll';
 import IdeaActionButton from './admin/IdeaActionButton';
 import IdeaBadges from './IdeaBadges';
 import IdeaDetailAdmin from './IdeaDetailAdmin';
@@ -25,9 +27,11 @@ export default function IdeaDetail({ idea, company, query }) {
   const router = useRouter();
   const user = useSelector((state) => state.auth.user);
   const comments = useSelector((state) => state.comments.comments);
+  const commentCountInfo = useSelector((state) => state.comments.countInfo);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const userIp = useSelector((state) => state.auth.userIp);
   const canComment = useRegisteredUserValidation('commentIdea');
+
   function handleClose() {
     dispatch(toggleFeedBackDetailModal());
     const temp = query;
@@ -123,9 +127,21 @@ export default function IdeaDetail({ idea, company, query }) {
 
       <ImageList images={idea?.images} isPreview />
 
-      {canComment && <CommentForm ideaId={idea?._id} company={company} />}
-      {comments?.length > 0 &&
-        comments?.map((comment) => <CommentCard key={comment?._id} comment={comment} />)}
+      {canComment && <CommentForm ideaId={idea?._id} />}
+      <InfiniteScroll
+        items={comments}
+        countInfo={commentCountInfo}
+        endOfList={() =>
+          dispatch(
+            commentActions.getComments({
+              ideaId: idea?._id,
+              page: commentCountInfo.currentPage + 1
+            })
+          )
+        }>
+        {comments?.length > 0 &&
+          comments?.map((comment) => <CommentCard key={comment?._id} comment={comment} />)}
+      </InfiniteScroll>
     </Drawer>
   );
 }

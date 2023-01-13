@@ -7,6 +7,8 @@ import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
+import { commentActions } from '@/redux/comments/commentsSlice';
+import { repliesActions } from '@/redux/replies/repliesSlice';
 import { Email } from './icons';
 import { generateUrl } from '../utils';
 
@@ -148,6 +150,24 @@ export default function Realtime() {
   function downVoteIdeaHandler({ message }) {
     dispatch(ideaActions.downVoteIdeaSuccess(message));
   }
+  function addCommentHandler({ message }) {
+    dispatch(commentActions.addCommentSuccess(message));
+  }
+  function updateCommentHandler({ message }) {
+    dispatch(commentActions.updateCommentSuccess(message));
+  }
+  function deleteCommentHandler({ message }) {
+    dispatch(commentActions.deleteCommentSuccess(message));
+  }
+  function addReplyHandler({ message }) {
+    dispatch(repliesActions.createReplySuccess(message));
+  }
+  function updateReplyHandler({ message }) {
+    dispatch(repliesActions.updateReplySuccess(message));
+  }
+  function deleteReplyHandler({ message }) {
+    dispatch(repliesActions.deleteReplySuccess(message));
+  }
 
   useEffect(() => {
     if (user && company) {
@@ -177,6 +197,12 @@ export default function Realtime() {
       realtime.on('delete-idea', deleteIdeaHandler);
       realtime.on('vote-idea', voteIdeaHandler);
       realtime.on('downVote-idea', downVoteIdeaHandler);
+      realtime.on('add-comment', addCommentHandler);
+      realtime.on('update-comment', updateCommentHandler);
+      realtime.on('delete-comment', deleteCommentHandler);
+      realtime.on('add-reply', addReplyHandler);
+      realtime.on('update-reply', updateReplyHandler);
+      realtime.on('delete-reply', deleteReplyHandler);
     } else if (company) {
       realtime.join(company._id);
       realtime.on('update-company', updateCompanyHandler);
@@ -185,6 +211,12 @@ export default function Realtime() {
       realtime.on('delete-idea', deleteIdeaHandler);
       realtime.on('vote-idea', voteIdeaHandler);
       realtime.on('downVote-idea', downVoteIdeaHandler);
+      realtime.on('add-comment', addCommentHandler);
+      realtime.on('update-comment', updateCommentHandler);
+      realtime.on('delete-comment', deleteCommentHandler);
+      realtime.on('add-reply', addReplyHandler);
+      realtime.on('update-reply', updateReplyHandler);
+      realtime.on('delete-reply', deleteReplyHandler);
     }
     return () => {
       realtime.off('delete-membership', deleteMembershipHandler);
@@ -206,6 +238,12 @@ export default function Realtime() {
       realtime.off('delete-idea', deleteIdeaHandler);
       realtime.off('vote-idea', voteIdeaHandler);
       realtime.off('downVote-idea', downVoteIdeaHandler);
+      realtime.off('add-comment', addCommentHandler);
+      realtime.off('update-comment', updateCommentHandler);
+      realtime.off('delete-comment', deleteCommentHandler);
+      realtime.off('add-reply', addReplyHandler);
+      realtime.off('update-reply', updateReplyHandler);
+      realtime.off('delete-reply', deleteReplyHandler);
     };
   }, [user, companies, company]);
 
