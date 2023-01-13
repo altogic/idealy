@@ -44,7 +44,9 @@ export default function CreateModal({
                 <div className="absolute top-8 right-8">
                   <Button
                     variant="icon"
-                    icon={<Close className="w-6 h-6 text-slate-500" />}
+                    icon={
+                      <Close className="w-6 h-6 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
+                    }
                     onClick={cancelOnClick}
                   />
                 </div>
