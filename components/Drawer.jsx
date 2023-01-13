@@ -57,7 +57,7 @@ export default function Drawer({ open, onClose, title, children, sidebar }) {
                     </button>
                   </div>
                   <div className="flex items-start justify-between">
-                    <Dialog.Title className="text-slate-800 dark:text-aa-100 purple:text-pt-100 mb-8 text-xl font-semibold break-all">
+                    <Dialog.Title className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all">
                       {title}
                     </Dialog.Title>
                   </div>
