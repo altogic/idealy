@@ -40,7 +40,7 @@ export default function Button({
           ? 'bg-red-600 dark:bg-red-900 purple:bg-red-900 text-white border-transparent hover:bg-red-700'
           : '',
         variant === 'indigo'
-          ? 'bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white dark:text-aa-100 purple:text-pt-100 border-transparent hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600'
+          ? 'bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white dark:text-aa-100 purple:text-pt-100 border-transparent dark:border-aa-600 purple:border-pt-600 hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600'
           : ''
       )}
       {...props}
