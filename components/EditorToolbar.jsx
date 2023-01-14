@@ -1,24 +1,4 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable react/button-has-type */
-
-function CustomUndo() {
-  return (
-    <svg viewBox="0 0 18 18">
-      <polygon className="ql-fill ql-stroke" points="6 10 4 12 2 10 6 10" />
-      <path className="ql-stroke" d="M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9" />
-    </svg>
-  );
-}
-
-// Redo button icon component for Quill editor
-function CustomRedo() {
-  return (
-    <svg viewBox="0 0 18 18">
-      <polygon className="ql-fill ql-stroke" points="12 10 14 12 16 10 12 10" />
-      <path className="ql-stroke" d="M9.91,13.91A4.6,4.6,0,0,1,9,14a5,5,0,1,1,5-5" />
-    </svg>
-  );
-}
+import { Bold, Italic, Underline, Strike, Link, Undo, Redo } from './icons';
 
 // Undo and redo functions for Custom Toolbar
 function undoChange() {
@@ -50,18 +30,28 @@ export const formats = ['bold', 'italic', 'underline', 'strike', 'link'];
 // Quill Toolbar component
 export default function EditorToolbar() {
   return (
-    <div id="toolbar">
+    <div id="toolbar" className="ql-toolbar ql-snow">
       <span className="ql-formats">
-        <button className="ql-bold" />
-        <button className="ql-italic" />
-        <button className="ql-underline" />
-        <button className="ql-strike" />
-        <button className="ql-link" />
-        <button className="ql-undo">
-          <CustomUndo />
+        <button type="button" className="ql-bold">
+          <Bold />
         </button>
-        <button className="ql-redo">
-          <CustomRedo />
+        <button type="button" className="ql-italic">
+          <Italic />
+        </button>
+        <button type="button" className="ql-underline">
+          <Underline />
+        </button>
+        <button type="button" className="ql-strike">
+          <Strike />
+        </button>
+        <button type="button" className="ql-link">
+          <Link />
+        </button>
+        <button type="button" className="ql-undo">
+          <Undo />
+        </button>
+        <button type="button" className="ql-redo">
+          <Redo />
         </button>
       </span>
     </div>
