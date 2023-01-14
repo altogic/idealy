@@ -19,7 +19,7 @@ export default function FilterIdea({
   }, []);
   const company = useSelector((state) => state.company.company);
   return (
-    <div className="mb-9 flex items-center gap-4 justify-between w-full">
+    <div className="flex items-center gap-4 justify-between w-full">
       <Listbox
         value={sortType}
         onChange={(value) => {
@@ -27,7 +27,7 @@ export default function FilterIdea({
           router.query.sort = value.url;
           router.push(router);
         }}>
-        <div className="relative mt-1 flex-1">
+        <div className="relative flex-1">
           <Listbox.Button className="relative w-full inline-flex max-w-[195px] bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-600 purple:border-pt-600 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
             <UpDown className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200 mr-2" />
             <span className="block text-gray-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm truncate">
