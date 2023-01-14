@@ -58,7 +58,7 @@ export default function WhiteLabel() {
             }}
           />
         </div>
-        <div className="py-6 border-b border-slate-200">
+        <div className="py-6 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
           <Toggle
             title="Create a company"
             description

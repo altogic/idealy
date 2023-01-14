@@ -76,7 +76,7 @@ export default function RoadMaps() {
         />
       </div>
       <div className="lg:max-w-2xl">
-        <div className="pb-6 mb-11 border-b border-slate-200">
+        <div className="pb-6 mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
           <form
             onSubmit={handleSubmit(formSubmit)}
             className="grid grid-cols-1 md:grid-cols-[500px,1fr] items-end gap-4">

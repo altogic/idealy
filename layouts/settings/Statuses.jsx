@@ -99,7 +99,7 @@ export default function Statuses() {
         />
       </div>
       <div className="max-w-2xl">
-        <div className="pb-4 mb-6 lg:mb-11 border-b border-slate-200">
+        <div className="pb-6 mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
           <form onSubmit={handleSubmit(formSubmit)}>
             <div className="grid grid-cols-1 md:grid-cols-[1fr,135px] items-start gap-4">
               <Input
@@ -147,7 +147,7 @@ export default function Statuses() {
             />
           )}
         </div>
-        <hr className="border-slate-200" />
+        <hr className="border-slate-200 dark:border-aa-600 purple:border-pt-600" />
         <div>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-8">
             <span className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-sm">

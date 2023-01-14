@@ -47,8 +47,8 @@ export default function Miscellaneous() {
           big
         />
       </div>
-      <div className="max-w-2xl divide-y divide-slate-200 dark:divide-aa-400 purple:divide-pt-400">
-        <div className="divide-y divide-slate-200 dark:divide-aa-400 purple:divide-pt-400">
+      <div className="max-w-2xl divide-y divide-slate-200 dark:divide-aa-600 purple:divide-pt-600">
+        <div className="divide-y divide-slate-200 dark:divide-aa-600 purple:divide-pt-600">
           <div className="pb-6">
             <SectionTitle sectionTitle="Company settings" />
           </div>
@@ -78,7 +78,7 @@ export default function Miscellaneous() {
           </div>
         </div>
         {company?.role === 'Owner' && (
-          <div className="py-14 divide-y divide-slate-200 dark:divide-aa-400 purple:divide-pt-400">
+          <div className="py-14 divide-y divide-slate-200 dark:divide-aa-600 purple:divide-pt-600">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-6">
               <div>
                 <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-base font-semibold tracking-sm">

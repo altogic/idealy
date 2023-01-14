@@ -93,7 +93,7 @@ export default function Authentication() {
         />
       </div>
       <div className="max-w-2xl">
-        <div className="divide-y divide-slate-200 dark:divide-aa-400 purple:divide-pt-400">
+        <div className="divide-y divide-slate-200 dark:divide-aa-600 purple:divide-pt-600">
           <div className="pb-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <SectionTitle sectionTitle="Authentication method" />
@@ -185,7 +185,7 @@ export default function Authentication() {
           </div>
           {authenticationSelected === 'Custom' ? (
             <div className="py-20 lg:py-24">
-              <div className="divide-y divide-slate-200 dark:divide-aa-400 purple:divide-pt-400">
+              <div className="divide-y divide-slate-200 dark:divide-aa-600 purple:divide-pt-600">
                 <div className="pb-4">
                   <SectionTitle sectionTitle="Advanced settings" />
                 </div>

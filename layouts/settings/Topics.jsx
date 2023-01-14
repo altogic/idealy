@@ -76,7 +76,7 @@ export default function Topics() {
         />
       </div>
       <div className="max-w-2xl">
-        <div className="pb-6 mb-11 border-b border-slate-200">
+        <div className="pb-6 mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
           <form onSubmit={handleSubmit(formSubmit)}>
             <div className="grid grid-cols-1 md:grid-cols-[1fr,135px] items-start gap-4">
               <Input
