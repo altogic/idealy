@@ -12,11 +12,13 @@ import GuestForm from './GuestForm';
 export default function CommentForm({ ideaId, editedComment, setEditComment }) {
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.comments.createCommentLoading);
+  const updateCommentLoading = useSelector((state) => state.comments.updateCommentLoading);
   const user = useSelector((state) => state.auth.user);
   const company = useSelector((state) => state.company.company);
   const [comment, setComment] = useState('');
   const guestValidation = useGuestValidation({ company, fieldName: 'commentIdea' });
   const userIp = useSelector((state) => state.auth.userIp);
+
   const schema = yup.object().shape({
     text: yup.string(),
     guestName: yup.string().when([], {
@@ -38,12 +40,13 @@ export default function CommentForm({ ideaId, editedComment, setEditComment }) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitSuccessful },
     setValue,
     control
   } = useForm({
     resolver: yupResolver(schema)
   });
+
   const submitComment = (data) => {
     if (comment.trim() === '') {
       return;
@@ -57,7 +60,6 @@ export default function CommentForm({ ideaId, editedComment, setEditComment }) {
           email: user?.email || data.guestEmail
         })
       );
-      setEditComment(false);
     } else {
       dispatch(
         commentActions.addComment({
@@ -69,8 +71,8 @@ export default function CommentForm({ ideaId, editedComment, setEditComment }) {
           ip: userIp
         })
       );
+      setComment('');
     }
-    setComment('');
   };
   useEffect(() => {
     setComment('');
@@ -84,8 +86,15 @@ export default function CommentForm({ ideaId, editedComment, setEditComment }) {
       setValue('privacyPolicy', true);
     }
   }, [editedComment]);
+
+  useEffect(() => {
+    if (!updateCommentLoading && setEditComment && isSubmitSuccessful) {
+      setEditComment(false);
+      setComment('');
+    }
+  }, [updateCommentLoading, setEditComment, isSubmitSuccessful]);
   return (
-    <form onSubmit={handleSubmit(submitComment)} className="mt-8 mb-6">
+    <form onSubmit={handleSubmit(submitComment)} className="m-4">
       <Controller
         control={control}
         name="text"
@@ -101,7 +110,7 @@ export default function CommentForm({ ideaId, editedComment, setEditComment }) {
         )}
       />
       {guestValidation && <GuestForm register={register} errors={errors} />}
-      <div className="mt-8 text-right flex justify-end gap-2">
+      <div className={`flex justify-end gap-2 ${editedComment ? 'mt-2' : 'm-8'}`}>
         {editedComment && (
           <Button
             type="button"
@@ -109,7 +118,6 @@ export default function CommentForm({ ideaId, editedComment, setEditComment }) {
             variant="blank"
             size="sm"
             height="10"
-            loading={isLoading}
             onClick={() => setEditComment(false)}
           />
         )}
@@ -119,7 +127,7 @@ export default function CommentForm({ ideaId, editedComment, setEditComment }) {
           variant="indigo"
           size="sm"
           height="10"
-          loading={isLoading}
+          loading={editedComment ? updateCommentLoading : isLoading}
         />
       </div>
     </form>

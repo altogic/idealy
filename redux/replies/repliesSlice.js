@@ -5,16 +5,18 @@ export const repliesSlice = createSlice({
   name: 'replies',
   initialState: {
     replies: {},
-    loading: false,
+    isLoading: false,
     countInfo: {},
-    error: null
+    error: null,
+    createReplyLoading: false,
+    updateReplyLoading: false
   },
   reducers: {
     getReplies: (state) => {
-      state.loading = true;
+      state.isLoading = true;
     },
     getRepliesSuccess: (state, action) => {
-      state.loading = false;
+      state.isLoading = false;
       state.countInfo[action.payload.commentId] = action.payload.countInfo;
       if (state.countInfo[action.payload.commentId].currentPage === 1) {
         state.replies[action.payload.commentId] = action.payload.result;
@@ -26,14 +28,14 @@ export const repliesSlice = createSlice({
       }
     },
     getRepliesFailure: (state, action) => {
-      state.loading = false;
+      state.isLoading = false;
       state.error = action.payload;
     },
     createReply: (state) => {
-      state.loading = true;
+      state.createReplyLoading = true;
     },
     createReplySuccess: (state, action) => {
-      state.loading = false;
+      state.createReplyLoading = false;
       if (
         !state.replies[action.payload.commentId].find((reply) => reply._id === action.payload._id)
       ) {
@@ -48,33 +50,33 @@ export const repliesSlice = createSlice({
       }
     },
     createReplyFailure: (state, action) => {
-      state.loading = false;
+      state.createReplyLoading = false;
       state.error = action.payload;
     },
     updateReply: (state) => {
-      state.loading = true;
+      state.updateReplyLoading = true;
     },
     updateReplySuccess: (state, action) => {
-      state.loading = false;
+      state.updateReplyLoading = false;
       state.replies[action.payload.commentId] = state.replies[action.payload.commentId].map(
         (reply) => (reply._id === action.payload._id ? action.payload : reply)
       );
     },
     updateReplyFailure: (state, action) => {
-      state.loading = false;
+      state.updateReplyLoading = false;
       state.error = action.payload;
     },
     deleteReply: (state) => {
-      state.loading = true;
+      state.isLoading = true;
     },
     deleteReplySuccess: (state, action) => {
-      state.loading = false;
+      state.isLoading = false;
       state.replies[action.payload.commentId] = state.replies[action.payload.commentId].filter(
         (reply) => reply._id !== action.payload.replyId
       );
     },
     deleteReplyFailure: (state, action) => {
-      state.loading = false;
+      state.isLoading = false;
       state.error = action.payload;
     }
   },

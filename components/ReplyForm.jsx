@@ -11,6 +11,8 @@ export default function ReplyForm({ setIsReplying, commentId, reply }) {
   const dispatch = useDispatch();
   const ip = useSelector((state) => state.auth.userIp);
   const user = useSelector((state) => state.auth.user);
+  const createReplyLoading = useSelector((state) => state.replies.createReplyLoading);
+  const updateReplyLoading = useSelector((state) => state.replies.updateReplyLoading);
   const schema = yup.object().shape({
     content: yup.string().required('Content is required')
   });
@@ -19,7 +21,7 @@ export default function ReplyForm({ setIsReplying, commentId, reply }) {
     register,
     handleSubmit,
     setValue,
-    formState: { errors }
+    formState: { errors, isSubmitSuccessful }
   } = useForm({
     resolver: yupResolver(schema),
     mode: 'all'
@@ -28,7 +30,6 @@ export default function ReplyForm({ setIsReplying, commentId, reply }) {
   const onSubmit = (data) => {
     if (reply) {
       dispatch(repliesActions.updateReply({ ...data, _id: reply._id }));
-      setIsReplying(false);
     } else {
       dispatch(repliesActions.createReply({ ...data, commentId, ip, user: user._id }));
     }
@@ -39,6 +40,12 @@ export default function ReplyForm({ setIsReplying, commentId, reply }) {
       setValue('content', reply.content);
     }
   }, [reply]);
+
+  useEffect(() => {
+    if (isSubmitSuccessful && !updateReplyLoading && reply) {
+      setIsReplying(false);
+    }
+  }, [isSubmitSuccessful, updateReplyLoading]);
   return (
     <div className="w-full relative max-h-[14z0px]">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full">
@@ -59,7 +66,14 @@ export default function ReplyForm({ setIsReplying, commentId, reply }) {
               size="sm"
               height={8}
             />
-            <Button type="submit" variant="indigo" text="Submit" size="sm" height={8} />
+            <Button
+              type="submit"
+              variant="indigo"
+              text="Submit"
+              size="sm"
+              height={8}
+              loading={reply ? updateReplyLoading : createReplyLoading}
+            />
           </div>
         </div>
       </form>
