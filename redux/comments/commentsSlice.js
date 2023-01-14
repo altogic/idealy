@@ -8,6 +8,7 @@ export const commentsSlice = createSlice({
     countInfo: {},
     isLoading: false,
     createCommentLoading: false,
+    updateCommentLoading: false,
     error: null
   },
   reducers: {
@@ -52,10 +53,10 @@ export const commentsSlice = createSlice({
       state.error = action.payload;
     },
     updateComment: (state) => {
-      state.isLoading = true;
+      state.updateCommentLoading = true;
     },
     updateCommentSuccess: (state, action) => {
-      state.isLoading = false;
+      state.updateCommentLoading = false;
       state.comments = state.comments.map((comment) => {
         if (comment._id === action.payload._id) {
           return action.payload;
@@ -64,7 +65,7 @@ export const commentsSlice = createSlice({
       });
     },
     updateCommentFailure: (state, action) => {
-      state.isLoading = false;
+      state.updateCommentLoading = false;
       state.error = action.payload;
     }
   },
