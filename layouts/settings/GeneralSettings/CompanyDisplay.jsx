@@ -28,7 +28,7 @@ export default function CompanyDisplay() {
 
   return (
     <>
-      <div className="pb-4 mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-aa-600">
+      <div className="pb-4 mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
         <SectionTitle
           sectionTitle="Company Display"
           sectionDescription="Update your company display assets."
