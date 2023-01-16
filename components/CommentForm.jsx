@@ -110,7 +110,7 @@ export default function CommentForm({ ideaId, editedComment, setEditComment }) {
         )}
       />
       {guestValidation && <GuestForm register={register} errors={errors} />}
-      <div className={`flex justify-end gap-2 ${editedComment ? 'mt-2' : 'm-8'}`}>
+      <div className={`flex justify-end gap-2 ${editedComment ? 'mt-2' : 'my-8'}`}>
         {editedComment && (
           <Button
             type="button"
