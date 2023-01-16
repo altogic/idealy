@@ -15,7 +15,7 @@ export default function Editor({ content, setContent, errors, children, ...props
         formats={formats}
         className={` border ${
           !errors?.message
-            ? 'border-gray-300 dark:border-aa-600 purple:border-pt-600 focus:border-blue-300'
+            ? 'border-gray-300 dark:border-aa-600 purple:border-pt-800 focus:border-blue-300'
             : 'border-red-300 focus:border-red-300'
         }  rounded-md`}
         {...props}

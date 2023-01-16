@@ -40,7 +40,7 @@ export default function CommentCard({ comment }) {
                 id="type-a-comment"
                 name="type-a-comment"
                 rows={5}
-                className="block w-full bg-white dark:bg-aa-800 purple:bg-pt-800 text-slate-500 dark:text-aa-200 purple:text-pt-200 text-base tracking-sm border border-gray-300 dark:border-aa-600 purple:border-pt-600 rounded-md placeholder:text-slate-500 dark:placeholder-aa-200 purple:placeholder-pt-200 focus:border-indigo-500 focus:ring-indigo-500 dark:focus:ring-aa-400 dark:focus:border-aa-400 purple:focus:ring-pt-400 purple:focus:border-pt-400"
+                className="block w-full bg-white dark:bg-aa-800 purple:bg-pt-800 text-slate-500 dark:text-aa-200 purple:text-pt-200 text-base tracking-sm border border-gray-300 dark:border-aa-600 purple:border-pt-800 rounded-md placeholder:text-slate-500 dark:placeholder-aa-200 purple:placeholder-pt-200 focus:border-indigo-500 focus:ring-indigo-500 dark:focus:ring-aa-400 dark:focus:border-aa-400 purple:focus:ring-pt-400 purple:focus:border-pt-400"
                 placeholder="Type a comment"
               />
             </div>

@@ -91,7 +91,7 @@ export default function Statuses() {
 
   return (
     <>
-      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
+      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
         <SectionTitle
           sectionTitle="Statuses"
           sectionDescription="Use Statuses to track Ideas on your Roadmap."
@@ -99,7 +99,7 @@ export default function Statuses() {
         />
       </div>
       <div className="max-w-2xl">
-        <div className="pb-6 mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
+        <div className="pb-6 mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
           <form onSubmit={handleSubmit(formSubmit)}>
             <div className="grid grid-cols-1 md:grid-cols-[1fr,135px] items-start gap-4">
               <Input
@@ -147,7 +147,7 @@ export default function Statuses() {
             />
           )}
         </div>
-        <hr className="border-slate-200 dark:border-aa-600 purple:border-pt-600" />
+        <hr className="border-slate-200 dark:border-aa-600 purple:border-pt-800" />
         <div>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-8">
             <span className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-sm">
@@ -155,7 +155,7 @@ export default function Statuses() {
             </span>
             <Listbox value={status} onChange={(selected) => changeCompletedStatus(selected)}>
               <div className="relative mt-1 flex-[0.6]">
-                <Listbox.Button className="relative w-full inline-flex bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-600 purple:border-pt-600 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                <Listbox.Button className="relative w-full inline-flex bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-600 purple:border-pt-800 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                   <div className="inline-flex items-center gap-2">
                     {status.color && (
                       <svg className="h-2.5 w-2.5" fill={status.color} viewBox="0 0 8 8">

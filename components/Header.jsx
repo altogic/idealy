@@ -43,7 +43,7 @@ export default function Header() {
     <>
       <header
         className={cn(
-          `fixed top-0 left-0 flex items-center justify-between w-full bg-indigo-900 dark:bg-aa-900 purple:bg-pt-1000 border-b dark:border-aa-600 purple:border-pt-600 p-4 lg:py-6 lg:px-12 z-50`,
+          `fixed top-0 left-0 flex items-center justify-between w-full bg-indigo-900 dark:bg-aa-900 purple:bg-pt-1000 border-b dark:border-aa-600 purple:border-pt-800 p-4 lg:py-6 lg:px-12 z-50`,
           router.asPath.includes('settings') ? 'pl-16' : null
         )}>
         <div className="flex items-center">
@@ -72,7 +72,7 @@ export default function Header() {
                 className={cn(
                   `flex items-center justify-center py-2 px-3 rounded-md transition`,
                   router.pathname === '/public-view'
-                    ? 'bg-indigo-700 dark:bg-aa-700 purple:bg-pt-900'
+                    ? 'bg-indigo-700 dark:bg-aa-600 purple:bg-pt-900'
                     : 'hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900'
                 )}>
                 <Link href={generateUrl('public-view', selectedCompany.subdomain)}>
@@ -139,7 +139,7 @@ export default function Header() {
                 leaveTo="transform opacity-0 scale-95">
                 <Menu.Items className="origin-top-right absolute top-12 right-0 w-[430px] rounded-lg shadow-xl bg-white dark:bg-aa-700 purple:bg-pt-900 focus:outline-none z-50">
                   <div>
-                    <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
+                    <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
                       <h6 className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-base font-semibold tracking-md">
                         Notification
                       </h6>

@@ -8,7 +8,7 @@ import CompanySiteNavigation from './GeneralSettings/CompanySiteNavigation';
 export default function GeneralFunctions() {
   return (
     <>
-      <div className="pb-4 mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-600">
+      <div className="pb-4 mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
         <SectionTitle
           sectionTitle="General Settings"
           sectionDescription="Manage your company settings."
@@ -17,13 +17,13 @@ export default function GeneralFunctions() {
       </div>
       <div className="max-w-[510px]">
         <CompanyLogo />
-        <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
+        <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
         <CompanyName />
-        <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
+        <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
         <CompanyDisplay />
-        <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
+        <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
         <CompanyFavicon />
-        <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
+        <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
         <CompanySiteNavigation />
       </div>
     </>
