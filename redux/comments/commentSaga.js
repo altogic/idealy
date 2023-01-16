@@ -1,6 +1,7 @@
 import CommentsService from '@/services/comments';
 import { realtime } from '@/utils/altogic';
 import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { ideaActions } from '../ideas/ideaSlice';
 import { commentActions } from './commentsSlice';
 
 function* addCommentSaga({ payload }) {
@@ -11,7 +12,7 @@ function* addCommentSaga({ payload }) {
       throw new Error(errors);
     }
     yield put(commentActions.addCommentSuccess(data));
-
+    yield put(ideaActions.addedNewComment(data.ideaId));
     realtime.send(company._id, 'add-comment', data);
   } catch (error) {
     yield put(commentActions.addCommentFailure(error));
@@ -23,13 +24,12 @@ function* getCommentsSaga({ payload: { ideaId, page } }) {
     if (errors) {
       throw new Error(errors);
     }
-
     yield put(commentActions.getCommentsSuccess(comments));
   } catch (error) {
     yield put(commentActions.getCommentsFailure(error));
   }
 }
-function* deleteCommentSaga({ payload: commentId }) {
+function* deleteCommentSaga({ payload: { commentId, ideaId } }) {
   try {
     const company = yield select((state) => state.company.company);
     const { errors } = yield call(CommentsService.deleteComment, commentId);
@@ -37,6 +37,7 @@ function* deleteCommentSaga({ payload: commentId }) {
       throw new Error(errors);
     }
     yield put(commentActions.deleteCommentSuccess(commentId));
+    yield put(ideaActions.deleteComment(ideaId));
     realtime.send(company._id, 'delete-comment', commentId);
   } catch (error) {
     yield put(commentActions.deleteCommentFailure(error));

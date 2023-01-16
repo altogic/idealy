@@ -130,14 +130,10 @@ export const ideaSlice = createSlice({
     },
     addedNewComment(state, action) {
       state.ideas = state.ideas.map((idea) => {
-        if (idea._id === action.payload.ideaId) {
-          const recentUsers = idea.recentUsers
-            ? idea.recentUsers?.filter((rc) => rc?.user !== action.payload.data?.user)
-            : [];
+        if (idea._id === action.payload) {
           return {
             ...idea,
-            commentCount: idea.commentCount + 1,
-            recentUsers: [...recentUsers, action.payload.data]
+            commentCount: idea.commentCount + 1
           };
         }
         return idea;
@@ -213,6 +209,17 @@ export const ideaSlice = createSlice({
     deleteIdeaStatusFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    deleteComment(state, action) {
+      state.ideas = state.ideas.map((idea) => {
+        if (idea._id === action.payload) {
+          return {
+            ...idea,
+            commentCount: idea.commentCount - 1
+          };
+        }
+        return idea;
+      });
     }
   },
   extraReducers: (builder) => {
