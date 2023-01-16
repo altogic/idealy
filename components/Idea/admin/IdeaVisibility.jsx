@@ -54,7 +54,7 @@ export default function IdeaVisibility({ updateIdea }) {
           });
           setIsPrivate(!isPrivate);
         }}
-        text={`Make ${idea?.isPrivate ? 'Public' : 'Private'}`}
+        text="Make Private"
       />
       <IdeaSwitch
         checked={showOnRoadMap}

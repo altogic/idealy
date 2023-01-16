@@ -172,7 +172,7 @@ export default function PublicView({ userIp }) {
 
             {isSubmitIdeaVisible && <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />}
           </div>
-          <div className="flex items-start justify-between">
+          <div className="flex items-start justify-between mb-9">
             <FilterIdea
               sortType={sortType}
               setSortType={setSortType}
@@ -200,8 +200,8 @@ export default function PublicView({ userIp }) {
               ))
             ) : (
               <EmptyState
-                title="No data found"
-                description="Your search did not match any data. Please retry or try a new word."
+                title="No feature ideas found."
+                description="Your search did not match any data or this company does not have any feature ideas yet."
               />
             )}
           </InfiniteScroll>

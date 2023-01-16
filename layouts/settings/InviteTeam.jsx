@@ -103,7 +103,7 @@ export default function InviteTeam() {
   };
   return (
     <div>
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between lg:gap-4 pb-4 mb-10 lg:mb-11 lg:border-b lg:border-slate-200 dark:border-aa-400 purple:border-aa-400">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between lg:gap-4 pb-4 mb-10 lg:mb-11 lg:border-b lg:border-slate-200 dark:border-aa-600 purple:border-pt-800">
         <div className="pb-4 mb-10 lg:pb-0 lg:mb-0 border-b border-slate-200 lg:border-0">
           <SectionTitle
             sectionTitle="Invite Team"
@@ -198,7 +198,7 @@ export default function InviteTeam() {
                               <Label label="Role" />
                               <Listbox value={roleSelected} onChange={setRoleSelected}>
                                 <div className="relative">
-                                  <Listbox.Button className="flex items-center relative w-full md:w-[150px] h-11 bg-white dark:bg-aa-800 purple:bg-pt-800 py-3 px-[14px] border border-slate-300 dark:border-aa-600 purple:border-pt-600 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                                  <Listbox.Button className="flex items-center relative w-full md:w-[150px] h-11 bg-white dark:bg-aa-800 purple:bg-pt-800 py-3 px-[14px] border border-slate-300 dark:border-aa-600 purple:border-pt-800 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                                     <span className="block text-gray-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm truncate">
                                       {roleSelected.name}
                                     </span>
@@ -309,26 +309,26 @@ export default function InviteTeam() {
         </div>
       </div>
       {getCompanyMembersLoading ? (
-        <div role="status" className="w-full space-y-4 divide-y divide-gray-200 animate-pulse">
+        <div role="status" className="w-full space-y-4 divide-y divide-gray-400 animate-pulse">
           <div className="flex justify-between items-center">
             <div>
-              <div className="h-2.5 bg-gray-300 rounded-full w-24 mb-2.5" />
-              <div className="w-32 h-2 bg-gray-200 rounded-full" />
+              <div className="h-2.5 bg-gray-400 rounded-full w-24 mb-2.5" />
+              <div className="w-32 h-2 bg-gray-300 rounded-full" />
             </div>
-            <div className="h-2.5 bg-gray-300 rounded-full w-12" />
+            <div className="h-2.5 bg-gray-400 rounded-full w-12" />
           </div>
           <div className="flex justify-between items-center pt-4">
             <div>
-              <div className="h-2.5 bg-gray-300 rounded-full w-24 mb-2.5" />
-              <div className="w-32 h-2 bg-gray-200 rounded-full" />
+              <div className="h-2.5 bg-gray-400 rounded-full w-24 mb-2.5" />
+              <div className="w-32 h-2 bg-gray-300 rounded-full" />
             </div>
-            <div className="h-2.5 bg-gray-300 rounded-full w-12" />
+            <div className="h-2.5 bg-gray-400 rounded-full w-12" />
           </div>
           <span className="sr-only">Loading...</span>
         </div>
       ) : (
         <div>
-          <div className="flex items-center justify-between pl-4 pr-[7rem] pb-4 mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-aa-400">
+          <div className="flex items-center justify-between pl-4 pr-[7rem] pb-4 mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
             <span className="text-slate-800 dark:text-aa-100 purple:text-pt-100">Admins</span>
             <span className="hidden lg:inline-block text-slate-800 dark:text-aa-100 purple:text-pt-100">
               Role

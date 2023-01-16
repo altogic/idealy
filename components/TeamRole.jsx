@@ -149,7 +149,7 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
             onChange={(selected) => handleRoleChange(selected.name)}
             disabled={company?.role !== 'Owner' && role === company?.role}>
             <div className="relative w-full">
-              <Listbox.Button className="relative inline-flex items-center justify-between w-full lg:w-[150px] bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-600 purple:border-pt-600 rounded-lg cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300">
+              <Listbox.Button className="relative inline-flex items-center justify-between w-full lg:w-[150px] bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-600 purple:border-pt-800 rounded-lg cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300">
                 <span className="block text-gray-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm truncate">
                   {selected}
                 </span>
