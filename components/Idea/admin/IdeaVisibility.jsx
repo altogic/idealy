@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fileActions } from '@/redux/file/fileSlice';
 import Image from '@/components/Image';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
+import Button from '@/components/Button';
 import IdeaAdminTab from './IdeaAdminTab';
 import IdeaSwitch from './IdeaSwitch';
-import Button from '@/components/Button';
 
 export default function IdeaVisibility({ updateIdea }) {
   const dispatch = useDispatch();

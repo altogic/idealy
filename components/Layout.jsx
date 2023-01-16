@@ -49,11 +49,11 @@ export default function Layout({ children }) {
   }, [companies]);
 
   useEffect(() => {
-    if (user && _.isNil(companies)) {
+    if (user) {
       dispatch(companyActions.getUserCompanies(user?._id));
     }
     const wildcard = window.location.hostname.split('.')[0];
-    if (company?.subdomain !== wildcard && _.isNil(company)) {
+    if (company?.subdomain !== wildcard) {
       dispatch(
         companyActions.getCompanyBySubdomain({
           subdomain: wildcard,

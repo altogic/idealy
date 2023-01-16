@@ -189,10 +189,6 @@ function* addNewMember({ payload }) {
     if (error) {
       throw error;
     }
-    realtime.send(data.companyId, 'accept-invitation', {
-      sender: data.user._id,
-      payload: data
-    });
     yield put(companyActions.addNewMemberSuccess(data));
     payload.onSuccess();
   } catch (error) {
