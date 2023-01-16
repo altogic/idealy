@@ -21,11 +21,11 @@ export default function ReplyCard({ reply }) {
       <div className="flex gap-5">
         {/* Name First Letter Icon */}
         <Avatar src={reply?.user?.profilePicture} alt={reply?.user?.name || 'Anonymous'} />
-        <div className="w-full space-y-5">
+        <div className="w-full space-y-3">
           <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-base tracking-sm">
             {reply?.user?.name || 'Anonymous'}
           </h6>
-          <div className="prose prose-p:text-slate-500 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
+          <div className="prose prose-p:my-0 prose-p:text-slate-500 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
             <p>{reply?.content}</p>
           </div>
           <div className="flex items-center gap-3">
@@ -33,7 +33,7 @@ export default function ReplyCard({ reply }) {
               {DateTime.fromISO(reply?.createdAt).setLocale('en').toRelative()}
             </span>
             {(userIp === reply.ip || user._id === reply.user._id) && (
-              <div className=" hidden group-hover:flex items-center gap-3 ">
+              <div className=" hidden group-hover:flex items-center gap-3">
                 <svg
                   className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
                   fill="currentColor"
