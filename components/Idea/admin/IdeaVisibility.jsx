@@ -68,7 +68,7 @@ export default function IdeaVisibility({ updateIdea }) {
       />
       <div className="flex justify-between items-center gap-4 py-3">
         <span className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-sm font-medium">
-          Cover Image
+          Roadmap Cover Image
         </span>
         <Button
           type="button"
