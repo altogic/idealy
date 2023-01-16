@@ -12,6 +12,7 @@ import {
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import CommentForm from '../CommentForm';
 import Drawer from '../Drawer';
 import { Pen, Thumbtack, Trash } from '../icons';
@@ -46,6 +47,12 @@ export default function IdeaDetail({ idea, company, query }) {
     );
     dispatch(ideaActions.setSelectedIdea(null));
   }
+  useEffect(() => {
+    if (router.isReady) {
+      dispatch(commentActions.getComments({ ideaId: router.query.feedback, page: 1 }));
+    }
+  }, [router]);
+
   return (
     <Drawer
       open={feedBackDetailModal}
