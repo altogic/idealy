@@ -72,8 +72,21 @@ export default function CommentCard({ comment }) {
                   setIsReplying(!isReplying);
                   setShowReplies(!showReplies);
                 }}
-                className="inline-flex text-slate-500 hover:text-indigo-600 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
-                {showReplies ? 'Hide' : 'Show'} Replies{' '}
+                className="inline-flex items-center justify-center gap-2">
+                {!!comment.replyCount && (
+                  <>
+                    <svg
+                      className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
+                      fill="currentColor"
+                      viewBox="0 0 8 8">
+                      <circle cx={4} cy={4} r={3} />
+                    </svg>
+                    <span className="text-slate-500 hover:text-indigo-600 dark:text-aa-400 purple:text-pt-400 text-sm tracking-sm">
+                      {showReplies ? 'Hide' : 'Show'}{' '}
+                      {comment.replyCount > 1 ? ` ${comment.replyCount} Replies` : 'Reply'}
+                    </span>
+                  </>
+                )}
               </button>
               {(userIp === comment?.ip || user?._id === comment?.user?._id) && (
                 <div className=" hidden group-hover:flex items-center gap-3 ">

@@ -1,3 +1,6 @@
+import DeleteModal from '@/components/DeleteModal';
+import EmptyState from '@/components/EmptyState';
+import { Danger } from '@/components/icons';
 import FilterIdea from '@/components/Idea/FilterIdea';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
 import SubmitIdea from '@/components/Idea/SubmitIdea';
@@ -5,7 +8,7 @@ import InfiniteScroll from '@/components/InfiniteScroll';
 import Layout from '@/components/Layout';
 import PublicViewCard from '@/components/PublicViewCard';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
-import { commentActions } from '@/redux/comments/commentsSlice';
+import { authActions } from '@/redux/auth/authSlice';
 import { toggleDeleteFeedBackModal, toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { IDEA_SORT_TYPES } from 'constants';
@@ -13,10 +16,6 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { authActions } from '@/redux/auth/authSlice';
-import DeleteModal from '@/components/DeleteModal';
-import { Danger } from '@/components/icons';
-import EmptyState from '@/components/EmptyState';
 
 export default function PublicView({ userIp }) {
   const [page, setPage] = useState(1);
@@ -73,10 +72,6 @@ export default function PublicView({ userIp }) {
   };
 
   const handleClickIdea = (idea) => {
-    dispatch(commentActions.getComments({ ideaId: idea._id, page: 1 }));
-    dispatch(ideaActions.setSelectedIdea(idea));
-    dispatch(toggleFeedBackDetailModal());
-    setRouterQuery(router.query);
     router.push(
       {
         pathname: router.pathname,
@@ -88,6 +83,9 @@ export default function PublicView({ userIp }) {
       undefined,
       { scroll: false }
     );
+    dispatch(ideaActions.setSelectedIdea(idea));
+    dispatch(toggleFeedBackDetailModal());
+    setRouterQuery(router.query);
   };
 
   const getIdeasByCompany = useCallback(() => {
@@ -126,7 +124,7 @@ export default function PublicView({ userIp }) {
         const ideaDetail = ideas.find((i) => i._id === feedback);
         if (ideaDetail) {
           dispatch(ideaActions.setSelectedIdea(ideaDetail));
-          dispatch(commentActions.getComments({ ideaId: ideaDetail._id, page: 1 }));
+
           dispatch(toggleFeedBackDetailModal());
         }
       }
