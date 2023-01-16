@@ -18,6 +18,7 @@ export default function CommentCard({ comment }) {
   const [editedReply, setEditedReply] = useState();
   const [page, setPage] = useState();
   const dispatch = useDispatch();
+  const idea = useSelector((state) => state.idea.selectedIdea);
   const replies = useSelector((state) => state.replies.replies);
   const countInfo = useSelector((state) => state.replies.countInfo);
   const userIp = useSelector((state) => state.auth.userIp);
@@ -148,7 +149,9 @@ export default function CommentCard({ comment }) {
         show={isDelete}
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
-        deleteOnClick={() => dispatch(commentActions.deleteComment(comment._id))}
+        deleteOnClick={() =>
+          dispatch(commentActions.deleteComment({ commentId: comment._id, ideaId: idea._id }))
+        }
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title="Delete Comment"
         description="Are you sure you want to delete this comment? This action cannot be undone."
