@@ -146,7 +146,6 @@ export default function Realtime() {
   }
   function deleteIdeaHandler({ message }) {
     const idea = new URLSearchParams(document.location.search).get('feedback');
-    console.log(feedBackDetailModal, feedBackDetailModal && idea === message, message, idea);
     if (feedBackDetailModal && idea === message) {
       dispatch(toggleFeedBackDetailModal());
       setDeleteIdeaModal(true);
@@ -323,11 +322,6 @@ export default function Realtime() {
       }
     }
   };
-
-  useEffect(() => {
-    console.log(deleteIdeaModal);
-  }, [deleteIdeaModal]);
-
   return (
     <>
       <Transition appear show={deleteDialog} as={Fragment}>
