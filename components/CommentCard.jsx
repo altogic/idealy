@@ -119,15 +119,17 @@ export default function CommentCard({ comment }) {
             </div>
             {showReplies && (
               <>
-                <hr className="my-2 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
-                {replies[comment?._id]?.map((reply) => (
-                  <ReplyCard
-                    reply={reply}
-                    key={reply?._id}
-                    setEditedReply={setEditedReply}
-                    setIsReplying={setIsReplying}
-                  />
-                ))}
+                <hr className="my-6 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
+                <div className="space-y-6">
+                  {replies[comment?._id]?.map((reply) => (
+                    <ReplyCard
+                      reply={reply}
+                      key={reply?._id}
+                      setEditedReply={setEditedReply}
+                      setIsReplying={setIsReplying}
+                    />
+                  ))}
+                </div>
               </>
             )}
             {loading && <CommentSkeleton />}{' '}
