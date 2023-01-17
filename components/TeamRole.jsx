@@ -208,14 +208,27 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
             </div>
           </Listbox>
           {(email !== user?.email && role !== company?.role) || company?.role === 'Owner' ? (
-            <Button
-              type="button"
-              icon={
-                <Trash className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-red-500 dark:hover:text-red-500 purple:hover:text-red-500" />
-              }
-              variant="icon"
-              onClick={() => setIsDelete(!isDelete)}
-            />
+            <div className="flex items-center justify-center">
+              <Button
+                type="button"
+                icon={
+                  <Trash className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-red-500 dark:hover:text-red-500 purple:hover:text-red-500" />
+                }
+                variant="icon"
+                onClick={() => setIsDelete(!isDelete)}
+              />
+              {status !== 'Active' && (
+                <Button
+                  type="button"
+                  variant="blank"
+                  text="Resend"
+                  className="text-sm text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-indigo-500 dark:hover:text-indigo-500 purple:hover:text-indigo-500"
+                  onClick={() =>
+                    dispatch(companyActions.resendInvite({ email, companyId: company._id }))
+                  }
+                />
+              )}
+            </div>
           ) : (
             <span className="w-5 h-5 py-2.5 px-4" />
           )}
