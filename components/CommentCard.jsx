@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import { useDispatch, useSelector } from 'react-redux';
 import { repliesActions } from '@/redux/replies/repliesSlice';
 import { commentActions } from '@/redux/comments/commentsSlice';
+import useIdeaActionValidation from '@/hooks/useIdeaActionValidation';
 import Avatar from './Avatar';
 import ReplyForm from './ReplyForm';
 import ReplyCard from './ReplyCard';
@@ -18,10 +19,10 @@ export default function CommentCard({ comment }) {
   const [editedReply, setEditedReply] = useState();
   const [page, setPage] = useState();
   const dispatch = useDispatch();
+  const idea = useSelector((state) => state.idea.selectedIdea);
   const replies = useSelector((state) => state.replies.replies);
   const countInfo = useSelector((state) => state.replies.countInfo);
-  const userIp = useSelector((state) => state.auth.userIp);
-  const user = useSelector((state) => state.auth.user);
+  const canEdit = useIdeaActionValidation(comment);
   useEffect(() => {
     if (page) {
       dispatch(repliesActions.getReplies({ commentId: comment?._id, page }));
@@ -40,12 +41,12 @@ export default function CommentCard({ comment }) {
         <div className="flex gap-5">
           {/* Name First Letter Icon */}
           <Avatar src={comment?.profilePicture} alt={comment?.name || 'Anonymous'} />
-          <div className="w-full space-y-5">
+          <div className="w-full space-y-w">
             <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-base tracking-sm">
               {comment?.name || 'Anonymous'}
             </h6>
-            <div className="prose prose-p:text-slate-500 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
-              <div dangerouslySetInnerHTML={{ __html: comment?.text }} />
+            <div className="prose prose-p:text-slate-500 prose-p:my-2 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
+              <article dangerouslySetInnerHTML={{ __html: comment?.text }} />
             </div>
             <div className="flex items-center gap-3">
               <span className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-sm tracking-sm">
@@ -72,10 +73,23 @@ export default function CommentCard({ comment }) {
                   setIsReplying(!isReplying);
                   setShowReplies(!showReplies);
                 }}
-                className="inline-flex text-slate-500 hover:text-indigo-600 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
-                {showReplies ? 'Hide' : 'Show'} Replies{' '}
+                className="inline-flex items-center justify-center gap-2">
+                {!!comment?.replyCount && (
+                  <>
+                    <svg
+                      className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
+                      fill="currentColor"
+                      viewBox="0 0 8 8">
+                      <circle cx={4} cy={4} r={3} />
+                    </svg>
+                    <span className="text-slate-500 hover:text-indigo-600 dark:text-aa-400 purple:text-pt-400 text-sm tracking-sm">
+                      {showReplies ? 'Hide' : 'Show'}{' '}
+                      {comment?.replyCount > 1 ? ` ${comment?.replyCount} Replies` : 'Reply'}
+                    </span>
+                  </>
+                )}
               </button>
-              {(userIp === comment?.ip || user?._id === comment?.user?._id) && (
+              {canEdit && (
                 <div className=" hidden group-hover:flex items-center gap-3 ">
                   <svg
                     className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
@@ -92,21 +106,25 @@ export default function CommentCard({ comment }) {
                 </div>
               )}
             </div>
-            <hr />
-            {showReplies &&
-              replies[comment?._id]?.map((reply) => (
-                <ReplyCard
-                  reply={reply}
-                  key={reply?._id}
-                  setEditedReply={setEditedReply}
-                  setIsReplying={setIsReplying}
-                />
-              ))}
+            {showReplies && (
+              <>
+                <hr className="my-2 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
+                {replies[comment?._id]?.map((reply) => (
+                  <ReplyCard
+                    reply={reply}
+                    key={reply?._id}
+                    setEditedReply={setEditedReply}
+                    setIsReplying={setIsReplying}
+                  />
+                ))}
+              </>
+            )}
             {isReplying && (
               <ReplyForm
                 commentId={comment?._id}
                 setIsReplying={setIsReplying}
                 reply={editedReply}
+                setShowReplies={setShowReplies}
               />
             )}
 
@@ -114,7 +132,7 @@ export default function CommentCard({ comment }) {
               <button
                 type="button"
                 onClick={() => setPage(page + 1)}
-                className="inline-flex text-indigo-600 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
+                className="inline-flex text-indigo-600 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm mt-2">
                 {`Show ${
                   countInfo[comment?._id].count - countInfo[comment?._id].currentPage * 5
                 } more ${
@@ -131,7 +149,9 @@ export default function CommentCard({ comment }) {
         show={isDelete}
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
-        deleteOnClick={() => dispatch(commentActions.deleteComment(comment._id))}
+        deleteOnClick={() =>
+          dispatch(commentActions.deleteComment({ commentId: comment._id, ideaId: idea._id }))
+        }
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title="Delete Comment"
         description="Are you sure you want to delete this comment? This action cannot be undone."

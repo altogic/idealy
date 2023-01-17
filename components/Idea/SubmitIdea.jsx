@@ -5,9 +5,9 @@ import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { Disclosure } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import _ from 'lodash';
 import cn from 'classnames';
-import { Fragment, useEffect, useState } from 'react';
+import _ from 'lodash';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
@@ -25,6 +25,7 @@ export default function SubmitIdea({ idea }) {
   const user = useSelector((state) => state.auth.user);
   const similarIdeas = useSelector((state) => state.idea.similarIdeas);
   const loading = useSelector((state) => state.file.isLoading);
+  const ideaLoading = useSelector((state) => state.idea.isLoading);
   const fileLinks = useSelector((state) => state.file.fileLinks);
   const open = useSelector((state) => state.general.feedBackSubmitModal);
   const userIp = useSelector((state) => state.auth.userIp);
@@ -65,7 +66,7 @@ export default function SubmitIdea({ idea }) {
     control,
     reset,
     setValue,
-    formState: { errors }
+    formState: { errors, isSubmitSuccessful }
   } = useForm({
     defaultValues: {
       privacyPolicy: false
@@ -90,9 +91,6 @@ export default function SubmitIdea({ idea }) {
     } else {
       dispatch(ideaActions.createIdea(reqData));
     }
-    setTopics([]);
-    setContent('');
-    dispatch(toggleFeedBackSubmitModal());
   };
 
   function imageHandler() {
@@ -113,9 +111,23 @@ export default function SubmitIdea({ idea }) {
     setImages(images.filter((_, i) => i !== index));
     dispatch(fileActions.deleteFile(fileLinks[index]));
   };
-  const handleClose = () => {
-    dispatch(toggleFeedBackSubmitModal());
+  const resetForm = () => {
+    reset({
+      title: undefined,
+      content: undefined,
+      topics: undefined,
+      guestName: undefined,
+      guestEmail: undefined,
+      privacyPolicy: false
+    });
+    setContent('');
+    setTopics([]);
+    setImages([]);
     dispatch(ideaActions.clearSimilarIdeas());
+  };
+  const handleClose = () => {
+    resetForm();
+    dispatch(toggleFeedBackSubmitModal());
   };
   useEffect(() => {
     if (open) {
@@ -135,16 +147,7 @@ export default function SubmitIdea({ idea }) {
       setTopics(idea?.topics);
       setImages(idea?.images);
     } else {
-      reset({
-        title: undefined,
-        content: undefined,
-        topics: undefined,
-        guestName: undefined,
-        guestEmail: undefined
-      });
-      setTopics([]);
-      setContent('');
-      setInpTitle('');
+      resetForm();
     }
   }, [idea]);
 
@@ -160,6 +163,7 @@ export default function SubmitIdea({ idea }) {
       clearTimeout(timer);
     };
   }, [inpTitle]);
+
   useEffect(() => {
     if (content) {
       setValue('content', content);
@@ -170,6 +174,12 @@ export default function SubmitIdea({ idea }) {
       setValue('topics', topics);
     }
   }, [topics]);
+
+  useEffect(() => {
+    if (!ideaLoading && isSubmitSuccessful) {
+      handleClose();
+    }
+  }, [ideaLoading, isSubmitSuccessful]);
 
   return (
     <>
@@ -294,7 +304,8 @@ export default function SubmitIdea({ idea }) {
             <Button
               type="submit"
               className="flex items-center justify-center bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white py-3 px-4 text-sm font-medium tracking-sm border border-transparent rounded-lg hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600 focus:outline-none"
-              text={`${idea ? 'Update' : 'Submit'} Feedback`}
+              text={`${idea ? 'Update' : 'Submit'} Idea`}
+              loading={ideaLoading}
             />
           </div>
         </form>

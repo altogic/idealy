@@ -177,6 +177,9 @@ function* updateMemberStatusSaga({ payload }) {
     if (error) {
       throw error;
     }
+    if (payload.onSuccess) {
+      payload.onSuccess();
+    }
     yield put(companyActions.updateMemberStatusSuccess(user._id));
   } catch (error) {
     yield put(companyActions.updateMemberStatusFailed(error));
@@ -456,6 +459,10 @@ function* getCompanyBySubdomain({ payload: { subdomain, onFail, onSuccess, userI
   }
 }
 
+function* resendInviteSaga({ payload }) {
+  yield call(companyService.resendInvitation(payload));
+}
+
 export default function* companySaga() {
   yield all([
     takeEvery(companyActions.setCompanyWillBeCreated.type, setCreatedCompanySaga),
@@ -486,6 +493,7 @@ export default function* companySaga() {
     takeEvery(companyActions.addItemToCompanySubLists.type, addItemToCompanySubLists),
     takeEvery(companyActions.deleteCompanySubListsItem.type, deleteCompanySubListsItem),
     takeEvery(companyActions.getCompanyBySubdomain.type, getCompanyBySubdomain),
-    takeEvery(companyActions.updateCompany, updateCompanySaga)
+    takeEvery(companyActions.updateCompany, updateCompanySaga),
+    takeEvery(companyActions.resendInvite, resendInviteSaga)
   ]);
 }

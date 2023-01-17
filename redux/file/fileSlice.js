@@ -88,6 +88,9 @@ export const fileSlice = createSlice({
     deleteCompanyFaviconFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    clearFileLinks(state) {
+      state.fileLinks = [];
     }
   },
   extraReducers: (builder) => {

@@ -11,7 +11,7 @@ export default function IdeaVisibility({ updateIdea }) {
   const dispatch = useDispatch();
   const idea = useSelector((state) => state.idea.selectedIdea);
   const coverImage = useSelector((state) => state.file.fileLink);
-  const loading = useSelector((state) => state.file.loading);
+  const loading = useSelector((state) => state.file.isLoading);
   const [file, setFile] = useState();
   const [showOnRoadMap, setShowOnRoadMap] = useState();
   const [isPrivate, setIsPrivate] = useState();
@@ -68,18 +68,12 @@ export default function IdeaVisibility({ updateIdea }) {
       />
       <div className="flex justify-between items-center gap-4 py-3">
         <span className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-sm font-medium">
-          Cover Image
+          Roadmap Cover Image
         </span>
-        <Button
-          type="button"
-          onClick={handleAddCoverImage}
-          loading={loading}
-          text="Upload"
-          variant="indigo"
-        />
+        <Button type="button" onClick={handleAddCoverImage} text="Upload" variant="indigo" />
       </div>
-      {idea?.coverImage && (
-        <div className=" w-full">
+      {(idea?.coverImage || file) && (
+        <div className="w-full">
           <Image
             src={file ? URL.createObjectURL(file) : idea?.coverImage}
             alt={idea?.title}

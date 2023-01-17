@@ -1,9 +1,9 @@
 import cn from 'classnames';
 import { Exclamation } from './icons';
 
-export default function TextArea({ id, label, error, register, rows, ...props }) {
+export default function TextArea({ id, label, error, register, rows, inlineSubmit, ...props }) {
   return (
-    <div className="relative w-full">
+    <div className="w-full">
       {label && (
         <label
           htmlFor={id}
@@ -14,23 +14,32 @@ export default function TextArea({ id, label, error, register, rows, ...props })
           {label}
         </label>
       )}
-
-      <div className="flex">
+      <div className="relative">
         <textarea
           id={id}
           className={cn(
-            'block w-full text-slate-900 text-base tracking-sm border border-gray-300 rounded-lg placeholder-slate-500 focus:border-indigo-500 focus:ring-indigo-500',
-            error && 'text-red-900 pr-11 border-red-600 placeholder-red-300 focus:ring-red-600'
+            'block w-full text-slate-900 text-base tracking-sm rounded-lg placeholder-slate-500',
+            error && 'text-red-900 pr-11 border-red-600 placeholder-red-300 focus:ring-red-600',
+            inlineSubmit
+              ? 'border-none ring-transparent focus:border-none focus:ring-transparent focus:outline-none'
+              : 'border border-gray-300 focus:border-indigo-500 focus:ring-indigo-500'
           )}
           rows={rows}
           {...register}
           {...props}
         />
+        {error && (
+          <Exclamation
+            className={cn(
+              'absolute top-1/2 right-0 w-6 h-6 pointer-events-none text-red-600 mr-2',
+              inlineSubmit ? 'translate-y-1/2' : '-translate-y-1/2'
+            )}
+          />
+        )}
       </div>
-      {error && (
-        <Exclamation className="absolute top-1/2 right-0 -translate-y-full w-6 h-6 pointer-events-none text-red-600 mr-2" />
+      {error?.message && !inlineSubmit && (
+        <span className="inline-block text-sm text-red-600">{error.message}</span>
       )}
-      {error?.message && <span className="inline-block text-sm text-red-600">{error.message}</span>}
     </div>
   );
 }
