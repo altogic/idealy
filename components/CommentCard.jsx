@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import { useDispatch, useSelector } from 'react-redux';
 import { repliesActions } from '@/redux/replies/repliesSlice';
 import { commentActions } from '@/redux/comments/commentsSlice';
+import useIdeaActionValidation from '@/hooks/useIdeaActionValidation';
 import Avatar from './Avatar';
 import ReplyForm from './ReplyForm';
 import ReplyCard from './ReplyCard';
@@ -21,8 +22,7 @@ export default function CommentCard({ comment }) {
   const idea = useSelector((state) => state.idea.selectedIdea);
   const replies = useSelector((state) => state.replies.replies);
   const countInfo = useSelector((state) => state.replies.countInfo);
-  const userIp = useSelector((state) => state.auth.userIp);
-  const user = useSelector((state) => state.auth.user);
+  const canEdit = useIdeaActionValidation(comment);
   useEffect(() => {
     if (page) {
       dispatch(repliesActions.getReplies({ commentId: comment?._id, page }));
@@ -89,7 +89,7 @@ export default function CommentCard({ comment }) {
                   </>
                 )}
               </button>
-              {(userIp === comment?.ip || user?._id === comment?.user?._id) && (
+              {canEdit && (
                 <div className=" hidden group-hover:flex items-center gap-3 ">
                   <svg
                     className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
