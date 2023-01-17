@@ -4,11 +4,13 @@ import { HYDRATE } from 'next-redux-wrapper';
 const initialState = {
   ideas: [],
   isLoading: false,
+  getIdeaLoading: false,
   error: null,
   countInfo: null,
+  selectedIdea: null,
   ideaVotes: [],
   similarIdeas: [],
-  selectedIdea: null
+  searchedCompanyMembers: []
 };
 
 export const ideaSlice = createSlice({
@@ -16,10 +18,10 @@ export const ideaSlice = createSlice({
   initialState,
   reducers: {
     getIdeasByCompany: (state) => {
-      state.isLoading = true;
+      state.getIdeaLoading = true;
     },
     getIdeasByCompanySuccess: (state, action) => {
-      state.isLoading = false;
+      state.getIdeaLoading = false;
       state.countInfo = action.payload.countInfo;
       if (action.payload.countInfo.currentPage === 1) {
         state.ideas = action.payload.result;
@@ -28,7 +30,7 @@ export const ideaSlice = createSlice({
       }
     },
     getIdeasByCompanyFailure: (state, action) => {
-      state.isLoading = false;
+      state.getIdeaLoading = false;
       state.error = action.payload;
     },
     createIdea(state) {
@@ -130,18 +132,15 @@ export const ideaSlice = createSlice({
     },
     addedNewComment(state, action) {
       state.ideas = state.ideas.map((idea) => {
-        if (idea._id === action.payload.ideaId) {
-          const recentUsers = idea.recentUsers
-            ? idea.recentUsers?.filter((rc) => rc?.user !== action.payload.data?.user)
-            : [];
+        if (idea._id === action.payload) {
           return {
             ...idea,
-            commentCount: idea.commentCount + 1,
-            recentUsers: [...recentUsers, action.payload.data]
+            commentCount: idea.commentCount + 1
           };
         }
         return idea;
       });
+      state.selectedIdea.commentCount += 1;
     },
     setSelectedIdea(state, action) {
       state.selectedIdea = action.payload;
@@ -169,15 +168,11 @@ export const ideaSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    getUserVotes(state) {
-      state.isLoading = true;
-    },
+    getUserVotes() {},
     getUserVotesSuccess(state, action) {
-      state.isLoading = false;
       state.ideaVotes = action.payload;
     },
     getUserVotesFailure(state, action) {
-      state.isLoading = false;
       state.error = action.payload;
     },
     updateIdeaRealtime(state, action) {
@@ -211,6 +206,29 @@ export const ideaSlice = createSlice({
       };
     },
     deleteIdeaStatusFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    deleteComment(state, action) {
+      state.ideas = state.ideas.map((idea) => {
+        if (idea._id === action.payload) {
+          return {
+            ...idea,
+            commentCount: idea.commentCount - 1
+          };
+        }
+        return idea;
+      });
+      state.selectedIdea.commentCount -= 1;
+    },
+    searchCompanyMembers(state) {
+      state.isLoading = true;
+    },
+    searchCompanyMembersSuccess(state, action) {
+      state.isLoading = false;
+      state.searchedCompanyMembers = action.payload;
+    },
+    searchCompanyMembersFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
     }

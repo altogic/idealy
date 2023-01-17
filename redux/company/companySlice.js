@@ -436,7 +436,7 @@ export const companySlice = createSlice({
       state.companyMembers = state.companyMembers.map((member) => {
         if (
           member.user._id === action.payload.userId &&
-          member.companyId === action.payload.company._id
+          member.companyId === action.payload.company
         ) {
           return {
             ...member,
@@ -584,7 +584,8 @@ export const companySlice = createSlice({
     getCompanyBySubdomainFailed(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-    }
+    },
+    resendInvite() {}
   },
 
   extraReducers: (builder) => {

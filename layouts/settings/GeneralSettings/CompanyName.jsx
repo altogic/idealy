@@ -67,7 +67,7 @@ export default function CompanyName() {
   }, [company.name, setValue]);
   return (
     <>
-      <div className="pb-4 mb-11 border-b border-slate-200 dark:border-aa-400 purple:border-aa-400">
+      <div className="pb-4 mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
         <SectionTitle sectionTitle="Company Name" sectionDescription="Update your company name." />
       </div>
       <form onSubmit={handleSubmit(formSubmit)} className="space-y-6">

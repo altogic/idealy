@@ -32,6 +32,10 @@ export default function IdeaStatuses({ updateIdea }) {
               setSelectedStatus(status);
             } else {
               dispatch(ideaActions.deleteIdeaStatus(idea._id));
+              updateIdea({
+                statusUpdatedAt: Date.now(),
+                isCompleted: false
+              });
               setSelectedStatus(null);
             }
           }}>

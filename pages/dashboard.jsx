@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { Fragment, useState } from 'react';
 import Head from 'next/head';
 import cn from 'classnames';
@@ -231,7 +232,6 @@ export default function AdminDashboard() {
     copy(copyText);
     ToastMessage.success('Link copied to clipboard');
   };
-  console.log('userChoice', userChoice);
   return (
     <>
       <Head>

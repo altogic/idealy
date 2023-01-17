@@ -1,3 +1,6 @@
+import DeleteModal from '@/components/DeleteModal';
+import EmptyState from '@/components/EmptyState';
+import { Danger } from '@/components/icons';
 import FilterIdea from '@/components/Idea/FilterIdea';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
 import SubmitIdea from '@/components/Idea/SubmitIdea';
@@ -5,7 +8,7 @@ import InfiniteScroll from '@/components/InfiniteScroll';
 import Layout from '@/components/Layout';
 import PublicViewCard from '@/components/PublicViewCard';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
-import { commentActions } from '@/redux/comments/commentsSlice';
+import { authActions } from '@/redux/auth/authSlice';
 import { toggleDeleteFeedBackModal, toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { IDEA_SORT_TYPES } from 'constants';
@@ -13,10 +16,6 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { authActions } from '@/redux/auth/authSlice';
-import DeleteModal from '@/components/DeleteModal';
-import { Danger } from '@/components/icons';
-import EmptyState from '@/components/EmptyState';
 
 export default function PublicView({ userIp }) {
   const [page, setPage] = useState(1);
@@ -32,15 +31,11 @@ export default function PublicView({ userIp }) {
   const ideas = useSelector((state) => state.idea.ideas);
   const countInfo = useSelector((state) => state.idea.countInfo);
   const ideaVotes = useSelector((state) => state.idea.ideaVotes);
+  const loading = useSelector((state) => state.idea.getIdeaLoading);
   const selectedIdea = useSelector((state) => state.idea.selectedIdea);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const deleteFeedBackModal = useSelector((state) => state.general.deleteFeedBackModal);
-
-  const handleDelete = () => {
-    dispatch(ideaActions.deleteIdea(selectedIdea._id));
-    dispatch(toggleFeedBackDetailModal());
-  };
 
   const handleFilter = (filterTopics, filterStatus) => {
     if (filterTopics?.length || filterStatus?.length) {
@@ -73,10 +68,6 @@ export default function PublicView({ userIp }) {
   };
 
   const handleClickIdea = (idea) => {
-    dispatch(commentActions.getComments({ ideaId: idea._id, page: 1 }));
-    dispatch(ideaActions.setSelectedIdea(idea));
-    dispatch(toggleFeedBackDetailModal());
-    setRouterQuery(router.query);
     router.push(
       {
         pathname: router.pathname,
@@ -88,6 +79,9 @@ export default function PublicView({ userIp }) {
       undefined,
       { scroll: false }
     );
+    dispatch(ideaActions.setSelectedIdea(idea));
+    dispatch(toggleFeedBackDetailModal());
+    setRouterQuery(router.query);
   };
 
   const getIdeasByCompany = useCallback(() => {
@@ -107,6 +101,25 @@ export default function PublicView({ userIp }) {
     }
   }, [page, router.query.sort, router.query.status, router.query.topics]);
 
+  function handleCloseIdea() {
+    dispatch(toggleFeedBackDetailModal());
+    const temp = router.query;
+    delete temp?.feedback;
+    router.push(
+      {
+        pathname: router.pathname,
+        query: temp
+      },
+      undefined,
+      { scroll: false }
+    );
+    dispatch(ideaActions.setSelectedIdea(null));
+  }
+
+  const handleDelete = () => {
+    dispatch(ideaActions.deleteIdea(selectedIdea._id));
+    handleCloseIdea();
+  };
   useEffect(() => {
     if (router) {
       const { topics, status, sort, feedback } = router.query;
@@ -126,7 +139,7 @@ export default function PublicView({ userIp }) {
         const ideaDetail = ideas.find((i) => i._id === feedback);
         if (ideaDetail) {
           dispatch(ideaActions.setSelectedIdea(ideaDetail));
-          dispatch(commentActions.getComments({ ideaId: ideaDetail._id, page: 1 }));
+
           dispatch(toggleFeedBackDetailModal());
         }
       }
@@ -143,7 +156,6 @@ export default function PublicView({ userIp }) {
 
   useEffect(() => {
     if (company) {
-      console.log(company, 'company');
       if (!company.privacy.isPublic && !company.privacy.isPublic.userApproval) {
         router.push('/404');
       }
@@ -172,7 +184,7 @@ export default function PublicView({ userIp }) {
 
             {isSubmitIdeaVisible && <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />}
           </div>
-          <div className="flex items-start justify-between">
+          <div className="flex items-start justify-between mb-9">
             <FilterIdea
               sortType={sortType}
               setSortType={setSortType}
@@ -186,7 +198,35 @@ export default function PublicView({ userIp }) {
             items={ideas}
             countInfo={countInfo}
             endOfList={() => setPage((page) => page + 1)}>
-            {ideas.length > 0 ? (
+            {loading ? (
+              <div
+                role="status"
+                className="w-full space-y-4 divide-y divide-gray-300 animate-pulse">
+                <div className="flex justify-between items-center px-4 py-8">
+                  <div className="flex items-center gap-6">
+                    <div className="w-[62px] h-20 bg-gray-300 rounded-lg" />
+                    <div>
+                      <div className="w-64 h-2.5 bg-gray-300 rounded-full mb-2.5" />
+                      <div className="w-32 h-2 bg-gray-300 rounded-full mb-2.5" />
+                      <div className="h-2.5 bg-gray-300 rounded-full w-24" />
+                    </div>
+                  </div>
+                  <div className="h-2.5 bg-gray-300 rounded-full w-12" />
+                </div>
+                <div className="flex justify-between items-center px-4 py-8">
+                  <div className="flex items-center gap-6">
+                    <div className="w-[62px] h-20 bg-gray-300 rounded-lg" />
+                    <div>
+                      <div className="w-64 h-2.5 bg-gray-300 rounded-full mb-2.5" />
+                      <div className="w-32 h-2 bg-gray-300 rounded-full mb-2.5" />
+                      <div className="h-2.5 bg-gray-300 rounded-full w-24" />
+                    </div>
+                  </div>
+                  <div className="h-2.5 bg-gray-300 rounded-full w-12" />
+                </div>
+                <span className="sr-only">Loading...</span>
+              </div>
+            ) : ideas.length > 0 ? (
               ideas?.map((idea) => (
                 <div
                   key={idea._id}
@@ -200,8 +240,8 @@ export default function PublicView({ userIp }) {
               ))
             ) : (
               <EmptyState
-                title="No data found"
-                description="Your search did not match any data. Please retry or try a new word."
+                title="No feature ideas found."
+                description="Your search did not match any data or this company does not have any feature ideas yet."
               />
             )}
           </InfiniteScroll>

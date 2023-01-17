@@ -8,6 +8,7 @@ export const commentsSlice = createSlice({
     countInfo: {},
     isLoading: false,
     createCommentLoading: false,
+    updateCommentLoading: false,
     error: null
   },
   reducers: {
@@ -40,22 +41,18 @@ export const commentsSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    deleteComment: (state) => {
-      state.isLoading = true;
-    },
+    deleteComment: () => {},
     deleteCommentSuccess: (state, action) => {
-      state.isLoading = false;
       state.comments = state.comments.filter((comment) => comment._id !== action.payload);
     },
     deleteCommentFailure: (state, action) => {
-      state.isLoading = false;
       state.error = action.payload;
     },
     updateComment: (state) => {
-      state.isLoading = true;
+      state.updateCommentLoading = true;
     },
     updateCommentSuccess: (state, action) => {
-      state.isLoading = false;
+      state.updateCommentLoading = false;
       state.comments = state.comments.map((comment) => {
         if (comment._id === action.payload._id) {
           return action.payload;
@@ -64,8 +61,30 @@ export const commentsSlice = createSlice({
       });
     },
     updateCommentFailure: (state, action) => {
-      state.isLoading = false;
+      state.updateCommentLoading = false;
       state.error = action.payload;
+    },
+    addedReply: (state, action) => {
+      state.comments = state.comments.map((comment) => {
+        if (comment._id === action.payload) {
+          return {
+            ...comment,
+            replyCount: comment.replyCount + 1
+          };
+        }
+        return comment;
+      });
+    },
+    deleteReply: (state, action) => {
+      state.comments = state.comments.map((comment) => {
+        if (comment._id === action.payload) {
+          return {
+            ...comment,
+            replyCount: comment.replyCount - 1
+          };
+        }
+        return comment;
+      });
     }
   },
   extraReducers: (builder) => {

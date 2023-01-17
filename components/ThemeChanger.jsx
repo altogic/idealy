@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { useState } from 'react';
 
 export default function ThemeChanger() {
   const [theme, setTheme] = useState('light');
-  console.log(theme);
+
   const switchTheme = (newTheme) => {
     setTheme(newTheme);
     document.body.className = newTheme;

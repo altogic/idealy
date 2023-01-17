@@ -5,12 +5,14 @@ import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { Disclosure } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import _ from 'lodash';
 import cn from 'classnames';
-import { Fragment, useEffect, useState } from 'react';
+import _ from 'lodash';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
+import AutoComplete from '../AutoComplete';
+import Avatar from '../Avatar';
 import Button from '../Button';
 import Drawer from '../Drawer';
 import Editor from '../Editor';
@@ -25,9 +27,12 @@ export default function SubmitIdea({ idea }) {
   const user = useSelector((state) => state.auth.user);
   const similarIdeas = useSelector((state) => state.idea.similarIdeas);
   const loading = useSelector((state) => state.file.isLoading);
+  const ideaLoading = useSelector((state) => state.idea.isLoading);
   const fileLinks = useSelector((state) => state.file.fileLinks);
   const open = useSelector((state) => state.general.feedBackSubmitModal);
   const userIp = useSelector((state) => state.auth.userIp);
+  const companyMembers = useSelector((state) => state.idea.searchedCompanyMembers);
+  const searchLoading = useSelector((state) => state.idea.isLoading);
   const [images, setImages] = useState([]);
   const guestValidation = useGuestValidation({
     company,
@@ -37,6 +42,7 @@ export default function SubmitIdea({ idea }) {
   const [topics, setTopics] = useState([]);
   const [content, setContent] = useState('');
   const [inpTitle, setInpTitle] = useState();
+  const [member, setMember] = useState();
   const dispatch = useDispatch();
   const schema = yup.object().shape({
     title: yup.string().max(140, 'Title must be under 140 character').required('Title is required'),
@@ -65,7 +71,7 @@ export default function SubmitIdea({ idea }) {
     control,
     reset,
     setValue,
-    formState: { errors }
+    formState: { errors, isSubmitSuccessful }
   } = useForm({
     defaultValues: {
       privacyPolicy: false
@@ -79,7 +85,7 @@ export default function SubmitIdea({ idea }) {
       content,
       topics,
       images: fileLinks,
-      author: user?._id,
+      author: member?._id || user?._id,
       company: company._id,
       companySubdomain: company.subdomain,
       ip: userIp
@@ -90,9 +96,6 @@ export default function SubmitIdea({ idea }) {
     } else {
       dispatch(ideaActions.createIdea(reqData));
     }
-    setTopics([]);
-    setContent('');
-    dispatch(toggleFeedBackSubmitModal());
   };
 
   function imageHandler() {
@@ -113,10 +116,38 @@ export default function SubmitIdea({ idea }) {
     setImages(images.filter((_, i) => i !== index));
     dispatch(fileActions.deleteFile(fileLinks[index]));
   };
-  const handleClose = () => {
-    dispatch(toggleFeedBackSubmitModal());
+  const resetForm = () => {
+    reset({
+      title: undefined,
+      content: undefined,
+      topics: undefined,
+      guestName: undefined,
+      guestEmail: undefined,
+      privacyPolicy: false
+    });
+    setContent('');
+    setTopics([]);
+    setImages([]);
+    setMember();
     dispatch(ideaActions.clearSimilarIdeas());
   };
+  const handleClose = () => {
+    resetForm();
+    dispatch(toggleFeedBackSubmitModal());
+  };
+
+  const handleOnSearch = (searchText) => {
+    if (searchText) {
+      dispatch(ideaActions.searchCompanyMembers({ searchText, companyId: company._id }));
+    }
+  };
+  const formatResult = (item) => (
+    <div className="flex items-center gap-2 text-slate-500 tracking-[-0.4px]  cursor-pointer p-4">
+      <Avatar src={item.profilePicture} alt={item.name} />
+      <span>{item.name}</span>
+    </div>
+  );
+
   useEffect(() => {
     if (open) {
       reset();
@@ -134,17 +165,9 @@ export default function SubmitIdea({ idea }) {
       setContent(idea?.content);
       setTopics(idea?.topics);
       setImages(idea?.images);
+      setMember(idea?.author);
     } else {
-      reset({
-        title: undefined,
-        content: undefined,
-        topics: undefined,
-        guestName: undefined,
-        guestEmail: undefined
-      });
-      setTopics([]);
-      setContent('');
-      setInpTitle('');
+      resetForm();
     }
   }, [idea]);
 
@@ -160,6 +183,7 @@ export default function SubmitIdea({ idea }) {
       clearTimeout(timer);
     };
   }, [inpTitle]);
+
   useEffect(() => {
     if (content) {
       setValue('content', content);
@@ -170,6 +194,12 @@ export default function SubmitIdea({ idea }) {
       setValue('topics', topics);
     }
   }, [topics]);
+
+  useEffect(() => {
+    if (!ideaLoading && isSubmitSuccessful) {
+      handleClose();
+    }
+  }, [ideaLoading, isSubmitSuccessful]);
 
   return (
     <>
@@ -183,6 +213,15 @@ export default function SubmitIdea({ idea }) {
       />
       <Drawer open={open} onClose={() => handleClose()} title="Tell us your idea">
         <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="my-8">
+            <AutoComplete
+              suggestions={companyMembers}
+              onSearch={handleOnSearch}
+              loading={searchLoading}
+              formatResult={formatResult}
+              onSuggestionClick={setMember}
+            />
+          </div>
           <div className="mb-8">
             <Input
               name="title"
@@ -283,7 +322,7 @@ export default function SubmitIdea({ idea }) {
               )}
             />
           </div>
-          <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
+          <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
           <div>
             {((idea?.guestName && idea?.guestEmail) || guestValidation) && (
               <GuestForm register={register} errors={errors} />
@@ -294,7 +333,8 @@ export default function SubmitIdea({ idea }) {
             <Button
               type="submit"
               className="flex items-center justify-center bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white py-3 px-4 text-sm font-medium tracking-sm border border-transparent rounded-lg hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600 focus:outline-none"
-              text={`${idea ? 'Update' : 'Submit'} Feedback`}
+              text={`${idea ? 'Update' : 'Submit'} Idea`}
+              loading={ideaLoading}
             />
           </div>
         </form>

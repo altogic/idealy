@@ -121,18 +121,26 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
   return (
     <>
       <div className="group flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white dark:bg-aa-900 purple:bg-pt-1000 p-4 transition hover:bg-slate-50 dark:hover:bg-aa-700 purple:hover:bg-pt-800">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 max-w-[250px] w-full">
           {isRegistered ? (
-            <Avatar className="w-[50px] h-[50px] rounded-full" src={avatar} alt={name} />
+            <Avatar
+              className="flex-shrink-0 w-[50px] h-[50px] rounded-full"
+              src={avatar}
+              alt={name}
+            />
           ) : (
-            <CircleUser className="w-[50px] h-[50px] rounded-full text-slate-400" />
+            <CircleUser className="flex-shrink-0 w-[50px] h-[50px] rounded-full text-slate-400" />
           )}
           <div className={cn(email ? 'space-y-1' : null)}>
-            <h6 className="text-slate-700 dark:text-aa-100 purple:text-pt-100 text-base font-medium tracking-sm whitespace-nowrap">
+            <h6
+              className="max-w-[188px] text-slate-700 dark:text-aa-100 purple:text-pt-100 text-base font-medium tracking-sm truncate"
+              title={name}>
               {name}
             </h6>
             {email && (
-              <p className="text-slate-400 dark:text-aa-300 purple:text-pt-300 text-sm tracking-sm whitespace-nowrap">
+              <p
+                className="max-w-[188px] text-slate-400 dark:text-aa-300 purple:text-pt-300 text-sm tracking-sm truncate"
+                title={email}>
                 {email}
               </p>
             )}
@@ -149,7 +157,7 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
             onChange={(selected) => handleRoleChange(selected.name)}
             disabled={company?.role !== 'Owner' && role === company?.role}>
             <div className="relative w-full">
-              <Listbox.Button className="relative inline-flex items-center justify-between w-full lg:w-[150px] bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-600 purple:border-pt-600 rounded-lg cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300">
+              <Listbox.Button className="relative inline-flex items-center justify-between w-full lg:w-[150px] bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-600 purple:border-pt-800 rounded-lg cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300">
                 <span className="block text-gray-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm truncate">
                   {selected}
                 </span>
@@ -208,14 +216,27 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
             </div>
           </Listbox>
           {(email !== user?.email && role !== company?.role) || company?.role === 'Owner' ? (
-            <Button
-              type="button"
-              icon={
-                <Trash className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-red-500 dark:hover:text-red-500 purple:hover:text-red-500" />
-              }
-              variant="icon"
-              onClick={() => setIsDelete(!isDelete)}
-            />
+            <div className="flex items-center justify-center">
+              <Button
+                type="button"
+                icon={
+                  <Trash className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-red-500 dark:hover:text-red-500 purple:hover:text-red-500" />
+                }
+                variant="icon"
+                onClick={() => setIsDelete(!isDelete)}
+              />
+              {status !== 'Active' && (
+                <Button
+                  type="button"
+                  variant="blank"
+                  text="Resend"
+                  className="text-sm text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-indigo-500 dark:hover:text-indigo-500 purple:hover:text-indigo-500"
+                  onClick={() =>
+                    dispatch(companyActions.resendInvite({ email, companyId: company._id }))
+                  }
+                />
+              )}
+            </div>
           ) : (
             <span className="w-5 h-5 py-2.5 px-4" />
           )}
