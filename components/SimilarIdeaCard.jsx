@@ -3,14 +3,27 @@ import { DateTime } from 'luxon';
 import { toggleFeedBackDetailModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { useDispatch } from 'react-redux';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
+import { useRouter } from 'next/router';
 
 export default function SimilarIdeaCard({ idea }) {
   const dispatch = useDispatch();
+  const router = useRouter();
   return (
     <button
       type="button"
       className="w-full px-2 py-6 lg:p-6 rounded-lg transition hover:bg-slate-200"
       onClick={() => {
+        router.push(
+          {
+            pathname: router.pathname,
+            query: {
+              ...router.query,
+              feedback: idea._id
+            }
+          },
+          undefined,
+          { scroll: false }
+        );
         dispatch(ideaActions.setSelectedIdea(idea));
         dispatch(toggleFeedBackSubmitModal());
         dispatch(toggleFeedBackDetailModal());
