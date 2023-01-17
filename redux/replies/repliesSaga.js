@@ -2,6 +2,7 @@ import { call, put, takeEvery, select } from 'redux-saga/effects';
 import replyService from '@/services/replies';
 import { realtime } from '@/utils/altogic';
 import { repliesActions } from './repliesSlice';
+import { commentActions } from '../comments/commentsSlice';
 
 function* getReplies({ payload: { commentId, page } }) {
   try {
@@ -23,6 +24,7 @@ function* createReply({ payload: reply }) {
       throw new Error(errors);
     }
     yield put(repliesActions.createReplySuccess(data));
+    yield put(commentActions.addedReply(data.commentId));
     realtime.send(company._id, 'add-reply', data);
   } catch (error) {
     yield put(repliesActions.createReplyFailure(error));
@@ -51,6 +53,7 @@ function* deleteReply({ payload: { replyId, commentId } }) {
       throw new Error(errors);
     }
     yield put(repliesActions.deleteReplySuccess({ replyId, commentId }));
+    yield put(commentActions.deleteReply(commentId));
     realtime.send(company._id, 'delete-reply', { replyId, commentId });
   } catch (error) {
     yield put(repliesActions.deleteReplyFailure(error));

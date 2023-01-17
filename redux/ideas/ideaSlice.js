@@ -4,6 +4,7 @@ import { HYDRATE } from 'next-redux-wrapper';
 const initialState = {
   ideas: [],
   isLoading: false,
+  getIdeaLoading: false,
   error: null,
   countInfo: null,
   ideaVotes: [],
@@ -16,10 +17,10 @@ export const ideaSlice = createSlice({
   initialState,
   reducers: {
     getIdeasByCompany: (state) => {
-      state.isLoading = true;
+      state.getIdeaLoading = true;
     },
     getIdeasByCompanySuccess: (state, action) => {
-      state.isLoading = false;
+      state.getIdeaLoading = false;
       state.countInfo = action.payload.countInfo;
       if (action.payload.countInfo.currentPage === 1) {
         state.ideas = action.payload.result;
@@ -28,7 +29,7 @@ export const ideaSlice = createSlice({
       }
     },
     getIdeasByCompanyFailure: (state, action) => {
-      state.isLoading = false;
+      state.getIdeaLoading = false;
       state.error = action.payload;
     },
     createIdea(state) {

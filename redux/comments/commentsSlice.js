@@ -67,6 +67,28 @@ export const commentsSlice = createSlice({
     updateCommentFailure: (state, action) => {
       state.updateCommentLoading = false;
       state.error = action.payload;
+    },
+    addedReply: (state, action) => {
+      state.comments = state.comments.map((comment) => {
+        if (comment._id === action.payload) {
+          return {
+            ...comment,
+            replyCount: comment.replyCount + 1
+          };
+        }
+        return comment;
+      });
+    },
+    deleteReply: (state, action) => {
+      state.comments = state.comments.map((comment) => {
+        if (comment._id === action.payload) {
+          return {
+            ...comment,
+            replyCount: comment.replyCount - 1
+          };
+        }
+        return comment;
+      });
     }
   },
   extraReducers: (builder) => {
