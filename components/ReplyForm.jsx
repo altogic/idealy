@@ -57,7 +57,7 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
   }, [isSubmitSuccessful, createReplyLoading]);
 
   return (
-    <div className="w-full max-h-[140px] mt-2">
+    <div className="w-full max-h-[140px] mt-6">
       <form
         onSubmit={handleSubmit(onSubmit)}
         onFocus={() => setIsFormFocus(true)}

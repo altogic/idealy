@@ -17,7 +17,7 @@ export default function ReplyCard({ reply }) {
   return editReply ? (
     <ReplyForm reply={reply} setIsReplying={setEditReply} />
   ) : (
-    <div className="group bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 p-8 mt-2 rounded">
+    <div className="group bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 rounded">
       <div className="flex gap-5">
         {/* Name First Letter Icon */}
         <Avatar src={reply?.user?.profilePicture} alt={reply?.user?.name || 'Anonymous'} />

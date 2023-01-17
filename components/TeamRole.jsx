@@ -121,18 +121,26 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
   return (
     <>
       <div className="group flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white dark:bg-aa-900 purple:bg-pt-1000 p-4 transition hover:bg-slate-50 dark:hover:bg-aa-700 purple:hover:bg-pt-800">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 max-w-[250px] w-full">
           {isRegistered ? (
-            <Avatar className="w-[50px] h-[50px] rounded-full" src={avatar} alt={name} />
+            <Avatar
+              className="flex-shrink-0 w-[50px] h-[50px] rounded-full"
+              src={avatar}
+              alt={name}
+            />
           ) : (
-            <CircleUser className="w-[50px] h-[50px] rounded-full text-slate-400" />
+            <CircleUser className="flex-shrink-0 w-[50px] h-[50px] rounded-full text-slate-400" />
           )}
           <div className={cn(email ? 'space-y-1' : null)}>
-            <h6 className="text-slate-700 dark:text-aa-100 purple:text-pt-100 text-base font-medium tracking-sm whitespace-nowrap">
+            <h6
+              className="max-w-[188px] text-slate-700 dark:text-aa-100 purple:text-pt-100 text-base font-medium tracking-sm truncate"
+              title={name}>
               {name}
             </h6>
             {email && (
-              <p className="text-slate-400 dark:text-aa-300 purple:text-pt-300 text-sm tracking-sm whitespace-nowrap">
+              <p
+                className="max-w-[188px] text-slate-400 dark:text-aa-300 purple:text-pt-300 text-sm tracking-sm truncate"
+                title={email}>
                 {email}
               </p>
             )}
