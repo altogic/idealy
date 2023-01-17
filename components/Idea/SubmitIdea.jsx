@@ -11,6 +11,8 @@ import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
+import AutoComplete from '../AutoComplete';
+import Avatar from '../Avatar';
 import Button from '../Button';
 import Drawer from '../Drawer';
 import Editor from '../Editor';
@@ -29,6 +31,8 @@ export default function SubmitIdea({ idea }) {
   const fileLinks = useSelector((state) => state.file.fileLinks);
   const open = useSelector((state) => state.general.feedBackSubmitModal);
   const userIp = useSelector((state) => state.auth.userIp);
+  const companyMembers = useSelector((state) => state.idea.searchedCompanyMembers);
+  const searchLoading = useSelector((state) => state.idea.isLoading);
   const [images, setImages] = useState([]);
   const guestValidation = useGuestValidation({
     company,
@@ -38,6 +42,7 @@ export default function SubmitIdea({ idea }) {
   const [topics, setTopics] = useState([]);
   const [content, setContent] = useState('');
   const [inpTitle, setInpTitle] = useState();
+  const [member, setMember] = useState();
   const dispatch = useDispatch();
   const schema = yup.object().shape({
     title: yup.string().max(140, 'Title must be under 140 character').required('Title is required'),
@@ -80,7 +85,7 @@ export default function SubmitIdea({ idea }) {
       content,
       topics,
       images: fileLinks,
-      author: user?._id,
+      author: member?._id || user?._id,
       company: company._id,
       companySubdomain: company.subdomain,
       ip: userIp
@@ -129,6 +134,19 @@ export default function SubmitIdea({ idea }) {
     resetForm();
     dispatch(toggleFeedBackSubmitModal());
   };
+
+  const handleOnSearch = (searchText) => {
+    if (searchText) {
+      dispatch(ideaActions.searchCompanyMembers({ searchText, companyId: company._id }));
+    }
+  };
+  const formatResult = (item) => (
+    <div className="flex items-center gap-2 text-slate-500 tracking-[-0.4px]  cursor-pointer p-4">
+      <Avatar src={item.profilePicture} alt={item.name} />
+      <span>{item.name}</span>
+    </div>
+  );
+
   useEffect(() => {
     if (open) {
       reset();
@@ -174,6 +192,11 @@ export default function SubmitIdea({ idea }) {
       setValue('topics', topics);
     }
   }, [topics]);
+  useEffect(() => {
+    if (member) {
+      console.log({ member });
+    }
+  }, [member]);
 
   useEffect(() => {
     if (!ideaLoading && isSubmitSuccessful) {
@@ -193,6 +216,15 @@ export default function SubmitIdea({ idea }) {
       />
       <Drawer open={open} onClose={() => handleClose()} title="Tell us your idea">
         <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="my-8">
+            <AutoComplete
+              suggestions={companyMembers}
+              onSearch={handleOnSearch}
+              loading={searchLoading}
+              formatResult={formatResult}
+              onSuggestionClick={setMember}
+            />
+          </div>
           <div className="mb-8">
             <Input
               name="title"
