@@ -67,7 +67,11 @@ export default function CommentCard({ comment }) {
               </svg>
               <button
                 type="button"
-                onClick={() => setIsReplying(!isReplying)}
+                onClick={() => {
+                  setIsReplying(!isReplying);
+                  setShowReplies(true);
+                  dispatch(repliesActions.getReplies({ commentId: comment?._id, page }));
+                }}
                 className="inline-flex text-slate-500 hover:text-indigo-600 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
                 Reply
               </button>
@@ -113,33 +117,20 @@ export default function CommentCard({ comment }) {
                 </div>
               )}
             </div>
-            {loading ? (
-              <CommentSkeleton />
-            ) : (
-              showReplies && (
-                <>
-                  <hr className="my-2 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
-                  {replies[comment?._id]?.map((reply) => (
-                    <ReplyCard
-                      reply={reply}
-                      key={reply?._id}
-                      setEditedReply={setEditedReply}
-                      setIsReplying={setIsReplying}
-                    />
-                  ))}
-                </>
-              )
+            {showReplies && (
+              <>
+                <hr className="my-2 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
+                {replies[comment?._id]?.map((reply) => (
+                  <ReplyCard
+                    reply={reply}
+                    key={reply?._id}
+                    setEditedReply={setEditedReply}
+                    setIsReplying={setIsReplying}
+                  />
+                ))}
+              </>
             )}
-
-            {isReplying && (
-              <ReplyForm
-                commentId={comment?._id}
-                setIsReplying={setIsReplying}
-                reply={editedReply}
-                setShowReplies={setShowReplies}
-              />
-            )}
-
+            {loading && <CommentSkeleton />}{' '}
             {page < countInfo[comment?._id]?.totalPages && showReplies && (
               <button
                 type="button"
@@ -153,6 +144,14 @@ export default function CommentCard({ comment }) {
                     : 'reply'
                 } `}
               </button>
+            )}
+            {isReplying && (
+              <ReplyForm
+                commentId={comment?._id}
+                setIsReplying={setIsReplying}
+                reply={editedReply}
+                setShowReplies={setShowReplies}
+              />
             )}
           </div>
         </div>

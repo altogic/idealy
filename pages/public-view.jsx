@@ -31,7 +31,7 @@ export default function PublicView({ userIp }) {
   const ideas = useSelector((state) => state.idea.ideas);
   const countInfo = useSelector((state) => state.idea.countInfo);
   const ideaVotes = useSelector((state) => state.idea.ideaVotes);
-  const loading = useSelector((state) => state.idea.isLoading);
+  const loading = useSelector((state) => state.idea.getIdeaLoading);
   const selectedIdea = useSelector((state) => state.idea.selectedIdea);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
