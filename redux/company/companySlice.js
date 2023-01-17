@@ -584,7 +584,8 @@ export const companySlice = createSlice({
     getCompanyBySubdomainFailed(state, action) {
       state.isLoading = false;
       state.error = action.payload;
-    }
+    },
+    resendInvite() {}
   },
 
   extraReducers: (builder) => {

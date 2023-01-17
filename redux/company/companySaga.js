@@ -459,6 +459,10 @@ function* getCompanyBySubdomain({ payload: { subdomain, onFail, onSuccess, userI
   }
 }
 
+function* resendInviteSaga({ payload }) {
+  yield call(companyService.resendInvitation(payload));
+}
+
 export default function* companySaga() {
   yield all([
     takeEvery(companyActions.setCompanyWillBeCreated.type, setCreatedCompanySaga),
@@ -489,6 +493,7 @@ export default function* companySaga() {
     takeEvery(companyActions.addItemToCompanySubLists.type, addItemToCompanySubLists),
     takeEvery(companyActions.deleteCompanySubListsItem.type, deleteCompanySubListsItem),
     takeEvery(companyActions.getCompanyBySubdomain.type, getCompanyBySubdomain),
-    takeEvery(companyActions.updateCompany, updateCompanySaga)
+    takeEvery(companyActions.updateCompany, updateCompanySaga),
+    takeEvery(companyActions.resendInvite, resendInviteSaga)
   ]);
 }
