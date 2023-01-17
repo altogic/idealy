@@ -53,6 +53,7 @@ export default function InviteTeam() {
         companySubdomain: company.subdomain,
         onSuccess: (userId) => {
           setIsInvite(false);
+          setRoleSelected(ROLE[0]);
           if (userId) {
             realtime.send(userId, 'new-invitation', {
               role: roleSelected.name,
