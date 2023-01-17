@@ -7,9 +7,10 @@ const initialState = {
   getIdeaLoading: false,
   error: null,
   countInfo: null,
+  selectedIdea: null,
   ideaVotes: [],
   similarIdeas: [],
-  selectedIdea: null
+  searchedCompanyMembers: []
 };
 
 export const ideaSlice = createSlice({
@@ -217,6 +218,17 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
+    },
+    searchCompanyMembers(state) {
+      state.isLoading = true;
+    },
+    searchCompanyMembersSuccess(state, action) {
+      state.isLoading = false;
+      state.searchedCompanyMembers = action.payload;
+    },
+    searchCompanyMembersFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   },
   extraReducers: (builder) => {
