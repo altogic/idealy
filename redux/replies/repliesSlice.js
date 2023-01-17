@@ -37,7 +37,7 @@ export const repliesSlice = createSlice({
     createReplySuccess: (state, action) => {
       state.createReplyLoading = false;
       if (
-        !state.replies[action.payload.commentId].find((reply) => reply._id === action.payload._id)
+        !state.replies[action.payload.commentId]?.find((reply) => reply._id === action.payload._id)
       ) {
         if (state.replies[action.payload.commentId]) {
           state.replies[action.payload.commentId] = [
@@ -45,7 +45,7 @@ export const repliesSlice = createSlice({
             action.payload
           ];
         } else {
-          state.replies[action.payload.commentId] = action.payload;
+          state.replies[action.payload.commentId] = [action.payload];
         }
       }
     },
