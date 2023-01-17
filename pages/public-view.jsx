@@ -31,6 +31,7 @@ export default function PublicView({ userIp }) {
   const ideas = useSelector((state) => state.idea.ideas);
   const countInfo = useSelector((state) => state.idea.countInfo);
   const ideaVotes = useSelector((state) => state.idea.ideaVotes);
+  const loading = useSelector((state) => state.idea.isLoading);
   const selectedIdea = useSelector((state) => state.idea.selectedIdea);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
@@ -141,7 +142,6 @@ export default function PublicView({ userIp }) {
 
   useEffect(() => {
     if (company) {
-      console.log(company, 'company');
       if (!company.privacy.isPublic && !company.privacy.isPublic.userApproval) {
         router.push('/404');
       }
@@ -184,7 +184,35 @@ export default function PublicView({ userIp }) {
             items={ideas}
             countInfo={countInfo}
             endOfList={() => setPage((page) => page + 1)}>
-            {ideas.length > 0 ? (
+            {loading ? (
+              <div
+                role="status"
+                className="w-full space-y-4 divide-y divide-gray-300 animate-pulse">
+                <div className="flex justify-between items-center px-4 py-8">
+                  <div className="flex items-center gap-6">
+                    <div className="w-[62px] h-20 bg-gray-300 rounded-lg" />
+                    <div>
+                      <div className="w-64 h-2.5 bg-gray-300 rounded-full mb-2.5" />
+                      <div className="w-32 h-2 bg-gray-300 rounded-full mb-2.5" />
+                      <div className="h-2.5 bg-gray-300 rounded-full w-24" />
+                    </div>
+                  </div>
+                  <div className="h-2.5 bg-gray-300 rounded-full w-12" />
+                </div>
+                <div className="flex justify-between items-center px-4 py-8">
+                  <div className="flex items-center gap-6">
+                    <div className="w-[62px] h-20 bg-gray-300 rounded-lg" />
+                    <div>
+                      <div className="w-64 h-2.5 bg-gray-300 rounded-full mb-2.5" />
+                      <div className="w-32 h-2 bg-gray-300 rounded-full mb-2.5" />
+                      <div className="h-2.5 bg-gray-300 rounded-full w-24" />
+                    </div>
+                  </div>
+                  <div className="h-2.5 bg-gray-300 rounded-full w-12" />
+                </div>
+                <span className="sr-only">Loading...</span>
+              </div>
+            ) : ideas.length > 0 ? (
               ideas?.map((idea) => (
                 <div
                   key={idea._id}
