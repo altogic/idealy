@@ -4,12 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { repliesActions } from '@/redux/replies/repliesSlice';
 import { commentActions } from '@/redux/comments/commentsSlice';
 import useIdeaActionValidation from '@/hooks/useIdeaActionValidation';
+import cn from 'classnames';
 import Avatar from './Avatar';
 import ReplyForm from './ReplyForm';
 import ReplyCard from './ReplyCard';
 import { Danger, Pen, Trash } from './icons';
 import DeleteModal from './DeleteModal';
 import CommentForm from './CommentForm';
+import CommentSkeleton from './CommentSkeleton';
 
 export default function CommentCard({ comment }) {
   const [isReplying, setIsReplying] = useState(false);
@@ -22,6 +24,7 @@ export default function CommentCard({ comment }) {
   const idea = useSelector((state) => state.idea.selectedIdea);
   const replies = useSelector((state) => state.replies.replies);
   const countInfo = useSelector((state) => state.replies.countInfo);
+  const loading = useSelector((state) => state.replies.isLoading);
   const canEdit = useIdeaActionValidation(comment);
   useEffect(() => {
     if (page) {
@@ -30,7 +33,11 @@ export default function CommentCard({ comment }) {
   }, [page]);
 
   return (
-    <div className="bg-gray-50 group dark:bg-aa-800 purple:bg-pt-900 p-8 mt-2 rounded">
+    <div
+      className={cn(
+        'bg-gray-50 group dark:bg-aa-800 purple:bg-pt-900 p-8 mt-2 rounded',
+        isReplying && 'min-h-[32rem]'
+      )}>
       {editComment ? (
         <CommentForm
           ideaId={comment?.ideaId}
@@ -106,19 +113,24 @@ export default function CommentCard({ comment }) {
                 </div>
               )}
             </div>
-            {showReplies && (
-              <>
-                <hr className="my-2 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
-                {replies[comment?._id]?.map((reply) => (
-                  <ReplyCard
-                    reply={reply}
-                    key={reply?._id}
-                    setEditedReply={setEditedReply}
-                    setIsReplying={setIsReplying}
-                  />
-                ))}
-              </>
+            {loading ? (
+              <CommentSkeleton />
+            ) : (
+              showReplies && (
+                <>
+                  <hr className="my-2 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
+                  {replies[comment?._id]?.map((reply) => (
+                    <ReplyCard
+                      reply={reply}
+                      key={reply?._id}
+                      setEditedReply={setEditedReply}
+                      setIsReplying={setIsReplying}
+                    />
+                  ))}
+                </>
+              )
             )}
+
             {isReplying && (
               <ReplyForm
                 commentId={comment?._id}

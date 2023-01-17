@@ -21,7 +21,7 @@ export default function InfiniteScroll({ items, countInfo, children, endOfList }
     if (inView) handleEndOfList();
   }, [inView]);
   return (
-    <div>
+    <div id="infinite-scroll">
       {children}
       <div ref={setRefs} />
     </div>
