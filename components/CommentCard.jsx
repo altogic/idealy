@@ -74,7 +74,7 @@ export default function CommentCard({ comment }) {
                   setShowReplies(!showReplies);
                 }}
                 className="inline-flex items-center justify-center gap-2">
-                {!!comment.replyCount && (
+                {!!comment?.replyCount && (
                   <>
                     <svg
                       className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
@@ -84,7 +84,7 @@ export default function CommentCard({ comment }) {
                     </svg>
                     <span className="text-slate-500 hover:text-indigo-600 dark:text-aa-400 purple:text-pt-400 text-sm tracking-sm">
                       {showReplies ? 'Hide' : 'Show'}{' '}
-                      {comment.replyCount > 1 ? ` ${comment.replyCount} Replies` : 'Reply'}
+                      {comment?.replyCount > 1 ? ` ${comment?.replyCount} Replies` : 'Reply'}
                     </span>
                   </>
                 )}
