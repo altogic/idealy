@@ -177,6 +177,9 @@ function* updateMemberStatusSaga({ payload }) {
     if (error) {
       throw error;
     }
+    if (payload.onSuccess) {
+      payload.onSuccess();
+    }
     yield put(companyActions.updateMemberStatusSuccess(user._id));
   } catch (error) {
     yield put(companyActions.updateMemberStatusFailed(error));
