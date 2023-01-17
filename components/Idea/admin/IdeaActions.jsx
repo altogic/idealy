@@ -12,40 +12,36 @@ export default function IdeaActions({ updateIdea }) {
       type: 'Pin',
       onClick: () => updateIdea({ isPinned: !idea.isPinned }),
       Icon: Thumbtack,
-      color: 'green',
-      control: idea?.isPinned
+      color: `hover:text-green-500 ${idea?.isPinned ? 'text-green-500' : ''}`
     },
     {
       type: 'Archive',
       onClick: () => updateIdea({ isArchived: !idea.isArchived }),
       Icon: Archive,
-      color: 'orange',
-      control: idea?.isArchived
+      color: `hover:text-orange-500 ${idea?.isArchived ? 'text-orange-500' : ''}`
     },
     {
       type: 'Bug',
       onClick: () => updateIdea({ isBug: !idea.isBug }),
       Icon: Bug,
-      color: 'red',
-      control: idea?.isBug
+      color: `hover:text-red-500 ${idea?.isBug ? 'text-red-500' : ''}`
     },
     {
       type: 'Merge',
       onClick: () => {},
       Icon: Merge,
-      color: 'pink',
-      control: idea?.isMerged
+      color: 'hover:text-pink-500'
     },
     {
       type: 'Delete',
       Icon: Trash,
-      color: 'red',
+      color: 'hover:text-red-500',
       onClick: () => dispatch(toggleDeleteFeedBackModal())
     },
     {
       type: 'Edit',
       Icon: Pen,
-      color: 'sky',
+      color: 'hover:text-blue-500',
       onClick: () => dispatch(toggleFeedBackSubmitModal())
     }
   ];

@@ -37,11 +37,6 @@ export default function PublicView({ userIp }) {
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const deleteFeedBackModal = useSelector((state) => state.general.deleteFeedBackModal);
 
-  const handleDelete = () => {
-    dispatch(ideaActions.deleteIdea(selectedIdea._id));
-    dispatch(toggleFeedBackDetailModal());
-  };
-
   const handleFilter = (filterTopics, filterStatus) => {
     if (filterTopics?.length || filterStatus?.length) {
       const topicsFilter = [];
@@ -106,6 +101,25 @@ export default function PublicView({ userIp }) {
     }
   }, [page, router.query.sort, router.query.status, router.query.topics]);
 
+  function handleCloseIdea() {
+    dispatch(toggleFeedBackDetailModal());
+    const temp = router.query;
+    delete temp?.feedback;
+    router.push(
+      {
+        pathname: router.pathname,
+        query: temp
+      },
+      undefined,
+      { scroll: false }
+    );
+    dispatch(ideaActions.setSelectedIdea(null));
+  }
+
+  const handleDelete = () => {
+    dispatch(ideaActions.deleteIdea(selectedIdea._id));
+    handleCloseIdea();
+  };
   useEffect(() => {
     if (router) {
       const { topics, status, sort, feedback } = router.query;

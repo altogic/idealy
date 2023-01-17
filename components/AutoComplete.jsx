@@ -90,7 +90,10 @@ function AutoComplete({
           {input && (
             <XIcon
               className="w-5 h-5 text-slate-400 absolute right-2 top-10 cursor-pointer"
-              onClick={() => setInput('')}
+              onClick={() => {
+                setInput('');
+                setSelectedSuggestion();
+              }}
             />
           )}
         </div>

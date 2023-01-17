@@ -23,7 +23,6 @@ export default function Realtime() {
   const user = useSelector((state) => state.auth.user);
   const company = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
-  const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -146,7 +145,7 @@ export default function Realtime() {
   }
   function deleteIdeaHandler({ message }) {
     const idea = new URLSearchParams(document.location.search).get('feedback');
-    if (feedBackDetailModal && idea === message) {
+    if (idea === message) {
       dispatch(toggleFeedBackDetailModal());
       setDeleteIdeaModal(true);
     }

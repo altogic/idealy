@@ -21,7 +21,7 @@ export default function IdeaDetailAdmin() {
   return (
     <div className="flex-shrink-0 w-72 bg-white dark:bg-aa-900 purple:bg-pt-1000 border-r border-slate-200 dark:border-aa-600 purple:border-pt-800">
       <div className="flex flex-col h-full">
-        <div className="flex-shrink-0 px-4 py-9 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
+        <div className="flex-shrink-0 p-5 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
           <h2 className="text-xl font-semibold text-slate-800 dark:text-aa-200 purple:text-pt-200">
             Admin
           </h2>

@@ -12,7 +12,7 @@ import {
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useIdeaActionValidation from '@/hooks/useIdeaActionValidation';
 import CommentForm from '../CommentForm';
 import Drawer from '../Drawer';
@@ -36,6 +36,7 @@ export default function IdeaDetail({ idea, company, query }) {
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const canComment = useRegisteredUserValidation('commentIdea');
   const canEdit = useIdeaActionValidation(idea);
+  const [isFetched, setIsFetched] = useState(false);
   function handleClose() {
     dispatch(toggleFeedBackDetailModal());
     const temp = query;
@@ -51,10 +52,11 @@ export default function IdeaDetail({ idea, company, query }) {
     dispatch(ideaActions.setSelectedIdea(null));
   }
   useEffect(() => {
-    if (router.isReady) {
+    if (router.isReady && !!idea?.commentCount && !isFetched) {
+      setIsFetched(true);
       dispatch(commentActions.getComments({ ideaId: router.query.feedback, page: 1 }));
     }
-  }, [router]);
+  }, [router, idea]);
 
   return (
     <Drawer
@@ -95,20 +97,19 @@ export default function IdeaDetail({ idea, company, query }) {
                     )
                   }
                   Icon={Thumbtack}
-                  color="green"
-                  control={idea?.isPinned}
+                  color={`hover:text-green-500 ${idea?.isPinned ? 'text-green-500' : ''}`}
                 />
               )}
               <IdeaActionButton
                 type="Delete"
                 Icon={Trash}
-                color="red"
+                color="hover:text-red-500"
                 onClick={() => dispatch(toggleDeleteFeedBackModal())}
               />
               <IdeaActionButton
                 type="Edit"
                 Icon={Pen}
-                color="sky"
+                color="hover:text-blue-500"
                 onClick={() => dispatch(toggleFeedBackSubmitModal())}
               />
             </div>
@@ -118,22 +119,24 @@ export default function IdeaDetail({ idea, company, query }) {
 
       <div className="flex items-center justify-between gap-4">
         {/* Feedback Detail Topic Badges */}
-        <div className="flex items-center gap-2">
-          <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
-            Topics
-          </span>
-          <svg
-            className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
-            fill="currentColor"
-            viewBox="0 0 8 8">
-            <circle cx={4} cy={4} r={3} />
-          </svg>
+        {!!idea?.topics.length && (
           <div className="flex items-center gap-2">
-            {idea?.topics.map((topic) => (
-              <TopicBadges key={topic} badgeName={topic} />
-            ))}
+            <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
+              Topics
+            </span>
+            <svg
+              className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
+              fill="currentColor"
+              viewBox="0 0 8 8">
+              <circle cx={4} cy={4} r={3} />
+            </svg>
+            <div className="flex items-center gap-2">
+              {idea?.topics.map((topic) => (
+                <TopicBadges key={topic} badgeName={topic} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
         {/* Feedback Detail Status Badge */}
         {idea?.status && <StatusBadge name={idea?.status.name} color={idea?.status.color} />}
       </div>

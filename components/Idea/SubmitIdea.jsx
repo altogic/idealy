@@ -128,6 +128,7 @@ export default function SubmitIdea({ idea }) {
     setContent('');
     setTopics([]);
     setImages([]);
+    setMember();
     dispatch(ideaActions.clearSimilarIdeas());
   };
   const handleClose = () => {
@@ -164,6 +165,7 @@ export default function SubmitIdea({ idea }) {
       setContent(idea?.content);
       setTopics(idea?.topics);
       setImages(idea?.images);
+      setMember(idea?.author);
     } else {
       resetForm();
     }
@@ -192,11 +194,6 @@ export default function SubmitIdea({ idea }) {
       setValue('topics', topics);
     }
   }, [topics]);
-  useEffect(() => {
-    if (member) {
-      console.log({ member });
-    }
-  }, [member]);
 
   useEffect(() => {
     if (!ideaLoading && isSubmitSuccessful) {

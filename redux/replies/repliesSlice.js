@@ -66,17 +66,13 @@ export const repliesSlice = createSlice({
       state.updateReplyLoading = false;
       state.error = action.payload;
     },
-    deleteReply: (state) => {
-      state.isLoading = true;
-    },
+    deleteReply: () => {},
     deleteReplySuccess: (state, action) => {
-      state.isLoading = false;
       state.replies[action.payload.commentId] = state.replies[action.payload.commentId].filter(
         (reply) => reply._id !== action.payload.replyId
       );
     },
     deleteReplyFailure: (state, action) => {
-      state.isLoading = false;
       state.error = action.payload;
     }
   },

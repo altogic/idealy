@@ -41,15 +41,11 @@ export const commentsSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    deleteComment: (state) => {
-      state.isLoading = true;
-    },
+    deleteComment: () => {},
     deleteCommentSuccess: (state, action) => {
-      state.isLoading = false;
       state.comments = state.comments.filter((comment) => comment._id !== action.payload);
     },
     deleteCommentFailure: (state, action) => {
-      state.isLoading = false;
       state.error = action.payload;
     },
     updateComment: (state) => {

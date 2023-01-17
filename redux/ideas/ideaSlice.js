@@ -140,6 +140,7 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
+      state.selectedIdea.commentCount += 1;
     },
     setSelectedIdea(state, action) {
       state.selectedIdea = action.payload;
@@ -218,6 +219,7 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
+      state.selectedIdea.commentCount -= 1;
     },
     searchCompanyMembers(state) {
       state.isLoading = true;
