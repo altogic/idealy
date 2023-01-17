@@ -1,16 +1,17 @@
-import React, { useEffect, Fragment, useState } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import { commentActions } from '@/redux/comments/commentsSlice';
+import { companyActions } from '@/redux/company/companySlice';
+import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { notificationActions } from '@/redux/notification/notificationSlice';
+import { repliesActions } from '@/redux/replies/repliesSlice';
 import { realtime } from '@/utils/altogic';
+import { Dialog, Transition } from '@headlessui/react';
 import { COMPANY_TABS } from 'constants';
 import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux';
-import { companyActions } from '@/redux/company/companySlice';
-import { ideaActions } from '@/redux/ideas/ideaSlice';
-import { commentActions } from '@/redux/comments/commentsSlice';
-import { repliesActions } from '@/redux/replies/repliesSlice';
-import { Email } from './icons';
+import { Fragment, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { generateUrl } from '../utils';
+import { Danger, Email } from './icons';
 
 export default function Realtime() {
   const [invitationDialog, setInvitationDialog] = useState(false);
@@ -18,9 +19,11 @@ export default function Realtime() {
   const [deletedCompanyName, setDeletedCompanyName] = useState(false);
   const [invitation, setInvitation] = useState();
   const [deletedCompany, setDeletedCompany] = useState();
+  const [deleteIdeaModal, setDeleteIdeaModal] = useState(false);
   const user = useSelector((state) => state.auth.user);
   const company = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
+  const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -142,6 +145,12 @@ export default function Realtime() {
     }
   }
   function deleteIdeaHandler({ message }) {
+    const idea = new URLSearchParams(document.location.search).get('feedback');
+    console.log(feedBackDetailModal, feedBackDetailModal && idea === message, message, idea);
+    if (feedBackDetailModal && idea === message) {
+      dispatch(toggleFeedBackDetailModal());
+      setDeleteIdeaModal(true);
+    }
     dispatch(ideaActions.deleteIdeaSuccess(message));
   }
   function voteIdeaHandler({ message }) {
@@ -314,6 +323,11 @@ export default function Realtime() {
       }
     }
   };
+
+  useEffect(() => {
+    console.log(deleteIdeaModal);
+  }, [deleteIdeaModal]);
+
   return (
     <>
       <Transition appear show={deleteDialog} as={Fragment}>
@@ -413,6 +427,55 @@ export default function Realtime() {
                       className="inline-flex items-center justify-center bg-indigo-600 text-white py-2.5 px-4 text-sm font-medium tracking-sm border border-transparent rounded-md transition  hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       onClick={handleAcceptInvitation}>
                       Accept
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+      <Transition appear show={deleteIdeaModal} as={Fragment}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          onClose={() => setDeleteIdeaModal(!deleteIdeaModal)}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0">
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <div className="inline-flex items-center justify-center flex-shrink-0 w-10 h-10 bg-indigo-100 rounded-full">
+                    <Danger className="w-6 h-6 text-red-600" />
+                  </div>
+                  <div className="space-y-2 mt-2">
+                    <h2 className="text-slate-800 text-lg font-medium tracking-sm">
+                      The idea you are viewing has been deleted.
+                    </h2>
+                  </div>
+                  <div className="flex items-center justify-center mt-6 gap-3">
+                    <button
+                      type="button"
+                      className="inline-flex items-center justify-center bg-indigo-600 text-white py-2.5 px-4 text-sm font-medium tracking-sm border border-transparent rounded-md transition  hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      onClick={() => setDeleteIdeaModal(!deleteIdeaModal)}>
+                      OK
                     </button>
                   </div>
                 </Dialog.Panel>
