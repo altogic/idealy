@@ -165,15 +165,11 @@ export const ideaSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    getUserVotes(state) {
-      state.isLoading = true;
-    },
+    getUserVotes() {},
     getUserVotesSuccess(state, action) {
-      state.isLoading = false;
       state.ideaVotes = action.payload;
     },
     getUserVotesFailure(state, action) {
-      state.isLoading = false;
       state.error = action.payload;
     },
     updateIdeaRealtime(state, action) {
