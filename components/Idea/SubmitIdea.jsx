@@ -111,7 +111,7 @@ export default function SubmitIdea({ idea }) {
     setImages(images.filter((_, i) => i !== index));
     dispatch(fileActions.deleteFile(fileLinks[index]));
   };
-  const handleClose = () => {
+  const resetForm = () => {
     reset({
       title: undefined,
       content: undefined,
@@ -120,11 +120,13 @@ export default function SubmitIdea({ idea }) {
       guestEmail: undefined,
       privacyPolicy: false
     });
-    setImages([]);
     setContent('');
     setTopics([]);
-    dispatch(fileActions.clearFileLinks());
+    setImages([]);
     dispatch(ideaActions.clearSimilarIdeas());
+  };
+  const handleClose = () => {
+    resetForm();
     dispatch(toggleFeedBackSubmitModal());
   };
   useEffect(() => {
@@ -144,6 +146,8 @@ export default function SubmitIdea({ idea }) {
       setContent(idea?.content);
       setTopics(idea?.topics);
       setImages(idea?.images);
+    } else {
+      resetForm();
     }
   }, [idea]);
 
@@ -159,6 +163,7 @@ export default function SubmitIdea({ idea }) {
       clearTimeout(timer);
     };
   }, [inpTitle]);
+
   useEffect(() => {
     if (content) {
       setValue('content', content);
