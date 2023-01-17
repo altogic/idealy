@@ -43,7 +43,7 @@ export default function Realtime() {
       dispatch(
         companyActions.updateMemberStatusRealtime({
           userId: data.message.userId,
-          company: data.message.companyId
+          company: data.message.company._id
         })
       );
     } else {
@@ -251,7 +251,8 @@ export default function Realtime() {
     dispatch(
       companyActions.updateMemberStatus({
         id: invitation._id,
-        companyId: invitation.company._id
+        companyId: invitation.company._id,
+        onSuccess: () => router.push(generateUrl('dashboard', invitation.company.subdomain))
       })
     );
     dispatch(
@@ -279,7 +280,6 @@ export default function Realtime() {
       })
     );
     setInvitationDialog(false);
-    router.push(generateUrl('dashboard', invitation.company.subdomain));
   };
   const handleDeclineInvitation = () => {
     dispatch(
