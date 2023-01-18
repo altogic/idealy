@@ -151,7 +151,9 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
                 text="Resend Invitation"
                 className="text-xs text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-indigo-500 dark:hover:text-indigo-500 purple:hover:text-indigo-500"
                 onClick={() =>
-                  dispatch(companyActions.resendInvite({ email, companyId: company._id }))
+                  dispatch(
+                    companyActions.resendInvite({ email: email || name, companyId: company._id })
+                  )
                 }
               />
             )}
