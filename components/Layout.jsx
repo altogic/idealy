@@ -4,7 +4,7 @@ import { deleteCookie, getCookie } from 'cookies-next';
 import _ from 'lodash';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateUrl, setCookie } from '../utils';
 import Header from './Header';
@@ -15,7 +15,9 @@ export default function Layout({ children }) {
   const company = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const companyFetched = useRef(false);
   const user = useSelector((state) => state.auth.user);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -49,11 +51,8 @@ export default function Layout({ children }) {
   }, [companies]);
 
   useEffect(() => {
-    if (user) {
-      dispatch(companyActions.getUserCompanies(user?._id));
-    }
     const wildcard = window.location.hostname.split('.')[0];
-    if (company?.subdomain !== wildcard) {
+    if (company?.subdomain !== wildcard && router.isReady) {
       dispatch(
         companyActions.getCompanyBySubdomain({
           subdomain: wildcard,
@@ -64,6 +63,13 @@ export default function Layout({ children }) {
           onFail: () => {}
         })
       );
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user && !companyFetched.current) {
+      companyFetched.current = true;
+      dispatch(companyActions.getUserCompanies(user?._id));
     }
   }, [user]);
 

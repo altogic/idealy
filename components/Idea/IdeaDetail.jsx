@@ -24,6 +24,7 @@ import IdeaDetailAdmin from './IdeaDetailAdmin';
 import IdeaInfo from './IdeaInfo';
 import EmptyState from '../EmptyState';
 import CommentSkeleton from '../CommentSkeleton';
+import VoteIdea from './VoteIdea';
 
 export default function IdeaDetail({ idea, company, query }) {
   const dispatch = useDispatch();
@@ -34,6 +35,8 @@ export default function IdeaDetail({ idea, company, query }) {
   const commentCountInfo = useSelector((state) => state.comments.countInfo);
   const loading = useSelector((state) => state.comments.isLoading);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
+  const ideaVotes = useSelector((state) => state.idea.ideaVotes);
+  const userIp = useSelector((state) => state.auth.userIp);
   const canComment = useRegisteredUserValidation('commentIdea');
   const canEdit = useIdeaActionValidation(idea);
   const [isFetched, setIsFetched] = useState(false);
@@ -52,11 +55,12 @@ export default function IdeaDetail({ idea, company, query }) {
     dispatch(ideaActions.setSelectedIdea(null));
   }
   useEffect(() => {
-    if (router.isReady && !!idea?.commentCount && !isFetched) {
+    const ideaId = router.query.feedback;
+    if (router.isReady && !!idea?.commentCount && !isFetched && ideaId) {
       setIsFetched(true);
-      dispatch(commentActions.getComments({ ideaId: router.query.feedback, page: 1 }));
+      dispatch(commentActions.getComments({ ideaId, page: 1 }));
     }
-  }, [router, idea]);
+  }, [router.asPath, idea]);
 
   return (
     <Drawer
@@ -66,108 +70,123 @@ export default function IdeaDetail({ idea, company, query }) {
       sidebar={
         user && (company?.role === 'Owner' || company?.role === 'Admin') && <IdeaDetailAdmin />
       }>
-      <div className="mb-8">
-        <IdeaBadges idea={idea} />
-      </div>
-      <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-400 purple:prose-p:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-8 break-words">
-        <p dangerouslySetInnerHTML={{ __html: idea?.content }} />
-      </div>
-
-      <div className="flex items-center gap-3 mb-8">
-        {/* User */}
-        <IdeaInfo idea={idea} />
-        {canEdit && (
-          <>
-            <svg
-              className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
-              fill="currentColor"
-              viewBox="0 0 8 8">
-              <circle cx={4} cy={4} r={3} />
-            </svg>
-            <div className="flex">
-              {user && (company?.role === 'Owner' || company?.role === 'Admin') && (
-                <IdeaActionButton
-                  type="Pin"
-                  onClick={() =>
-                    dispatch(
-                      ideaActions.updateIdea({
-                        _id: idea._id,
-                        isPinned: !idea.isPinned
-                      })
-                    )
-                  }
-                  Icon={Thumbtack}
-                  color={`hover:text-green-500 ${idea?.isPinned ? 'text-green-500' : ''}`}
-                />
-              )}
-              <IdeaActionButton
-                type="Delete"
-                Icon={Trash}
-                color="hover:text-red-500"
-                onClick={() => dispatch(toggleDeleteFeedBackModal())}
-              />
-              <IdeaActionButton
-                type="Edit"
-                Icon={Pen}
-                color="hover:text-blue-500"
-                onClick={() => dispatch(toggleFeedBackSubmitModal())}
-              />
-            </div>
-          </>
-        )}
-      </div>
-
-      <div className="flex items-center justify-between gap-4">
-        {/* Feedback Detail Topic Badges */}
-        {!!idea?.topics.length && (
-          <div className="flex items-center gap-2">
-            <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
-              Topics
-            </span>
-            <svg
-              className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
-              fill="currentColor"
-              viewBox="0 0 8 8">
-              <circle cx={4} cy={4} r={3} />
-            </svg>
-            <div className="flex items-center gap-2">
-              {idea?.topics.map((topic) => (
-                <TopicBadges key={topic} badgeName={topic} />
-              ))}
-            </div>
+      <div className="flex gap-6">
+        <VoteIdea
+          ideaId={idea?._id}
+          voteCount={idea?.voteCount}
+          voted={
+            user
+              ? ideaVotes.find((v) => v.ideaId === idea?._id && v.userId === user._id)
+              : ideaVotes.find((v) => v.ideaId === idea?._id && v.ip === userIp && !v.userId)
+          }
+        />
+        <div className="relative flex-1">
+          <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all">
+            {idea?.title}
+          </h2>
+          <div className="mb-8">
+            <IdeaBadges idea={idea} />
           </div>
-        )}
-        {/* Feedback Detail Status Badge */}
-        {idea?.status && <StatusBadge name={idea?.status.name} color={idea?.status.color} />}
-      </div>
+          <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-400 purple:prose-p:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-8 break-words">
+            <p dangerouslySetInnerHTML={{ __html: idea?.content }} />
+          </div>
 
-      <ImageList images={idea?.images} isPreview />
+          <div className="flex items-center gap-2 mb-8">
+            {/* User */}
+            <IdeaInfo idea={idea} />
+            {canEdit && (
+              <>
+                <svg
+                  className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
+                  fill="currentColor"
+                  viewBox="0 0 8 8">
+                  <circle cx={4} cy={4} r={3} />
+                </svg>
+                <div className="flex">
+                  {user && (company?.role === 'Owner' || company?.role === 'Admin') && (
+                    <IdeaActionButton
+                      type="Pin"
+                      onClick={() =>
+                        dispatch(
+                          ideaActions.updateIdea({
+                            _id: idea._id,
+                            isPinned: !idea.isPinned
+                          })
+                        )
+                      }
+                      Icon={Thumbtack}
+                      color={`hover:text-green-500 ${idea?.isPinned ? 'text-green-500' : ''}`}
+                    />
+                  )}
+                  <IdeaActionButton
+                    type="Delete"
+                    Icon={Trash}
+                    color="hover:text-red-500"
+                    onClick={() => dispatch(toggleDeleteFeedBackModal())}
+                  />
+                  <IdeaActionButton
+                    type="Edit"
+                    Icon={Pen}
+                    color="hover:text-blue-500"
+                    onClick={() => dispatch(toggleFeedBackSubmitModal())}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="flex items-center justify-between gap-4">
+            {/* Feedback Detail Topic Badges */}
+            {!!idea?.topics.length && (
+              <div className="flex items-center gap-2">
+                <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
+                  Topics
+                </span>
+                <svg
+                  className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
+                  fill="currentColor"
+                  viewBox="0 0 8 8">
+                  <circle cx={4} cy={4} r={3} />
+                </svg>
+                <div className="flex items-center gap-2">
+                  {idea?.topics.map((topic) => (
+                    <TopicBadges key={topic} badgeName={topic} />
+                  ))}
+                </div>
+              </div>
+            )}
+            {/* Feedback Detail Status Badge */}
+            {idea?.status && <StatusBadge name={idea?.status.name} color={idea?.status.color} />}
+          </div>
+
+          <ImageList images={idea?.images} isPreview />
+        </div>
+      </div>
 
       {canComment && <CommentForm ideaId={idea?._id} />}
-      {loading ? (
-        <CommentSkeleton />
-      ) : idea?.commentCount > 0 ? (
-        <InfiniteScroll
-          items={comments}
-          countInfo={commentCountInfo}
-          endOfList={() =>
-            dispatch(
-              commentActions.getComments({
-                ideaId: idea?._id,
-                page: commentCountInfo.currentPage + 1
-              })
-            )
-          }>
-          {comments?.map((comment) => (
-            <CommentCard key={comment?._id} comment={comment} />
-          ))}
-        </InfiniteScroll>
-      ) : (
-        <EmptyState
-          title="No Comments"
-          description="Your search did not match any data or this idea does not have any comments yet"
-        />
-      )}
+      <InfiniteScroll
+        items={comments}
+        countInfo={commentCountInfo}
+        endOfList={() =>
+          dispatch(
+            commentActions.getComments({
+              ideaId: idea?._id,
+              page: commentCountInfo.currentPage + 1
+            })
+          )
+        }>
+        {loading && !comments.length ? (
+          <CommentSkeleton />
+        ) : idea?.commentCount > 0 ? (
+          comments?.map((comment) => <CommentCard key={comment?._id} comment={comment} />)
+        ) : (
+          <EmptyState
+            title="No Comments"
+            description="Your search did not match any data or this idea does not have any comments yet"
+          />
+        )}
+        {loading && !!comments.length && <CommentSkeleton />}
+      </InfiniteScroll>
     </Drawer>
   );
 }

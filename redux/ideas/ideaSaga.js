@@ -60,7 +60,11 @@ function* downVoteIdeaSaga({ payload }) {
 
     yield put(ideaActions.downVoteIdeaSuccess(payload.ideaId));
     const company = yield select((state) => state.company.company);
-    realtime.send(company._id, 'downVote-idea', payload.ideaId);
+    realtime.send(company._id, 'downVote-idea', {
+      ideaId: payload.ideaId,
+      userId: payload?.userId,
+      ...(!payload.userId && { userIp: payload.ip })
+    });
   } catch (error) {
     yield put(ideaActions.downVoteIdeaFailure(error));
   }
@@ -114,9 +118,9 @@ function* deleteIdeaCoverImage({ payload: id }) {
     yield put(ideaActions.deleteIdeaCoverImageFailure(error));
   }
 }
-function* getUserVotesSaga({ payload: { userIp, companyId } }) {
+function* getUserVotesSaga({ payload: { ip, companyId, userId } }) {
   try {
-    const { data, errors } = yield call(ideaService.getUserVotes, userIp, companyId);
+    const { data, errors } = yield call(ideaService.getUserVotes, { ip, companyId, userId });
     if (errors) {
       throw new Error(errors);
     }

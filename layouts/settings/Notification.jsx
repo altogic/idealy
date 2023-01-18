@@ -7,6 +7,7 @@ import { authActions } from '@/redux/auth/authSlice';
 export default function Notification() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const company = useSelector((state) => state.company.company);
   const [selectedNotification, setSelectedNotification] = useState();
   const selectedCompany = useSelector((state) => state.company.company);
   const [disableAll, setDisableAll] = useState();
@@ -102,13 +103,15 @@ export default function Notification() {
   };
   return (
     <>
-      <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
-        <SectionTitle
-          sectionTitle="Notifications"
-          sectionDescription="Keep your inbox under control."
-          big
-        />
-      </div>
+      {company?.name && (
+        <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
+          <SectionTitle
+            sectionTitle={`${company?.name} Notifications`}
+            sectionDescription="Keep your inbox under control."
+            big
+          />
+        </div>
+      )}
       <div className="max-w-lg">
         <div className="space-y-6">
           <Toggle

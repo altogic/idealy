@@ -460,7 +460,11 @@ function* getCompanyBySubdomain({ payload: { subdomain, onFail, onSuccess, userI
 }
 
 function* resendInviteSaga({ payload }) {
-  yield call(companyService.resendInvitation(payload));
+  try {
+    yield call(companyService.resendInvitation(payload));
+  } catch (error) {
+    yield put(companyActions.resendInviteFailed(error))
+  }
 }
 
 export default function* companySaga() {

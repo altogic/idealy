@@ -5,10 +5,11 @@ const ideaService = {
   createIdea: (req) => endpoint.post('/idea', req),
   voteIdea: (req) => endpoint.post('/idea/vote', req),
   downVoteIdea: (req) => endpoint.delete(`/idea/downVote`, req),
-  getUserVotes: (ip, companyId) =>
+  getUserVotes: ({ ip, companyId, userId }) =>
     endpoint.get(`/ideaVote`, {
       ip,
-      companyId
+      companyId,
+      userId
     }),
   updateIdea: (req) => endpoint.put('/idea', req),
   deleteIdea: (id) => db.model('ideas').object(id).delete(),

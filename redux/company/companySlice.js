@@ -585,7 +585,10 @@ export const companySlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    resendInvite() {}
+    resendInvite() {},
+    resendInviteFailed(state, action) {
+      state.error = action.payload;
+    }
   },
 
   extraReducers: (builder) => {

@@ -143,7 +143,13 @@ export default function Header() {
                       <h6 className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-base font-semibold tracking-md">
                         Notification
                       </h6>
-                      <button type="button">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          router.push(
+                            generateUrl('settings?tab=notifications', selectedCompany.subdomain)
+                          )
+                        }>
                         <Settings className="w-6 h-6 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
                       </button>
                     </div>
@@ -157,30 +163,7 @@ export default function Header() {
                           alt=""
                         />
                         <div className="text-left">
-                          <p className="text-slate-400 dark:text-aa-400 purple:text-pt-400 text-base leading-5 tracking-sm">
-                            <strong className="text-slate-700 dark:text-aa-200 purple:text-pt-200 font-semibold">
-                              umit.cakmak@gmail.com
-                            </strong>{' '}
-                            Updated client key{' '}
-                            <strong className="text-slate-700 dark:text-aa-200 purple:text-pt-200 font-semibold">
-                              client key
-                            </strong>
-                          </p>
-                          <span className="text-gray-400 text-xs font-medium tracking-sm">
-                            12 hours ago
-                          </span>
-                        </div>
-                      </button>
-                      <button
-                        type="button"
-                        className="flex items-start gap-4 p-4 transition ease-linear duration-150 hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700">
-                        <img
-                          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                          className="w-10 h-10 rounded-full"
-                          alt=""
-                        />
-                        <div className="text-left">
-                          <p className="text-slate-400 dark:text-aa-400 purple:text-pt-400 text-base leading-5 tracking-sm">
+                          <p className=" text-sm text-slate-400 dark:text-aa-400 purple:text-pt-400  leading-5 tracking-sm">
                             <strong className="text-slate-700 dark:text-aa-200 purple:text-pt-200 font-semibold">
                               umit.cakmak@gmail.com
                             </strong>{' '}

@@ -9,6 +9,7 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
   const dispatch = useDispatch();
   const canVote = useRegisteredUserValidation('voteIdea');
   const userIp = useSelector((state) => state.auth.userIp);
+  const user = useSelector((state) => state.auth.user);
   const company = useSelector((state) => state.company.company);
   const [voteCountState, setVoteCountState] = useState();
   const [votedState, setVotedState] = useState();
@@ -20,14 +21,21 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
   const downVote = () => {
     setVoteCountState((prev) => prev - 1);
     setVotedState(false);
-    dispatch(ideaActions.downVoteIdea({ ideaId, ip: userIp }));
+    dispatch(ideaActions.downVoteIdea({ ideaId, ...(!user && { ip: userIp }), userId: user?._id }));
   };
 
   const upVote = () => {
     if (!voted) {
       setVoteCountState((prev) => prev + 1);
       setVotedState(true);
-      dispatch(ideaActions.voteIdea({ ideaId, ip: userIp, companyId: company._id }));
+      dispatch(
+        ideaActions.voteIdea({
+          ideaId,
+          ...(!user && { ip: userIp }),
+          companyId: company._id,
+          userId: user?._id
+        })
+      );
     } else {
       downVote();
     }
@@ -43,7 +51,7 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
           onClick={upVote}
           disabled={!canVote}
           className="inline-flex items-center justify-center">
-          <ChevronUp className={`w-5 h-5 ${votedState ? ' text-indigo-900' : 'text-slate-400'} `} />
+          <ChevronUp className={`w-5 h-5 ${voted ? ' text-indigo-900' : 'text-slate-400'} `} />
         </button>
       )}
       <span
