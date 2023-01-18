@@ -51,18 +51,16 @@ export const ideaSlice = createSlice({
     },
     voteIdeaSuccess(state, action) {
       state.isLoading = false;
-      if (!state.ideaVotes.find((vote) => vote.ideaId === action.payload.ideaId)) {
-        state.ideaVotes = [...state.ideaVotes, action.payload];
-        state.ideas = state.ideas.map((idea) => {
-          if (idea._id === action.payload.ideaId) {
-            return {
-              ...idea,
-              voteCount: idea.voteCount + 1
-            };
-          }
-          return idea;
-        });
-      }
+      state.ideaVotes = [...state.ideaVotes, action.payload];
+      state.ideas = state.ideas.map((idea) => {
+        if (idea._id === action.payload.ideaId) {
+          return {
+            ...idea,
+            voteCount: idea.voteCount + 1
+          };
+        }
+        return idea;
+      });
     },
     voteIdeaFailure(state, action) {
       state.isLoading = false;
@@ -231,8 +229,31 @@ export const ideaSlice = createSlice({
     searchCompanyMembersFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    downVoteIdeaRealtime(state, action) {
+      state.ideas = state.ideas.map((idea) => {
+        if (idea._id === action.payload) {
+          return {
+            ...idea,
+            voteCount: idea.voteCount ? idea.voteCount - 1 : 0
+          };
+        }
+        return idea;
+      });
+    },
+    upVoteIdeaRealtime(state, action) {
+      state.ideas = state.ideas.map((idea) => {
+        if (idea._id === action.payload) {
+          return {
+            ...idea,
+            voteCount: idea.voteCount + 1
+          };
+        }
+        return idea;
+      });
     }
   },
+
   extraReducers: (builder) => {
     builder.addCase([HYDRATE], (state, action) => ({
       ...state,

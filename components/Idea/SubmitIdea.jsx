@@ -211,7 +211,10 @@ export default function SubmitIdea({ idea }) {
         size="sm"
         onClick={() => dispatch(toggleFeedBackSubmitModal())}
       />
-      <Drawer open={open} onClose={() => handleClose()} title="Tell us your idea">
+      <Drawer open={open} onClose={() => handleClose()}>
+        <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all">
+          Tell us your idea
+        </h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="my-8">
             <AutoComplete

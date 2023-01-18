@@ -94,7 +94,7 @@ export default function CommentForm({ ideaId, editedComment, setEditComment }) {
     }
   }, [updateCommentLoading, setEditComment, isSubmitSuccessful]);
   return (
-    <form onSubmit={handleSubmit(submitComment)} className="m-4">
+    <form onSubmit={handleSubmit(submitComment)} className="my-4">
       <Controller
         control={control}
         name="text"

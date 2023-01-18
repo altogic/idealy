@@ -131,7 +131,7 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
           ) : (
             <CircleUser className="flex-shrink-0 w-[50px] h-[50px] rounded-full text-slate-400" />
           )}
-          <div className={cn(email ? 'space-y-1' : null)}>
+          <div className={cn(email ? 'space-y-1' : '')}>
             <h6
               className="max-w-[188px] text-slate-700 dark:text-aa-100 purple:text-pt-100 text-base font-medium tracking-sm truncate"
               title={name}>
@@ -143,6 +143,17 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
                 title={email}>
                 {email}
               </p>
+            )}
+            {status === 'Pending' && (
+              <Button
+                type="button"
+                variant="blank"
+                text="Resend Invitation"
+                className="text-xs text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-indigo-500 dark:hover:text-indigo-500 purple:hover:text-indigo-500"
+                onClick={() =>
+                  dispatch(companyActions.resendInvite({ email, companyId: company._id }))
+                }
+              />
             )}
           </div>
         </div>
@@ -216,27 +227,14 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
             </div>
           </Listbox>
           {(email !== user?.email && role !== company?.role) || company?.role === 'Owner' ? (
-            <div className="flex items-center justify-center">
-              <Button
-                type="button"
-                icon={
-                  <Trash className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-red-500 dark:hover:text-red-500 purple:hover:text-red-500" />
-                }
-                variant="icon"
-                onClick={() => setIsDelete(!isDelete)}
-              />
-              {status !== 'Active' && (
-                <Button
-                  type="button"
-                  variant="blank"
-                  text="Resend"
-                  className="text-sm text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-indigo-500 dark:hover:text-indigo-500 purple:hover:text-indigo-500"
-                  onClick={() =>
-                    dispatch(companyActions.resendInvite({ email, companyId: company._id }))
-                  }
-                />
-              )}
-            </div>
+            <Button
+              type="button"
+              icon={
+                <Trash className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-red-500 dark:hover:text-red-500 purple:hover:text-red-500" />
+              }
+              variant="icon"
+              onClick={() => setIsDelete(!isDelete)}
+            />
           ) : (
             <span className="w-5 h-5 py-2.5 px-4" />
           )}

@@ -39,7 +39,7 @@ export default function IdeaVisibility({ updateIdea }) {
     }
   }, [coverImage]);
   useEffect(() => {
-    if (idea?.showOnRoadMap) {
+    if (idea) {
       setShowOnRoadMap(idea.showOnRoadMap);
       setIsPrivate(idea.isPrivate);
     }

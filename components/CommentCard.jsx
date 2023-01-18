@@ -1,17 +1,16 @@
-import { useState, useEffect } from 'react';
-import { DateTime } from 'luxon';
-import { useDispatch, useSelector } from 'react-redux';
-import { repliesActions } from '@/redux/replies/repliesSlice';
-import { commentActions } from '@/redux/comments/commentsSlice';
 import useIdeaActionValidation from '@/hooks/useIdeaActionValidation';
-import cn from 'classnames';
+import { commentActions } from '@/redux/comments/commentsSlice';
+import { repliesActions } from '@/redux/replies/repliesSlice';
+import { DateTime } from 'luxon';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Avatar from './Avatar';
-import ReplyForm from './ReplyForm';
-import ReplyCard from './ReplyCard';
-import { Danger, Pen, Trash } from './icons';
-import DeleteModal from './DeleteModal';
 import CommentForm from './CommentForm';
 import CommentSkeleton from './CommentSkeleton';
+import DeleteModal from './DeleteModal';
+import { Danger, Pen, Trash } from './icons';
+import ReplyCard from './ReplyCard';
+import ReplyForm from './ReplyForm';
 
 export default function CommentCard({ comment }) {
   const [isReplying, setIsReplying] = useState(false);
@@ -33,11 +32,7 @@ export default function CommentCard({ comment }) {
   }, [page]);
 
   return (
-    <div
-      className={cn(
-        'bg-gray-50 group dark:bg-aa-800 purple:bg-pt-900 p-8 mt-2 rounded',
-        isReplying && 'min-h-[32rem]'
-      )}>
+    <div className="bg-gray-50 group dark:bg-aa-800 purple:bg-pt-900 p-8 mt-2 rounded">
       {editComment ? (
         <CommentForm
           ideaId={comment?.ideaId}
@@ -70,7 +65,9 @@ export default function CommentCard({ comment }) {
                 onClick={() => {
                   setIsReplying(!isReplying);
                   setShowReplies(true);
-                  dispatch(repliesActions.getReplies({ commentId: comment?._id, page }));
+                  if (comment?.replyCount) {
+                    dispatch(repliesActions.getReplies({ commentId: comment?._id, page }));
+                  }
                 }}
                 className="inline-flex text-slate-500 hover:text-indigo-600 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
                 Reply
@@ -120,24 +117,28 @@ export default function CommentCard({ comment }) {
             {showReplies && (
               <>
                 <hr className="my-6 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
-                <div className="space-y-6">
-                  {replies[comment?._id]?.map((reply) => (
-                    <ReplyCard
-                      reply={reply}
-                      key={reply?._id}
-                      setEditedReply={setEditedReply}
-                      setIsReplying={setIsReplying}
-                    />
-                  ))}
-                </div>
+                {loading && page === 1 ? (
+                  <CommentSkeleton />
+                ) : (
+                  <div className="space-y-6">
+                    {replies[comment?._id]?.map((reply) => (
+                      <ReplyCard
+                        reply={reply}
+                        key={reply?._id}
+                        setEditedReply={setEditedReply}
+                        setIsReplying={setIsReplying}
+                      />
+                    ))}
+                  </div>
+                )}
               </>
             )}
-            {loading && <CommentSkeleton />}{' '}
+            {loading && page > 1 && <CommentSkeleton />}{' '}
             {page < countInfo[comment?._id]?.totalPages && showReplies && (
               <button
                 type="button"
                 onClick={() => setPage(page + 1)}
-                className="inline-flex text-indigo-600 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm mt-2">
+                className="inline-flex text-indigo-600 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm mt-4">
                 {`Show ${
                   countInfo[comment?._id].count - countInfo[comment?._id].currentPage * 5
                 } more ${

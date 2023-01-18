@@ -21,6 +21,7 @@ export default function Realtime() {
   const [deletedCompany, setDeletedCompany] = useState();
   const [deleteIdeaModal, setDeleteIdeaModal] = useState(false);
   const user = useSelector((state) => state.auth.user);
+  const userIp = useSelector((state) => state.auth.userIp);
   const company = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
   const dispatch = useDispatch();
@@ -152,10 +153,14 @@ export default function Realtime() {
     dispatch(ideaActions.deleteIdeaSuccess(message));
   }
   function voteIdeaHandler({ message }) {
-    dispatch(ideaActions.voteIdeaSuccess(message));
+    if ((user && user._id !== message.userId) || (!user && userIp !== message.userIp)) {
+      dispatch(ideaActions.upVoteIdeaRealtime(message.ideaId));
+    }
   }
   function downVoteIdeaHandler({ message }) {
-    dispatch(ideaActions.downVoteIdeaSuccess(message));
+    if ((user && user._id !== message.userId) || (!user && userIp !== message.userIp)) {
+      dispatch(ideaActions.downVoteIdeaRealtime(message.ideaId));
+    }
   }
   function addCommentHandler({ message }) {
     dispatch(commentActions.addCommentSuccess(message));

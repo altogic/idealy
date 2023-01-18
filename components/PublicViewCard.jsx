@@ -12,7 +12,9 @@ export default function PublicViewCard({ idea, onClick, voted }) {
         <VoteIdea voted={voted} voteCount={idea?.voteCount} ideaId={idea?._id} />
         <button type="button" onClick={onClick} className="w-full">
           <div className="flex items-center mb-2">
-            <IdeaBadges idea={idea} />
+            {(idea?.isPrivate || idea?.isBug || idea?.isArchived || idea?.isPinned) && (
+              <IdeaBadges idea={idea} />
+            )}
             <h2
               className="max-w-[500px] text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left truncate"
               title={idea?.title}>
@@ -23,9 +25,10 @@ export default function PublicViewCard({ idea, onClick, voted }) {
             className="max-w-3xl text-slate-500 dark:text-aa-300 purple:text-pt-300 mb-6 text-sm tracking-sm text-left line-clamp-3"
             dangerouslySetInnerHTML={{ __html: idea?.content }}
           />
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2">
             {/* Bottom Left */}
-            <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-3">
+
+            <div className="flex flex-col lg:flex-row lg:items-center gap-2">
               <IdeaInfo idea={idea} />
               {idea?.topics.length > 0 && (
                 <>

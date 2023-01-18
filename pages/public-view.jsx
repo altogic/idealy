@@ -36,7 +36,7 @@ export default function PublicView({ userIp }) {
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const deleteFeedBackModal = useSelector((state) => state.general.deleteFeedBackModal);
-
+  const user = useSelector((state) => state.auth.user);
   const handleFilter = (filterTopics, filterStatus) => {
     if (filterTopics?.length || filterStatus?.length) {
       const topicsFilter = [];
@@ -120,6 +120,7 @@ export default function PublicView({ userIp }) {
     dispatch(ideaActions.deleteIdea(selectedIdea._id));
     handleCloseIdea();
   };
+
   useEffect(() => {
     if (router) {
       const { topics, status, sort, feedback } = router.query;
@@ -159,7 +160,9 @@ export default function PublicView({ userIp }) {
       if (!company.privacy.isPublic && !company.privacy.isPublic.userApproval) {
         router.push('/404');
       }
-      dispatch(ideaActions.getUserVotes({ userIp, companyId: company?._id }));
+      dispatch(
+        ideaActions.getUserVotes({ ip: userIp, companyId: company?._id, userId: user?._id })
+      );
     }
   }, [company]);
 
@@ -198,7 +201,7 @@ export default function PublicView({ userIp }) {
             items={ideas}
             countInfo={countInfo}
             endOfList={() => setPage((page) => page + 1)}>
-            {loading ? (
+            {loading && page === 1 ? (
               <div
                 role="status"
                 className="w-full space-y-4 divide-y divide-gray-300 animate-pulse">
@@ -234,15 +237,39 @@ export default function PublicView({ userIp }) {
                   <PublicViewCard
                     idea={idea}
                     onClick={() => handleClickIdea(idea)}
-                    voted={ideaVotes.some((vote) => vote.ip === userIp && vote.ideaId === idea._id)}
+                    voted={
+                      user
+                        ? ideaVotes.find((v) => v.ideaId === idea._id && v.userId === user._id)
+                        : ideaVotes.find(
+                            (v) => v.ideaId === idea._id && v.ip === userIp && !v.userId
+                          )
+                    }
                   />
                 </div>
               ))
             ) : (
               <EmptyState
-                title="No feature ideas found."
+                title="No feature ideas found"
                 description="Your search did not match any data or this company does not have any feature ideas yet."
               />
+            )}
+            {loading && page > 1 && (
+              <div
+                role="status"
+                className="w-full space-y-4 divide-y divide-gray-300 animate-pulse">
+                <div className="flex justify-between items-center px-4 py-8">
+                  <div className="flex items-center gap-6">
+                    <div className="w-[62px] h-20 bg-gray-300 rounded-lg" />
+                    <div>
+                      <div className="w-64 h-2.5 bg-gray-300 rounded-full mb-2.5" />
+                      <div className="w-32 h-2 bg-gray-300 rounded-full mb-2.5" />
+                      <div className="h-2.5 bg-gray-300 rounded-full w-24" />
+                    </div>
+                  </div>
+                  <div className="h-2.5 bg-gray-300 rounded-full w-12" />
+                </div>
+                <span className="sr-only">Loading...</span>
+              </div>
             )}
           </InfiniteScroll>
         </div>
