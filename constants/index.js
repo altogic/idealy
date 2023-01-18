@@ -87,7 +87,23 @@ export const IDEA_BADGES = [
   }
 ];
 
-export const ERROR_MESSAGES = {
-  'Invalid or expired access token':
-    'This email verification token has already been used or has expired.'
-};
+export const THEMES = [
+  {
+    id: 1,
+    name: 'Light',
+    value: 'light',
+    image: './light.png'
+  },
+  {
+    id: 2,
+    name: 'Dark',
+    value: 'dark',
+    image: './dark.png'
+  },
+  {
+    id: 3,
+    name: 'Purple',
+    value: 'theme-purple',
+    image: './purple.png'
+  }
+];

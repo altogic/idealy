@@ -3,13 +3,22 @@ import 'animate.css/animate.min.css';
 import { cssTransition, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/globals.css';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 function MyApp({ Component, pageProps }) {
   const toastTransition = cssTransition({
     enter: 'animate__animated animate__slideInDown',
     exit: 'animate__animated animate__slideOutUp'
   });
+  const company = useSelector((state) => state.company.company);
 
+  useEffect(() => {
+    if (company) {
+      document.title = company.name;
+      document.body.className = company.theme;
+    }
+  }, [company]);
   return (
     <>
       <ToastContainer
