@@ -461,9 +461,13 @@ function* getCompanyBySubdomain({ payload: { subdomain, onFail, onSuccess, userI
 
 function* resendInviteSaga({ payload }) {
   try {
-    yield call(companyService.resendInvitation(payload));
+    const { errors } = yield call(companyService.resendInvitation, payload);
+    if (errors) {
+      throw errors;
+    }
+    yield put(companyActions.resendInviteSuccess());
   } catch (error) {
-    yield put(companyActions.resendInviteFailed(error))
+    yield put(companyActions.resendInviteFailed(error));
   }
 }
 
