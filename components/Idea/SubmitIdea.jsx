@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
+import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import AutoComplete from '../AutoComplete';
 import Avatar from '../Avatar';
 import Button from '../Button';
@@ -38,6 +39,7 @@ export default function SubmitIdea({ idea }) {
     company,
     fieldName: 'submitIdeas'
   });
+  const canSubmit = useRegisteredUserValidation('submitIdeas');
 
   const [topics, setTopics] = useState([]);
   const [content, setContent] = useState('');
@@ -194,6 +196,11 @@ export default function SubmitIdea({ idea }) {
       setValue('topics', topics);
     }
   }, [topics]);
+  useEffect(() => {
+    if (user) {
+      setMember(user);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!ideaLoading && isSubmitSuccessful) {
@@ -203,29 +210,34 @@ export default function SubmitIdea({ idea }) {
 
   return (
     <>
-      <Button
-        type="button"
-        text="Submit Feedback"
-        icon={<Plus className="w-5 h-5" />}
-        variant="indigo"
-        size="sm"
-        onClick={() => dispatch(toggleFeedBackSubmitModal())}
-      />
+      {canSubmit && (
+        <Button
+          type="button"
+          text="Submit Feedback"
+          icon={<Plus className="w-5 h-5" />}
+          variant="indigo"
+          size="sm"
+          onClick={() => dispatch(toggleFeedBackSubmitModal())}
+        />
+      )}
       <Drawer open={open} onClose={() => handleClose()}>
         <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all">
           Tell us your idea
         </h2>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="my-8">
-            <AutoComplete
-              suggestions={companyMembers}
-              onSearch={handleOnSearch}
-              loading={searchLoading}
-              formatResult={formatResult}
-              onSuggestionClick={setMember}
-            />
-          </div>
-          <div className="mb-8">
+          {user && company?.role && (
+            <div className="my-8">
+              <AutoComplete
+                suggestions={companyMembers}
+                onSearch={handleOnSearch}
+                loading={searchLoading}
+                formatResult={formatResult}
+                onSuggestionClick={setMember}
+                activeSuggestion={member}
+              />
+            </div>
+          )}
+          <div className={user && company?.role ? 'mb-8' : 'my-8'}>
             <Input
               name="title"
               id="title"

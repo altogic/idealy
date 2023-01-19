@@ -84,14 +84,14 @@ export default function IdeaDetail({ idea, company, query }) {
           <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all">
             {idea?.title}
           </h2>
-          <div className="mb-8">
+          <div className="my-8">
             <IdeaBadges idea={idea} />
           </div>
           <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-400 purple:prose-p:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-8 break-words">
             <p dangerouslySetInnerHTML={{ __html: idea?.content }} />
           </div>
 
-          <div className="flex items-center gap-2 mb-8">
+          <div className="flex items-center gap-2 my-8">
             {/* User */}
             <IdeaInfo idea={idea} />
             {canEdit && (

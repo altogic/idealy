@@ -13,6 +13,7 @@ function AutoComplete({
   onSuggestionClick,
   loading,
   closeModal,
+  activeSuggestion,
   ...rest
 }) {
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
@@ -63,18 +64,28 @@ function AutoComplete({
     };
   }, [input]);
 
+  useEffect(() => {
+    if (activeSuggestion) {
+      setSelectedSuggestion(activeSuggestion);
+      setInput(activeSuggestion.name);
+    }
+  }, [activeSuggestion]);
+
   return (
     <div className="relative h-[73px]">
       <div className="w-full absolute z-10">
         <div className="flex items-center">
           {selectedSuggestion && (
-            <div className="flex items-center absolute left-2 top-8 z-20 border border-slate-300 shadow-sm bg-gray-100 rounded-lg hover:bg-gray-200 p-1">
+            <div className="flex items-center gap-2 absolute left-2 top-1/2 transform translate-y-[-2px] z-20 bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300">
               <Avatar
                 src={selectedSuggestion.profilePicture}
                 alt={selectedSuggestion.name}
                 size="w-7 h-7"
+                fontSize="text-sm"
               />
-              <span className="ml-2">{selectedSuggestion.name}</span>
+              <span className="text-sm text-slate-500 dark:text-aa-400 purple:text-pt-400">
+                {selectedSuggestion.name}
+              </span>
             </div>
           )}
           <Input
@@ -87,7 +98,7 @@ function AutoComplete({
             onKeyDown={onKeyDown}
             {...rest}
           />
-          {input && (
+          {(input || selectedSuggestion) && (
             <XIcon
               className="w-5 h-5 text-slate-400 absolute right-2 top-10 cursor-pointer"
               onClick={() => {
