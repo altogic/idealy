@@ -5,6 +5,7 @@ import { Transition, Dialog, Menu } from '@headlessui/react';
 import { useSelector, useDispatch } from 'react-redux';
 import { notificationActions } from '@/redux/notification/notificationSlice';
 import { useRouter } from 'next/router';
+import _ from 'lodash';
 import { Search, Feedback, Roadmap, Announcements, Settings, Notification } from './icons';
 import UserDropdown from './Header/UserDropdown';
 import CompanyAvatar from './CompanyAvatar';
@@ -27,7 +28,9 @@ export default function Header() {
   useEffect(() => {
     if (isAuthenticated) {
       setIsLoggedIn(isAuthenticated);
-      dispatch(notificationActions.getNotifications(user._id));
+      if (_.isEmpty(notifications)) {
+        dispatch(notificationActions.getNotifications(user._id));
+      }
     }
   }, [isAuthenticated]);
 
@@ -47,7 +50,7 @@ export default function Header() {
           router.asPath.includes('settings') ? 'pl-16' : null
         )}>
         <div className="flex items-center">
-          {selectedCompany?.name ? (
+          {selectedCompany?.name && (
             <Link href="/">
               <a
                 className="inline-flex items-center gap-4 flex-shrink-0 mr-6"
@@ -64,7 +67,7 @@ export default function Header() {
                 )}
               </a>
             </Link>
-          ) : null}
+          )}
 
           <ul className="hidden lg:flex items-center gap-2">
             {selectedCompany?.siteNavigation?.feedback && (
@@ -75,7 +78,7 @@ export default function Header() {
                     ? 'bg-indigo-700 dark:bg-aa-600 purple:bg-pt-900'
                     : 'hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900'
                 )}>
-                <Link href={generateUrl('public-view', selectedCompany.subdomain)}>
+                <Link href="/public-view">
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
                     <Feedback className="w-6 h-6 text-indigo-50 mr-3" />
                     Feedback
@@ -85,7 +88,7 @@ export default function Header() {
             )}
             {selectedCompany?.siteNavigation?.roadmap && (
               <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
-                <Link href="/">
+                <Link href={generateUrl('dashboard', selectedCompany.subdomain)}>
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
                     <Roadmap className="w-6 h-6 text-indigo-50 mr-3" />
                     Roadmap

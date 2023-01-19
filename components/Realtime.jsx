@@ -115,13 +115,7 @@ export default function Realtime() {
   function updateCompanyHandler(data) {
     if (data.message.company._id === company._id || (user && data.message.sender !== user?._id)) {
       dispatch(
-        companyActions.selectCompany({
-          ...data.message.company,
-          role: company?.role
-        })
-      );
-      dispatch(
-        companyActions.updateCompanyRealtime({
+        companyActions.updateCompanySuccess({
           ...data.message.company,
           role: company?.role
         })

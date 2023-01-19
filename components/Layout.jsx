@@ -4,7 +4,7 @@ import { deleteCookie, getCookie } from 'cookies-next';
 import _ from 'lodash';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateUrl, setCookie } from '../utils';
 import Header from './Header';
@@ -15,7 +15,7 @@ export default function Layout({ children }) {
   const company = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const companyFetched = useRef(false);
+
   const user = useSelector((state) => state.auth.user);
 
   const dispatch = useDispatch();
@@ -39,9 +39,9 @@ export default function Layout({ children }) {
       );
       deleteCookie('invitation-token');
     }
-    if (isAuthenticated) {
-      dispatch(authActions.setUser());
-    }
+    // if (isAuthenticated) {
+    //   dispatch(authActions.setUser());
+    // }
   }, [isAuthenticated]);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function Layout({ children }) {
 
   useEffect(() => {
     const wildcard = window.location.hostname.split('.')[0];
-    if (company?.subdomain !== wildcard && router.isReady) {
+    if (company?.subdomain !== wildcard) {
       dispatch(
         companyActions.getCompanyBySubdomain({
           subdomain: wildcard,
@@ -67,8 +67,7 @@ export default function Layout({ children }) {
   }, [user]);
 
   useEffect(() => {
-    if (user && !companyFetched.current) {
-      companyFetched.current = true;
+    if (user && _.isEmpty(companies)) {
       dispatch(companyActions.getUserCompanies(user?._id));
     }
   }, [user]);
@@ -85,7 +84,7 @@ export default function Layout({ children }) {
           <Realtime />
         </main>
       </div>
-      {company?.whiteLabel?.isHideBanner && (
+      {!company?.whiteLabel?.isHideBanner && (
         <a href="https://www.altogic.com/" target="_blank" rel="noopener noreferrer">
           <img className="fixed bottom-8 right-8" src="./powered-by-altogic.svg" alt="" />
         </a>
