@@ -1,5 +1,4 @@
 import { IDEA_BADGES } from 'constants';
-import cn from 'classnames';
 import Badge from '../Badge';
 
 export default function IdeaBadges({ idea }) {
@@ -9,12 +8,7 @@ export default function IdeaBadges({ idea }) {
         {IDEA_BADGES?.map(
           (badge) =>
             idea?.[badge.field] && (
-              <Badge
-                key={badge.name}
-                Icon={badge.icon}
-                text={badge.name}
-                className={cn(badge.className)}
-              />
+              <Badge key={badge.name} Icon={badge.icon} text={badge.name} color={badge.color} />
             )
         )}
       </div>
