@@ -134,9 +134,7 @@ export default function Realtime() {
     dispatch(ideaActions.createIdeaSuccess(message));
   }
   function updateIdeaHandler({ message }) {
-    if (!user && !company?.role) {
-      dispatch(ideaActions.updateIdeaRealtime(message));
-    }
+    dispatch(ideaActions.updateIdeaRealtime(message));
   }
   function deleteIdeaHandler({ message }) {
     const idea = new URLSearchParams(document.location.search).get('feedback');

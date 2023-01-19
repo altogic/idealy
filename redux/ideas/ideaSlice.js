@@ -183,6 +183,7 @@ export const ideaSlice = createSlice({
       state.ideas = state.ideas.filter(
         (idea) => !(idea.isArchived || idea.isPrivate || idea.isCompleted)
       );
+      state.selectedIdea = action.payload;
     },
     deleteIdeaStatus(state) {
       state.isLoading = true;

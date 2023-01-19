@@ -1,20 +1,22 @@
-import { Fragment, useState, useEffect } from 'react';
-import cn from 'classnames';
-import { Listbox, Transition } from '@headlessui/react';
-import { ROLE } from 'constants';
-import { useDispatch, useSelector } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
-import { realtime } from '@/utils/altogic';
 import { notificationActions } from '@/redux/notification/notificationSlice';
+import { realtime } from '@/utils/altogic';
+import { Listbox, Transition } from '@headlessui/react';
+import cn from 'classnames';
+import { ROLE } from 'constants';
+import { Fragment, useEffect, useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Avatar from './Avatar';
 import Button from './Button';
 import DeleteModal from './DeleteModal';
-import { Danger, Trash, CircleUser, ChevronDown } from './icons';
-import Avatar from './Avatar';
+import { ChevronDown, CircleUser, Danger, Trash } from './icons';
 
 export default function TeamRole({ avatar, name, email, status, role, isRegistered, id, userId }) {
   const [isDelete, setIsDelete] = useState(false);
   const [selected, setSelected] = useState(role);
   const company = useSelector((state) => state.company.company);
+  const loading = useSelector((state) => state.company.isLoading);
+  const isSent = useRef(false);
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const handleDelete = () => {
@@ -117,6 +119,11 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
       setSelected(role);
     }
   }, [role]);
+  useEffect(() => {
+    if (isSent.current) {
+      isSent.current = false;
+    }
+  }, [loading]);
 
   return (
     <>
@@ -147,14 +154,17 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
             {status === 'Pending' && (
               <Button
                 type="button"
-                variant="blank"
+                variant="text"
                 text="Resend Invitation"
-                className="text-xs text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-indigo-500 "
-                onClick={() =>
+                size="xs"
+                height="8"
+                onClick={() => {
+                  isSent.current = true;
                   dispatch(
                     companyActions.resendInvite({ email: email || name, companyId: company._id })
-                  )
-                }
+                  );
+                }}
+                loading={loading && isSent.current}
               />
             )}
           </div>
