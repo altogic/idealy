@@ -33,6 +33,9 @@ export default function SimilarIdeaCard({ idea }) {
           <span className="text-indigo-700 text-xl font-semibold tracking-md">
             {idea?.voteCount}
           </span>
+          <span className="text-slate-500 text-sm tracking-sm">
+            {idea?.voteCount <= 1 ? 'Vote' : 'Votes'}
+          </span>
         </div>
         <div className="w-full">
           <div className="flex items-center gap-2 mb-1">
