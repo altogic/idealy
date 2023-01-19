@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
-import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import AutoComplete from '../AutoComplete';
 import Avatar from '../Avatar';
 import Button from '../Button';
@@ -39,7 +38,6 @@ export default function SubmitIdea({ idea }) {
     company,
     fieldName: 'submitIdeas'
   });
-  const canSubmit = useRegisteredUserValidation('submitIdeas');
 
   const [topics, setTopics] = useState([]);
   const [content, setContent] = useState('');
@@ -165,7 +163,7 @@ export default function SubmitIdea({ idea }) {
     } else {
       resetForm();
     }
-  }, [idea]);
+  }, [idea, feedBackSubmitModal]);
 
   useEffect(() => {
     let timer;
@@ -204,16 +202,15 @@ export default function SubmitIdea({ idea }) {
 
   return (
     <>
-      {canSubmit && (
-        <Button
-          type="button"
-          text="Submit Feedback"
-          icon={<Plus className="w-5 h-5" />}
-          variant="indigo"
-          size="sm"
-          onClick={() => dispatch(toggleFeedBackSubmitModal())}
-        />
-      )}
+      <Button
+        type="button"
+        text="Submit Feedback"
+        icon={<Plus className="w-5 h-5" />}
+        variant="indigo"
+        size="sm"
+        onClick={() => dispatch(toggleFeedBackSubmitModal())}
+      />
+
       <Drawer open={feedBackSubmitModal} onClose={() => handleClose()}>
         <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all">
           Tell us your idea
@@ -239,7 +236,11 @@ export default function SubmitIdea({ idea }) {
               register={register('title')}
               error={errors.title}
               placeholder="Feedback Title"
-              onKeyUp={(e) => setInpTitle(e.target.value)}
+              onKeyUp={(e) => {
+                if (!idea) {
+                  setInpTitle(e.target.value);
+                }
+              }}
             />
 
             {!!similarIdeas?.length && (
