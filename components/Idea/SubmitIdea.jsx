@@ -30,7 +30,7 @@ export default function SubmitIdea({ idea }) {
   const loading = useSelector((state) => state.file.isLoading);
   const ideaLoading = useSelector((state) => state.idea.isLoading);
   const fileLinks = useSelector((state) => state.file.fileLinks);
-  const open = useSelector((state) => state.general.feedBackSubmitModal);
+  const feedBackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const userIp = useSelector((state) => state.auth.userIp);
   const companyMembers = useSelector((state) => state.idea.searchedCompanyMembers);
   const searchLoading = useSelector((state) => state.idea.isLoading);
@@ -149,12 +149,6 @@ export default function SubmitIdea({ idea }) {
       <span>{item.name}</span>
     </div>
   );
-
-  useEffect(() => {
-    if (open) {
-      reset();
-    }
-  }, [open]);
   useEffect(() => {
     if (!_.isNil(idea)) {
       reset({
@@ -200,7 +194,7 @@ export default function SubmitIdea({ idea }) {
     if (user) {
       setMember(user);
     }
-  }, [user]);
+  }, [user, feedBackSubmitModal]);
 
   useEffect(() => {
     if (!ideaLoading && isSubmitSuccessful) {
@@ -220,7 +214,7 @@ export default function SubmitIdea({ idea }) {
           onClick={() => dispatch(toggleFeedBackSubmitModal())}
         />
       )}
-      <Drawer open={open} onClose={() => handleClose()}>
+      <Drawer open={feedBackSubmitModal} onClose={() => handleClose()}>
         <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all">
           Tell us your idea
         </h2>

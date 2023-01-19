@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
 import { Email } from '@/components/icons';
+import SvgError from '@/components/icons/Error';
+import { authActions } from '@/redux/auth/authSlice';
+import { companyActions } from '@/redux/company/companySlice';
+import AuthService from '@/services/auth';
 import companyService from '@/services/company';
 import { deleteCookie, setCookie } from 'cookies-next';
 import Head from 'next/head';
 import Link from 'next/link';
-import SvgError from '@/components/icons/Error';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { authActions } from '@/redux/auth/authSlice';
-import { companyActions } from '@/redux/company/companySlice';
-import AuthService from '@/services/auth';
 import { generateUrl } from '../utils';
 
 export default function Invitation({ invitation, errors, companies }) {
@@ -76,14 +76,14 @@ export default function Invitation({ invitation, errors, companies }) {
               )}
               <p className="text-slate-500 mb-8 text-center text-sm tracking-sm">
                 Do you have an account?{' '}
-                <Link href={generateUrl('login?isInvited=true')}>
+                <Link href="/login?isInvited=true">
                   <a className="font-medium text-indigo-700 tracking-sm hover:text-indigo-500">
                     Click to login
                   </a>
                 </Link>
               </p>
               <p className="text-slate-500 mb-8 text-center text-sm tracking-sm">
-                <Link href={generateUrl('register?isInvited=true')}>
+                <Link href="/register?isInvited=true">
                   <a className="font-medium text-indigo-700 tracking-sm hover:text-indigo-500">
                     Create an account
                   </a>

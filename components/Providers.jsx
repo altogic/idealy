@@ -1,10 +1,8 @@
-import React from 'react';
 import { authActions } from '@/redux/auth/authSlice';
-import { useDispatch } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
-import Router from 'next/router';
 import { isNil } from 'lodash';
-import { generateUrl } from '../utils';
+import Router from 'next/router';
+import { useDispatch } from 'react-redux';
 
 export default function Providers({ invitation }) {
   const dispatch = useDispatch();
@@ -25,7 +23,7 @@ export default function Providers({ invitation }) {
               );
             } else {
               dispatch(companyActions.updateMemberStatus({ companyId: invitation.companyId }));
-              Router.push(generateUrl('select-company'));
+              Router.push('/select-company');
             }
           }
         }

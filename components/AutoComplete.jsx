@@ -76,14 +76,14 @@ function AutoComplete({
       <div className="w-full absolute z-10">
         <div className="flex items-center">
           {selectedSuggestion && (
-            <div className="flex items-center gap-2 absolute left-2 top-1/2 transform translate-y-[-2px] z-20 bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300">
+            <div className="flex items-center gap-2 absolute left-2 top-1/2 z-20 bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded purple:bg-pt-900  dark:bg-aa-900 ">
               <Avatar
                 src={selectedSuggestion.profilePicture}
                 alt={selectedSuggestion.name}
-                size="w-7 h-7"
+                size="w-6 h-6"
                 fontSize="text-sm"
               />
-              <span className="text-sm text-slate-500 dark:text-aa-400 purple:text-pt-400">
+              <span className="text-sm text-indigo-800 dark:text-aa-300 purple:text-pt-300">
                 {selectedSuggestion.name}
               </span>
             </div>

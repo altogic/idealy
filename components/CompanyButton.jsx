@@ -1,15 +1,12 @@
-import React from 'react';
 import { Plus } from '@/components/icons';
 import Link from 'next/link';
-import CompanyAvatar from './CompanyAvatar';
 import { generateUrl } from '../utils';
+import CompanyAvatar from './CompanyAvatar';
 
 export default function CompanyButton({ icon, company, label, ...props }) {
   return (
     <Link
-      href={
-        company ? generateUrl('dashboard', company.subdomain) : generateUrl('create-new-company')
-      }
+      href={company ? generateUrl('dashboard', company.subdomain) : '/create-new-company'}
       {...props}>
       <a className="group inline-flex flex-col items-center justify-center w-[88px] transform transition ease-linear duration-150">
         {label ? (

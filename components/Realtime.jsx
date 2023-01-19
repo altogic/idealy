@@ -258,7 +258,7 @@ export default function Realtime() {
       companyActions.updateMemberStatus({
         id: invitation._id,
         companyId: invitation.company._id,
-        onSuccess: () => router.push(generateUrl('dashboard', invitation.company.subdomain))
+        onSuccess: () => router.push('/dashboard')
       })
     );
     dispatch(

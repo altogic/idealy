@@ -1,16 +1,15 @@
-import { Fragment, useState, useEffect } from 'react';
-import Link from 'next/link';
-import cn from 'classnames';
-import { Transition, Dialog, Menu } from '@headlessui/react';
-import { useSelector, useDispatch } from 'react-redux';
 import { notificationActions } from '@/redux/notification/notificationSlice';
-import { useRouter } from 'next/router';
+import { Dialog, Menu, Transition } from '@headlessui/react';
+import cn from 'classnames';
 import _ from 'lodash';
-import { Search, Feedback, Roadmap, Announcements, Settings, Notification } from './icons';
-import UserDropdown from './Header/UserDropdown';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { Fragment, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import CompanyAvatar from './CompanyAvatar';
+import UserDropdown from './Header/UserDropdown';
+import { Announcements, Feedback, Notification, Roadmap, Search, Settings } from './icons';
 import ThemeChanger from './ThemeChanger';
-import { generateUrl } from '../utils';
 
 export default function Header() {
   const router = useRouter();
@@ -88,7 +87,7 @@ export default function Header() {
             )}
             {selectedCompany?.siteNavigation?.roadmap && (
               <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
-                <Link href={generateUrl('dashboard', selectedCompany.subdomain)}>
+                <Link href="/">
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
                     <Roadmap className="w-6 h-6 text-indigo-50 mr-3" />
                     Roadmap
@@ -148,11 +147,7 @@ export default function Header() {
                       </h6>
                       <button
                         type="button"
-                        onClick={() =>
-                          router.push(
-                            generateUrl('settings?tab=notifications', selectedCompany.subdomain)
-                          )
-                        }>
+                        onClick={() => router.push('/settings?tab=notifications')}>
                         <Settings className="w-6 h-6 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
                       </button>
                     </div>
@@ -249,12 +244,12 @@ export default function Header() {
             !loading && (
               <ul className="flex items-center gap-4">
                 <li>
-                  <Link href={generateUrl('login')}>
+                  <Link href="/login">
                     <a className="inline-flex text-indigo-50 text-sm tracking-sm">Login</a>
                   </Link>
                 </li>
                 <li>
-                  <Link href={generateUrl('register')}>
+                  <Link href="/register">
                     <a className="inline-flex text-indigo-400 text-sm tracking-sm">Signup</a>
                   </Link>
                 </li>
