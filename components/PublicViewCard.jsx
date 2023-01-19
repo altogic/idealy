@@ -13,9 +13,11 @@ export default function PublicViewCard({ idea, onClick, voted }) {
         <VoteIdea voted={voted} voteCount={idea?.voteCount} ideaId={idea?._id} />
         <button type="button" onClick={onClick} className="w-full">
           <div className="flex items-center mb-2">
-            {(idea?.isPrivate || idea?.isBug || idea?.isArchived || idea?.isPinned) && (
-              <IdeaBadges idea={idea} />
-            )}
+            {(idea?.isPrivate ||
+              idea?.isBug ||
+              idea?.isArchived ||
+              idea?.isPinned ||
+              !idea?.isApproved) && <IdeaBadges idea={idea} />}
             <h2
               className="max-w-[500px] text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left truncate"
               title={idea?.title}>

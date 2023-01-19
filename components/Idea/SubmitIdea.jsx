@@ -109,7 +109,8 @@ export default function SubmitIdea({ idea }) {
       author: member?._id || user?._id,
       company: company._id,
       companySubdomain: company.subdomain,
-      ip: userIp
+      ip: userIp,
+      isApproved: !company?.privacy?.ideaApproval
     };
     delete reqData.privacyPolicy;
     if (idea) {

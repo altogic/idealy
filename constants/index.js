@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/prefer-default-export
-import { Archive, Bug, Eye, Thumbtack } from '@/components/icons';
+import { Archive, Bug, CircleCheck, Eye, Thumbtack } from '@/components/icons';
 
 export const BREAKPOINT = {
   TABLET_SIZE: 1024,
@@ -84,6 +84,12 @@ export const IDEA_BADGES = [
     icon: Bug,
     color: 'red',
     field: 'isBug'
+  },
+  {
+    name: 'Need Approval',
+    icon: CircleCheck,
+    color: 'pink',
+    field: 'isApproved'
   }
 ];
 

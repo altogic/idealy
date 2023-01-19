@@ -7,7 +7,8 @@ export default function IdeaBadges({ idea }) {
       <div className="flex items-center gap-2 last:mr-3">
         {IDEA_BADGES?.map(
           (badge) =>
-            idea?.[badge.field] && (
+            ((badge.field !== 'isApproved' && idea?.[badge.field]) ||
+              (badge.field === 'isApproved' && !idea?.[badge.field])) && (
               <Badge key={badge.name} Icon={badge.icon} text={badge.name} color={badge.color} />
             )
         )}
