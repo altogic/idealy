@@ -85,9 +85,9 @@ export default function PublicView({ userIp }) {
   };
 
   const getIdeasByCompany = useCallback(() => {
-    if (router.isReady) {
+    if (router.isReady && company?._id) {
       const req = {
-        subdomain: window.location.hostname.split('.')[0],
+        companyId: company?._id,
         limit: 10,
         filter: `this.isArchived == false && this.isPrivate == false && this.isCompleted == false && ${handleFilter(
           router.query.topics?.split(','),
@@ -99,7 +99,7 @@ export default function PublicView({ userIp }) {
 
       dispatch(ideaActions.getIdeasByCompany(req));
     }
-  }, [page, router.query.sort, router.query.status, router.query.topics]);
+  }, [page, router.query.sort, router.query.status, router.query.topics, company]);
 
   function handleCloseIdea() {
     dispatch(toggleFeedBackDetailModal());
@@ -153,7 +153,7 @@ export default function PublicView({ userIp }) {
     }
   }, [page, getIdeasByCompany]);
 
-  const isSubmitIdeaVisible = useRegisteredUserValidation('submitIdea');
+  const isSubmitIdeaVisible = useRegisteredUserValidation('submitIdeas');
 
   useEffect(() => {
     if (company) {

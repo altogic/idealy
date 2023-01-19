@@ -3,17 +3,14 @@ import { realtime } from '@/utils/altogic';
 import { call, put, takeEvery, select } from 'redux-saga/effects';
 import { ideaActions } from './ideaSlice';
 
-function* getIdeasByCompanySaga({ payload: { subdomain, limit, page, sort, filter } }) {
+function* getIdeasByCompanySaga({ payload: { companyId, limit, page, sort, filter } }) {
   try {
     const { data: ideas, errors } = yield call(ideaService.getIdeasByCompany, {
-      subdomain,
+      companyId,
       limit,
       page,
       sort,
-      pinnedFilter: `${
-        filter || ''
-      } this.companySubdomain == '${subdomain}' && this.isPinned == true`,
-      filter: `${filter || ''} this.companySubdomain == '${subdomain}' && this.isPinned == false`
+      filter: `${filter || ''} this.company == '${companyId}'`
     });
     if (errors) {
       throw new Error(errors);
