@@ -25,6 +25,7 @@ import IdeaInfo from './IdeaInfo';
 import EmptyState from '../EmptyState';
 import CommentSkeleton from '../CommentSkeleton';
 import VoteIdea from './VoteIdea';
+import SanitizeHtml from '../SanitizeHtml';
 
 export default function IdeaDetail({ idea, company, query }) {
   const dispatch = useDispatch();
@@ -87,8 +88,8 @@ export default function IdeaDetail({ idea, company, query }) {
           <div className="my-8">
             <IdeaBadges idea={idea} />
           </div>
-          <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-400 purple:prose-p:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-8 break-words">
-            <p dangerouslySetInnerHTML={{ __html: idea?.content }} />
+          <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-400 purple:prose-p:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-8 break-all">
+            <SanitizeHtml html={idea?.content} />
           </div>
 
           <div className="flex items-center gap-2 my-8">

@@ -11,6 +11,7 @@ import DeleteModal from './DeleteModal';
 import { Danger, Pen, Trash } from './icons';
 import ReplyCard from './ReplyCard';
 import ReplyForm from './ReplyForm';
+import SanitizeHtml from './SanitizeHtml';
 
 export default function CommentCard({ comment }) {
   const [isReplying, setIsReplying] = useState(false);
@@ -48,7 +49,7 @@ export default function CommentCard({ comment }) {
               {comment?.name || 'Anonymous'}
             </h6>
             <div className="prose prose-p:text-slate-500 prose-p:my-2 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
-              <article dangerouslySetInnerHTML={{ __html: comment?.text }} />
+              <SanitizeHtml html={comment?.text} />
             </div>
             <div className="flex items-center gap-3">
               <span className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-sm tracking-sm">

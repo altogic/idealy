@@ -2,6 +2,7 @@ import VoteIdea from '@/components/Idea/VoteIdea';
 import { Comment } from './icons';
 import IdeaBadges from './Idea/IdeaBadges';
 import IdeaInfo from './Idea/IdeaInfo';
+import SanitizeHtml from './SanitizeHtml';
 import StatusBadge from './StatusBadge';
 import TopicBadges from './TopicBadges';
 
@@ -21,9 +22,9 @@ export default function PublicViewCard({ idea, onClick, voted }) {
               {idea?.title}
             </h2>
           </div>
-          <p
+          <SanitizeHtml
             className="max-w-3xl text-slate-500 dark:text-aa-300 purple:text-pt-300 mb-6 text-sm tracking-sm text-left line-clamp-3"
-            dangerouslySetInnerHTML={{ __html: idea?.content }}
+            html={idea?.content}
           />
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2">
             {/* Bottom Left */}

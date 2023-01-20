@@ -4,6 +4,7 @@ import { toggleFeedBackDetailModal, toggleFeedBackSubmitModal } from '@/redux/ge
 import { useDispatch } from 'react-redux';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { useRouter } from 'next/router';
+import SanitizeHtml from './SanitizeHtml';
 
 export default function SimilarIdeaCard({ idea }) {
   const dispatch = useDispatch();
@@ -45,9 +46,9 @@ export default function SimilarIdeaCard({ idea }) {
               {idea?.title}
             </h3>
           </div>
-          <p
+          <SanitizeHtml
             className="max-w-3xl text-slate-500 mb-2 text-sm tracking-sm text-left line-clamp-1"
-            dangerouslySetInnerHTML={{ __html: idea?.content }}
+            content={idea?.content}
           />
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             {/* Bottom Left */}
