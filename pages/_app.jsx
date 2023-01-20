@@ -6,14 +6,17 @@ import { cssTransition, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/globals.css';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
+
 
 function MyApp({ Component, pageProps }) {
   const toastTransition = cssTransition({
     enter: 'animate__animated animate__slideInDown',
     exit: 'animate__animated animate__slideOutUp'
   });
+  const company = useSelector((state) => state.company.company);
   const dispatch = useDispatch();
+  
   useEffect(() => {
     const guestInfo = localStorageUtil.get('guestAuthentication');
     if (guestInfo) {
@@ -21,6 +24,12 @@ function MyApp({ Component, pageProps }) {
     }
   }, []);
 
+  useEffect(() => {
+    if (company) {
+      document.title = company.name;
+      document.body.className = company.theme;
+    }
+  }, [company]);
   return (
     <>
       <ToastContainer

@@ -2,6 +2,7 @@ import AuthService from '@/services/auth';
 import companyService from '@/services/company';
 import ideaService from '@/services/idea';
 import { realtime } from '@/utils/altogic';
+import ToastMessage from '@/utils/toast';
 import { SUBDOMAIN_REGEX } from 'constants';
 import _ from 'lodash';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
@@ -466,6 +467,7 @@ function* resendInviteSaga({ payload }) {
       throw errors;
     }
     yield put(companyActions.resendInviteSuccess());
+    ToastMessage.success('Invitation resent successfully');
   } catch (error) {
     yield put(companyActions.resendInviteFailed(error));
   }
