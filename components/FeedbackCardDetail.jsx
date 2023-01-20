@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import ButtonBadge from './ButtonBadge';
-import DeleteModal from './DeleteModal';
+import InfoModal from './InfoModal';
 import { Pen, Trash, Reply, Spam, Danger } from './icons';
 
 export default function FeedbackCardDetail({
@@ -72,14 +72,17 @@ export default function FeedbackCardDetail({
         </div>
       </div>
       {/* Delete Modal */}
-      <DeleteModal
+      <InfoModal
         show={isDelete}
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
-        deleteOnClick={() => setIsDelete(!isDelete)}
+        onConfirm={() => setIsDelete(!isDelete)}
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title="Delete post"
         description="Are you sure you want to delete this post? This action cannot be undone."
+        confirmText="Delete Feedback"
+        confirmColor="red"
+        canCancel
       />
     </>
   );

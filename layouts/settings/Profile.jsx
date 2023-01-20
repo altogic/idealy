@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import SectionTitle from '@/components/SectionTitle';
 import Button from '@/components/Button';
-import DeleteModal from '@/components/DeleteModal';
+import InfoModal from '@/components/InfoModal';
 import { Danger } from '@/components/icons';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
@@ -74,14 +74,17 @@ export default function Profile() {
         </div>
       </div>
       {/* Delete Modal */}
-      <DeleteModal
+      <InfoModal
         show={deleteProfile}
         onClose={() => setDeleteProfile(!deleteProfile)}
         cancelOnClick={() => setDeleteProfile(!deleteProfile)}
-        deleteOnClick={deleteProfileHandler}
+        onConfirm={deleteProfileHandler}
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title="Delete Profile"
         description="Are you sure you want to delete your profile? This action will delete all data associated with owned companies and remove you from the membership of all other companies."
+        confirmText="Delete Profile"
+        confirmColor="red"
+        canCancel
       />
     </>
   );

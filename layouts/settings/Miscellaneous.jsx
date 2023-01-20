@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import SectionTitle from '@/components/SectionTitle';
 import Button from '@/components/Button';
 import Toggle from '@/components/Toggle';
-import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
 import { Trash } from '@/components/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
 import Router from 'next/router';
 import { realtime } from '@/utils/altogic';
 import { generateUrl } from '@/utils/index';
+import CompanyDeleteModal from '@/components/CompanyDeleteModal';
 
 export default function Miscellaneous() {
   const [deleteCompanyConfirm, setDeleteCompanyConfirm] = useState(false);
@@ -113,7 +113,7 @@ export default function Miscellaneous() {
           </div>
         )}
       </div>
-      <ConfirmDeleteModal
+      <CompanyDeleteModal
         show={deleteCompanyConfirm}
         onClose={() => setDeleteCompanyConfirm(!deleteCompanyConfirm)}
         cancelOnClick={() => setDeleteCompanyConfirm(!deleteCompanyConfirm)}

@@ -6,7 +6,7 @@ import Layout from '@/components/Layout';
 import SectionTitle from '@/components/SectionTitle';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
-import DeleteModal from '@/components/DeleteModal';
+import InfoModal from '@/components/InfoModal';
 import { Plus, Email, Danger } from '@/components/icons';
 
 const feedbacksBadges = [
@@ -361,14 +361,17 @@ export default function PublicViewNormalUserSettings() {
               </Dialog>
             </Transition.Root>
             {/* Delete Modal */}
-            <DeleteModal
+            <InfoModal
               show={deleteProfile}
               onClose={() => setDeleteProfile(!deleteProfile)}
               cancelOnClick={() => setDeleteProfile(!deleteProfile)}
-              deleteOnClick={() => setDeleteProfile(!deleteProfile)}
+              onConfirm={() => setDeleteProfile(!deleteProfile)}
               icon={<Danger className="w-6 h-6 text-red-600" />}
               title="Delete profile"
               description="Are you sure you want to delete this company? This action cannot be undone."
+              confirmText="Delete Profile"
+              confirmColor="red"
+              canCancel
             />
           </div>
         </div>

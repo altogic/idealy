@@ -1,4 +1,4 @@
-import DeleteModal from '@/components/DeleteModal';
+import InfoModal from '@/components/InfoModal';
 import EmptyState from '@/components/EmptyState';
 import { Danger } from '@/components/icons';
 import FilterIdea from '@/components/Idea/FilterIdea';
@@ -291,14 +291,17 @@ export default function PublicView({ userIp }) {
           query={routerQuery}
           voted={handleVoted(selectedIdea?._id)}
         />
-        <DeleteModal
+        <InfoModal
           show={deleteFeedBackModal}
           onClose={() => dispatch(toggleDeleteFeedBackModal())}
           cancelOnClick={() => dispatch(toggleDeleteFeedBackModal())}
-          deleteOnClick={handleDelete}
-          icon={<Danger className="w-6 h-6 text-red-600" />}
+          onConfirm={handleDelete}
+          icon={<Danger className="w-7 h-7 text-red-600" />}
           title="Delete Idea"
           description="Are you sure you want to delete this idea? This action cannot be undone."
+          confirmText="Delete Idea"
+          confirmColor="red"
+          canCancel
         />
       </Layout>
     </>

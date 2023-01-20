@@ -20,7 +20,6 @@ export default function IdeaApproval() {
     isLoading.current = false;
   }, [isLoading]);
 
-  console.log(loading && isLoading, loading, isLoading.current);
   return (
     <IdeaAdminTab title="Approval">
       <div className="flex items-center justify-between gap-2">

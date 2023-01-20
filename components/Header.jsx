@@ -41,7 +41,7 @@ export default function Header() {
       ]);
     }
   }, [companies, selectedCompany]);
-  console.log(process.env.NODE_ENV);
+
   return (
     <>
       <header
@@ -259,7 +259,7 @@ export default function Header() {
           )}
         </div>
       </header>
-      {/* Search Slide Over Panel */}
+
       <Transition.Root show={open} as={Fragment}>
         <Dialog as="div" className="relative z-50" onClose={setOpen}>
           <div className="fixed inset-0" />
