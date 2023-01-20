@@ -86,7 +86,7 @@ export default function Layout({ children }) {
         <a href="https://www.idealy.io/" target="_blank" rel="noopener noreferrer" className="">
           <Badge
             text="Powered by Idealy"
-            color="purple"
+            color="indigo"
             className="fixed bottom-8 right-8 p-4 text-base"
           />
         </a>

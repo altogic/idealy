@@ -12,36 +12,39 @@ export default function IdeaActions({ updateIdea }) {
       type: 'Pin',
       onClick: () => updateIdea({ isPinned: !idea.isPinned }),
       Icon: Thumbtack,
-      color: `hover:text-green-500 ${idea?.isPinned ? 'text-green-500' : ''}`
+      color: 'green',
+      control: idea.isPinned
     },
     {
       type: 'Archive',
       onClick: () => updateIdea({ isArchived: !idea.isArchived }),
       Icon: Archive,
-      color: `hover:text-orange-500 ${idea?.isArchived ? 'text-orange-500' : ''}`
+      color: 'yellow',
+      control: idea.isArchived
     },
     {
       type: 'Bug',
       onClick: () => updateIdea({ isBug: !idea.isBug }),
       Icon: Bug,
-      color: `hover:text-red-500 ${idea?.isBug ? 'text-red-500' : ''}`
+      color: 'red',
+      control: idea.isBug
     },
     {
       type: 'Merge',
       onClick: () => {},
       Icon: Merge,
-      color: 'hover:text-pink-500'
+      color: 'pink'
     },
     {
       type: 'Delete',
       Icon: Trash,
-      color: 'hover:text-red-500',
+      color: 'red',
       onClick: () => dispatch(toggleDeleteFeedBackModal())
     },
     {
       type: 'Edit',
       Icon: Pen,
-      color: 'hover:text-blue-500',
+      color: 'blue',
       onClick: () => dispatch(toggleFeedBackSubmitModal())
     }
   ];
@@ -56,10 +59,10 @@ export default function IdeaActions({ updateIdea }) {
           <IdeaActionButton
             key={action.type}
             type={action.type}
-            Icon={action.Icon}
             color={action.color}
-            onClick={action.onClick}
             control={action.control}
+            Icon={action.Icon}
+            onClick={action.onClick}
           />
         ))}
       </div>

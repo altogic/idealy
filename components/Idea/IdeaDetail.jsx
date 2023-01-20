@@ -115,19 +115,20 @@ export default function IdeaDetail({ idea, company, query }) {
                         )
                       }
                       Icon={Thumbtack}
-                      color={`hover:text-green-500 ${idea?.isPinned ? 'text-green-500' : ''}`}
+                      color="green"
+                      control={idea?.isPinned}
                     />
                   )}
                   <IdeaActionButton
                     type="Delete"
                     Icon={Trash}
-                    color="hover:text-red-500"
+                    color="red"
                     onClick={() => dispatch(toggleDeleteFeedBackModal())}
                   />
                   <IdeaActionButton
                     type="Edit"
                     Icon={Pen}
-                    color="hover:text-blue-500"
+                    color="blue"
                     onClick={() => dispatch(toggleFeedBackSubmitModal())}
                   />
                 </div>
