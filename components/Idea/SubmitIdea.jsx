@@ -3,6 +3,7 @@ import useGuestValidation from '@/hooks/useGuestValidation';
 import { fileActions } from '@/redux/file/fileSlice';
 import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
+import localStorageUtil from '@/utils/localStorageUtil';
 import { Disclosure } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import cn from 'classnames';
@@ -33,6 +34,7 @@ export default function SubmitIdea({ idea }) {
   const userIp = useSelector((state) => state.auth.userIp);
   const companyMembers = useSelector((state) => state.idea.searchedCompanyMembers);
   const searchLoading = useSelector((state) => state.idea.isLoading);
+  const error = useSelector((state) => state.idea.error);
   const [images, setImages] = useState([]);
   const guestValidation = useGuestValidation({
     company,
@@ -71,7 +73,8 @@ export default function SubmitIdea({ idea }) {
     control,
     reset,
     setValue,
-    formState: { errors, isSubmitSuccessful }
+    setError,
+    formState: { errors }
   } = useForm({
     defaultValues: {
       privacyPolicy: false
@@ -79,6 +82,25 @@ export default function SubmitIdea({ idea }) {
     resolver: yupResolver(schema),
     mode: 'all'
   });
+  const resetForm = () => {
+    reset({
+      title: undefined,
+      content: undefined,
+      topics: undefined,
+      guestName: undefined,
+      guestEmail: undefined,
+      privacyPolicy: false
+    });
+    setContent('');
+    setTopics([]);
+    setImages([]);
+    setMember();
+    dispatch(ideaActions.clearSimilarIdeas());
+  };
+  const handleClose = () => {
+    resetForm();
+    dispatch(toggleFeedBackSubmitModal());
+  };
   const onSubmit = (data) => {
     const reqData = {
       ...data,
@@ -92,9 +114,35 @@ export default function SubmitIdea({ idea }) {
     };
     delete reqData.privacyPolicy;
     if (idea) {
-      dispatch(ideaActions.updateIdea({ _id: idea._id, ...reqData }));
+      dispatch(
+        ideaActions.updateIdea({
+          idea: { _id: idea._id, ...reqData },
+          onSuccess: () => {
+            if (data.guestEmail && data.guestName) {
+              localStorageUtil.set('guestAuthentication', {
+                name: data.guestName,
+                email: data.guestEmail
+              });
+            }
+            handleClose();
+          }
+        })
+      );
     } else {
-      dispatch(ideaActions.createIdea(reqData));
+      dispatch(
+        ideaActions.createIdea({
+          idea: reqData,
+          onSuccess: () => {
+            if (data.guestEmail && data.guestName) {
+              localStorageUtil.set('guestAuthentication', {
+                name: data.guestName,
+                email: data.guestEmail
+              });
+            }
+            handleClose();
+          }
+        })
+      );
     }
   };
 
@@ -115,25 +163,6 @@ export default function SubmitIdea({ idea }) {
   const removeImage = (index) => {
     setImages(images.filter((_, i) => i !== index));
     dispatch(fileActions.deleteFile(fileLinks[index]));
-  };
-  const resetForm = () => {
-    reset({
-      title: undefined,
-      content: undefined,
-      topics: undefined,
-      guestName: undefined,
-      guestEmail: undefined,
-      privacyPolicy: false
-    });
-    setContent('');
-    setTopics([]);
-    setImages([]);
-    setMember();
-    dispatch(ideaActions.clearSimilarIdeas());
-  };
-  const handleClose = () => {
-    resetForm();
-    dispatch(toggleFeedBackSubmitModal());
   };
 
   const handleOnSearch = (searchText) => {
@@ -195,10 +224,25 @@ export default function SubmitIdea({ idea }) {
   }, [user, feedBackSubmitModal]);
 
   useEffect(() => {
-    if (!ideaLoading && isSubmitSuccessful) {
-      handleClose();
+    const guestAuthentication = localStorageUtil.get('guestAuthentication');
+    if (guestAuthentication) {
+      setValue('guestName', guestAuthentication.name);
+      setValue('guestEmail', guestAuthentication.email);
+      setValue('privacyPolicy', true);
     }
-  }, [ideaLoading, isSubmitSuccessful]);
+  }, [feedBackSubmitModal]);
+  useEffect(() => {
+    if (Symbol.iterator in Object(error)) {
+      error.forEach((err) => {
+        if (err.code === 'user_exist') {
+          setError('guestEmail', {
+            type: 'manual',
+            message: err.message
+          });
+        }
+      });
+    }
+  }, [error, setError]);
 
   return (
     <>
