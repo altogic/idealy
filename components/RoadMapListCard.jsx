@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Button from './Button';
-import DeleteModal from './DeleteModal';
+import InfoModal from './InfoModal';
 import { Pen, Trash, Danger } from './icons';
 
 export default function RoadMapListCard({
@@ -32,14 +32,17 @@ export default function RoadMapListCard({
         </div>
       </div>
       {/* Delete Modal */}
-      <DeleteModal
+      <InfoModal
         show={isDelete}
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
-        deleteOnClick={() => setIsDelete(!isDelete)}
+        onConfirm={() => setIsDelete(!isDelete)}
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title={modalTitle}
         description={modalDescription}
+        confirmText="Delete Roadmap"
+        confirmColor="red"
+        canCancel
       />
     </>
   );

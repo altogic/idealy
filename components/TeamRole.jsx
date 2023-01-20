@@ -8,7 +8,7 @@ import { Fragment, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Avatar from './Avatar';
 import Button from './Button';
-import DeleteModal from './DeleteModal';
+import InfoModal from './InfoModal';
 import { ChevronDown, CircleUser, Danger, Trash } from './icons';
 
 export default function TeamRole({ avatar, name, email, status, role, isRegistered, id, userId }) {
@@ -253,14 +253,17 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
         </div>
       </div>
       {/* Delete Modal */}
-      <DeleteModal
+      <InfoModal
         show={isDelete}
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
-        deleteOnClick={handleDelete}
+        onConfirm={handleDelete}
         icon={<Danger className="w-6 h-6 text-red-600" />}
-        title="Delete team member"
+        title="Delete Team Member"
         description="Are you sure you want to delete this team member? This action cannot be undone."
+        confirmText="Delete Team Member"
+        confirmColor="red"
+        canCancel
       />
     </>
   );

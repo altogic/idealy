@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Avatar from './Avatar';
 import CommentForm from './CommentForm';
 import CommentSkeleton from './CommentSkeleton';
-import DeleteModal from './DeleteModal';
+import InfoModal from './InfoModal';
 import { Danger, Pen, Trash } from './icons';
 import ReplyCard from './ReplyCard';
 import ReplyForm from './ReplyForm';
@@ -160,16 +160,19 @@ export default function CommentCard({ comment }) {
           </div>
         </div>
       )}
-      <DeleteModal
+      <InfoModal
         show={isDelete}
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
-        deleteOnClick={() =>
+        onConfirm={() =>
           dispatch(commentActions.deleteComment({ commentId: comment._id, ideaId: idea._id }))
         }
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title="Delete Comment"
         description="Are you sure you want to delete this comment? This action cannot be undone."
+        confirmText="Delete Comment"
+        confirmColor="red"
+        canCancel
       />
     </div>
   );

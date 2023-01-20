@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { ROLE } from 'constants';
-import DeleteModal from './DeleteModal';
+import InfoModal from './InfoModal';
 import Button from './Button';
 import { Danger } from './icons';
 
@@ -125,14 +125,17 @@ export default function UserDetail() {
         </div>
       </div>
       {/* Delete Modal */}
-      <DeleteModal
+      <InfoModal
         show={isDelete}
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
-        deleteOnClick={() => setIsDelete(!isDelete)}
+        onConfirm={() => setIsDelete(!isDelete)}
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title="Delete post"
         description="Are you sure you want to delete this post? This action cannot be undone."
+        confirmText="Delete"
+        confirmColor="red"
+        canCancel
       />
     </>
   );
