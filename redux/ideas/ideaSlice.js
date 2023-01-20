@@ -10,7 +10,8 @@ const initialState = {
   selectedIdea: null,
   ideaVotes: [],
   similarIdeas: [],
-  searchedCompanyMembers: []
+  searchedCompanyMembers: [],
+  guestInfo: {}
 };
 
 export const ideaSlice = createSlice({
@@ -252,6 +253,9 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
+    },
+    setGuestInfo(state, action) {
+      state.guestInfo = action.payload;
     }
   },
 

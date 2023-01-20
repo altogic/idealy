@@ -1,3 +1,4 @@
+import useGuestValidation from '@/hooks/useGuestValidation';
 import { commentActions } from '@/redux/comments/commentsSlice';
 import { companyActions } from '@/redux/company/companySlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
@@ -24,6 +25,8 @@ export default function Realtime() {
   const userIp = useSelector((state) => state.auth.userIp);
   const company = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
+  const guestInfo = useSelector((state) => state.idea.guestInfo);
+  const voteGuestAuth = useGuestValidation('voteIdea');
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -145,12 +148,20 @@ export default function Realtime() {
     dispatch(ideaActions.deleteIdeaSuccess(message));
   }
   function voteIdeaHandler({ message }) {
-    if ((user && user._id !== message.userId) || (!user && userIp !== message.userIp)) {
+    if (
+      (user && user._id !== message.userId) ||
+      (!user && userIp !== message.ip) ||
+      (voteGuestAuth && guestInfo.guestEmail !== message.guestEmail)
+    ) {
       dispatch(ideaActions.upVoteIdeaRealtime(message.ideaId));
     }
   }
   function downVoteIdeaHandler({ message }) {
-    if ((user && user._id !== message.userId) || (!user && userIp !== message.userIp)) {
+    if (
+      (user && user._id !== message.userId) ||
+      (!user && userIp !== message.ip) ||
+      (voteGuestAuth && guestInfo.guestEmail !== message.guestEmail)
+    ) {
       dispatch(ideaActions.downVoteIdeaRealtime(message.ideaId));
     }
   }
