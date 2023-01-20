@@ -41,7 +41,7 @@ export default function Header() {
       ]);
     }
   }, [companies, selectedCompany]);
-  console.log(process.env.NODE_ENV);
+
   return (
     <>
       <header
