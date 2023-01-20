@@ -2,7 +2,7 @@
 
 import { SESSION_COOKIE_OPTIONS } from 'constants';
 import { deleteCookie, setCookie as nextCookie } from 'cookies-next';
-
+import localStorageUtil from './localStorageUtil';
 /* eslint-disable no-bitwise */
 export function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -51,3 +51,11 @@ export function shadeHexColor(color, percent) {
     .toString(16)
     .slice(1)}`;
 }
+export const addGuestInfoToLocalStorage = (guestEmail, guestName) => {
+  if (guestEmail && guestName) {
+    localStorageUtil.set('guestAuthentication', {
+      guestName,
+      guestEmail
+    });
+  }
+};
