@@ -3,7 +3,7 @@ import useGuestValidation from '@/hooks/useGuestValidation';
 import { fileActions } from '@/redux/file/fileSlice';
 import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import localStorageUtil from '@/utils/localStorageUtil';
+import { addGuestInfoToLocalStorage } from '@/utils/index';
 import { Disclosure } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import cn from 'classnames';
@@ -35,11 +35,9 @@ export default function SubmitIdea({ idea }) {
   const companyMembers = useSelector((state) => state.idea.searchedCompanyMembers);
   const searchLoading = useSelector((state) => state.idea.isLoading);
   const error = useSelector((state) => state.idea.error);
+  const guestInfo = useSelector((state) => state.idea.guestInfo);
   const [images, setImages] = useState([]);
-  const guestValidation = useGuestValidation({
-    company,
-    fieldName: 'submitIdeas'
-  });
+  const guestValidation = useGuestValidation('submitIdeas');
 
   const [topics, setTopics] = useState([]);
   const [content, setContent] = useState('');
@@ -101,6 +99,7 @@ export default function SubmitIdea({ idea }) {
     resetForm();
     dispatch(toggleFeedBackSubmitModal());
   };
+
   const onSubmit = (data) => {
     const reqData = {
       ...data,
@@ -118,12 +117,7 @@ export default function SubmitIdea({ idea }) {
         ideaActions.updateIdea({
           idea: { _id: idea._id, ...reqData },
           onSuccess: () => {
-            if (data.guestEmail && data.guestName) {
-              localStorageUtil.set('guestAuthentication', {
-                name: data.guestName,
-                email: data.guestEmail
-              });
-            }
+            addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
             handleClose();
           }
         })
@@ -133,12 +127,7 @@ export default function SubmitIdea({ idea }) {
         ideaActions.createIdea({
           idea: reqData,
           onSuccess: () => {
-            if (data.guestEmail && data.guestName) {
-              localStorageUtil.set('guestAuthentication', {
-                name: data.guestName,
-                email: data.guestEmail
-              });
-            }
+            addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
             handleClose();
           }
         })
@@ -224,13 +213,12 @@ export default function SubmitIdea({ idea }) {
   }, [user, feedBackSubmitModal]);
 
   useEffect(() => {
-    const guestAuthentication = localStorageUtil.get('guestAuthentication');
-    if (guestAuthentication) {
-      setValue('guestName', guestAuthentication.name);
-      setValue('guestEmail', guestAuthentication.email);
+    if (guestInfo) {
+      setValue('guestName', guestInfo.guestName);
+      setValue('guestEmail', guestInfo.guestEmail);
       setValue('privacyPolicy', true);
     }
-  }, [feedBackSubmitModal]);
+  }, [feedBackSubmitModal, guestInfo]);
   useEffect(() => {
     if (Symbol.iterator in Object(error)) {
       error.forEach((err) => {

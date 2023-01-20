@@ -26,7 +26,7 @@ import EmptyState from '../EmptyState';
 import CommentSkeleton from '../CommentSkeleton';
 import VoteIdea from './VoteIdea';
 
-export default function IdeaDetail({ idea, company, query }) {
+export default function IdeaDetail({ idea, company, query, voted }) {
   const dispatch = useDispatch();
 
   const router = useRouter();
@@ -71,15 +71,7 @@ export default function IdeaDetail({ idea, company, query }) {
         user && (company?.role === 'Owner' || company?.role === 'Admin') && <IdeaDetailAdmin />
       }>
       <div className="flex gap-6">
-        <VoteIdea
-          ideaId={idea?._id}
-          voteCount={idea?.voteCount}
-          voted={
-            user
-              ? ideaVotes.find((v) => v.ideaId === idea?._id && v.userId === user._id)
-              : ideaVotes.find((v) => v.ideaId === idea?._id && v.ip === userIp && !v.userId)
-          }
-        />
+        <VoteIdea ideaId={idea?._id} voteCount={idea?.voteCount} voted={voted} />
         <div className="relative flex-1">
           <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all">
             {idea?.title}

@@ -7,6 +7,7 @@ import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfiniteScroll from '@/components/InfiniteScroll';
 import Layout from '@/components/Layout';
 import PublicViewCard from '@/components/PublicViewCard';
+import useGuestValidation from '@/hooks/useGuestValidation';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import { authActions } from '@/redux/auth/authSlice';
 import { toggleDeleteFeedBackModal, toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
@@ -36,7 +37,9 @@ export default function PublicView({ userIp }) {
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const deleteFeedBackModal = useSelector((state) => state.general.deleteFeedBackModal);
+  const guestInfo = useSelector((state) => state.idea.guestInfo);
   const user = useSelector((state) => state.auth.user);
+  const voteGuestAuth = useGuestValidation('voteIdea');
   const handleFilter = (filterTopics, filterStatus) => {
     if (filterTopics?.length || filterStatus?.length) {
       const topicsFilter = [];
@@ -119,6 +122,18 @@ export default function PublicView({ userIp }) {
   const handleDelete = () => {
     dispatch(ideaActions.deleteIdea(selectedIdea._id));
     handleCloseIdea();
+  };
+
+  const handleVoted = (ideaId) => {
+    if (user) {
+      return ideaVotes.find((v) => v.ideaId === ideaId && v.userId === user._id);
+    }
+    if (voteGuestAuth) {
+      return ideaVotes.find(
+        (v) => v.ideaId === ideaId && guestInfo.guestEmail === v.guestEmail && !v.userId
+      );
+    }
+    return ideaVotes.find((v) => v.ideaId === ideaId && v.ip === userIp && !v.userId);
   };
 
   useEffect(() => {
@@ -237,13 +252,7 @@ export default function PublicView({ userIp }) {
                   <PublicViewCard
                     idea={idea}
                     onClick={() => handleClickIdea(idea)}
-                    voted={
-                      user
-                        ? ideaVotes.find((v) => v.ideaId === idea._id && v.userId === user._id)
-                        : ideaVotes.find(
-                            (v) => v.ideaId === idea._id && v.ip === userIp && !v.userId
-                          )
-                    }
+                    voted={handleVoted(idea._id)}
                   />
                 </div>
               ))
@@ -273,7 +282,12 @@ export default function PublicView({ userIp }) {
             )}
           </InfiniteScroll>
         </div>
-        <IdeaDetail idea={selectedIdea} company={company} query={routerQuery} />
+        <IdeaDetail
+          idea={selectedIdea}
+          company={company}
+          query={routerQuery}
+          voted={handleVoted(selectedIdea?._id)}
+        />
         <DeleteModal
           show={deleteFeedBackModal}
           onClose={() => dispatch(toggleDeleteFeedBackModal())}
