@@ -72,17 +72,23 @@ export default function IdeaDetail({ idea, company, query, voted }) {
       <div className="flex gap-6">
         <VoteIdea ideaId={idea?._id} voteCount={idea?.voteCount} voted={voted} />
         <div className="relative flex-1">
-          <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all">
+          <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all mb-8">
             {idea?.title}
           </h2>
-          <div className="my-8">
-            <IdeaBadges idea={idea} />
-          </div>
+          {(idea?.isPrivate ||
+            idea?.isBug ||
+            idea?.isArchived ||
+            idea?.isPinned ||
+            !idea?.isApproved) && (
+            <div className="mb-8">
+              <IdeaBadges idea={idea} />
+            </div>
+          )}
           <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-400 purple:prose-p:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-8 break-all">
             <SanitizeHtml html={idea?.content} />
           </div>
 
-          <div className="flex items-center gap-2 my-8">
+          <div className="flex items-center gap-2 mb-8">
             {/* User */}
             <IdeaInfo idea={idea} />
             {canEdit && (
@@ -127,7 +133,7 @@ export default function IdeaDetail({ idea, company, query, voted }) {
             )}
           </div>
 
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center justify-between gap-4 mb-8">
             {/* Feedback Detail Topic Badges */}
             {!!idea?.topics.length && (
               <div className="flex items-center gap-2">

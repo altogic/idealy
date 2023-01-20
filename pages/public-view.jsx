@@ -40,23 +40,32 @@ export default function PublicView({ userIp }) {
   const guestInfo = useSelector((state) => state.idea.guestInfo);
   const user = useSelector((state) => state.auth.user);
   const voteGuestAuth = useGuestValidation('voteIdea');
+
+  const getTopicsFilter = (filterTopics) => {
+    if (filterTopics?.length) {
+      const topicsFilter = [];
+      filterTopics.forEach((topic) => {
+        topicsFilter.push(`IN(this.topics,'${topic}')`);
+      });
+      return `(${topicsFilter.join(' || ')})`;
+    }
+    return '';
+  };
+  const getStatusFilter = (filterStatus) => {
+    if (filterStatus?.length) {
+      const statusFilter = [];
+      filterStatus.forEach((status) => {
+        statusFilter.push(`this.status._id == '${status}'`);
+      });
+      return `(${statusFilter.join(' || ')})`;
+    }
+    return '';
+  };
   const handleFilter = (filterTopics, filterStatus) => {
     if (filterTopics?.length || filterStatus?.length) {
-      const topicsFilter = [];
-      const statusFilter = [];
-      if (filterTopics?.length) {
-        filterTopics.forEach((topic) => {
-          topicsFilter.push(`IN(this.topics,'${topic}')`);
-        });
-      }
-      if (filterStatus?.length) {
-        filterStatus.forEach((status) => {
-          statusFilter.push(`this.status._id == '${status}'`);
-        });
-      }
-      return `${topicsFilter.length ? `(${topicsFilter.join(' || ')})` : ''} ${
-        topicsFilter.length && statusFilter.length ? '&&' : ''
-      }  ${statusFilter.length ? `(${statusFilter.join(' || ')})` : ''} &&`;
+      const topicsFilter = getTopicsFilter(filterTopics);
+      const statusFilter = getStatusFilter(filterStatus);
+      return `${topicsFilter} ${topicsFilter && statusFilter ? '&&' : ''}  ${statusFilter} &&`;
     }
     return '';
   };
@@ -99,7 +108,9 @@ export default function PublicView({ userIp }) {
         sort: handleSort(router.query.sort),
         page
       };
-
+      if (!user && !company?.role) {
+        req.filter += ` this.isApproved == true &&`;
+      }
       dispatch(ideaActions.getIdeasByCompany(req));
     }
   }, [page, router.query.sort, router.query.status, router.query.topics, company]);
@@ -136,29 +147,21 @@ export default function PublicView({ userIp }) {
     return ideaVotes.find((v) => v.ideaId === ideaId && v.ip === userIp && !v.userId);
   };
 
+  const showFeedbackDetail = (feedbackId) => {
+    const ideaDetail = ideas.find((i) => i._id === feedbackId);
+    if (ideaDetail) {
+      dispatch(ideaActions.setSelectedIdea(ideaDetail));
+      dispatch(toggleFeedBackDetailModal());
+    }
+  };
   useEffect(() => {
     if (router) {
       const { topics, status, sort, feedback } = router.query;
-      if (sort) {
-        const sortType = IDEA_SORT_TYPES.find((s) => s.url === sort);
-        setSortType(sortType);
-      } else {
-        setSortType(IDEA_SORT_TYPES[2]);
-      }
-      if (topics) {
-        setFilterTopics(topics.split(','));
-      }
-      if (status) {
-        setFilterStatus(status.split(','));
-      }
-      if (feedback && !feedBackDetailModal) {
-        const ideaDetail = ideas.find((i) => i._id === feedback);
-        if (ideaDetail) {
-          dispatch(ideaActions.setSelectedIdea(ideaDetail));
-
-          dispatch(toggleFeedBackDetailModal());
-        }
-      }
+      if (sort) setSortType(IDEA_SORT_TYPES.find((s) => s.url === sort));
+      else setSortType(IDEA_SORT_TYPES[2]);
+      if (topics) setFilterTopics(topics.split(','));
+      if (status) setFilterStatus(status.split(','));
+      if (feedback && !feedBackDetailModal) showFeedbackDetail(feedback);
     }
   }, [router, ideas]);
 

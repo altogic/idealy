@@ -2,11 +2,13 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleDeleteFeedBackModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { Merge, Archive, Thumbtack, Trash, Pen, Bug } from '@/components/icons';
+import useUpdateIdea from '@/hooks/useUpdateIdea';
 import IdeaActionButton from './IdeaActionButton';
 
-export default function IdeaActions({ updateIdea }) {
+export default function IdeaActions() {
   const idea = useSelector((state) => state.idea.selectedIdea);
   const dispatch = useDispatch();
+  const updateIdea = useUpdateIdea(idea);
   const ideaActions = [
     {
       type: 'Pin',
