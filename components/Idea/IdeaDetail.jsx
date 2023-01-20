@@ -35,8 +35,6 @@ export default function IdeaDetail({ idea, company, query, voted }) {
   const commentCountInfo = useSelector((state) => state.comments.countInfo);
   const loading = useSelector((state) => state.comments.isLoading);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
-  const ideaVotes = useSelector((state) => state.idea.ideaVotes);
-  const userIp = useSelector((state) => state.auth.userIp);
   const canComment = useRegisteredUserValidation('commentIdea');
   const canEdit = useIdeaActionValidation(idea);
   const [isFetched, setIsFetched] = useState(false);
