@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import Divider from '../Divider';
 import IdeaActions from './admin/IdeaActions';
 import IdeaApproval from './admin/IdeaApproval';
 import IdeaPriority from './admin/IdeaPriority';
@@ -18,13 +19,13 @@ export default function IdeaDetailAdmin() {
         </div>
         <div className="flex flex-col flex-1 bg-slate-50 dark:bg-aa-800 purple:bg-pt-900 p-4 overflow-y-auto">
           <IdeaStatuses />
-          <hr className="my-2 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
+          <Divider />
           <IdeaPriority />
-          <hr className="my-2 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
+          <Divider />
           <IdeaVisibility />
           {!idea?.isApproved && (
             <>
-              <hr className="my-2 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
+              <Divider />
               <IdeaApproval />
             </>
           )}

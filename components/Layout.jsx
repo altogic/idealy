@@ -31,9 +31,9 @@ export default function Layout({ children }) {
       );
       deleteCookie('invitation-token');
     }
-    // if (isAuthenticated) {
-    //   dispatch(authActions.setUser());
-    // }
+    if (isAuthenticated) {
+      dispatch(authActions.setUser());
+    }
   }, [isAuthenticated]);
 
   useEffect(() => {

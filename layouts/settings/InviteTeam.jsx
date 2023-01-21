@@ -4,14 +4,14 @@ import { Close, Email, PlusPeople, TwoPeople } from '@/components/icons';
 import Input from '@/components/Input';
 import Label from '@/components/Label';
 import Modal from '@/components/Modal';
+import RoleListBox from '@/components/RoleListBox';
 import SectionTitle from '@/components/SectionTitle';
 import TeamRole from '@/components/TeamRole';
 import { companyActions } from '@/redux/company/companySlice';
 import { realtime } from '@/utils/altogic';
-import { Listbox, Transition } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ROLE } from 'constants';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
@@ -19,7 +19,7 @@ import * as yup from 'yup';
 export default function InviteTeam() {
   const dispatch = useDispatch();
 
-  const [roleSelected, setRoleSelected] = useState(ROLE[0]);
+  const [roleSelected, setRoleSelected] = useState(ROLE[0]?.name);
   const [isInvite, setIsInvite] = useState(false);
 
   const company = useSelector((state) => state.company.company);
@@ -47,17 +47,17 @@ export default function InviteTeam() {
     dispatch(
       companyActions.inviteTeamMember({
         ...data,
-        role: roleSelected.name,
+        role: roleSelected,
         companyId: company._id,
         companyName: company.name,
         canCreateCompany: company.whiteLabel.canCreateCompany,
         companySubdomain: company.subdomain,
         onSuccess: (userId) => {
           setIsInvite(false);
-          setRoleSelected(ROLE[0]);
+          setRoleSelected(ROLE[0].name);
           if (userId) {
             realtime.send(userId, 'new-invitation', {
-              role: roleSelected.name,
+              role: roleSelected,
               userId,
               company
             });
@@ -71,7 +71,7 @@ export default function InviteTeam() {
   }
   const handleCloseDialog = () => {
     setIsInvite(!isInvite);
-    setRoleSelected(ROLE[0]);
+    setRoleSelected(ROLE[0].name);
   };
   useEffect(() => {
     if (company) {
@@ -175,80 +175,7 @@ export default function InviteTeam() {
                   </div>
                   <div>
                     <Label label="Role" />
-                    <Listbox value={roleSelected} onChange={setRoleSelected}>
-                      <div className="relative">
-                        <Listbox.Button className="flex items-center relative w-full md:w-[150px] h-11 bg-white dark:bg-aa-800 purple:bg-pt-800 py-3 px-[14px] border border-slate-300 dark:border-aa-600 purple:border-pt-800 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                          <span className="block text-gray-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm truncate">
-                            {roleSelected.name}
-                          </span>
-                          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5">
-                            <svg
-                              className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200"
-                              viewBox="0 0 20 20"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg">
-                              <path
-                                d="M5 7.5L10 12.5L15 7.5"
-                                stroke="currentColor"
-                                strokeWidth="1.66667"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
-                          </span>
-                        </Listbox.Button>
-                        <Transition
-                          as={Fragment}
-                          leave="transition ease-in duration-100"
-                          leaveFrom="opacity-100"
-                          leaveTo="opacity-0">
-                          <Listbox.Options className="absolute mt-1 w-full md:w-[150px] overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 py-1 text-base shadow-lg focus:outline-none sm:text-sm z-[9999]">
-                            {ROLE.map((item) => (
-                              <Listbox.Option
-                                key={item.id}
-                                className={({ active }) =>
-                                  `relative flex items-center justify-between cursor-default select-none py-2 px-3.5 transition hover:text-slate-900 dark:hover:text-aa-100 purple:hover:text-pt-100 ${
-                                    active
-                                      ? 'bg-slate-100 dark:bg-aa-700 purple:bg-pt-700'
-                                      : 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
-                                  }`
-                                }
-                                value={item}>
-                                {({ selected }) => (
-                                  <>
-                                    <span
-                                      className={`block truncate ${
-                                        selected
-                                          ? 'text-slate-900 dark:text-aa-100 purple:text-pt-100'
-                                          : 'font-normal'
-                                      }`}>
-                                      {item.name}
-                                    </span>
-                                    {selected ? (
-                                      <span className="flex items-center pl-3 text-indigo-700 dark:text-aa-200 purple:text-pt-200">
-                                        <svg
-                                          className="w-5 h-5"
-                                          viewBox="0 0 20 20"
-                                          fill="none"
-                                          xmlns="http://www.w3.org/2000/svg">
-                                          <path
-                                            d="M16.6673 5L7.50065 14.1667L3.33398 10"
-                                            stroke="currentColor"
-                                            strokeWidth="1.66667"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                          />
-                                        </svg>
-                                      </span>
-                                    ) : null}
-                                  </>
-                                )}
-                              </Listbox.Option>
-                            ))}
-                          </Listbox.Options>
-                        </Transition>
-                      </div>
-                    </Listbox>
+                    <RoleListBox roleSelected={roleSelected} setRoleSelected={setRoleSelected} />
                   </div>
                 </div>
                 <div className="flex items-center min-h-[60px] bg-slate-100 dark:bg-aa-600 purple:bg-pt-800 text-slate-500 dark:text-aa-100 purple:text-pt-100 my-8 py-2 px-4 text-sm tracking-sm rounded-lg">

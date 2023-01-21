@@ -15,6 +15,7 @@ import * as yup from 'yup';
 import AutoComplete from '../AutoComplete';
 import Avatar from '../Avatar';
 import Button from '../Button';
+import Divider from '../Divider';
 import Drawer from '../Drawer';
 import Editor from '../Editor';
 import GuestForm from '../GuestForm';
@@ -365,7 +366,7 @@ export default function SubmitIdea({ idea }) {
               )}
             />
           </div>
-          <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
+          <Divider />
           <div>
             {((idea?.guestName && idea?.guestEmail) || guestValidation) && (
               <GuestForm register={register} errors={errors} />

@@ -1,4 +1,5 @@
 import SectionTitle from '@/components/SectionTitle';
+import Divider from '@/components/Divider';
 import CompanyLogo from './GeneralSettings/CompanyLogo';
 import CompanyName from './GeneralSettings/CompanyName';
 import CompanyFavicon from './GeneralSettings/CompanyFavicon';
@@ -17,13 +18,13 @@ export default function GeneralFunctions() {
       </div>
       <div className="max-w-[510px]">
         <CompanyLogo />
-        <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
+        <Divider />
         <CompanyName />
-        <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
+        <Divider />
         <CompanyDisplay />
-        <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
+        <Divider />
         <CompanyFavicon />
-        <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
+        <Divider />
         <CompanySiteNavigation />
       </div>
     </>

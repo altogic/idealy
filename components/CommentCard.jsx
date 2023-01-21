@@ -12,6 +12,7 @@ import { Danger, Pen, Trash } from './icons';
 import ReplyCard from './ReplyCard';
 import ReplyForm from './ReplyForm';
 import SanitizeHtml from './SanitizeHtml';
+import Divider from './Divider';
 
 export default function CommentCard({ comment }) {
   const [isReplying, setIsReplying] = useState(false);
@@ -117,7 +118,7 @@ export default function CommentCard({ comment }) {
             </div>
             {showReplies && (
               <>
-                <hr className="my-6 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
+                <Divider />
                 {loading && page === 1 ? (
                   <CommentSkeleton />
                 ) : (

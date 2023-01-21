@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toggleDeleteFeedBackModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { Merge, Archive, Thumbtack, Trash, Pen, Bug } from '@/components/icons';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
+import Divider from '@/components/Divider';
 import IdeaActionButton from './IdeaActionButton';
 
 export default function IdeaActions() {
@@ -55,7 +56,7 @@ export default function IdeaActions() {
       <p className="text-slate-900 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">
         Actions
       </p>
-      <hr className="my-2 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
+      <Divider />
       <div className="flex w-full flex-row space-x-2">
         {ideaActions.map((action) => (
           <IdeaActionButton
