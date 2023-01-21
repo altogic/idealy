@@ -17,6 +17,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Divider from '@/components/Divider';
 
 export default function PublicView({ userIp }) {
   const [page, setPage] = useState(1);
@@ -248,15 +249,14 @@ export default function PublicView({ userIp }) {
                 <span className="sr-only">Loading...</span>
               </div>
             ) : ideas.length > 0 ? (
-              ideas?.map((idea) => (
-                <div
-                  key={idea._id}
-                  className="inline-block w-full py-6 border-b border-slate-200 last:border-0 first:pt-0">
+              ideas?.map((idea, index) => (
+                <div key={idea._id} className="inline-block w-full py-6 ">
                   <PublicViewCard
                     idea={idea}
                     onClick={() => handleClickIdea(idea)}
                     voted={handleVoted(idea._id)}
                   />
+                  {ideas.length - 1 !== index && <Divider />}
                 </div>
               ))
             ) : (

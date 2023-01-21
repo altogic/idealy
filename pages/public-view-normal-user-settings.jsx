@@ -8,6 +8,7 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 import InfoModal from '@/components/InfoModal';
 import { Plus, Email, Danger } from '@/components/icons';
+import Divider from '@/components/Divider';
 
 const feedbacksBadges = [
   {
@@ -299,7 +300,7 @@ export default function PublicViewNormalUserSettings() {
                                     ))}
                                   </div>
                                 </div>
-                                <hr className="my-8 border-slate-200" />
+                                <Divider />
                                 <div>
                                   <form action="">
                                     <div className="flex items-center gap-4 mb-4">
@@ -340,7 +341,7 @@ export default function PublicViewNormalUserSettings() {
                                         </label>
                                       </div>
                                     </div>
-                                    <hr className="mt-8 mb-20" />
+                                    <Divider />
                                     <div className="flex justify-end">
                                       <button
                                         type="button"

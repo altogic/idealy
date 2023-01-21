@@ -3,6 +3,7 @@ import RoadMapCard from '@/components/RoadMapCard';
 import PublicViewCard from '@/components/PublicViewCard';
 import TopicBadges from '@/components/TopicBadges';
 import CommentCard from '@/components/CommentCard';
+import Divider from '@/components/Divider';
 
 export default function Component() {
   return (
@@ -14,7 +15,7 @@ export default function Component() {
           </h2>
           <RoadMapCard score="5" title="At venenatis leo fringilla eu nec." />
         </div>
-        <hr className="my-10 border-slate-200" />
+        <Divider />
         <div className="mb-10">
           <h2 className="text-slate-800 mb-5 text-4xl font-semibold tracking-sm">
             Public View Card
@@ -27,12 +28,12 @@ export default function Component() {
             status={2}
           />
         </div>
-        <hr className="my-10 border-slate-200" />
+        <Divider />
         <div className="mb-10">
           <h2 className="text-slate-800 mb-5 text-4xl font-semibold tracking-sm">Topic Badges</h2>
           <TopicBadges badgeName="Development" />
         </div>
-        <hr className="my-10 border-slate-200" />
+        <Divider />
         <div className="mb-10">
           <h2 className="text-slate-800 mb-5 text-4xl font-semibold tracking-sm">Comment Card</h2>
           <CommentCard nameFirstLetter="O" userName="Olivia Rhye" timeAgo="3 days ago" />

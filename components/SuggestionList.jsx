@@ -1,9 +1,10 @@
 import { Popover } from '@headlessui/react';
+import Divider from './Divider';
 
 function SuggestionsList({ filteredSuggestions, onClick, formatResult }) {
   return (
     <Popover>
-      <hr className="border-gray-100 m-auto w-11/12" />
+      <Divider className="m-auto w-11/12" />
       <ul className="suggestions bg-white border border-gray-300 border-t-0 list-none mt-0 overflow-y-auto pl-0 w-full">
         {filteredSuggestions.length ? (
           filteredSuggestions.map((suggestion) => (
@@ -14,7 +15,7 @@ function SuggestionsList({ filteredSuggestions, onClick, formatResult }) {
               <li className="hover:cursor-pointer hover:text-slate-300 hover:bg-gray-100">
                 {formatResult ? formatResult(suggestion) : suggestion.name}
               </li>
-              <hr className="border-gray-100 m-auto w-11/12" />
+              <Divider className="m-auto w-11/12" />
             </Popover.Button>
           ))
         ) : (

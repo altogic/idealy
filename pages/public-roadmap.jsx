@@ -5,6 +5,7 @@ import Layout from '@/components/Layout';
 import RoadMapCard from '@/components/RoadMapCard';
 import TopicBadges from '@/components/TopicBadges';
 import CommentCard from '@/components/CommentCard';
+import Divider from '@/components/Divider';
 
 export default function PublicView() {
   const [openDetailFeedbackModal, setOpenDetailFeedbackModal] = useState(false);
@@ -31,7 +32,7 @@ export default function PublicView() {
                 </svg>
                 <span>Under Consideration (3)</span>
               </div>
-              <hr className="my-4 border-slate-200" />
+              <Divider />
               <RoadMapCard score="5" title="At venenatis leo fringilla eu nec." />
             </div>
             <div className="p-6 border border-slate-200 rounded-lg shadow">
@@ -41,7 +42,7 @@ export default function PublicView() {
                 </svg>
                 <span>Under Consideration (3)</span>
               </div>
-              <hr className="my-4 border-slate-200" />
+              <Divider />
               <RoadMapCard score="5" title="At venenatis leo fringilla eu nec." />
             </div>
           </div>

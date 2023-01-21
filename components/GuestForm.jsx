@@ -1,4 +1,5 @@
 import React from 'react';
+import Divider from './Divider';
 import Input from './Input';
 
 export default function GuestForm({ register, errors, vertical }) {
@@ -40,7 +41,7 @@ export default function GuestForm({ register, errors, vertical }) {
           className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
         />
       </div>
-      {!vertical && <hr className="mt-8" />}
+      {!vertical && <Divider />}
     </>
   );
 }

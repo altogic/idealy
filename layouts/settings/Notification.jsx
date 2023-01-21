@@ -3,6 +3,7 @@ import SectionTitle from '@/components/SectionTitle';
 import Toggle from '@/components/Toggle';
 import { useDispatch, useSelector } from 'react-redux';
 import { authActions } from '@/redux/auth/authSlice';
+import Divider from '@/components/Divider';
 
 export default function Notification() {
   const dispatch = useDispatch();
@@ -219,7 +220,8 @@ export default function Notification() {
             }}
           />
         </div>
-        <hr className="mt-6 mb-20 border-slate-200" />
+
+        <Divider className="mb-20" />
         <div className="pb-4 mb-6 border-b border-slate-200">
           <SectionTitle sectionTitle="Personal" />
         </div>
