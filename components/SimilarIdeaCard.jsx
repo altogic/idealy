@@ -30,7 +30,7 @@ export default function SimilarIdeaCard({ idea }) {
         dispatch(toggleFeedBackDetailModal());
       }}>
       <div className="flex items-start lg:items-center gap-6">
-        <div className="flex flex-col items-center justify-center bg-white dark:bg-aa-50 dark:bg-opacity-20 purple:bg-opacity-20 py-2 px-3 border border-gray-300 dark:border-aa-600 purple:border-pt-800 rounded-lg">
+        <div className="flex flex-col items-center justify-center bg-white dark:bg-aa-50 purple:bg-pt-50 dark:bg-opacity-10 purple:bg-opacity-10 py-2 px-3 border border-gray-300 dark:border-aa-600 purple:border-pt-800 rounded-lg">
           <span className="text-indigo-700 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md">
             {idea?.voteCount}
           </span>

@@ -85,8 +85,10 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
   };
   return (
     <div
-      className={`flex flex-col items-center bg-white px-3 md:px-5 border rounded-lg h-20 ${
-        votedState ? 'border-2 border-indigo-500' : 'border-gray-400'
+      className={`flex flex-col items-center bg-white dark:bg-aa-50 purple:bg-pt-50 dark:bg-opacity-10 purple:bg-opacity-10 py-1 px-3 md:px-5 border rounded-lg h-20 ${
+        votedState
+          ? 'border-2 border-indigo-500 dark:border-aa-200 purple:border-pt-200'
+          : 'border-gray-400'
       }`}>
       {canVote && (
         <button
@@ -94,12 +96,16 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
           onClick={upVote}
           disabled={!canVote}
           className="inline-flex items-center justify-center">
-          <ChevronUp className={`w-5 h-5 ${voted ? ' text-indigo-900' : 'text-slate-400'} `} />
+          <ChevronUp
+            className={`w-5 h-5 ${
+              voted ? ' text-indigo-900 dark:text-aa-200 purple:text-pt-200' : 'text-slate-400'
+            } `}
+          />
         </button>
       )}
       <span
         className={cn(
-          'text-indigo-700 text-2xl font-semibold tracking-md',
+          'text-indigo-700 dark:text-aa-200 purple:text-pt-200 text-2xl font-semibold tracking-md',
           !canVote ? 'm-auto' : ''
         )}>
         {voteCountState}
