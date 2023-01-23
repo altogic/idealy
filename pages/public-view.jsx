@@ -198,8 +198,8 @@ export default function PublicView({ userIp }) {
         <meta name="description" content="Altogic Canny Alternative Public View" />
       </Head>
       <Layout>
-        <div className="max-w-screen-lg mx-auto my-14">
-          <div className="flex items-start justify-between mb-16">
+        <div className="max-w-screen-lg mx-auto lg:my-14">
+          <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-16">
             <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
               Feature Ideas
             </h1>
