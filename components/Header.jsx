@@ -121,7 +121,7 @@ export default function Header() {
           >
             Public View
           </button> */}
-          {process.env.NODE_ENV === 'development' && <ThemeChanger />}
+          {/* {process.env.NODE_ENV === 'development' && <ThemeChanger />} */}
           {/* Notification */}
           {isLoggedIn && (
             <Menu as="div" className="relative">
