@@ -47,7 +47,7 @@ export default function SimilarIdeaCard({ idea }) {
             </h3>
           </div>
           <SanitizeHtml
-            className="max-w-3xl text-slate-500 mb-2 text-sm tracking-sm text-left line-clamp-1"
+            className="max-w-3xl text-slate-500 dark:text-aa-300 purple:text-pt-300 mb-6 text-sm tracking-sm text-left line-clamp-1"
             content={idea?.content}
           />
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
