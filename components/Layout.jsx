@@ -4,9 +4,10 @@ import { deleteCookie, getCookie } from 'cookies-next';
 import _ from 'lodash';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateUrl, setCookie } from '../utils';
+import Badge from './Badge';
 import Header from './Header';
 import Realtime from './Realtime';
 
@@ -15,18 +16,9 @@ export default function Layout({ children }) {
   const company = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const companyFetched = useRef(false);
   const user = useSelector((state) => state.auth.user);
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const userFromCookie = JSON.parse(getCookie('user') || null);
-    const session = JSON.parse(getCookie('session') || null);
-    if (userFromCookie && session) {
-      dispatch(authActions.authStateChange({ user: userFromCookie, session }));
-    }
-  }, []);
 
   useEffect(() => {
     const invitation = JSON.parse(getCookie('invitation-token') || null);
@@ -51,12 +43,18 @@ export default function Layout({ children }) {
   }, [companies]);
 
   useEffect(() => {
+    const userFromCookie = JSON.parse(getCookie('user') || null);
+    const session = JSON.parse(getCookie('session') || null);
+    if (userFromCookie && session) {
+      dispatch(authActions.authStateChange({ user: userFromCookie, session }));
+    }
+
     const wildcard = window.location.hostname.split('.')[0];
-    if (company?.subdomain !== wildcard && router.isReady) {
+    if (company?.subdomain !== wildcard) {
       dispatch(
         companyActions.getCompanyBySubdomain({
           subdomain: wildcard,
-          userId: user?._id,
+          userId: userFromCookie?._id,
           onSuccess: (subdomain) => {
             setCookie('subdomain', subdomain);
           },
@@ -64,14 +62,13 @@ export default function Layout({ children }) {
         })
       );
     }
-  }, [user]);
+  }, []);
 
   useEffect(() => {
-    if (user && !companyFetched.current) {
-      companyFetched.current = true;
+    if (isAuthenticated && _.isEmpty(companies)) {
       dispatch(companyActions.getUserCompanies(user?._id));
     }
-  }, [user]);
+  }, [isAuthenticated]);
 
   return (
     <div className="bg-white dark:bg-aa-900 purple:bg-pt-1000">
@@ -85,9 +82,13 @@ export default function Layout({ children }) {
           <Realtime />
         </main>
       </div>
-      {company?.whiteLabel?.isHideBanner && (
-        <a href="https://www.altogic.com/" target="_blank" rel="noopener noreferrer">
-          <img className="fixed bottom-8 right-8" src="./powered-by-altogic.svg" alt="" />
+      {!company?.whiteLabel?.isHideBanner && (
+        <a href="https://www.idealy.io/" target="_blank" rel="noopener noreferrer" className="">
+          <Badge
+            text="Powered by Idealy"
+            color="indigo"
+            className="fixed bottom-8 right-8 p-4 text-base"
+          />
         </a>
       )}
     </div>

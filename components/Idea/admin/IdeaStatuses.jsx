@@ -1,44 +1,44 @@
 import { CircleCheck } from '@/components/icons';
+import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { RadioGroup } from '@headlessui/react';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import IdeaAdminTab from './IdeaAdminTab';
 
-export default function IdeaStatuses({ updateIdea }) {
+export default function IdeaStatuses() {
   const [selectedStatus, setSelectedStatus] = useState(null);
+
   const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
   const idea = useSelector((state) => state.idea.selectedIdea);
-
+  const updateIdea = useUpdateIdea(idea);
   useEffect(() => {
     if (idea?.status) {
       setSelectedStatus(idea.status);
     }
   }, [idea]);
-
+  const handleStatusChange = (status) => {
+    if (status._id !== idea?.status?._id) {
+      updateIdea({
+        status: status._id,
+        statusUpdatedAt: Date.now(),
+        isCompleted: status.isCompletedStatus
+      });
+      setSelectedStatus(status);
+    } else {
+      dispatch(ideaActions.deleteIdeaStatus(idea._id));
+      updateIdea({
+        statusUpdatedAt: Date.now(),
+        isCompleted: false
+      });
+      setSelectedStatus(null);
+    }
+  };
   return (
     <IdeaAdminTab title="Statuses">
       <div className="flex flex-col gap-4">
-        <RadioGroup
-          value={selectedStatus}
-          onChange={(status) => {
-            if (status._id !== idea?.status?._id) {
-              updateIdea({
-                status: status._id,
-                statusUpdatedAt: Date.now(),
-                isCompleted: status.isCompletedStatus
-              });
-              setSelectedStatus(status);
-            } else {
-              dispatch(ideaActions.deleteIdeaStatus(idea._id));
-              updateIdea({
-                statusUpdatedAt: Date.now(),
-                isCompleted: false
-              });
-              setSelectedStatus(null);
-            }
-          }}>
+        <RadioGroup value={selectedStatus} onChange={handleStatusChange}>
           <RadioGroup.Label className="sr-only">Server size</RadioGroup.Label>
           <div>
             {company?.statuses?.map((status) => (

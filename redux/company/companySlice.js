@@ -585,7 +585,12 @@ export const companySlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    resendInvite() {},
+    resendInvite(state) {
+      state.isLoading = true;
+    },
+    resendInviteSuccess(state) {
+      state.isLoading = false;
+    },
     resendInviteFailed(state, action) {
       state.error = action.payload;
     }

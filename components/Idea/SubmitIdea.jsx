@@ -1,8 +1,10 @@
 import ImageList from '@/components/ImageList';
 import useGuestValidation from '@/hooks/useGuestValidation';
+import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { fileActions } from '@/redux/file/fileSlice';
 import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
+import { addGuestInfoToLocalStorage } from '@/utils/index';
 import { Disclosure } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import cn from 'classnames';
@@ -14,6 +16,7 @@ import * as yup from 'yup';
 import AutoComplete from '../AutoComplete';
 import Avatar from '../Avatar';
 import Button from '../Button';
+import Divider from '../Divider';
 import Drawer from '../Drawer';
 import Editor from '../Editor';
 import GuestForm from '../GuestForm';
@@ -29,21 +32,21 @@ export default function SubmitIdea({ idea }) {
   const loading = useSelector((state) => state.file.isLoading);
   const ideaLoading = useSelector((state) => state.idea.isLoading);
   const fileLinks = useSelector((state) => state.file.fileLinks);
-  const open = useSelector((state) => state.general.feedBackSubmitModal);
+  const feedBackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const userIp = useSelector((state) => state.auth.userIp);
   const companyMembers = useSelector((state) => state.idea.searchedCompanyMembers);
   const searchLoading = useSelector((state) => state.idea.isLoading);
+  const error = useSelector((state) => state.idea.error);
+  const guestInfo = useSelector((state) => state.idea.guestInfo);
   const [images, setImages] = useState([]);
-  const guestValidation = useGuestValidation({
-    company,
-    fieldName: 'submitIdeas'
-  });
+  const guestValidation = useGuestValidation('submitIdeas');
 
   const [topics, setTopics] = useState([]);
   const [content, setContent] = useState('');
   const [inpTitle, setInpTitle] = useState();
   const [member, setMember] = useState();
   const dispatch = useDispatch();
+  const updateIdea = useUpdateIdea(idea);
   const schema = yup.object().shape({
     title: yup.string().max(140, 'Title must be under 140 character').required('Title is required'),
     content: yup.string(),
@@ -71,7 +74,8 @@ export default function SubmitIdea({ idea }) {
     control,
     reset,
     setValue,
-    formState: { errors, isSubmitSuccessful }
+    setError,
+    formState: { errors }
   } = useForm({
     defaultValues: {
       privacyPolicy: false
@@ -79,6 +83,26 @@ export default function SubmitIdea({ idea }) {
     resolver: yupResolver(schema),
     mode: 'all'
   });
+  const resetForm = () => {
+    reset({
+      title: undefined,
+      content: undefined,
+      topics: undefined,
+      guestName: undefined,
+      guestEmail: undefined,
+      privacyPolicy: false
+    });
+    setContent('');
+    setTopics([]);
+    setImages([]);
+    setMember();
+    dispatch(ideaActions.clearSimilarIdeas());
+  };
+  const handleClose = () => {
+    resetForm();
+    dispatch(toggleFeedBackSubmitModal());
+  };
+
   const onSubmit = (data) => {
     const reqData = {
       ...data,
@@ -88,13 +112,28 @@ export default function SubmitIdea({ idea }) {
       author: member?._id || user?._id,
       company: company._id,
       companySubdomain: company.subdomain,
-      ip: userIp
+      ip: userIp,
+      isApproved: !company?.privacy?.ideaApproval
     };
     delete reqData.privacyPolicy;
     if (idea) {
-      dispatch(ideaActions.updateIdea({ _id: idea._id, ...reqData }));
+      updateIdea({
+        idea: { _id: idea._id, ...reqData },
+        onSuccess: () => {
+          addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
+          handleClose();
+        }
+      });
     } else {
-      dispatch(ideaActions.createIdea(reqData));
+      dispatch(
+        ideaActions.createIdea({
+          idea: reqData,
+          onSuccess: () => {
+            addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
+            handleClose();
+          }
+        })
+      );
     }
   };
 
@@ -116,25 +155,6 @@ export default function SubmitIdea({ idea }) {
     setImages(images.filter((_, i) => i !== index));
     dispatch(fileActions.deleteFile(fileLinks[index]));
   };
-  const resetForm = () => {
-    reset({
-      title: undefined,
-      content: undefined,
-      topics: undefined,
-      guestName: undefined,
-      guestEmail: undefined,
-      privacyPolicy: false
-    });
-    setContent('');
-    setTopics([]);
-    setImages([]);
-    setMember();
-    dispatch(ideaActions.clearSimilarIdeas());
-  };
-  const handleClose = () => {
-    resetForm();
-    dispatch(toggleFeedBackSubmitModal());
-  };
 
   const handleOnSearch = (searchText) => {
     if (searchText) {
@@ -147,12 +167,6 @@ export default function SubmitIdea({ idea }) {
       <span>{item.name}</span>
     </div>
   );
-
-  useEffect(() => {
-    if (open) {
-      reset();
-    }
-  }, [open]);
   useEffect(() => {
     if (!_.isNil(idea)) {
       reset({
@@ -169,7 +183,7 @@ export default function SubmitIdea({ idea }) {
     } else {
       resetForm();
     }
-  }, [idea]);
+  }, [idea, feedBackSubmitModal]);
 
   useEffect(() => {
     let timer;
@@ -194,12 +208,31 @@ export default function SubmitIdea({ idea }) {
       setValue('topics', topics);
     }
   }, [topics]);
+  useEffect(() => {
+    if (user) {
+      setMember(user);
+    }
+  }, [user, feedBackSubmitModal]);
 
   useEffect(() => {
-    if (!ideaLoading && isSubmitSuccessful) {
-      handleClose();
+    if (guestInfo) {
+      setValue('guestName', guestInfo.guestName);
+      setValue('guestEmail', guestInfo.guestEmail);
+      setValue('privacyPolicy', true);
     }
-  }, [ideaLoading, isSubmitSuccessful]);
+  }, [feedBackSubmitModal, guestInfo]);
+  useEffect(() => {
+    if (Symbol.iterator in Object(error)) {
+      error.forEach((err) => {
+        if (err.code === 'user_exist') {
+          setError('guestEmail', {
+            type: 'manual',
+            message: err.message
+          });
+        }
+      });
+    }
+  }, [error, setError]);
 
   return (
     <>
@@ -211,21 +244,25 @@ export default function SubmitIdea({ idea }) {
         size="sm"
         onClick={() => dispatch(toggleFeedBackSubmitModal())}
       />
-      <Drawer open={open} onClose={() => handleClose()}>
+
+      <Drawer open={feedBackSubmitModal} onClose={() => handleClose()}>
         <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all">
           Tell us your idea
         </h2>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="my-8">
-            <AutoComplete
-              suggestions={companyMembers}
-              onSearch={handleOnSearch}
-              loading={searchLoading}
-              formatResult={formatResult}
-              onSuggestionClick={setMember}
-            />
-          </div>
-          <div className="mb-8">
+          {user && company?.role && (
+            <div className="my-8">
+              <AutoComplete
+                suggestions={companyMembers}
+                onSearch={handleOnSearch}
+                loading={searchLoading}
+                formatResult={formatResult}
+                onSuggestionClick={setMember}
+                activeSuggestion={member}
+              />
+            </div>
+          )}
+          <div className={user && company?.role ? 'mb-8' : 'my-8'}>
             <Input
               name="title"
               id="title"
@@ -233,7 +270,11 @@ export default function SubmitIdea({ idea }) {
               register={register('title')}
               error={errors.title}
               placeholder="Feedback Title"
-              onKeyUp={(e) => setInpTitle(e.target.value)}
+              onKeyUp={(e) => {
+                if (!idea) {
+                  setInpTitle(e.target.value);
+                }
+              }}
             />
 
             {!!similarIdeas?.length && (
@@ -325,7 +366,7 @@ export default function SubmitIdea({ idea }) {
               )}
             />
           </div>
-          <hr className="my-8 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
+          <Divider />
           <div>
             {((idea?.guestName && idea?.guestEmail) || guestValidation) && (
               <GuestForm register={register} errors={errors} />

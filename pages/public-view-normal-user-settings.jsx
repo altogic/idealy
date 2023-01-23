@@ -6,8 +6,9 @@ import Layout from '@/components/Layout';
 import SectionTitle from '@/components/SectionTitle';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
-import DeleteModal from '@/components/DeleteModal';
+import InfoModal from '@/components/InfoModal';
 import { Plus, Email, Danger } from '@/components/icons';
+import Divider from '@/components/Divider';
 
 const feedbacksBadges = [
   {
@@ -299,7 +300,7 @@ export default function PublicViewNormalUserSettings() {
                                     ))}
                                   </div>
                                 </div>
-                                <hr className="my-8 border-slate-200" />
+                                <Divider />
                                 <div>
                                   <form action="">
                                     <div className="flex items-center gap-4 mb-4">
@@ -340,7 +341,7 @@ export default function PublicViewNormalUserSettings() {
                                         </label>
                                       </div>
                                     </div>
-                                    <hr className="mt-8 mb-20" />
+                                    <Divider />
                                     <div className="flex justify-end">
                                       <button
                                         type="button"
@@ -361,14 +362,17 @@ export default function PublicViewNormalUserSettings() {
               </Dialog>
             </Transition.Root>
             {/* Delete Modal */}
-            <DeleteModal
+            <InfoModal
               show={deleteProfile}
               onClose={() => setDeleteProfile(!deleteProfile)}
               cancelOnClick={() => setDeleteProfile(!deleteProfile)}
-              deleteOnClick={() => setDeleteProfile(!deleteProfile)}
+              onConfirm={() => setDeleteProfile(!deleteProfile)}
               icon={<Danger className="w-6 h-6 text-red-600" />}
               title="Delete profile"
               description="Are you sure you want to delete this company? This action cannot be undone."
+              confirmText="Delete Profile"
+              confirmColor="red"
+              canCancel
             />
           </div>
         </div>

@@ -8,7 +8,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { SketchPicker } from 'react-color';
 import { Pen, Trash, Danger, Star } from '@/components/icons';
 import Button from './Button';
-import DeleteModal from './DeleteModal';
+import InfoModal from './InfoModal';
 import Input from './Input';
 
 export default function SettingsActionCard({
@@ -269,14 +269,17 @@ export default function SettingsActionCard({
       )}
 
       {/* Delete Modal */}
-      <DeleteModal
+      <InfoModal
         show={isDelete}
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
-        deleteOnClick={deleteAction}
+        onConfirm={deleteAction}
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title={modalTitle}
         description={modalDescription}
+        confirmText="Delete"
+        confirmColor="red"
+        canCancel
       />
     </div>
   );

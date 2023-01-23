@@ -2,6 +2,7 @@ import VoteIdea from '@/components/Idea/VoteIdea';
 import { Comment } from './icons';
 import IdeaBadges from './Idea/IdeaBadges';
 import IdeaInfo from './Idea/IdeaInfo';
+import SanitizeHtml from './SanitizeHtml';
 import StatusBadge from './StatusBadge';
 import TopicBadges from './TopicBadges';
 
@@ -12,18 +13,20 @@ export default function PublicViewCard({ idea, onClick, voted }) {
         <VoteIdea voted={voted} voteCount={idea?.voteCount} ideaId={idea?._id} />
         <button type="button" onClick={onClick} className="w-full">
           <div className="flex items-center mb-2">
-            {(idea?.isPrivate || idea?.isBug || idea?.isArchived || idea?.isPinned) && (
-              <IdeaBadges idea={idea} />
-            )}
+            {(idea?.isPrivate ||
+              idea?.isBug ||
+              idea?.isArchived ||
+              idea?.isPinned ||
+              !idea?.isApproved) && <IdeaBadges idea={idea} />}
             <h2
               className="max-w-[500px] text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left truncate"
               title={idea?.title}>
               {idea?.title}
             </h2>
           </div>
-          <p
+          <SanitizeHtml
             className="max-w-3xl text-slate-500 dark:text-aa-300 purple:text-pt-300 mb-6 text-sm tracking-sm text-left line-clamp-3"
-            dangerouslySetInnerHTML={{ __html: idea?.content }}
+            html={idea?.content}
           />
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2">
             {/* Bottom Left */}

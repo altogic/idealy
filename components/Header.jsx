@@ -1,15 +1,15 @@
-import { Fragment, useState, useEffect } from 'react';
-import Link from 'next/link';
-import cn from 'classnames';
-import { Transition, Dialog, Menu } from '@headlessui/react';
-import { useSelector, useDispatch } from 'react-redux';
 import { notificationActions } from '@/redux/notification/notificationSlice';
+import { Dialog, Menu, Transition } from '@headlessui/react';
+import cn from 'classnames';
+import _ from 'lodash';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Search, Feedback, Roadmap, Announcements, Settings, Notification } from './icons';
-import UserDropdown from './Header/UserDropdown';
+import { Fragment, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import CompanyAvatar from './CompanyAvatar';
+import UserDropdown from './Header/UserDropdown';
+import { Announcements, Feedback, Notification, Roadmap, Search, Settings } from './icons';
 import ThemeChanger from './ThemeChanger';
-import { generateUrl } from '../utils';
 
 export default function Header() {
   const router = useRouter();
@@ -27,7 +27,9 @@ export default function Header() {
   useEffect(() => {
     if (isAuthenticated) {
       setIsLoggedIn(isAuthenticated);
-      dispatch(notificationActions.getNotifications(user._id));
+      if (_.isEmpty(notifications)) {
+        dispatch(notificationActions.getNotifications(user._id));
+      }
     }
   }, [isAuthenticated]);
 
@@ -39,6 +41,7 @@ export default function Header() {
       ]);
     }
   }, [companies, selectedCompany]);
+
   return (
     <>
       <header
@@ -47,7 +50,7 @@ export default function Header() {
           router.asPath.includes('settings') ? 'pl-16' : null
         )}>
         <div className="flex items-center">
-          {selectedCompany?.name ? (
+          {selectedCompany?.name && (
             <Link href="/">
               <a
                 className="inline-flex items-center gap-4 flex-shrink-0 mr-6"
@@ -64,7 +67,7 @@ export default function Header() {
                 )}
               </a>
             </Link>
-          ) : null}
+          )}
 
           <ul className="hidden lg:flex items-center gap-2">
             {selectedCompany?.siteNavigation?.feedback && (
@@ -75,7 +78,7 @@ export default function Header() {
                     ? 'bg-indigo-700 dark:bg-aa-600 purple:bg-pt-900'
                     : 'hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900'
                 )}>
-                <Link href={generateUrl('public-view', selectedCompany.subdomain)}>
+                <Link href="/public-view">
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
                     <Feedback className="w-6 h-6 text-indigo-50 mr-3" />
                     Feedback
@@ -118,7 +121,7 @@ export default function Header() {
           >
             Public View
           </button> */}
-          <ThemeChanger />
+          {process.env.NODE_ENV === 'development' && <ThemeChanger />}
           {/* Notification */}
           {isLoggedIn && (
             <Menu as="div" className="relative">
@@ -145,11 +148,7 @@ export default function Header() {
                       </h6>
                       <button
                         type="button"
-                        onClick={() =>
-                          router.push(
-                            generateUrl('settings?tab=notifications', selectedCompany.subdomain)
-                          )
-                        }>
+                        onClick={() => router.push('/settings?tab=notifications')}>
                         <Settings className="w-6 h-6 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
                       </button>
                     </div>
@@ -246,12 +245,12 @@ export default function Header() {
             !loading && (
               <ul className="flex items-center gap-4">
                 <li>
-                  <Link href={generateUrl('login')}>
+                  <Link href="/login">
                     <a className="inline-flex text-indigo-50 text-sm tracking-sm">Login</a>
                   </Link>
                 </li>
                 <li>
-                  <Link href={generateUrl('register')}>
+                  <Link href="/register">
                     <a className="inline-flex text-indigo-400 text-sm tracking-sm">Signup</a>
                   </Link>
                 </li>
@@ -260,7 +259,7 @@ export default function Header() {
           )}
         </div>
       </header>
-      {/* Search Slide Over Panel */}
+
       <Transition.Root show={open} as={Fragment}>
         <Dialog as="div" className="relative z-50" onClose={setOpen}>
           <div className="fixed inset-0" />

@@ -18,9 +18,8 @@ const nextConfig = {
     ]
   },
   env: {
-    appName: 'idealy',
+    appName: 'Idealy',
     url: 'idealy.io',
-    testWildCard: 'idealy',
     NEXT_PUBLIC_DOMAIN: `idealy.${process.env.NODE_ENV === 'development' ? 'com' : 'io'}`
   }
 };

@@ -14,9 +14,8 @@ export default function CommentForm({ ideaId, editedComment, setEditComment }) {
   const isLoading = useSelector((state) => state.comments.createCommentLoading);
   const updateCommentLoading = useSelector((state) => state.comments.updateCommentLoading);
   const user = useSelector((state) => state.auth.user);
-  const company = useSelector((state) => state.company.company);
   const [comment, setComment] = useState('');
-  const guestValidation = useGuestValidation({ company, fieldName: 'commentIdea' });
+  const guestValidation = useGuestValidation('commentIdea');
   const userIp = useSelector((state) => state.auth.userIp);
 
   const schema = yup.object().shape({

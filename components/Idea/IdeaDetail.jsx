@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import useIdeaActionValidation from '@/hooks/useIdeaActionValidation';
+import useUpdateIdea from '@/hooks/useUpdateIdea';
 import CommentForm from '../CommentForm';
 import Drawer from '../Drawer';
 import { Pen, Thumbtack, Trash } from '../icons';
@@ -25,8 +26,9 @@ import IdeaInfo from './IdeaInfo';
 import EmptyState from '../EmptyState';
 import CommentSkeleton from '../CommentSkeleton';
 import VoteIdea from './VoteIdea';
+import SanitizeHtml from '../SanitizeHtml';
 
-export default function IdeaDetail({ idea, company, query }) {
+export default function IdeaDetail({ idea, company, query, voted }) {
   const dispatch = useDispatch();
 
   const router = useRouter();
@@ -35,11 +37,10 @@ export default function IdeaDetail({ idea, company, query }) {
   const commentCountInfo = useSelector((state) => state.comments.countInfo);
   const loading = useSelector((state) => state.comments.isLoading);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
-  const ideaVotes = useSelector((state) => state.idea.ideaVotes);
-  const userIp = useSelector((state) => state.auth.userIp);
   const canComment = useRegisteredUserValidation('commentIdea');
   const canEdit = useIdeaActionValidation(idea);
   const [isFetched, setIsFetched] = useState(false);
+  const updateIdea = useUpdateIdea(idea);
   function handleClose() {
     dispatch(toggleFeedBackDetailModal());
     const temp = query;
@@ -71,24 +72,22 @@ export default function IdeaDetail({ idea, company, query }) {
         user && (company?.role === 'Owner' || company?.role === 'Admin') && <IdeaDetailAdmin />
       }>
       <div className="flex gap-6">
-        <VoteIdea
-          ideaId={idea?._id}
-          voteCount={idea?.voteCount}
-          voted={
-            user
-              ? ideaVotes.find((v) => v.ideaId === idea?._id && v.userId === user._id)
-              : ideaVotes.find((v) => v.ideaId === idea?._id && v.ip === userIp && !v.userId)
-          }
-        />
+        <VoteIdea ideaId={idea?._id} voteCount={idea?.voteCount} voted={voted} />
         <div className="relative flex-1">
-          <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all">
+          <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all mb-8">
             {idea?.title}
           </h2>
-          <div className="mb-8">
-            <IdeaBadges idea={idea} />
-          </div>
-          <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-400 purple:prose-p:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-8 break-words">
-            <p dangerouslySetInnerHTML={{ __html: idea?.content }} />
+          {(idea?.isPrivate ||
+            idea?.isBug ||
+            idea?.isArchived ||
+            idea?.isPinned ||
+            !idea?.isApproved) && (
+            <div className="mb-8">
+              <IdeaBadges idea={idea} />
+            </div>
+          )}
+          <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-400 purple:prose-p:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-8 break-all">
+            <SanitizeHtml html={idea?.content} />
           </div>
 
           <div className="flex items-center gap-2 mb-8">
@@ -107,27 +106,26 @@ export default function IdeaDetail({ idea, company, query }) {
                     <IdeaActionButton
                       type="Pin"
                       onClick={() =>
-                        dispatch(
-                          ideaActions.updateIdea({
-                            _id: idea._id,
-                            isPinned: !idea.isPinned
-                          })
-                        )
+                        updateIdea({
+                          _id: idea._id,
+                          isPinned: !idea.isPinned
+                        })
                       }
                       Icon={Thumbtack}
-                      color={`hover:text-green-500 ${idea?.isPinned ? 'text-green-500' : ''}`}
+                      color="green"
+                      control={idea?.isPinned}
                     />
                   )}
                   <IdeaActionButton
                     type="Delete"
                     Icon={Trash}
-                    color="hover:text-red-500"
+                    color="red"
                     onClick={() => dispatch(toggleDeleteFeedBackModal())}
                   />
                   <IdeaActionButton
                     type="Edit"
                     Icon={Pen}
-                    color="hover:text-blue-500"
+                    color="blue"
                     onClick={() => dispatch(toggleFeedBackSubmitModal())}
                   />
                 </div>
@@ -135,7 +133,7 @@ export default function IdeaDetail({ idea, company, query }) {
             )}
           </div>
 
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center justify-between gap-4 mb-8">
             {/* Feedback Detail Topic Badges */}
             {!!idea?.topics.length && (
               <div className="flex items-center gap-2">

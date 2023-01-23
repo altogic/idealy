@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Avatar from './Avatar';
-import DeleteModal from './DeleteModal';
+import InfoModal from './InfoModal';
 import { Danger, Pen, Trash } from './icons';
 import ReplyForm from './ReplyForm';
 
@@ -51,11 +51,11 @@ export default function ReplyCard({ reply }) {
           </div>
         </div>
       </div>
-      <DeleteModal
+      <InfoModal
         show={isDelete}
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
-        deleteOnClick={() =>
+        onConfirm={() =>
           dispatch(
             repliesActions.deleteReply({
               replyId: reply._id,
@@ -66,6 +66,9 @@ export default function ReplyCard({ reply }) {
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title="Delete Reply"
         description="Are you sure you want to delete this reply? This action cannot be undone."
+        confirmText="Delete Reply"
+        confirmColor="red"
+        canCancel
       />
     </div>
   );

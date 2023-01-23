@@ -9,7 +9,7 @@ export default function IdeaInfo({ idea }) {
         src={idea?.author?.profilePicture}
         alt={idea?.author ? idea?.author.name : idea?.guestName ? idea?.guestName : 'Anonymous'}
         size="w-7 h-7"
-        fontSize="text-sm"
+        fontSize="text-xs"
       />
       <span className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm font-medium tracking-sm">
         {idea?.author ? idea?.author.name : idea?.guestName ? idea?.guestName : 'Anonymous'}

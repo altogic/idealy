@@ -1,3 +1,4 @@
+import useGuestValidation from '@/hooks/useGuestValidation';
 import { commentActions } from '@/redux/comments/commentsSlice';
 import { companyActions } from '@/redux/company/companySlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
@@ -5,13 +6,13 @@ import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { notificationActions } from '@/redux/notification/notificationSlice';
 import { repliesActions } from '@/redux/replies/repliesSlice';
 import { realtime } from '@/utils/altogic';
-import { Dialog, Transition } from '@headlessui/react';
 import { COMPANY_TABS } from 'constants';
 import { useRouter } from 'next/router';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateUrl } from '../utils';
 import { Danger, Email } from './icons';
+import InfoModal from './InfoModal';
 
 export default function Realtime() {
   const [invitationDialog, setInvitationDialog] = useState(false);
@@ -24,6 +25,8 @@ export default function Realtime() {
   const userIp = useSelector((state) => state.auth.userIp);
   const company = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
+  const guestInfo = useSelector((state) => state.idea.guestInfo);
+  const voteGuestAuth = useGuestValidation('voteIdea');
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -115,13 +118,7 @@ export default function Realtime() {
   function updateCompanyHandler(data) {
     if (data.message.company._id === company._id || (user && data.message.sender !== user?._id)) {
       dispatch(
-        companyActions.selectCompany({
-          ...data.message.company,
-          role: company?.role
-        })
-      );
-      dispatch(
-        companyActions.updateCompanyRealtime({
+        companyActions.updateCompanySuccess({
           ...data.message.company,
           role: company?.role
         })
@@ -140,9 +137,7 @@ export default function Realtime() {
     dispatch(ideaActions.createIdeaSuccess(message));
   }
   function updateIdeaHandler({ message }) {
-    if (!user && !company?.role) {
-      dispatch(ideaActions.updateIdeaRealtime(message));
-    }
+    dispatch(ideaActions.updateIdeaRealtime(message));
   }
   function deleteIdeaHandler({ message }) {
     const idea = new URLSearchParams(document.location.search).get('feedback');
@@ -153,12 +148,20 @@ export default function Realtime() {
     dispatch(ideaActions.deleteIdeaSuccess(message));
   }
   function voteIdeaHandler({ message }) {
-    if ((user && user._id !== message.userId) || (!user && userIp !== message.userIp)) {
+    if (
+      (user && user._id !== message.userId) ||
+      (!user && userIp !== message.ip) ||
+      (voteGuestAuth && guestInfo.guestEmail !== message.guestEmail)
+    ) {
       dispatch(ideaActions.upVoteIdeaRealtime(message.ideaId));
     }
   }
   function downVoteIdeaHandler({ message }) {
-    if ((user && user._id !== message.userId) || (!user && userIp !== message.userIp)) {
+    if (
+      (user && user._id !== message.userId) ||
+      (!user && userIp !== message.ip) ||
+      (voteGuestAuth && guestInfo.guestEmail !== message.guestEmail)
+    ) {
       dispatch(ideaActions.downVoteIdeaRealtime(message.ideaId));
     }
   }
@@ -264,7 +267,7 @@ export default function Realtime() {
       companyActions.updateMemberStatus({
         id: invitation._id,
         companyId: invitation.company._id,
-        onSuccess: () => router.push(generateUrl('dashboard', invitation.company.subdomain))
+        onSuccess: () => router.push('/dashboard')
       })
     );
     dispatch(
@@ -328,160 +331,38 @@ export default function Realtime() {
   };
   return (
     <>
-      <Transition appear show={deleteDialog} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={() => {}}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0">
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95">
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <div className="inline-flex items-center justify-center flex-shrink-0 w-10 h-10 bg-indigo-100 rounded-full">
-                    <Email className="w-6 h-6 text-indigo-600" />
-                  </div>
-                  <div className="space-y-2 mt-2">
-                    <h2 className="text-slate-800 text-lg font-medium tracking-sm">
-                      You have been removed from <b>{deletedCompanyName}</b>
-                    </h2>
-                    <p className="text-slate-500 text-sm tracking-sm">
-                      Please contact your company admin for more information
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-center mt-6 gap-3">
-                    <button
-                      type="button"
-                      className="inline-flex items-center justify-center bg-indigo-600 text-white py-2.5 px-4 text-sm font-medium tracking-sm border border-transparent rounded-md transition  hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      onClick={handleDeleteMembership}>
-                      OK
-                    </button>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
-      <Transition appear show={invitationDialog} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={() => setInvitationDialog(false)}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0">
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95">
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <div className="inline-flex items-center justify-center flex-shrink-0 w-10 h-10 bg-indigo-100 rounded-full">
-                    <Email className="w-6 h-6 text-indigo-600" />
-                  </div>
-                  <div className="space-y-2">
-                    <h2 className="text-slate-800 text-lg font-medium tracking-sm">
-                      New Invitation
-                    </h2>
-                    <p className="text-slate-500 text-sm tracking-sm">
-                      You have been invited to join <b>{invitation?.company.name}</b> as an{' '}
-                      <b>{invitation?.role}</b>
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-center mt-6 gap-3">
-                    <button
-                      type="button"
-                      className="inline-flex items-center justify-center bg-white text-gray-700 py-2.5 px-4 text-sm font-medium tracking-sm border border-gray-300  rounded-md transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500  focus:ring-offset-2"
-                      onClick={handleDeclineInvitation}>
-                      Decline
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex items-center justify-center bg-indigo-600 text-white py-2.5 px-4 text-sm font-medium tracking-sm border border-transparent rounded-md transition  hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      onClick={handleAcceptInvitation}>
-                      Accept
-                    </button>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
-      <Transition appear show={deleteIdeaModal} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-10"
-          onClose={() => setDeleteIdeaModal(!deleteIdeaModal)}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0">
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95">
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <div className="inline-flex items-center justify-center flex-shrink-0 w-10 h-10 bg-indigo-100 rounded-full">
-                    <Danger className="w-6 h-6 text-red-600" />
-                  </div>
-                  <div className="space-y-2 mt-2">
-                    <h2 className="text-slate-800 text-lg font-medium tracking-sm">
-                      The idea you are viewing has been deleted.
-                    </h2>
-                  </div>
-                  <div className="flex items-center justify-center mt-6 gap-3">
-                    <button
-                      type="button"
-                      className="inline-flex items-center justify-center bg-indigo-600 text-white py-2.5 px-4 text-sm font-medium tracking-sm border border-transparent rounded-md transition  hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      onClick={() => setDeleteIdeaModal(!deleteIdeaModal)}>
-                      OK
-                    </button>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
+      <InfoModal
+        show={deleteDialog}
+        title={` You have been removed from <b>${deletedCompanyName}</b>`}
+        icon={<Email className="w-6 h-6 text-indigo-600" />}
+        description="Please contact your company admin for more information"
+        onConfirm={handleDeleteMembership}
+        confirmText="OK"
+        confirmColor="indigo"
+        cancelOnClick={() => {}}
+      />
+      <InfoModal
+        show={invitationDialog}
+        title=" New Invitation"
+        description={`You have been invited to join <b>${invitation?.company.name}</b> as an <b>${invitation?.role}</b>`}
+        cancelOnClick={handleDeclineInvitation}
+        onConfirm={handleAcceptInvitation}
+        icon={<Email className="w-6 h-6 text-indigo-600" />}
+        confirmText="Accept"
+        cancelText="Decline"
+        confirmColor="indigo"
+        canCancel
+      />
+      <InfoModal
+        show={deleteIdeaModal}
+        cancelOnClick={setDeleteIdeaModal}
+        icon={<Danger className="w-6 h-6 text-red-600" />}
+        title="The idea you are viewing has been deleted."
+        description="Please contact your company admin for more information"
+        onConfirm={setDeleteIdeaModal}
+        confirmColor="red"
+        confirmText="OK"
+      />
     </>
   );
 }

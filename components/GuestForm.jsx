@@ -1,13 +1,16 @@
 import React from 'react';
+import Divider from './Divider';
 import Input from './Input';
 
-export default function GuestForm({ register, errors }) {
+export default function GuestForm({ register, errors, vertical }) {
   return (
     <>
-      <div className="flex gap-4 my-4 relative max-h-[46px]">
-        <span className="inline-block text-slate-600 text-base tracking-sm whitespace-nowrap m-auto">
-          Your details
-        </span>
+      <div className={`flex gap-4 ${vertical ? 'flex-col' : 'max-h-[46px]'} my-4 relative`}>
+        {!vertical && (
+          <span className="inline-block text-slate-600 text-base tracking-sm whitespace-nowrap m-auto">
+            Your details
+          </span>
+        )}
         <Input
           type="text"
           name="guestName"
@@ -38,7 +41,7 @@ export default function GuestForm({ register, errors }) {
           className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
         />
       </div>
-      <hr className="mt-8" />
+      {!vertical && <Divider />}
     </>
   );
 }

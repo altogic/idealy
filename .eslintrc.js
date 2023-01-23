@@ -23,7 +23,8 @@ module.exports = {
     'import/extensions': 'off',
     'no-underscore-dangle': 'off',
     'no-shadow': 'off',
-    'no-nested-ternary': 'off'
+    'no-nested-ternary': 'off',
+    'react/no-danger': 'off'
   },
   settings: {
     'import/resolver': {

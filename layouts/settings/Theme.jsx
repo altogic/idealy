@@ -1,7 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import SectionTitle from '@/components/SectionTitle';
+import { THEMES } from 'constants';
+import ThemeButton from '@/components/ThemeButton';
+import { useSelector, useDispatch } from 'react-redux';
+import { companyActions } from '@/redux/company/companySlice';
 
 export default function Theme() {
+  const [selectedTheme, setSelectedTheme] = useState();
+  const dispatch = useDispatch();
+  const company = useSelector((state) => state.company.company);
+  useEffect(() => {
+    if (company) {
+      setSelectedTheme(company.theme);
+    }
+  }, [selectedTheme, company]);
+
+  const handleThemeChange = (theme) => {
+    setSelectedTheme(theme);
+    dispatch(
+      companyActions.updateCompany({
+        _id: company._id,
+        theme
+      })
+    );
+  };
+
   return (
     <>
       <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
@@ -16,18 +39,14 @@ export default function Theme() {
           <SectionTitle sectionTitle="Appearance" />
         </div>
         <div className="flex items-center gap-8 pb-6 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
-          <button type="button" className="flex flex-col items-start gap-4">
-            <img src="./light.png" alt="" />
-            <span className="text-slate-900 text-base tracking-sm">Light</span>
-          </button>
-          <button type="button" className="flex flex-col items-start gap-4">
-            <img src="./dark.png" alt="" />
-            <span className="text-slate-900 text-base tracking-sm">Dark</span>
-          </button>
-          <button type="button" className="flex flex-col items-start gap-4">
-            <img src="./purple.png" alt="" />
-            <span className="text-slate-900 text-base tracking-sm">Purple</span>
-          </button>
+          {THEMES?.map((theme) => (
+            <ThemeButton
+              key={theme.id}
+              theme={theme}
+              onClick={() => handleThemeChange(theme.value)}
+              isSelected={selectedTheme === theme.value}
+            />
+          ))}
         </div>
       </div>
     </>

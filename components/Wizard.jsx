@@ -1,13 +1,13 @@
-import React from 'react';
-import cn from 'classnames';
 import { ChevronLeft, ChevronRight } from '@/components/icons';
-import { useSelector, useDispatch } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
+import cn from 'classnames';
+import { SUBDOMAIN_REGEX } from 'constants';
 import _ from 'lodash';
 import Router from 'next/router';
-import { SUBDOMAIN_REGEX } from 'constants';
-import Button from './Button';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { generateUrl } from '../utils';
+import Button from './Button';
 
 export default function Wizard({ children, activePageIndex, setActivePageIndex, userIp }) {
   const pages = React.Children.toArray(children);
@@ -90,7 +90,7 @@ export default function Wizard({ children, activePageIndex, setActivePageIndex, 
   };
   const handleCancel = () => {
     if (companies.length > 0) {
-      Router.push(generateUrl('select-company'));
+      Router.push('/select-company');
     } else {
       Router.back();
     }

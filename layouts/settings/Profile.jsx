@@ -1,17 +1,18 @@
-import { useState, useEffect } from 'react';
-import SectionTitle from '@/components/SectionTitle';
 import Button from '@/components/Button';
-import DeleteModal from '@/components/DeleteModal';
+import Divider from '@/components/Divider';
 import { Danger } from '@/components/icons';
-import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux';
+import InfoModal from '@/components/InfoModal';
+import SectionTitle from '@/components/SectionTitle';
 import { authActions } from '@/redux/auth/authSlice';
-import { deleteCookie } from 'cookies-next';
 import { generateUrl } from '@/utils/index';
-import PersonalInformation from './Profile/PersonalInformation';
+import { deleteCookie } from 'cookies-next';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Avatar from '@/components/Avatar';
 import ChangeEmail from './Profile/ChangeEmail';
 import ChangePassword from './Profile/ChangePassword';
-import Avatar from './Profile/Avatar';
+import PersonalInformation from './Profile/PersonalInformation';
 
 export default function Profile() {
   const _user = useSelector((state) => state.auth.user);
@@ -20,6 +21,7 @@ export default function Profile() {
   const [user, setUser] = useState();
   const router = useRouter();
   useEffect(() => {
+    console.log(_user);
     if (_user) {
       setUser(_user);
     }
@@ -47,15 +49,15 @@ export default function Profile() {
       </div>
       <div className="max-w-lg">
         <PersonalInformation user={user} />
-        <hr className="my-6 lg:my-8 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
+        <Divider />
         <Avatar user={user} />
-        <hr className="my-6 lg:my-8 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
+        <Divider />
         {user?.provider === 'altogic' && (
           <>
             <ChangeEmail user={user} />
-            <hr className="my-6 lg:my-8 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
+            <Divider />
             <ChangePassword />
-            <hr className="my-6 lg:my-8 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
+            <Divider />
           </>
         )}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-50 dark:bg-aa-600 purple:bg-pt-800 p-6 rounded-lg">
@@ -74,14 +76,17 @@ export default function Profile() {
         </div>
       </div>
       {/* Delete Modal */}
-      <DeleteModal
+      <InfoModal
         show={deleteProfile}
         onClose={() => setDeleteProfile(!deleteProfile)}
         cancelOnClick={() => setDeleteProfile(!deleteProfile)}
-        deleteOnClick={deleteProfileHandler}
+        onConfirm={deleteProfileHandler}
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title="Delete Profile"
         description="Are you sure you want to delete your profile? This action will delete all data associated with owned companies and remove you from the membership of all other companies."
+        confirmText="Delete Profile"
+        confirmColor="red"
+        canCancel
       />
     </>
   );

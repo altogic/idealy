@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/prefer-default-export
-import { Archive, Bug, Eye, Thumbtack } from '@/components/icons';
+import { Archive, Bug, CircleCheck, Eye, Thumbtack } from '@/components/icons';
 
 export const BREAKPOINT = {
   TABLET_SIZE: 1024,
@@ -49,21 +49,7 @@ export const IDEA_SORT_TYPES = [
   { name: 'Newest', url: 'newest', query: 'createdAt:desc' },
   { name: 'Status Changed', url: 'status_changed', query: 'statusUpdatedAt:desc' }
 ];
-export const EDITOR_MODULES = {
-  clipboard: {
-    matchVisual: false
-  },
-  toolbar: {
-    container: [['bold', 'italic', 'underline', 'strike', 'link']]
-  },
-  history: {
-    delay: 500,
-    maxStack: 100,
-    userOnly: true
-  }
-};
 
-export const EDITOR_FORMATS = ['bold', 'italic', 'underline', 'align', 'strike'];
 export const SESSION_COOKIE_OPTIONS = {
   maxAge: 30 * 24 * 60 * 60,
   path: '/',
@@ -78,30 +64,52 @@ export const IDEA_BADGES = [
   {
     name: 'Pinned',
     icon: Thumbtack,
-    className: 'text-green-500 bg-green-50',
+    color: 'green',
     field: 'isPinned'
   },
   {
     name: 'Archived',
     icon: Archive,
-    className: 'text-orange-500 bg-orange-50',
+    color: 'yellow',
     field: 'isArchived'
   },
   {
     name: 'Private',
     icon: Eye,
-    className: 'text-blue-500 bg-blue-50',
+    color: 'blue',
     field: 'isPrivate'
   },
   {
     name: 'Bug',
     icon: Bug,
-    className: 'text-red-500 bg-red-50',
+    color: 'red',
     field: 'isBug'
+  },
+  {
+    name: 'Need Approval',
+    icon: CircleCheck,
+    color: 'pink',
+    field: 'isApproved'
   }
 ];
 
-export const ERROR_MESSAGES = {
-  'Invalid or expired access token':
-    'This email verification token has already been used or has expired.'
-};
+export const THEMES = [
+  {
+    id: 1,
+    name: 'Light',
+    value: 'light',
+    image: './light.png'
+  },
+  {
+    id: 2,
+    name: 'Dark',
+    value: 'dark',
+    image: './dark.png'
+  },
+  {
+    id: 3,
+    name: 'Purple',
+    value: 'theme-purple',
+    image: './purple.png'
+  }
+];

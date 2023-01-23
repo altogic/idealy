@@ -12,7 +12,7 @@ export default function WhiteLabel() {
   const [isHideBanner, setIsHideBanner] = useState();
   useEffect(() => {
     if (company) {
-      setCanCreateCompany(!company.whiteLabel.canCreateCompany);
+      setCanCreateCompany(company.whiteLabel.canCreateCompany);
       setIsHideBanner(company.whiteLabel.isHideBanner);
     }
   }, [company]);
@@ -63,10 +63,10 @@ export default function WhiteLabel() {
             title="Create a company"
             description
             descriptionText="Remove the  'Create a company' link from the member menu"
-            enabled={canCreateCompany}
+            enabled={!canCreateCompany}
             onChange={() => {
               setCanCreateCompany(!canCreateCompany);
-              updateCompanyWhiteLabel('canCreateCompany', canCreateCompany);
+              updateCompanyWhiteLabel('canCreateCompany', !canCreateCompany);
             }}
           />
         </div>

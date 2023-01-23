@@ -2,46 +2,52 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleDeleteFeedBackModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { Merge, Archive, Thumbtack, Trash, Pen, Bug } from '@/components/icons';
+import useUpdateIdea from '@/hooks/useUpdateIdea';
+import Divider from '@/components/Divider';
 import IdeaActionButton from './IdeaActionButton';
 
-export default function IdeaActions({ updateIdea }) {
+export default function IdeaActions() {
   const idea = useSelector((state) => state.idea.selectedIdea);
   const dispatch = useDispatch();
+  const updateIdea = useUpdateIdea(idea);
   const ideaActions = [
     {
       type: 'Pin',
       onClick: () => updateIdea({ isPinned: !idea.isPinned }),
       Icon: Thumbtack,
-      color: `hover:text-green-500 ${idea?.isPinned ? 'text-green-500' : ''}`
+      color: 'green',
+      control: idea.isPinned
     },
     {
       type: 'Archive',
       onClick: () => updateIdea({ isArchived: !idea.isArchived }),
       Icon: Archive,
-      color: `hover:text-orange-500 ${idea?.isArchived ? 'text-orange-500' : ''}`
+      color: 'yellow',
+      control: idea.isArchived
     },
     {
       type: 'Bug',
       onClick: () => updateIdea({ isBug: !idea.isBug }),
       Icon: Bug,
-      color: `hover:text-red-500 ${idea?.isBug ? 'text-red-500' : ''}`
+      color: 'red',
+      control: idea.isBug
     },
     {
       type: 'Merge',
       onClick: () => {},
       Icon: Merge,
-      color: 'hover:text-pink-500'
+      color: 'pink'
     },
     {
       type: 'Delete',
       Icon: Trash,
-      color: 'hover:text-red-500',
+      color: 'red',
       onClick: () => dispatch(toggleDeleteFeedBackModal())
     },
     {
       type: 'Edit',
       Icon: Pen,
-      color: 'hover:text-blue-500',
+      color: 'blue',
       onClick: () => dispatch(toggleFeedBackSubmitModal())
     }
   ];
@@ -50,16 +56,16 @@ export default function IdeaActions({ updateIdea }) {
       <p className="text-slate-900 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">
         Actions
       </p>
-      <hr className="my-2 border-slate-200 dark:border-aa-600 purple:border-pt-800" />
+      <Divider />
       <div className="flex w-full flex-row space-x-2">
         {ideaActions.map((action) => (
           <IdeaActionButton
             key={action.type}
             type={action.type}
-            Icon={action.Icon}
             color={action.color}
-            onClick={action.onClick}
             control={action.control}
+            Icon={action.Icon}
+            onClick={action.onClick}
           />
         ))}
       </div>

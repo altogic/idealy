@@ -23,6 +23,7 @@ import {
   Pen,
   UpDown
 } from '@/components/icons';
+import Divider from '@/components/Divider';
 
 const commentsFilters = [
   { name: 'Trending' },
@@ -424,7 +425,7 @@ export default function AdminDashboard() {
                 placeholder="e.g. New topic"
               />
             </div>
-            <hr className="my-8" />
+            <Divider />
             <div className="space-y-2">
               <Label label="Statuses" />
               <div className="space-y-3">
@@ -532,7 +533,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
             </div>
-            <hr className="my-8" />
+            <Divider />
             <div className="relative">
               <Select
                 isMulti
@@ -718,7 +719,8 @@ export default function AdminDashboard() {
                 <div className="my-10">
                   <div className="flex items-center justify-between gap-6">
                     <h6>Comments</h6>
-                    <hr className="flex-1" />
+                    <Divider className="flex-1" />
+
                     <div className="flex-shrink-0">
                       <Listbox value={isCommentsFilters} onChange={setIsCommentsFilters}>
                         <div className="relative mt-1">
@@ -806,7 +808,7 @@ export default function AdminDashboard() {
                     fifthButton="Delete"
                   />
                   <div className="px-10">
-                    <hr className="my-10" />
+                    <Divider />
                   </div>
                   <FeedbackCardDetail
                     avatar="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
@@ -819,7 +821,7 @@ export default function AdminDashboard() {
                     fifthButton="Delete"
                   />
                   <div className="px-10">
-                    <hr className="my-10" />
+                    <Divider />
                   </div>
                   <FeedbackCardDetail
                     avatar="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
@@ -1390,7 +1392,7 @@ export default function AdminDashboard() {
                             placeholder="e.g. New topic"
                           />
                         </div>
-                        <hr className="my-8" />
+                        <Divider />
                         <div className="space-y-2">
                           <Label label="Statuses" />
                           <div className="space-y-3">
@@ -1498,7 +1500,7 @@ export default function AdminDashboard() {
                             </div>
                           </div>
                         </div>
-                        <hr className="my-8" />
+                        <Divider />
                         <div className="relative">
                           <Select
                             isMulti

@@ -4,6 +4,7 @@ import { toggleFeedBackDetailModal, toggleFeedBackSubmitModal } from '@/redux/ge
 import { useDispatch } from 'react-redux';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { useRouter } from 'next/router';
+import SanitizeHtml from './SanitizeHtml';
 
 export default function SimilarIdeaCard({ idea }) {
   const dispatch = useDispatch();
@@ -33,6 +34,9 @@ export default function SimilarIdeaCard({ idea }) {
           <span className="text-indigo-700 text-xl font-semibold tracking-md">
             {idea?.voteCount}
           </span>
+          <span className="text-slate-500 text-sm tracking-sm">
+            {idea?.voteCount <= 1 ? 'Vote' : 'Votes'}
+          </span>
         </div>
         <div className="w-full">
           <div className="flex items-center gap-2 mb-1">
@@ -42,9 +46,9 @@ export default function SimilarIdeaCard({ idea }) {
               {idea?.title}
             </h3>
           </div>
-          <p
-            className="max-w-3xl text-slate-500 mb-2 text-sm tracking-sm text-left line-clamp-1"
-            dangerouslySetInnerHTML={{ __html: idea?.content }}
+          <SanitizeHtml
+            className="max-w-3xl text-slate-500 dark:text-aa-300 purple:text-pt-300 mb-6 text-sm tracking-sm text-left line-clamp-1"
+            content={idea?.content}
           />
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             {/* Bottom Left */}

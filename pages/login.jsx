@@ -185,7 +185,7 @@ export default function Login({ invitation, clearSession, isInvited }) {
                   </form>
                   <p className="text-center mt-8 text-sm text-slate-500">
                     Don’t have an account?{' '}
-                    <Link href={generateUrl('register')}>
+                    <Link href="/register">
                       <a className="text-indigo-700 text-sm font-medium tracking-sm hover:text-indigo-500">
                         Sign up
                       </a>

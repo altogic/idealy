@@ -3,17 +3,14 @@ import { realtime } from '@/utils/altogic';
 import { call, put, takeEvery, select } from 'redux-saga/effects';
 import { ideaActions } from './ideaSlice';
 
-function* getIdeasByCompanySaga({ payload: { subdomain, limit, page, sort, filter } }) {
+function* getIdeasByCompanySaga({ payload: { companyId, limit, page, sort, filter } }) {
   try {
     const { data: ideas, errors } = yield call(ideaService.getIdeasByCompany, {
-      subdomain,
+      companyId,
       limit,
       page,
       sort,
-      pinnedFilter: `${
-        filter || ''
-      } this.companySubdomain == '${subdomain}' && this.isPinned == true`,
-      filter: `${filter || ''} this.companySubdomain == '${subdomain}' && this.isPinned == false`
+      filter: `${filter || ''} this.company == '${companyId}'`
     });
     if (errors) {
       throw new Error(errors);
@@ -25,15 +22,16 @@ function* getIdeasByCompanySaga({ payload: { subdomain, limit, page, sort, filte
   }
 }
 
-function* createIdeaSaga({ payload: req }) {
+function* createIdeaSaga({ payload: { idea, onSuccess } }) {
   try {
     const company = yield select((state) => state.company.company);
-    const { data, errors } = yield call(ideaService.createIdea, req);
+    const { data, errors } = yield call(ideaService.createIdea, idea);
     if (errors) {
-      throw new Error(errors);
+      throw errors.items;
     }
     yield put(ideaActions.createIdeaSuccess(data));
     realtime.send(company._id, 'create-idea', data);
+    onSuccess();
   } catch (error) {
     yield put(ideaActions.createIdeaFailure(error));
   }
@@ -69,7 +67,7 @@ function* downVoteIdeaSaga({ payload }) {
     yield put(ideaActions.downVoteIdeaFailure(error));
   }
 }
-function* updateIdeaSaga({ payload: idea }) {
+function* updateIdeaSaga({ payload: { idea, onSuccess } }) {
   try {
     const { data, errors } = yield call(ideaService.updateIdea, idea);
 
@@ -79,6 +77,7 @@ function* updateIdeaSaga({ payload: idea }) {
     yield put(ideaActions.updateIdeaSuccess(data));
     const company = yield select((state) => state.company.company);
     realtime.send(company._id, 'update-idea', data);
+    if (onSuccess) onSuccess();
   } catch (error) {
     yield put(ideaActions.updateIdeaFailure(error));
   }

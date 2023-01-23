@@ -2,7 +2,7 @@ import Image from './Image';
 
 function ImageList({ images, loading, onRemove, removable, isPreview }) {
   return (
-    <div className="flex flex-wrap gap-2 mt-8">
+    <div className="flex flex-wrap gap-2 my-8">
       {images?.map((file, index) => (
         <Image
           key={file}

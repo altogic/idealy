@@ -10,7 +10,8 @@ const initialState = {
   selectedIdea: null,
   ideaVotes: [],
   similarIdeas: [],
-  searchedCompanyMembers: []
+  searchedCompanyMembers: [],
+  guestInfo: {}
 };
 
 export const ideaSlice = createSlice({
@@ -183,6 +184,7 @@ export const ideaSlice = createSlice({
       state.ideas = state.ideas.filter(
         (idea) => !(idea.isArchived || idea.isPrivate || idea.isCompleted)
       );
+      state.selectedIdea = action.payload;
     },
     deleteIdeaStatus(state) {
       state.isLoading = true;
@@ -251,6 +253,9 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
+    },
+    setGuestInfo(state, action) {
+      state.guestInfo = action.payload;
     }
   },
 

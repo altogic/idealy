@@ -179,7 +179,7 @@ export default function CreateAnAccount({ company, invitation, isInvited }) {
                   </form>
                   <p className="text-center text-sm text-slate-500 mt-8">
                     Don’t have an account?{' '}
-                    <Link href={generateUrl('login')}>
+                    <Link href="/login">
                       <a className="font-medium text-indigo-700 tracking-sm hover:text-indigo-500">
                         Login
                       </a>

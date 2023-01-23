@@ -1,4 +1,4 @@
-import DeleteModal from '@/components/DeleteModal';
+import InfoModal from '@/components/InfoModal';
 import EmptyState from '@/components/EmptyState';
 import { Danger } from '@/components/icons';
 import FilterIdea from '@/components/Idea/FilterIdea';
@@ -7,6 +7,7 @@ import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfiniteScroll from '@/components/InfiniteScroll';
 import Layout from '@/components/Layout';
 import PublicViewCard from '@/components/PublicViewCard';
+import useGuestValidation from '@/hooks/useGuestValidation';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import { authActions } from '@/redux/auth/authSlice';
 import { toggleDeleteFeedBackModal, toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
@@ -16,6 +17,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Divider from '@/components/Divider';
 
 export default function PublicView({ userIp }) {
   const [page, setPage] = useState(1);
@@ -36,24 +38,35 @@ export default function PublicView({ userIp }) {
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const deleteFeedBackModal = useSelector((state) => state.general.deleteFeedBackModal);
+  const guestInfo = useSelector((state) => state.idea.guestInfo);
   const user = useSelector((state) => state.auth.user);
+  const voteGuestAuth = useGuestValidation('voteIdea');
+
+  const getTopicsFilter = (filterTopics) => {
+    if (filterTopics?.length) {
+      const topicsFilter = [];
+      filterTopics.forEach((topic) => {
+        topicsFilter.push(`IN(this.topics,'${topic}')`);
+      });
+      return `(${topicsFilter.join(' || ')})`;
+    }
+    return '';
+  };
+  const getStatusFilter = (filterStatus) => {
+    if (filterStatus?.length) {
+      const statusFilter = [];
+      filterStatus.forEach((status) => {
+        statusFilter.push(`this.status._id == '${status}'`);
+      });
+      return `(${statusFilter.join(' || ')})`;
+    }
+    return '';
+  };
   const handleFilter = (filterTopics, filterStatus) => {
     if (filterTopics?.length || filterStatus?.length) {
-      const topicsFilter = [];
-      const statusFilter = [];
-      if (filterTopics?.length) {
-        filterTopics.forEach((topic) => {
-          topicsFilter.push(`IN(this.topics,'${topic}')`);
-        });
-      }
-      if (filterStatus?.length) {
-        filterStatus.forEach((status) => {
-          statusFilter.push(`this.status._id == '${status}'`);
-        });
-      }
-      return `${topicsFilter.length ? `(${topicsFilter.join(' || ')})` : ''} ${
-        topicsFilter.length && statusFilter.length ? '&&' : ''
-      }  ${statusFilter.length ? `(${statusFilter.join(' || ')})` : ''} &&`;
+      const topicsFilter = getTopicsFilter(filterTopics);
+      const statusFilter = getStatusFilter(filterStatus);
+      return `${topicsFilter} ${topicsFilter && statusFilter ? '&&' : ''}  ${statusFilter} &&`;
     }
     return '';
   };
@@ -85,9 +98,9 @@ export default function PublicView({ userIp }) {
   };
 
   const getIdeasByCompany = useCallback(() => {
-    if (router.isReady) {
+    if (router.isReady && company?._id) {
       const req = {
-        subdomain: window.location.hostname.split('.')[0],
+        companyId: company?._id,
         limit: 10,
         filter: `this.isArchived == false && this.isPrivate == false && this.isCompleted == false && ${handleFilter(
           router.query.topics?.split(','),
@@ -96,10 +109,12 @@ export default function PublicView({ userIp }) {
         sort: handleSort(router.query.sort),
         page
       };
-
+      if (!user && !company?.role) {
+        req.filter += ` this.isApproved == true &&`;
+      }
       dispatch(ideaActions.getIdeasByCompany(req));
     }
-  }, [page, router.query.sort, router.query.status, router.query.topics]);
+  }, [page, router.query.sort, router.query.status, router.query.topics, company]);
 
   function handleCloseIdea() {
     dispatch(toggleFeedBackDetailModal());
@@ -121,29 +136,33 @@ export default function PublicView({ userIp }) {
     handleCloseIdea();
   };
 
+  const handleVoted = (ideaId) => {
+    if (user) {
+      return ideaVotes.find((v) => v.ideaId === ideaId && v.userId === user._id);
+    }
+    if (voteGuestAuth) {
+      return ideaVotes.find(
+        (v) => v.ideaId === ideaId && guestInfo.guestEmail === v.guestEmail && !v.userId
+      );
+    }
+    return ideaVotes.find((v) => v.ideaId === ideaId && v.ip === userIp && !v.userId);
+  };
+
+  const showFeedbackDetail = (feedbackId) => {
+    const ideaDetail = ideas.find((i) => i._id === feedbackId);
+    if (ideaDetail) {
+      dispatch(ideaActions.setSelectedIdea(ideaDetail));
+      dispatch(toggleFeedBackDetailModal());
+    }
+  };
   useEffect(() => {
     if (router) {
       const { topics, status, sort, feedback } = router.query;
-      if (sort) {
-        const sortType = IDEA_SORT_TYPES.find((s) => s.url === sort);
-        setSortType(sortType);
-      } else {
-        setSortType(IDEA_SORT_TYPES[2]);
-      }
-      if (topics) {
-        setFilterTopics(topics.split(','));
-      }
-      if (status) {
-        setFilterStatus(status.split(','));
-      }
-      if (feedback && !feedBackDetailModal) {
-        const ideaDetail = ideas.find((i) => i._id === feedback);
-        if (ideaDetail) {
-          dispatch(ideaActions.setSelectedIdea(ideaDetail));
-
-          dispatch(toggleFeedBackDetailModal());
-        }
-      }
+      if (sort) setSortType(IDEA_SORT_TYPES.find((s) => s.url === sort));
+      else setSortType(IDEA_SORT_TYPES[2]);
+      if (topics) setFilterTopics(topics.split(','));
+      if (status) setFilterStatus(status.split(','));
+      if (feedback && !feedBackDetailModal) showFeedbackDetail(feedback);
     }
   }, [router, ideas]);
 
@@ -153,7 +172,7 @@ export default function PublicView({ userIp }) {
     }
   }, [page, getIdeasByCompany]);
 
-  const isSubmitIdeaVisible = useRegisteredUserValidation('submitIdea');
+  const isSubmitIdeaVisible = useRegisteredUserValidation('submitIdeas');
 
   useEffect(() => {
     if (company) {
@@ -230,21 +249,14 @@ export default function PublicView({ userIp }) {
                 <span className="sr-only">Loading...</span>
               </div>
             ) : ideas.length > 0 ? (
-              ideas?.map((idea) => (
-                <div
-                  key={idea._id}
-                  className="inline-block w-full py-6 border-b border-slate-200 last:border-0 first:pt-0">
+              ideas?.map((idea, index) => (
+                <div key={idea._id} className="inline-block w-full py-6 ">
                   <PublicViewCard
                     idea={idea}
                     onClick={() => handleClickIdea(idea)}
-                    voted={
-                      user
-                        ? ideaVotes.find((v) => v.ideaId === idea._id && v.userId === user._id)
-                        : ideaVotes.find(
-                            (v) => v.ideaId === idea._id && v.ip === userIp && !v.userId
-                          )
-                    }
+                    voted={handleVoted(idea._id)}
                   />
+                  {ideas.length - 1 !== index && <Divider />}
                 </div>
               ))
             ) : (
@@ -273,25 +285,33 @@ export default function PublicView({ userIp }) {
             )}
           </InfiniteScroll>
         </div>
-        <IdeaDetail idea={selectedIdea} company={company} query={routerQuery} />
-        <DeleteModal
+        <IdeaDetail
+          idea={selectedIdea}
+          company={company}
+          query={routerQuery}
+          voted={handleVoted(selectedIdea?._id)}
+        />
+        <InfoModal
           show={deleteFeedBackModal}
           onClose={() => dispatch(toggleDeleteFeedBackModal())}
           cancelOnClick={() => dispatch(toggleDeleteFeedBackModal())}
-          deleteOnClick={handleDelete}
-          icon={<Danger className="w-6 h-6 text-red-600" />}
+          onConfirm={handleDelete}
+          icon={<Danger className="w-7 h-7 text-red-600" />}
           title="Delete Idea"
           description="Are you sure you want to delete this idea? This action cannot be undone."
+          confirmText="Delete Idea"
+          confirmColor="red"
+          canCancel
         />
       </Layout>
     </>
   );
 }
 export async function getServerSideProps() {
-  const { ip } = await fetch('https://api.ipify.org?format=json').then((res) => res.json());
+  const ip = await fetch(`https://ipv4.icanhazip.com/`).then((res) => res.text());
   return {
     props: {
-      userIp: ip
+      userIp: ip.trim()
     }
   };
 }

@@ -7,10 +7,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import Avatar from './Avatar';
 import CommentForm from './CommentForm';
 import CommentSkeleton from './CommentSkeleton';
-import DeleteModal from './DeleteModal';
+import InfoModal from './InfoModal';
 import { Danger, Pen, Trash } from './icons';
 import ReplyCard from './ReplyCard';
 import ReplyForm from './ReplyForm';
+import SanitizeHtml from './SanitizeHtml';
+import Divider from './Divider';
 
 export default function CommentCard({ comment }) {
   const [isReplying, setIsReplying] = useState(false);
@@ -48,7 +50,7 @@ export default function CommentCard({ comment }) {
               {comment?.name || 'Anonymous'}
             </h6>
             <div className="prose prose-p:text-slate-500 prose-p:my-2 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
-              <article dangerouslySetInnerHTML={{ __html: comment?.text }} />
+              <SanitizeHtml html={comment?.text} />
             </div>
             <div className="flex items-center gap-3">
               <span className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-sm tracking-sm">
@@ -116,7 +118,7 @@ export default function CommentCard({ comment }) {
             </div>
             {showReplies && (
               <>
-                <hr className="my-6 border-slate-200 dark:border-aa-600 purple:border-pt-600" />
+                <Divider />
                 {loading && page === 1 ? (
                   <CommentSkeleton />
                 ) : (
@@ -159,16 +161,19 @@ export default function CommentCard({ comment }) {
           </div>
         </div>
       )}
-      <DeleteModal
+      <InfoModal
         show={isDelete}
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
-        deleteOnClick={() =>
+        onConfirm={() =>
           dispatch(commentActions.deleteComment({ commentId: comment._id, ideaId: idea._id }))
         }
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title="Delete Comment"
         description="Are you sure you want to delete this comment? This action cannot be undone."
+        confirmText="Delete Comment"
+        confirmColor="red"
+        canCancel
       />
     </div>
   );

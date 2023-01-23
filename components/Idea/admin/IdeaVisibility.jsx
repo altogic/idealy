@@ -4,10 +4,11 @@ import { fileActions } from '@/redux/file/fileSlice';
 import Image from '@/components/Image';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import Button from '@/components/Button';
+import useUpdateIdea from '@/hooks/useUpdateIdea';
 import IdeaAdminTab from './IdeaAdminTab';
 import IdeaSwitch from './IdeaSwitch';
 
-export default function IdeaVisibility({ updateIdea }) {
+export default function IdeaVisibility() {
   const dispatch = useDispatch();
   const idea = useSelector((state) => state.idea.selectedIdea);
   const coverImage = useSelector((state) => state.file.fileLink);
@@ -15,6 +16,7 @@ export default function IdeaVisibility({ updateIdea }) {
   const [file, setFile] = useState();
   const [showOnRoadMap, setShowOnRoadMap] = useState();
   const [isPrivate, setIsPrivate] = useState();
+  const updateIdea = useUpdateIdea(idea);
   const handleAddCoverImage = () => {
     const input = document.createElement('input');
 
