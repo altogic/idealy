@@ -39,16 +39,16 @@ export default function IdeaApproval() {
               <button
                 type="button"
                 onClick={() => handleApprove(true)}
-                className="flex items-center gap-2 p-2 text-sm bg-slate-100 dark:bg-aa-700 purple:bg-pt-700 rounded-lg hover:bg-slate-200 dark:hover:bg-aa-900 dark:purple:bg-pt-800">
+                className="flex items-center gap-2 p-2 text-sm bg-slate-100 dark:bg-aa-700 purple:bg-pt-700 rounded hover:bg-slate-200 dark:hover:bg-aa-900 dark:purple:bg-pt-800">
                 <CheckIcon className="w-4 h-4 text-slate-900 dark:text-aa-200 purple:text-pt-200" />
-                <span className="text-slate-900 dark:text-aa-100 purple:text-pt-100">Yes</span>
+                <span className="text-slate-900 dark:text-aa-100 purple:text-pt-100">Approve</span>
               </button>
               <button
                 type="button"
                 onClick={() => handleApprove(false)}
-                className="flex items-center gap-2 p-2 text-sm bg-slate-100 dark:bg-aa-700 purple:bg-pt-700 rounded-lg hover:bg-slate-200 dark:hover:bg-aa-900 dark:purple:bg-pt-800">
+                className="flex items-center gap-2 p-2 text-sm bg-slate-100 dark:bg-aa-700 purple:bg-pt-700 rounded hover:bg-slate-200 dark:hover:bg-aa-900 dark:purple:bg-pt-800">
                 <XIcon className="w-4 h-4 text-slate-900 dark:text-aa-200 purple:text-pt-200" />
-                <span className="text-slate-900 dark:text-aa-100 purple:text-pt-100">No</span>
+                <span className="text-slate-900 dark:text-aa-100 purple:text-pt-100">Reject</span>
               </button>
             </>
           )}
