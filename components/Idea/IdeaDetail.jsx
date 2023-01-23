@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import useIdeaActionValidation from '@/hooks/useIdeaActionValidation';
+import useUpdateIdea from '@/hooks/useUpdateIdea';
 import CommentForm from '../CommentForm';
 import Drawer from '../Drawer';
 import { Pen, Thumbtack, Trash } from '../icons';
@@ -39,6 +40,7 @@ export default function IdeaDetail({ idea, company, query, voted }) {
   const canComment = useRegisteredUserValidation('commentIdea');
   const canEdit = useIdeaActionValidation(idea);
   const [isFetched, setIsFetched] = useState(false);
+  const updateIdea = useUpdateIdea(idea);
   function handleClose() {
     dispatch(toggleFeedBackDetailModal());
     const temp = query;
@@ -104,12 +106,10 @@ export default function IdeaDetail({ idea, company, query, voted }) {
                     <IdeaActionButton
                       type="Pin"
                       onClick={() =>
-                        dispatch(
-                          ideaActions.updateIdea({
-                            _id: idea._id,
-                            isPinned: !idea.isPinned
-                          })
-                        )
+                        updateIdea({
+                          _id: idea._id,
+                          isPinned: !idea.isPinned
+                        })
                       }
                       Icon={Thumbtack}
                       color="green"

@@ -6,8 +6,10 @@ export default function useUpdateIdea(idea) {
   const updateIdea = (req) => {
     dispatch(
       ideaActions.updateIdea({
-        _id: idea._id,
-        ...req
+        idea: {
+          _id: idea._id,
+          ...req
+        }
       })
     );
   };
