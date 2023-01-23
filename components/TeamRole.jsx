@@ -64,7 +64,6 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
   const handleRoleChange = (role) => {
     setSelected(role);
     if (isRegistered) {
-      console.log(role, userId);
       dispatch(
         companyActions.updateCompanyMemberRole({
           id,
@@ -127,7 +126,7 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
 
   return (
     <>
-      <div className="group flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white dark:bg-aa-900 purple:bg-pt-1000 p-4 transition hover:bg-slate-50 dark:hover:bg-aa-700 purple:hover:bg-pt-800">
+      <div className="group flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white dark:bg-aa-900 purple:bg-pt-1000 p-4 transition hover:bg-slate-50 dark:hover:bg-aa-700 purple:hover:bg-pt-600">
         <div className="flex items-center gap-3 max-w-[250px] w-full">
           {isRegistered ? (
             <Avatar
