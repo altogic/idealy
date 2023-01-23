@@ -308,10 +308,10 @@ export default function PublicView({ userIp }) {
   );
 }
 export async function getServerSideProps() {
-  const { ip } = await fetch('https://api.ipify.org?format=json').then((res) => res.json());
+  const ip = await fetch(`https://ipv4.icanhazip.com/`).then((res) => res.text());
   return {
     props: {
-      userIp: ip
+      userIp: ip.trim()
     }
   };
 }

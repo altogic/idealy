@@ -115,7 +115,7 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
           type="button"
           onClick={downVote}
           className="inline-flex items-center justify-center">
-          <ChevronDown className="w-5 h-5 text-slate-400" />
+          <ChevronDown className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400" />
         </button>
       )}
 
