@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import CompanyAvatar from './CompanyAvatar';
 import UserDropdown from './Header/UserDropdown';
 import { Announcements, Feedback, Notification, Roadmap, Search, Settings } from './icons';
-import ThemeChanger from './ThemeChanger';
 
 export default function Header() {
   const router = useRouter();

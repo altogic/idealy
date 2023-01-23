@@ -15,7 +15,7 @@ export { default as Close } from './Close';
 export { default as Comment } from './Comment';
 export { default as Copy } from './Copy';
 export { default as Danger } from './Danger';
-export { default as DenemeAccess } from './DenemeAccess';
+// export { default as DenemeAccess } from './DenemeAccess';
 export { default as Email } from './Email';
 export { default as Error } from './Error';
 export { default as Exclamation } from './Exclamation';
