@@ -242,6 +242,7 @@ export default function SubmitIdea({ idea }) {
         icon={<Plus className="w-5 h-5" />}
         variant="indigo"
         size="sm"
+        mobileFullWidth="mobileFullWidth"
         onClick={() => dispatch(toggleFeedBackSubmitModal())}
       />
 
