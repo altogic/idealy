@@ -117,13 +117,18 @@ export default function SubmitIdea({ idea }) {
     };
     delete reqData.privacyPolicy;
     if (idea) {
-      updateIdea({
-        idea: { _id: idea._id, ...reqData },
-        onSuccess: () => {
-          addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
-          handleClose();
-        }
-      });
+      dispatch(
+        ideaActions.updateIdea({
+          idea: {
+            _id: idea._id,
+            ...reqData
+          },
+          onSuccess: () => {
+            addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
+            handleClose();
+          }
+        })
+      );
     } else {
       dispatch(
         ideaActions.createIdea({
