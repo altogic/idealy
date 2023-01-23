@@ -4,6 +4,7 @@ import { THEMES } from 'constants';
 import ThemeButton from '@/components/ThemeButton';
 import { useSelector, useDispatch } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
+import localStorageUtil from '@/utils/localStorageUtil';
 
 export default function Theme() {
   const [selectedTheme, setSelectedTheme] = useState();
@@ -17,6 +18,7 @@ export default function Theme() {
 
   const handleThemeChange = (theme) => {
     setSelectedTheme(theme);
+    localStorageUtil.set('theme', theme);
     dispatch(
       companyActions.updateCompany({
         _id: company._id,
