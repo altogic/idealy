@@ -11,6 +11,7 @@ export default function Button({
   type,
   height,
   fullWidth,
+  mobileFullWidth,
   disabled,
   loading,
   ...props
@@ -27,6 +28,7 @@ export default function Button({
         `inline-flex items-center justify-center gap-2 tracking-sm border rounded-md transition ease-linear duration-200 focus:outline-none`,
         height ? `h-${height}` : '',
         fullWidth ? 'w-full' : '',
+        mobileFullWidth ? 'w-full md:w-auto' : '',
         loading ? 'opacity-50 cursor-not-allowed' : null,
         disabled ? 'opacity-50 cursor-not-allowed' : '',
         variant === 'icon' ? 'border-0 px-0 py-0' : '',
