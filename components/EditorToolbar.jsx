@@ -1,21 +1,9 @@
-import { Bold, Italic, Underline, Strike, Link, Undo, Redo } from './icons';
-
-// Undo and redo functions for Custom Toolbar
-function undoChange() {
-  this.quill.history.undo();
-}
-function redoChange() {
-  this.quill.history.redo();
-}
+/* eslint-disable jsx-a11y/control-has-associated-label */
 
 // Modules object for setting up the Quill editor
 export const modules = {
   toolbar: {
-    container: '#toolbar',
-    handlers: {
-      undo: undoChange,
-      redo: redoChange
-    }
+    container: '#toolbar'
   },
   history: {
     delay: 500,
@@ -30,29 +18,13 @@ export const formats = ['bold', 'italic', 'underline', 'strike', 'link'];
 // Quill Toolbar component
 export default function EditorToolbar() {
   return (
-    <div id="toolbar" className="ql-toolbar ql-snow">
+    <div id="toolbar">
       <span className="ql-formats">
-        <button type="button" className="ql-bold">
-          <Bold />
-        </button>
-        <button type="button" className="ql-italic">
-          <Italic />
-        </button>
-        <button type="button" className="ql-underline">
-          <Underline />
-        </button>
-        <button type="button" className="ql-strike">
-          <Strike />
-        </button>
-        <button type="button" className="ql-link">
-          <Link />
-        </button>
-        <button type="button" className="ql-undo">
-          <Undo />
-        </button>
-        <button type="button" className="ql-redo">
-          <Redo />
-        </button>
+        <button type="button" className="ql-bold" />
+        <button type="button" className="ql-italic" />
+        <button type="button" className="ql-underline" />
+        <button type="button" className="ql-strike" />
+        <button type="button" className="ql-link" />
       </span>
     </div>
   );

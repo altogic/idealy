@@ -72,6 +72,7 @@ const companyService = {
       .model(modelName)
       .object(id)
       .updateFields([{ field: fieldName, updateType: 'set', value }]),
-  resendInvitation: (req) => endpoint.post('/invitation/resend', req)
+  resendInvitation: (req) => endpoint.post('/invitation/resend', req),
+  createCompanyUser: (req) => endpoint.post('/company/user', req)
 };
 export default companyService;

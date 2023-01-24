@@ -472,7 +472,17 @@ function* resendInviteSaga({ payload }) {
     yield put(companyActions.resendInviteFailed(error));
   }
 }
-
+function* createCompanyUser({ payload }) {
+  try {
+    const { data, error } = yield call(companyService.createCompanyUser, payload);
+    if (error) {
+      throw error;
+    }
+    yield put(companyActions.createCompanyUserSuccess(data));
+  } catch (error) {
+    yield put(companyActions.createCompanyUserFailed(error));
+  }
+}
 export default function* companySaga() {
   yield all([
     takeEvery(companyActions.setCompanyWillBeCreated.type, setCreatedCompanySaga),
@@ -504,6 +514,7 @@ export default function* companySaga() {
     takeEvery(companyActions.deleteCompanySubListsItem.type, deleteCompanySubListsItem),
     takeEvery(companyActions.getCompanyBySubdomain.type, getCompanyBySubdomain),
     takeEvery(companyActions.updateCompany, updateCompanySaga),
-    takeEvery(companyActions.resendInvite, resendInviteSaga)
+    takeEvery(companyActions.resendInvite, resendInviteSaga),
+    takeEvery(companyActions.createCompanyUser, createCompanyUser)
   ]);
 }

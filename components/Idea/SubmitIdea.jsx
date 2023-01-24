@@ -24,6 +24,7 @@ import { ChevronUp, Photo, Plus } from '../icons';
 import Input from '../Input';
 import SimilarIdeaCard from '../SimilarIdeaCard';
 import TopicButton from '../TopicButton';
+import GuestFormModal from '../GuestFormModal';
 
 export default function SubmitIdea({ idea }) {
   const company = useSelector((state) => state.company.company);
@@ -40,7 +41,7 @@ export default function SubmitIdea({ idea }) {
   const guestInfo = useSelector((state) => state.idea.guestInfo);
   const [images, setImages] = useState([]);
   const guestValidation = useGuestValidation('submitIdeas');
-
+  const [openGuestForm, setOpenGuestForm] = useState(false);
   const [topics, setTopics] = useState([]);
   const [content, setContent] = useState('');
   const [inpTitle, setInpTitle] = useState();
@@ -162,11 +163,30 @@ export default function SubmitIdea({ idea }) {
     }
   };
   const formatResult = (item) => (
-    <div className="flex items-center gap-2 text-slate-500 tracking-[-0.4px]  cursor-pointer p-4">
-      <Avatar src={item.profilePicture} alt={item.name} />
-      <span>{item.name}</span>
+    <div className="flex items-center gap-2 text-slate-500 tracking-[-0.4px] cursor-pointer">
+      <Avatar
+        src={idea?.author?.profilePicture}
+        alt={item.name}
+        size="w-7 h-7"
+        fontSize="text-xs"
+      />
+      <span className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm font-medium tracking-sm">
+        {item.name}
+      </span>
+      <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-xs font-medium tracking-sm">
+        {item.email}
+      </span>
     </div>
   );
+  const createNewUser = (data) => {
+    const user = {
+      name: data.guestName,
+      email: data.guestEmail
+    };
+    setMember(user);
+    setOpenGuestForm(false);
+    setInpTitle('');
+  };
   useEffect(() => {
     if (!_.isNil(idea)) {
       reset({
@@ -208,11 +228,14 @@ export default function SubmitIdea({ idea }) {
       setValue('topics', topics);
     }
   }, [topics]);
+
   useEffect(() => {
-    if (user) {
+    if (idea) {
+      setMember(idea.author);
+    } else {
       setMember(user);
     }
-  }, [user, feedBackSubmitModal]);
+  }, [user, idea, feedBackSubmitModal]);
 
   useEffect(() => {
     if (guestInfo) {
@@ -260,6 +283,8 @@ export default function SubmitIdea({ idea }) {
                 formatResult={formatResult}
                 onSuggestionClick={setMember}
                 activeSuggestion={member}
+                setOpenGuestForm={setOpenGuestForm}
+                openGuestForm={openGuestForm}
               />
             </div>
           )}
@@ -369,7 +394,7 @@ export default function SubmitIdea({ idea }) {
               )}
             />
           </div>
-          <Divider />
+          <Divider className="m-8" />
           <div>
             {((idea?.guestName && idea?.guestEmail) || guestValidation) && (
               <GuestForm register={register} errors={errors} />
@@ -385,6 +410,12 @@ export default function SubmitIdea({ idea }) {
             />
           </div>
         </form>
+        <GuestFormModal
+          title="Add a new user"
+          open={openGuestForm}
+          onClose={() => setOpenGuestForm(false)}
+          onSubmit={createNewUser}
+        />
       </Drawer>
     </>
   );

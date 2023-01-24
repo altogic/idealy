@@ -37,7 +37,7 @@ export default function UserDetail() {
           <InfoCard title="Last Activity" description="A week ago" />
           <InfoCard title="Browser" description="Chrome" />
           <InfoCard title="OS" description="OS X 10.15.4 65-bit" />
-          <Divider />
+          <Divider className="m-8" />
 
           <div className="grid grid-cols-2 gap-4">
             <Button

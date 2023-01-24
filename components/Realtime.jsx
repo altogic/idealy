@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateUrl } from '../utils';
-import { Danger, Email } from './icons';
+import { Email } from './icons';
 import InfoModal from './InfoModal';
 
 export default function Realtime() {
@@ -333,7 +333,11 @@ export default function Realtime() {
     <>
       <InfoModal
         show={deleteDialog}
-        title={` You have been removed from <b>${deletedCompanyName}</b>`}
+        title={
+          <span>
+            You have been removed from <b>{deletedCompanyName}</b>
+          </span>
+        }
         icon={<Email className="w-6 h-6 text-indigo-600" />}
         description="Please contact your company admin for more information"
         onConfirm={handleDeleteMembership}
@@ -344,7 +348,12 @@ export default function Realtime() {
       <InfoModal
         show={invitationDialog}
         title=" New Invitation"
-        description={`You have been invited to join <b>${invitation?.company.name}</b> as an <b>${invitation?.role}</b>`}
+        description={
+          <span>
+            You have been invited to join <b>{invitation?.company.name}</b> as an{' '}
+            <b>{invitation?.role}</b>
+          </span>
+        }
         cancelOnClick={handleDeclineInvitation}
         onConfirm={handleAcceptInvitation}
         icon={<Email className="w-6 h-6 text-indigo-600" />}
@@ -355,12 +364,12 @@ export default function Realtime() {
       />
       <InfoModal
         show={deleteIdeaModal}
-        cancelOnClick={setDeleteIdeaModal}
-        icon={<Danger className="w-6 h-6 text-red-600" />}
+        cancelOnClick={() => {}}
+        icon={<Email className="w-6 h-6 text-indigo-600" />}
         title="The idea you are viewing has been deleted."
         description="Please contact your company admin for more information"
-        onConfirm={setDeleteIdeaModal}
-        confirmColor="red"
+        onConfirm={() => setDeleteIdeaModal(false)}
+        confirmColor="indigo"
         confirmText="OK"
       />
     </>

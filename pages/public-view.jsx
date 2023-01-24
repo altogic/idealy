@@ -250,14 +250,15 @@ export default function PublicView({ userIp }) {
               </div>
             ) : ideas.length > 0 ? (
               ideas?.map((idea, index) => (
-                <div key={idea._id} className="inline-block w-full py-6 ">
+                <>
                   <PublicViewCard
+                    key={idea._id}
                     idea={idea}
                     onClick={() => handleClickIdea(idea)}
                     voted={handleVoted(idea._id)}
                   />
-                  {ideas.length - 1 !== index && <Divider />}
-                </div>
+                  {ideas.length - 1 !== index && <Divider className="my-4" />}
+                </>
               ))
             ) : (
               <EmptyState

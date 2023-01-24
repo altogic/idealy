@@ -23,7 +23,11 @@ const ideaService = {
     db
       .model('ideas')
       .object(id)
-      .updateFields([{ field: 'status', updateType: 'unset', value: null }]),
+      .updateFields([
+        { field: 'status', updateType: 'unset', value: null },
+        { field: 'statusUpdatedAt', updateType: 'set', value: Date.now() },
+        { field: 'isCompleted', updateType: 'set', value: false }
+      ]),
   searchCompanyMembers: (companyId, searchText) =>
     endpoint.get('/company/member/search', { companyId, searchText })
 };

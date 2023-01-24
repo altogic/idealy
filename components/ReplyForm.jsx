@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { repliesActions } from '@/redux/replies/repliesSlice';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import cn from 'classnames';
 import Button from './Button';
 import TextArea from './TextArea';
@@ -15,6 +15,7 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
   const createReplyLoading = useSelector((state) => state.replies.createReplyLoading);
   const updateReplyLoading = useSelector((state) => state.replies.updateReplyLoading);
   const [isFormFocus, setIsFormFocus] = useState(false);
+  const isLoading = useRef(false);
   const schema = yup.object().shape({
     content: yup.string().required('Content is required')
   });
@@ -31,6 +32,7 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
   });
 
   const onSubmit = (data) => {
+    isLoading.current = true;
     if (reply) {
       dispatch(repliesActions.updateReply({ ...data, _id: reply._id }));
     } else {
@@ -55,6 +57,12 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
       reset();
     }
   }, [isSubmitSuccessful, createReplyLoading]);
+
+  useEffect(() => {
+    if (!createReplyLoading && !updateReplyLoading) {
+      isLoading.current = false;
+    }
+  }, [createReplyLoading, updateReplyLoading]);
 
   return (
     <div className="w-full mt-6">
@@ -93,12 +101,15 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
             text="Submit"
             size="sm"
             height="8"
-            loading={reply ? updateReplyLoading : createReplyLoading}
+            loading={(reply ? updateReplyLoading : createReplyLoading) && isLoading.current}
           />
         </div>
       </form>
+
       {errors.content && (
-        <span className="inline-block text-red-600">{errors.content.message}</span>
+        <span className="inline-block text-sm text-red-600 dark:text-red-500 purple:text-red-500 mt-2">
+          {errors.content.message}
+        </span>
       )}
     </div>
   );

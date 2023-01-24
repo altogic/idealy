@@ -3,17 +3,11 @@ import useGuestValidation from '@/hooks/useGuestValidation';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { addGuestInfoToLocalStorage } from '@/utils/index';
-import { yupResolver } from '@hookform/resolvers/yup';
 import cn from 'classnames';
 import _ from 'lodash';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import * as yup from 'yup';
-import Button from '../Button';
-import GuestForm from '../GuestForm';
-import Modal from '../Modal';
+import GuestFormModal from '../GuestFormModal';
 
 export default function VoteIdea({ voted, voteCount, ideaId }) {
   const dispatch = useDispatch();
@@ -26,20 +20,6 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
   const [voteCountState, setVoteCountState] = useState();
   const [votedState, setVotedState] = useState();
   const [openGuestForm, setOpenGuestForm] = useState(false);
-
-  const schema = yup.object().shape({
-    guestName: yup.string().required('Name is required'),
-    guestEmail: yup.string().email('Email is invalid').required('Email is required')
-  });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({
-    resolver: yupResolver(schema)
-  });
-
   useEffect(() => {
     setVoteCountState(voteCount);
     setVotedState(voted);
@@ -110,7 +90,7 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
         )}>
         {voteCountState}
       </span>
-      {voteCount > 0 && canVote && (
+      {voteCount > 0 && canVote && voted && (
         <button
           type="button"
           onClick={downVote}
@@ -118,31 +98,13 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
           <ChevronDown className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400" />
         </button>
       )}
-
-      <Modal show={openGuestForm} onClose={() => setOpenGuestForm(false)}>
-        <h1 className="mb-8 text-lg md:text-xl lg:text-2xl font-bold leading-none tracking-tight text-gray-900 dark:text-aa-100 purple:text-pt-100 text-center">
-          Please enter your details to vote
-        </h1>
-
-        <form onSubmit={handleSubmit(guestVote)} className="px-8">
-          <GuestForm register={register} errors={errors} vertical />
-          <div className="flex justify-end gap-2 my-8">
-            <Button
-              type="button"
-              text="Cancel"
-              variant="blank"
-              onClick={() => setOpenGuestForm(false)}
-            />
-            <Button type="submit" variant="indigo" text="Submit" />
-          </div>
-          <div className="text-center text-sm">
-            Already have an account?{' '}
-            <Link href="/login">
-              <a className="text-indigo-700 ml-2">Login</a>
-            </Link>
-          </div>
-        </form>
-      </Modal>
+      <GuestFormModal
+        title="Please enter your details to vote"
+        onSubmit={guestVote}
+        open={openGuestForm}
+        onClose={() => setOpenGuestForm(false)}
+        showLoginLink
+      />
     </div>
   );
 }
