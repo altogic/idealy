@@ -1,10 +1,12 @@
 import useGuestValidation from '@/hooks/useGuestValidation';
 import { commentActions } from '@/redux/comments/commentsSlice';
+import { addGuestInfoToLocalStorage } from '@/utils/index';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
 import Button from './Button';
 import Editor from './Editor';
 import GuestForm from './GuestForm';
@@ -50,6 +52,15 @@ export default function CommentForm({ ideaId, editedComment, setEditComment }) {
     if (comment.trim() === '') {
       return;
     }
+    if (data.guestEmail) {
+      addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
+      dispatch(
+        ideaActions.setGuestInfo({
+          name: data.guestName,
+          email: data.guestEmail
+        })
+      );
+    }
     if (editedComment) {
       dispatch(
         commentActions.updateComment({
@@ -67,7 +78,7 @@ export default function CommentForm({ ideaId, editedComment, setEditComment }) {
           user: user?._id,
           name: user?.name || data.guestName,
           email: user?.email || data.guestEmail,
-          ip: userIp
+          ...(!user && !data.guestEmail && { ip: userIp })
         })
       );
       setComment('');

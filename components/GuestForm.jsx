@@ -41,7 +41,7 @@ export default function GuestForm({ register, errors, vertical }) {
           className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
         />
       </div>
-      {!vertical && <Divider />}
+      {!vertical && <Divider className="m-8" />}
     </>
   );
 }

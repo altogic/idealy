@@ -56,7 +56,7 @@ export default function IdeaActions() {
       <p className="text-slate-900 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">
         Actions
       </p>
-      <Divider />
+      <Divider className="my-2" />
       <div className="flex w-full flex-row space-x-2">
         {ideaActions.map((action) => (
           <IdeaActionButton

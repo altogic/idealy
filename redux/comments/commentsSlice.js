@@ -85,6 +85,10 @@ export const commentsSlice = createSlice({
         }
         return comment;
       });
+    },
+    clearComments: (state) => {
+      state.comments = [];
+      state.countInfo = {};
     }
   },
   extraReducers: (builder) => {

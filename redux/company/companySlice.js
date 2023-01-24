@@ -32,7 +32,8 @@ const initialState = {
   deleteIdeaLoading: false,
   getCompanyMembersLoading: false,
   getCompanyLoading: false,
-  logoLoading: false
+  logoLoading: false,
+  companyUsers: []
 };
 
 export const companySlice = createSlice({
@@ -592,6 +593,17 @@ export const companySlice = createSlice({
       state.isLoading = false;
     },
     resendInviteFailed(state, action) {
+      state.error = action.payload;
+    },
+    createCompanyUser(state) {
+      state.isLoading = true;
+    },
+    createCompanyUserSuccess(state, action) {
+      state.isLoading = false;
+      state.companyUsers = [...state.companyUsers, action.payload];
+    },
+    createCompanyUserFailed(state, action) {
+      state.isLoading = false;
       state.error = action.payload;
     }
   },

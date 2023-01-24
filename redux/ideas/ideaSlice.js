@@ -226,7 +226,7 @@ export const ideaSlice = createSlice({
     },
     searchCompanyMembersSuccess(state, action) {
       state.isLoading = false;
-      state.searchedCompanyMembers = action.payload;
+      state.searchedCompanyMembers = [...action.payload.members, ...action.payload.users];
     },
     searchCompanyMembersFailure(state, action) {
       state.isLoading = false;

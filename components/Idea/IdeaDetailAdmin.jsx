@@ -19,13 +19,13 @@ export default function IdeaDetailAdmin() {
         </div>
         <div className="flex flex-col flex-1 bg-slate-50 dark:bg-aa-800 purple:bg-pt-900 p-4 overflow-y-auto">
           <IdeaStatuses />
-          <Divider />
+          <Divider className="my-4" />
           <IdeaPriority />
-          <Divider />
+          <Divider className="my-4" />
           <IdeaVisibility />
           {!idea?.isApproved && (
             <>
-              <Divider />
+              <Divider className="my-4" />
               <IdeaApproval />
             </>
           )}

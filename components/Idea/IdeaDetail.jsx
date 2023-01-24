@@ -63,6 +63,13 @@ export default function IdeaDetail({ idea, company, query, voted }) {
     }
   }, [router.asPath, idea]);
 
+  useEffect(() => {
+    if (!feedBackDetailModal) {
+      setIsFetched(false);
+      dispatch(commentActions.clearComments());
+    }
+  }, [feedBackDetailModal]);
+
   return (
     <Drawer
       open={feedBackDetailModal}
@@ -178,10 +185,7 @@ export default function IdeaDetail({ idea, company, query, voted }) {
         ) : idea?.commentCount > 0 ? (
           comments?.map((comment) => <CommentCard key={comment?._id} comment={comment} />)
         ) : (
-          <EmptyState
-            title="No Comments"
-            description="Your search did not match any data or this idea does not have any comments yet"
-          />
+          <EmptyState title="No Comments" description="This idea does not have any comments yet" />
         )}
         {loading && !!comments.length && <CommentSkeleton />}
       </InfiniteScroll>

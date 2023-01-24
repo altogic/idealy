@@ -1,24 +1,18 @@
+import Button from '@/components/Button';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
+import { toggleDeleteFeedBackModal } from '@/redux/general/generalSlice';
 import { CheckIcon, XIcon } from '@heroicons/react/outline';
-import { useRef, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { ClipLoader } from 'react-spinners';
+import { useDispatch, useSelector } from 'react-redux';
 import IdeaAdminTab from './IdeaAdminTab';
 
 export default function IdeaApproval() {
   const idea = useSelector((state) => state.idea.selectedIdea);
-  const isLoading = useRef(false);
   const loading = useSelector((state) => state.idea.isLoading);
   const updateIdea = useUpdateIdea(idea);
-
+  const dispatch = useDispatch();
   function handleApprove(isApproved) {
-    isLoading.current = true;
-
     updateIdea({ isApproved });
   }
-  useEffect(() => {
-    isLoading.current = false;
-  }, [isLoading]);
 
   return (
     <IdeaAdminTab title="Approval">
@@ -27,31 +21,27 @@ export default function IdeaApproval() {
           Approve
         </span>
         <div className="flex items-center gap-2">
-          {loading && isLoading.current ? (
-            <ClipLoader
-              size={15}
-              color="#4B5563"
-              loading={loading && isLoading.current}
-              className="mr-4"
-            />
-          ) : (
-            <>
-              <button
-                type="button"
-                onClick={() => handleApprove(true)}
-                className="flex items-center gap-2 p-2 text-sm bg-slate-100 dark:bg-aa-700 purple:bg-pt-700 rounded hover:bg-slate-200 dark:hover:bg-aa-900 dark:purple:bg-pt-800">
-                <CheckIcon className="w-4 h-4 text-slate-900 dark:text-aa-200 purple:text-pt-200" />
-                <span className="text-slate-900 dark:text-aa-100 purple:text-pt-100">Approve</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleApprove(false)}
-                className="flex items-center gap-2 p-2 text-sm bg-slate-100 dark:bg-aa-700 purple:bg-pt-700 rounded hover:bg-slate-200 dark:hover:bg-aa-900 dark:purple:bg-pt-800">
-                <XIcon className="w-4 h-4 text-slate-900 dark:text-aa-200 purple:text-pt-200" />
-                <span className="text-slate-900 dark:text-aa-100 purple:text-pt-100">Reject</span>
-              </button>
-            </>
-          )}
+          <Button
+            type="button"
+            onClick={() => handleApprove(true)}
+            text="Approve"
+            icon={
+              <CheckIcon className="w-4 h-4 text-slate-100 dark:text-aa-200 purple:text-pt-200" />
+            }
+            variant="indigo"
+            loading={loading}
+            size="sm"
+            height="8"
+          />
+          <Button
+            type="button"
+            onClick={() => dispatch(toggleDeleteFeedBackModal())}
+            text="Reject"
+            icon={<XIcon className="w-4 h-4 text-slate-100 dark:text-aa-200 purple:text-pt-200" />}
+            variant="red"
+            size="sm"
+            height="8"
+          />
         </div>
       </div>
     </IdeaAdminTab>

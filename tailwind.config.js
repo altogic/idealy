@@ -93,7 +93,17 @@ module.exports = {
     'purple:text-blue-400',
     'purple:text-yellow-400',
     'purple:text-green-400',
-    'purple:text-pink-400'
+    'purple:text-pink-400',
+    'bg-red-50',
+    'bg-blue-50',
+    'bg-yellow-50',
+    'bg-green-50',
+    'bg-pink-50',
+    'text-red-500',
+    'text-blue-500',
+    'text-yellow-500',
+    'text-green-500',
+    'text-pink-500'
   ],
   plugins: [
     require('@tailwindcss/forms'),
