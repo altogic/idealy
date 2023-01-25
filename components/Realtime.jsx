@@ -167,6 +167,14 @@ export default function Realtime() {
   }
   function addCommentHandler({ message }) {
     dispatch(commentActions.addCommentSuccess(message));
+
+    if (
+      (user && user._id !== message.user._id) ||
+      (!user && userIp !== message.ip) ||
+      (!user && guestInfo.guestEmail !== message.email)
+    ) {
+      dispatch(ideaActions.addedNewComment(message.ideaId));
+    }
   }
   function updateCommentHandler({ message }) {
     dispatch(commentActions.updateCommentSuccess(message));
@@ -176,6 +184,9 @@ export default function Realtime() {
   }
   function addReplyHandler({ message }) {
     dispatch(repliesActions.createReplySuccess(message));
+    if ((user && user._id !== message.user._id) || (!user && userIp !== message.ip)) {
+      dispatch(commentActions.addedReply(message.commentId));
+    }
   }
   function updateReplyHandler({ message }) {
     dispatch(repliesActions.updateReplySuccess(message));
@@ -267,7 +278,7 @@ export default function Realtime() {
       companyActions.updateMemberStatus({
         id: invitation._id,
         companyId: invitation.company._id,
-        onSuccess: () => router.push('/dashboard')
+        onSuccess: () => router.push(generateUrl('dashboard', invitation.company.subdomain))
       })
     );
     dispatch(
@@ -322,6 +333,7 @@ export default function Realtime() {
     if (company._id === deletedCompany) {
       if (companies.length === 1) {
         dispatch(companyActions.selectCompany(companies[0]));
+        router.push(generateUrl('dashboard', companies[0].subdomain));
       } else if (companies.length > 1) {
         router.push(generateUrl('select-company'));
       } else {
@@ -356,6 +368,7 @@ export default function Realtime() {
         }
         cancelOnClick={handleDeclineInvitation}
         onConfirm={handleAcceptInvitation}
+        onClose={() => setInvitationDialog(false)}
         icon={<Email className="w-6 h-6 text-indigo-600" />}
         confirmText="Accept"
         cancelText="Decline"

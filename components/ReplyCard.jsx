@@ -66,14 +66,15 @@ export default function ReplyCard({ reply }) {
         show={isDelete}
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
-        onConfirm={() =>
+        onConfirm={() => {
           dispatch(
             repliesActions.deleteReply({
               replyId: reply._id,
               commentId: reply.commentId
             })
-          )
-        }
+          );
+          setIsDelete(!isDelete);
+        }}
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title="Delete Reply"
         description="Are you sure you want to delete this reply? This action cannot be undone."

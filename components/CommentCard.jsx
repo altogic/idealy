@@ -171,9 +171,10 @@ export default function CommentCard({ comment }) {
         show={isDelete}
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
-        onConfirm={() =>
-          dispatch(commentActions.deleteComment({ commentId: comment._id, ideaId: idea._id }))
-        }
+        onConfirm={() => {
+          dispatch(commentActions.deleteComment({ commentId: comment._id, ideaId: idea._id }));
+          setIsDelete(!isDelete);
+        }}
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title="Delete Comment"
         description="Are you sure you want to delete this comment? This action cannot be undone."

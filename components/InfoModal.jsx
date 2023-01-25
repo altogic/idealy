@@ -12,10 +12,11 @@ export default function InfoModal({
   canCancel,
   cancelText,
   confirmColor,
+  onClose,
   ...props
 }) {
   return (
-    <Modal open={show} onClose={cancelOnClick} {...props}>
+    <Modal open={show} onClose={onClose} {...props}>
       <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-6 mb-8 lg:mb-4">
         {icon && (
           <span className="inline-flex items-center justify-center flex-shrink-0 w-10 h-10 rounded-full ring-8 bg-gray-200 dark:bg-aa-200 purple:bg-pt-200  ring-gray-100 dark:ring-aa-100 purple:ring-pt-100">
@@ -46,7 +47,6 @@ export default function InfoModal({
           variant={confirmColor}
           onClick={() => {
             onConfirm();
-            cancelOnClick();
           }}
           text={confirmText || 'Confirm'}
           {...props}

@@ -139,7 +139,9 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
-      state.selectedIdea.commentCount += 1;
+      if (state.selectedIdea) {
+        state.selectedIdea.commentCount += 1;
+      }
     },
     setSelectedIdea(state, action) {
       state.selectedIdea = action.payload;
@@ -256,6 +258,20 @@ export const ideaSlice = createSlice({
     },
     setGuestInfo(state, action) {
       state.guestInfo = action.payload;
+    },
+    approveAllIdeas(state) {
+      state.isLoading = true;
+    },
+    approveAllIdeasSuccess(state) {
+      state.isLoading = false;
+      state.ideas = state.ideas.map((idea) => ({
+        ...idea,
+        isApproved: true
+      }));
+    },
+    approveAllIdeasFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   },
 

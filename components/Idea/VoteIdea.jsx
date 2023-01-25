@@ -20,6 +20,7 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
   const [voteCountState, setVoteCountState] = useState();
   const [votedState, setVotedState] = useState();
   const [openGuestForm, setOpenGuestForm] = useState(false);
+  const isLoading = useSelector((state) => state.idea.isLoading);
   useEffect(() => {
     setVoteCountState(voteCount);
     setVotedState(voted);
@@ -44,7 +45,11 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
             ...(!user && { ip: userIp }),
             ...(voteGuestAuthentication && guestInfo),
             companyId: company._id,
-            userId: user?._id
+            userId: user?._id,
+            onError: () => {
+              setVoteCountState((prev) => prev - 1);
+              setVotedState(false);
+            }
           })
         );
       }
@@ -74,7 +79,7 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
         <button
           type="button"
           onClick={upVote}
-          disabled={!canVote}
+          disabled={!canVote || isLoading}
           className="inline-flex items-center justify-center">
           <ChevronUp
             className={`w-5 h-5 ${
@@ -90,11 +95,12 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
         )}>
         {voteCountState}
       </span>
-      {voteCount > 0 && canVote && voted && (
+      {voteCount > 0 && canVote && votedState && (
         <button
           type="button"
           onClick={downVote}
-          className="inline-flex items-center justify-center">
+          className="inline-flex items-center justify-center"
+          disabled={!votedState}>
           <ChevronDown className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400" />
         </button>
       )}

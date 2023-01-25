@@ -46,6 +46,9 @@ function* voteIdeaSaga({ payload }) {
     yield put(ideaActions.voteIdeaSuccess(data));
     realtime.send(company._id, 'vote-idea', data);
   } catch (error) {
+    if (payload.onError) {
+      payload.onError();
+    }
     yield put(ideaActions.voteIdeaFailure(error));
   }
 }
@@ -151,6 +154,17 @@ function* searchCompanyMembersSaga({ payload: { companyId, searchText } }) {
     yield put(ideaActions.searchCompanyMembersFailure(error));
   }
 }
+function* approveAllIdeasSaga({ payload: { companyId } }) {
+  try {
+    const { data, errors } = yield call(ideaService.approveAllIdeas, companyId);
+    if (errors) {
+      throw new Error(errors);
+    }
+    yield put(ideaActions.approveAllIdeasSuccess(data));
+  } catch (error) {
+    yield put(ideaActions.approveAllIdeasFailure(error));
+  }
+}
 
 export default function* ideaSaga() {
   yield takeEvery(ideaActions.getIdeasByCompany.type, getIdeasByCompanySaga);
@@ -164,4 +178,5 @@ export default function* ideaSaga() {
   yield takeEvery(ideaActions.getUserVotes.type, getUserVotesSaga);
   yield takeEvery(ideaActions.deleteIdeaStatus.type, deleteIdeaStatusSaga);
   yield takeEvery(ideaActions.searchCompanyMembers.type, searchCompanyMembersSaga);
+  yield takeEvery(ideaActions.approveAllIdeas.type, approveAllIdeasSaga);
 }

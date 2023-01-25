@@ -1,9 +1,8 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { toggleDeleteFeedBackModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
-import { Merge, Archive, Thumbtack, Trash, Pen, Bug } from '@/components/icons';
-import useUpdateIdea from '@/hooks/useUpdateIdea';
 import Divider from '@/components/Divider';
+import { Archive, Bug, Merge, Pen, Thumbtack, Trash } from '@/components/icons';
+import useUpdateIdea from '@/hooks/useUpdateIdea';
+import { toggleDeleteFeedBackModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import IdeaActionButton from './IdeaActionButton';
 
 export default function IdeaActions() {

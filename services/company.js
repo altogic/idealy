@@ -73,6 +73,17 @@ const companyService = {
       .object(id)
       .updateFields([{ field: fieldName, updateType: 'set', value }]),
   resendInvitation: (req) => endpoint.post('/invitation/resend', req),
-  createCompanyUser: (req) => endpoint.post('/company/user', req)
+  createCompanyUser: (req) => endpoint.post('/company/user', req),
+  requestAccess: (req) => endpoint.post('/company/request-access', req),
+  getAccessRequests: ({ companyId, userId }) =>
+    endpoint.get('/company/access-request', { companyId, userId }),
+  getAccessRequestsByCompany: (companyId) =>
+    db
+      .model('companyAccessRequests')
+      .filter(`companyId == '${companyId}'`)
+      .lookup({ field: 'user' })
+      .get(),
+  approveCompanyAccessRequest: (req) => endpoint.post('/company/access-request/approve', req),
+  rejectCompanyAccessRequest: (id) => db.model('companyAccessRequests').object(id).delete()
 };
 export default companyService;

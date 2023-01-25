@@ -29,6 +29,11 @@ const ideaService = {
         { field: 'isCompleted', updateType: 'set', value: false }
       ]),
   searchCompanyMembers: (companyId, searchText) =>
-    endpoint.get('/company/member/search', { companyId, searchText })
+    endpoint.get('/company/member/search', { companyId, searchText }),
+  approveAllIdeas: (companyId) =>
+    db
+      .model('ideas')
+      .filter(`company == '${companyId}'`)
+      .updateFields([{ field: 'isApproved', updateType: 'set', value: true }])
 };
 export default ideaService;
