@@ -36,11 +36,11 @@ export default function Theme() {
           big
         />
       </div>
-      <div className=" max-w-[472px]">
+      <div className=" max-w-[600px]">
         <div className="pb-4 mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
           <SectionTitle sectionTitle="Appearance" />
         </div>
-        <div className="flex items-center gap-8 pb-6 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 pb-6 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
           {THEMES?.map((theme) => (
             <ThemeButton
               key={theme.id}
