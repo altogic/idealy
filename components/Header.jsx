@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CompanyAvatar from './CompanyAvatar';
 import UserDropdown from './Header/UserDropdown';
 import { Announcements, Feedback, Notification, Roadmap, Search, Settings } from './icons';
+import ThemeChanger from './ThemeChanger';
 
 export default function Header() {
   const router = useRouter();
@@ -120,7 +121,7 @@ export default function Header() {
           >
             Public View
           </button> */}
-          {/* {process.env.NODE_ENV === 'development' && <ThemeChanger />} */}
+          {process.env.NODE_ENV === 'development' && <ThemeChanger />}
           {/* Notification */}
           {isLoggedIn && (
             <Menu as="div" className="relative">

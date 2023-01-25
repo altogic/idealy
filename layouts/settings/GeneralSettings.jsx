@@ -18,13 +18,13 @@ export default function GeneralFunctions() {
       </div>
       <div className="max-w-[510px]">
         <CompanyLogo />
-        <Divider />
+        <Divider className="my-8" />
         <CompanyName />
-        <Divider />
+        <Divider className="my-8" />
         <CompanyDisplay />
-        <Divider />
+        <Divider className="my-8" />
         <CompanyFavicon />
-        <Divider />
+        <Divider className="my-8" />
         <CompanySiteNavigation />
       </div>
     </>

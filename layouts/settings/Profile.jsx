@@ -21,7 +21,6 @@ export default function Profile() {
   const [user, setUser] = useState();
   const router = useRouter();
   useEffect(() => {
-    console.log(_user);
     if (_user) {
       setUser(_user);
     }
@@ -36,6 +35,7 @@ export default function Profile() {
         }
       })
     );
+    setDeleteProfile(false);
   };
 
   return (
@@ -49,15 +49,14 @@ export default function Profile() {
       </div>
       <div className="max-w-lg">
         <PersonalInformation user={user} />
-        <Divider />
+        <Divider className="my-8" />
         <Avatar user={user} />
-        <Divider />
         {user?.provider === 'altogic' && (
           <>
             <ChangeEmail user={user} />
-            <Divider />
+            <Divider className="my-8" />
             <ChangePassword />
-            <Divider />
+            <Divider className="my-8" />
           </>
         )}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-50 dark:bg-aa-600 purple:bg-pt-800 p-6 rounded-lg">

@@ -14,24 +14,26 @@ function AutoComplete({
   loading,
   closeModal,
   activeSuggestion,
+  setOpenGuestForm,
+  openGuestForm,
   ...rest
 }) {
-  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [input, setInput] = useState('');
   const [selectedSuggestion, setSelectedSuggestion] = useState();
+
   const onChange = async () => {
+    setSelectedSuggestion();
     setInput(input);
     onSearch(input);
-    setActiveSuggestionIndex(0);
     setShowSuggestions(true);
   };
   const closeSuggestions = () => {
     setShowSuggestions(false);
-    setActiveSuggestionIndex(0);
     setInput('');
     if (closeModal) {
       closeModal();
+      setSelectedSuggestion();
     }
   };
   const onClick = (suggestion) => {
@@ -40,11 +42,11 @@ function AutoComplete({
     closeSuggestions();
     onSuggestionClick(suggestion);
   };
-  const onKeyDown = (key) => {
-    if (key.keyCode === 13 || key.keyCode === 9) {
-      setInput(suggestions[activeSuggestionIndex].name);
-    }
-  };
+  // const onKeyDown = (key) => {
+  //   if (key.keyCode === 13 || key.keyCode === 9) {
+  //     setInput(selectedSuggestion.name);
+  //   }
+  // };
 
   useEffect(() => {
     document.body.addEventListener('click', () => closeSuggestions());
@@ -53,7 +55,7 @@ function AutoComplete({
 
   useEffect(() => {
     let timer;
-    if (input) {
+    if (input && !selectedSuggestion) {
       timer = setTimeout(() => {
         onChange();
       }, 500);
@@ -62,7 +64,7 @@ function AutoComplete({
     return () => {
       clearTimeout(timer);
     };
-  }, [input]);
+  }, [input, selectedSuggestion]);
 
   useEffect(() => {
     if (activeSuggestion) {
@@ -70,6 +72,11 @@ function AutoComplete({
       setInput(activeSuggestion.name);
     }
   }, [activeSuggestion]);
+  useEffect(() => {
+    if (openGuestForm) {
+      closeSuggestions();
+    }
+  }, [openGuestForm]);
 
   return (
     <div className="relative h-[73px]">
@@ -95,7 +102,7 @@ function AutoComplete({
             placeholder={!selectedSuggestion ? 'Search for a user...' : ''}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={onKeyDown}
+            // onKeyDown={onKeyDown}
             {...rest}
           />
           {(input || selectedSuggestion) && (
@@ -111,9 +118,9 @@ function AutoComplete({
         {showSuggestions && input && !loading && (
           <SuggestionsList
             filteredSuggestions={suggestions}
-            activeSuggestionIndex={activeSuggestionIndex}
             onClick={onClick}
             formatResult={formatResult}
+            setOpenGuestForm={setOpenGuestForm}
           />
         )}
       </div>

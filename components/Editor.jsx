@@ -1,12 +1,13 @@
-import { useState } from 'react';
 import dynamic from 'next/dynamic';
-import EditorToolbar, { formats, modules } from './EditorToolbar';
+import { useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
+import EditorToolbar, { formats, modules } from './EditorToolbar';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 export default function Editor({ content, setContent, errors, children, ...props }) {
   const [isEditorFocus, setIsEditorFocus] = useState();
+
   return (
     <>
       <ReactQuill

@@ -4,6 +4,7 @@ import { repliesActions } from '@/redux/replies/repliesSlice';
 import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import _ from 'lodash';
 import Avatar from './Avatar';
 import CommentForm from './CommentForm';
 import CommentSkeleton from './CommentSkeleton';
@@ -19,7 +20,7 @@ export default function CommentCard({ comment }) {
   const [editComment, setEditComment] = useState();
   const [showReplies, setShowReplies] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-  const [editedReply, setEditedReply] = useState();
+
   const [page, setPage] = useState();
   const dispatch = useDispatch();
   const idea = useSelector((state) => state.idea.selectedIdea);
@@ -44,9 +45,14 @@ export default function CommentCard({ comment }) {
       ) : (
         <div className="flex gap-5">
           {/* Name First Letter Icon */}
-          <Avatar src={comment?.profilePicture} alt={comment?.name || 'Anonymous'} />
+          <Avatar
+            src={comment?.profilePicture}
+            alt={comment?.name || 'Anonymous'}
+            size="w-7 h-7"
+            fontSize="text-sm"
+          />
           <div className="w-full space-y-w">
-            <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-base tracking-sm">
+            <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
               {comment?.name || 'Anonymous'}
             </h6>
             <div className="prose prose-p:text-slate-500 prose-p:my-2 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
@@ -66,8 +72,8 @@ export default function CommentCard({ comment }) {
                 type="button"
                 onClick={() => {
                   setIsReplying(!isReplying);
-                  setShowReplies(true);
-                  if (comment?.replyCount) {
+                  setShowReplies(!showReplies);
+                  if (comment?.replyCount && _.isEmpty(replies)) {
                     dispatch(repliesActions.getReplies({ commentId: comment?._id, page }));
                   }
                 }}
@@ -107,29 +113,30 @@ export default function CommentCard({ comment }) {
                     viewBox="0 0 8 8">
                     <circle cx={4} cy={4} r={3} />
                   </svg>
-                  <button type="button" onClick={() => setEditComment(true)}>
-                    <Pen className="h-4 w-4 text-slate-500 hover:text-blue-600 dark:text-aa-200 purple:text-pt-200" />
+                  <button
+                    type="button"
+                    onClick={() => setEditComment(true)}
+                    className="w-8 h-8 flex items-center justify-center rounded-full text-slate-500 dark:text-aa-200 purple:text-pt-200 hover:text-blue-800 hover:bg-blue-100 dark:hover:bg-gray-700 dark:hover:text-blue-400 purple:hover:bg-gray-700 purple:hover:text-blue-400">
+                    <Pen />
                   </button>
-                  <button type="button" onClick={() => setIsDelete(true)}>
-                    <Trash className="h-4 w-4 text-slate-500 hover:text-red-600 dark:text-aa-200 purple:text-pt-200" />
+                  <button
+                    type="button"
+                    onClick={() => setIsDelete(true)}
+                    className="w-8 h-8 flex items-center justify-center rounded-full text-slate-500 hover:text-red-600 dark:text-aa-200 purple:text-pt-200 hover:bg-red-100 dark:hover:bg-gray-700 dark:hover:text-red-400 purple:hover:bg-gray-700 purple:hover:text-red-400">
+                    <Trash />
                   </button>
                 </div>
               )}
             </div>
             {showReplies && (
               <>
-                <Divider />
+                <Divider className="my-8" />
                 {loading && page === 1 ? (
                   <CommentSkeleton />
                 ) : (
                   <div className="space-y-6">
                     {replies[comment?._id]?.map((reply) => (
-                      <ReplyCard
-                        reply={reply}
-                        key={reply?._id}
-                        setEditedReply={setEditedReply}
-                        setIsReplying={setIsReplying}
-                      />
+                      <ReplyCard reply={reply} key={reply?._id} />
                     ))}
                   </div>
                 )}
@@ -154,7 +161,6 @@ export default function CommentCard({ comment }) {
               <ReplyForm
                 commentId={comment?._id}
                 setIsReplying={setIsReplying}
-                reply={editedReply}
                 setShowReplies={setShowReplies}
               />
             )}
@@ -165,9 +171,10 @@ export default function CommentCard({ comment }) {
         show={isDelete}
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
-        onConfirm={() =>
-          dispatch(commentActions.deleteComment({ commentId: comment._id, ideaId: idea._id }))
-        }
+        onConfirm={() => {
+          dispatch(commentActions.deleteComment({ commentId: comment._id, ideaId: idea._id }));
+          setIsDelete(!isDelete);
+        }}
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title="Delete Comment"
         description="Are you sure you want to delete this comment? This action cannot be undone."

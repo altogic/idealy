@@ -2,9 +2,9 @@ import { Close } from '@/components/icons';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 
-export default function Drawer({ open, onClose, children, sidebar }) {
+export default function Drawer({ open, onClose, children, sidebar, className }) {
   return (
-    <Dialog as="div" className="relative z-50" open={open} onClose={() => onClose()}>
+    <Dialog as="div" className={`relative ${className}`} open={open} onClose={() => onClose()}>
       <Transition
         show={open}
         appear

@@ -32,7 +32,10 @@ const initialState = {
   deleteIdeaLoading: false,
   getCompanyMembersLoading: false,
   getCompanyLoading: false,
-  logoLoading: false
+  logoLoading: false,
+  companyUsers: [],
+  accessRequest: {},
+  accessRequests: []
 };
 
 export const companySlice = createSlice({
@@ -592,6 +595,77 @@ export const companySlice = createSlice({
       state.isLoading = false;
     },
     resendInviteFailed(state, action) {
+      state.error = action.payload;
+    },
+    createCompanyUser(state) {
+      state.isLoading = true;
+    },
+    createCompanyUserSuccess(state, action) {
+      state.isLoading = false;
+      state.companyUsers = [...state.companyUsers, action.payload];
+    },
+    createCompanyUserFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    requestAccess(state) {
+      state.isLoading = true;
+    },
+    requestAccessSuccess(state, action) {
+      state.isLoading = false;
+      state.accessRequests = action.payload;
+    },
+    requestAccessFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    getAccessRequest(state) {
+      state.isLoading = true;
+    },
+    getAccessRequestSuccess(state, action) {
+      state.isLoading = false;
+      state.accessRequest = action.payload;
+    },
+    getAccessRequestFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    getAccessRequestsByCompany(state) {
+      state.isLoading = true;
+    },
+    getAccessRequestsByCompanySuccess(state, action) {
+      state.isLoading = false;
+      state.accessRequests = action.payload;
+    },
+    getAccessRequestsByCompanyFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    approveCompanyAccessRequest(state) {
+      state.isLoading = true;
+    },
+    approveCompanyAccessRequestSuccess(state, action) {
+      state.isLoading = false;
+      state.accessRequests = state.accessRequests.filter(
+        (request) => request.user._id !== action.payload.user._id
+      );
+      state.companyMembers = [...state.companyMembers, action.payload];
+    },
+    approveCompanyAccessRequestFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    rejectCompanyAccessRequest(state) {
+      state.isLoading = false;
+    },
+    rejectCompanyAccessRequestSuccess(state, action) {
+      state.isLoading = false;
+      state.accessRequests = state.accessRequests.filter(
+        (request) => request._id !== action.payload
+      );
+    },
+    rejectCompanyAccessRequestFailed(state, action) {
+      state.isLoading = false;
       state.error = action.payload;
     }
   },
