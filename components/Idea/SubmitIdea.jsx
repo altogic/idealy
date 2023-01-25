@@ -1,6 +1,5 @@
 import ImageList from '@/components/ImageList';
 import useGuestValidation from '@/hooks/useGuestValidation';
-import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { fileActions } from '@/redux/file/fileSlice';
 import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
@@ -47,7 +46,7 @@ export default function SubmitIdea({ idea }) {
   const [inpTitle, setInpTitle] = useState();
   const [member, setMember] = useState();
   const dispatch = useDispatch();
-  const updateIdea = useUpdateIdea(idea);
+  // const updateIdea = useUpdateIdea(idea);
   const schema = yup.object().shape({
     title: yup.string().max(140, 'Title must be under 140 character').required('Title is required'),
     content: yup.string(),
