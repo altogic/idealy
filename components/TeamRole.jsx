@@ -157,6 +157,7 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
                 text="Resend Invitation"
                 size="xs"
                 height="8"
+                className="p-0 text-slate-400 dark:text-aa-300 purple:text-pt-300 text-sm tracking-sm"
                 onClick={() => {
                   isSent.current = true;
                   dispatch(

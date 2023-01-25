@@ -41,7 +41,8 @@ export const COMPANY_TABS = [
   { id: 10, name: 'Privacy', roles: ['Owner', 'Admin'] },
   { id: 11, name: 'White Labeling', roles: ['Owner', 'Admin'] },
   { id: 12, name: 'Authentication', roles: ['Owner', 'Admin'] },
-  { id: 13, name: 'Miscellaneous', roles: ['Owner', 'Admin'] }
+  { id: 13, name: 'Miscellaneous', roles: ['Owner', 'Admin'] },
+  { id: 14, name: 'Access Requests', roles: ['Owner', 'Admin'] }
 ];
 export const IDEA_SORT_TYPES = [
   { name: 'Trending', url: 'trending', query: 'trending' },

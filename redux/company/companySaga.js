@@ -483,6 +483,61 @@ function* createCompanyUser({ payload }) {
     yield put(companyActions.createCompanyUserFailed(error));
   }
 }
+function* requestAccessSaga({ payload }) {
+  try {
+    const { data, error } = yield call(companyService.requestAccess, payload);
+    if (error) {
+      throw error;
+    }
+    yield put(companyActions.requestAccessSuccess(data));
+  } catch (error) {
+    yield put(companyActions.requestAccessFailed(error));
+  }
+}
+function* getAccessRequestSaga({ payload }) {
+  try {
+    const { data, error } = yield call(companyService.getAccessRequests, payload);
+    if (error) {
+      throw error;
+    }
+    yield put(companyActions.getAccessRequestSuccess(data));
+  } catch (error) {
+    yield put(companyActions.getAccessRequestFailed(error));
+  }
+}
+function* getAccessRequestsByCompanySaga({ payload: companyId }) {
+  try {
+    const { data, error } = yield call(companyService.getAccessRequestsByCompany, companyId);
+    if (error) {
+      throw error;
+    }
+    yield put(companyActions.getAccessRequestsByCompanySuccess(data));
+  } catch (error) {
+    yield put(companyActions.getAccessRequestsByCompanyFailed(error));
+  }
+}
+function* approveCompanyAccessRequestSaga({ payload }) {
+  try {
+    const { data, error } = yield call(companyService.approveCompanyAccessRequest, payload);
+    if (error) {
+      throw error;
+    }
+    yield put(companyActions.approveCompanyAccessRequestSuccess(data));
+  } catch (error) {
+    yield put(companyActions.approveCompanyAccessRequestFailed(error));
+  }
+}
+function* rejectCompanyAccessRequestSaga({ payload: requestId }) {
+  try {
+    const { error } = yield call(companyService.rejectCompanyAccessRequest, requestId);
+    if (error) {
+      throw error;
+    }
+    yield put(companyActions.rejectCompanyAccessRequestSuccess(requestId));
+  } catch (error) {
+    yield put(companyActions.rejectCompanyAccessRequestFailed(error));
+  }
+}
 export default function* companySaga() {
   yield all([
     takeEvery(companyActions.setCompanyWillBeCreated.type, setCreatedCompanySaga),
@@ -515,6 +570,11 @@ export default function* companySaga() {
     takeEvery(companyActions.getCompanyBySubdomain.type, getCompanyBySubdomain),
     takeEvery(companyActions.updateCompany, updateCompanySaga),
     takeEvery(companyActions.resendInvite, resendInviteSaga),
-    takeEvery(companyActions.createCompanyUser, createCompanyUser)
+    takeEvery(companyActions.createCompanyUser, createCompanyUser),
+    takeEvery(companyActions.requestAccess, requestAccessSaga),
+    takeEvery(companyActions.getAccessRequest, getAccessRequestSaga),
+    takeEvery(companyActions.getAccessRequestsByCompany, getAccessRequestsByCompanySaga),
+    takeEvery(companyActions.approveCompanyAccessRequest, approveCompanyAccessRequestSaga),
+    takeEvery(companyActions.rejectCompanyAccessRequest, rejectCompanyAccessRequestSaga)
   ]);
 }

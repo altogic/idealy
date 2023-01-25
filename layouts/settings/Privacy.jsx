@@ -1,10 +1,13 @@
 import BaseListBox from '@/components/BaseListBox';
+import InfoModal from '@/components/InfoModal';
 import SectionTitle from '@/components/SectionTitle';
 import Toggle from '@/components/Toggle';
 import { companyActions } from '@/redux/company/companySlice';
 import { COMPANY_VISIBILITY } from 'constants';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Email } from '@/components/icons';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
 
 export default function Privacy() {
   const dispatch = useDispatch();
@@ -14,6 +17,7 @@ export default function Privacy() {
   );
   const [userApproval, setUserApproval] = useState(company.privacy.userApproval);
   const [ideaApproval, setIdeaApproval] = useState(company.privacy.ideaApproval);
+  const [ideaApproveModal, setIdeaApproveModal] = useState(false);
   useEffect(() => {
     setCompanySelected(COMPANY_VISIBILITY[company.privacy.isPublic ? 0 : 1]);
     setUserApproval(company.privacy.userApproval);
@@ -76,8 +80,12 @@ export default function Privacy() {
               descriptionText="Stop Ideas from going live on your board until you approve them."
               enabled={ideaApproval}
               onChange={() => {
-                setIdeaApproval(!ideaApproval);
-                updateCompanyPrivacy('ideaApproval', !ideaApproval);
+                if (!ideaApproval) {
+                  setIdeaApproveModal(true);
+                } else {
+                  setIdeaApproval(!ideaApproval);
+                  updateCompanyPrivacy('ideaApproval', !ideaApproval);
+                }
               }}
             />
           </div>
@@ -91,6 +99,22 @@ export default function Privacy() {
           </div> */}
         </div>
       </div>
+      <InfoModal
+        show={ideaApproveModal}
+        title="Idea Approval"
+        description="this change will approve all ideas pending approval."
+        onConfirm={() => {
+          setIdeaApproval(!ideaApproval);
+          updateCompanyPrivacy('ideaApproval', !ideaApproval);
+          dispatch(ideaActions.approveAllIdeas({ companyId: company._id }));
+          setIdeaApproveModal(false);
+        }}
+        onClose={() => setIdeaApproveModal(false)}
+        cancelOnClick={() => setIdeaApproveModal(false)}
+        icon={<Email className="w-6 h-6 text-indigo-600" />}
+        confirmColor="indigo"
+        canCancel
+      />
     </div>
   );
 }

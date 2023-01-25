@@ -23,6 +23,7 @@ import { useSelector } from 'react-redux';
 import { Close, HamburgerMenu } from '@/components/icons';
 import useWindowSize from '@/hooks/useWindowSize';
 import _ from 'lodash';
+import RequestAccess from '@/layouts/settings/RequestAccess';
 
 export default function Settings() {
   const [loading, setLoading] = useState(true);
@@ -200,6 +201,9 @@ export default function Settings() {
                       {/* Miscellaneous */}
                       <Tab.Panel>
                         <Miscellaneous />
+                      </Tab.Panel>
+                      <Tab.Panel>
+                        <RequestAccess />
                       </Tab.Panel>
                     </>
                   )}

@@ -119,7 +119,8 @@ export default function SubmitIdea({ idea }) {
     delete reqData.privacyPolicy;
     if (idea) {
       updateIdea({
-        idea: { _id: idea._id, ...reqData },
+        _id: idea._id,
+        ...reqData,
         onSuccess: () => {
           addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
           handleClose();
@@ -269,7 +270,7 @@ export default function SubmitIdea({ idea }) {
         onClick={() => dispatch(toggleFeedBackSubmitModal())}
       />
 
-      <Drawer open={feedBackSubmitModal} onClose={() => handleClose()}>
+      <Drawer open={feedBackSubmitModal} onClose={() => handleClose()} className="z-[9999]">
         <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all">
           Tell us your idea
         </h2>

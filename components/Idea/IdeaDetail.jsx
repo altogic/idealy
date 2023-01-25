@@ -75,6 +75,7 @@ export default function IdeaDetail({ idea, company, query, voted }) {
       open={feedBackDetailModal}
       onClose={() => handleClose()}
       title={idea?.title}
+      className="z-50"
       sidebar={
         user && (company?.role === 'Owner' || company?.role === 'Admin') && <IdeaDetailAdmin />
       }>
