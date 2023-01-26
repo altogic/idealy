@@ -24,7 +24,7 @@ function* createReply({ payload: reply }) {
       throw new Error(errors);
     }
     yield put(repliesActions.createReplySuccess(data));
-    yield put(commentActions.addedReply(data.commentId));
+
     realtime.send(company._id, 'add-reply', data);
   } catch (error) {
     yield put(repliesActions.createReplyFailure(error));

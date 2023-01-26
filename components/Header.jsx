@@ -8,7 +8,7 @@ import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CompanyAvatar from './CompanyAvatar';
 import UserDropdown from './Header/UserDropdown';
-import { Announcements, Feedback, Roadmap, Search } from './icons';
+import { Announcements, Feedback, People, Roadmap, Search } from './icons';
 import ThemeChanger from './ThemeChanger';
 import Notifications from './Notifications';
 
@@ -102,6 +102,16 @@ export default function Header() {
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
                     <Announcements className="w-6 h-6 text-indigo-50 mr-3" />
                     Announcements
+                  </a>
+                </Link>
+              </li>
+            )}
+            {selectedCompany?.role && (
+              <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
+                <Link href="/">
+                  <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
+                    <People className="w-6 h-6 text-indigo-50 mr-3" />
+                    User
                   </a>
                 </Link>
               </li>

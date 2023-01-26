@@ -10,9 +10,8 @@ export default function useIdeaActionValidation(model) {
   if (user) {
     return user?._id === model?.author?._id || company?.role;
   }
-  if (!_.isNil(guestInfo)) {
+  if (!_.isEmpty(guestInfo)) {
     return guestInfo?.guestEmail === model?.email || company?.role;
   }
-
   return userIp === model?.ip || company?.role;
 }
