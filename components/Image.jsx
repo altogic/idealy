@@ -39,7 +39,7 @@ export default function Image({ isPreview, src, alt, loading, onRemove, removabl
       </div>
 
       <Modal open={open} onClose={setOpen}>
-        <img src={src} alt="preview" className="w-full h-full" />s
+        <img src={src} alt="preview" className="w-full h-full" />
       </Modal>
     </>
   );

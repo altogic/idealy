@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
+import useUpdateIdea from '@/hooks/useUpdateIdea';
 import AutoComplete from '../AutoComplete';
 import Avatar from '../Avatar';
 import Button from '../Button';
@@ -46,7 +47,7 @@ export default function SubmitIdea({ idea }) {
   const [inpTitle, setInpTitle] = useState();
   const [member, setMember] = useState();
   const dispatch = useDispatch();
-  // const updateIdea = useUpdateIdea(idea);
+  const updateIdea = useUpdateIdea(idea);
   const schema = yup.object().shape({
     title: yup.string().max(140, 'Title must be under 140 character').required('Title is required'),
     content: yup.string(),
@@ -117,13 +118,9 @@ export default function SubmitIdea({ idea }) {
     };
     delete reqData.privacyPolicy;
     if (idea) {
-      updateIdea({
-        _id: idea._id,
-        ...reqData,
-        onSuccess: () => {
-          addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
-          handleClose();
-        }
+      updateIdea(reqData, () => {
+        addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
+        handleClose();
       });
     } else {
       dispatch(
@@ -290,6 +287,7 @@ export default function SubmitIdea({ idea }) {
           )}
           <div className={user && company?.role ? 'mb-8' : 'my-8'}>
             <Input
+              type="text"
               name="title"
               id="title"
               label="Title"

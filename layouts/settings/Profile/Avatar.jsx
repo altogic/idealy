@@ -75,7 +75,7 @@ export default function AvatarLayout({ user }) {
       <div className="flex gap-6 mb-6">
         {loading || updatePhotoLoading ? (
           <div className="flex items-center justify-center">
-            <ClipLoader loading={loading || updatePhotoLoading} color="#4338ca" size={30} />
+            <ClipLoader loading={loading || updatePhotoLoading} color="#312E81" size={30} />
           </div>
         ) : (
           <Avatar src={fileLink || user?.profilePicture} alt={user?.name} />

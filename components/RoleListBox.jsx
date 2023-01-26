@@ -12,7 +12,7 @@ export default function RoleListBox({ roleSelected, setRoleSelected }) {
       label={roleSelected}
       onChange={onChange}
       field="name"
-      options={ROLE}
+      options={roleSelected.isGuest ? ROLE : ROLE.filter((role) => !role.isGuest)}
     />
   );
 }

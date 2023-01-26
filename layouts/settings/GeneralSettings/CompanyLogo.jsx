@@ -67,7 +67,7 @@ export default function CompanyLogo() {
       <div className="flex gap-6 mb-6">
         {loading || loadingCompany ? (
           <div className="flex items-center justify-center">
-            <ClipLoader loading={loading || loadingCompany} color="#4338ca" size={30} />
+            <ClipLoader loading={loading || loadingCompany} color="#312E81" size={30} />
           </div>
         ) : (
           <CompanyAvatar

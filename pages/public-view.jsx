@@ -180,6 +180,7 @@ export default function PublicView({ userIp }) {
       if ((!company.privacy.isPublic || company.privacy.userApproval) && !company.role) {
         router.push('/request-access');
       }
+
       dispatch(
         ideaActions.getUserVotes({
           ip: userIp,

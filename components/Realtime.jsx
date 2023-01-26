@@ -6,6 +6,7 @@ import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { notificationActions } from '@/redux/notification/notificationSlice';
 import { repliesActions } from '@/redux/replies/repliesSlice';
 import { realtime } from '@/utils/altogic';
+import localStorageUtil from '@/utils/localStorageUtil';
 import { COMPANY_TABS } from 'constants';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -115,11 +116,12 @@ export default function Realtime() {
       dispatch(notificationActions.receiveNotificationRealtime(data.message));
     }
   }
-  function updateCompanyHandler(data) {
-    if (data.message.company._id === company._id || (user && data.message.sender !== user?._id)) {
+  function updateCompanyHandler({ message }) {
+    if (message.company._id === company._id || (user && message.sender !== user?._id)) {
+      localStorageUtil.set('theme', message.company.theme);
       dispatch(
         companyActions.updateCompanySuccess({
-          ...data.message.company,
+          ...message.company,
           role: company?.role
         })
       );
@@ -194,6 +196,34 @@ export default function Realtime() {
   function deleteReplyHandler({ message }) {
     dispatch(repliesActions.deleteReplySuccess(message));
   }
+  function approveAccessHandler({ message }) {
+    if (user._id === message.user._id) {
+      dispatch(companyActions.approvedAccessRequest(message));
+      router.push('/public-view');
+    }
+  }
+  function rejectAccessHandler({ message }) {
+    if (user._id === message.user._id) {
+      dispatch(companyActions.rejectCompanyAccessRequestSuccess(message));
+      router.push(generateUrl('/dashboard', companies[0].subdomain));
+    }
+  }
+  function approveAccessCompanyHandler({ message }) {
+    if (user._id !== message.user._id) {
+      dispatch(companyActions.approveCompanyAccessRequestSuccess(message));
+    }
+  }
+  function rejectAccessCompanyHandler({ message }) {
+    if (user._id !== message.user._id) {
+      dispatch(companyActions.rejectCompanyAccessRequestSuccess(message));
+    }
+  }
+
+  function requestAccessHandler({ message }) {
+    if (user._id !== message.user._id) {
+      dispatch(companyActions.requestAccessRealtime(message));
+    }
+  }
 
   useEffect(() => {
     if (user && company) {
@@ -202,6 +232,8 @@ export default function Realtime() {
       realtime.on('update-role', updateRoleHandler);
       realtime.on('new-invitation', newInvitationHandler);
       realtime.on('user-notification', userNotificationHandler);
+      realtime.on('approve-access', approveAccessHandler);
+      realtime.on('reject-access', rejectAccessHandler);
     }
 
     if (companies && companies.length > 0) {
@@ -229,7 +261,11 @@ export default function Realtime() {
       realtime.on('add-reply', addReplyHandler);
       realtime.on('update-reply', updateReplyHandler);
       realtime.on('delete-reply', deleteReplyHandler);
-    } else if (company) {
+      realtime.on('request-access', requestAccessHandler);
+      realtime.on('approve-access', approveAccessHandler);
+      realtime.on('reject-access', rejectAccessHandler);
+    }
+    if (company) {
       realtime.join(company._id);
       realtime.on('update-company', updateCompanyHandler);
       realtime.on('create-idea', createIdeasHandler);
@@ -243,6 +279,9 @@ export default function Realtime() {
       realtime.on('add-reply', addReplyHandler);
       realtime.on('update-reply', updateReplyHandler);
       realtime.on('delete-reply', deleteReplyHandler);
+      realtime.on('approve-access', approveAccessCompanyHandler);
+      realtime.on('reject-access', rejectAccessCompanyHandler);
+      realtime.on('request-access', requestAccessHandler);
     }
     return () => {
       realtime.off('delete-membership', deleteMembershipHandler);
@@ -270,6 +309,11 @@ export default function Realtime() {
       realtime.off('add-reply', addReplyHandler);
       realtime.off('update-reply', updateReplyHandler);
       realtime.off('delete-reply', deleteReplyHandler);
+      realtime.off('approve-access', approveAccessHandler);
+      realtime.off('reject-access', rejectAccessHandler);
+      realtime.off('approve-access', approveAccessCompanyHandler);
+      realtime.off('reject-access', rejectAccessCompanyHandler);
+      realtime.off('request-access', requestAccessHandler);
     };
   }, [user, companies, company]);
 
@@ -305,6 +349,11 @@ export default function Realtime() {
         message: `<b>${user.name}</b> has accepted your invitation to join <b>${invitation.company.name}</b>`
       })
     );
+    realtime.send(invitation.company._id, 'notification', {
+      user,
+      companyId: invitation.company._id,
+      message: `<b>${user.name}</b> has accepted your invitation to join <b>${invitation.company.name}</b>`
+    });
     setInvitationDialog(false);
   };
   const handleDeclineInvitation = () => {

@@ -1,8 +1,25 @@
 import { db, endpoint } from '@/utils/altogic';
 
 const notificationService = {
-  getNotifications: (userId) =>
-    db.model('companyNotifications').filter(`user == '${userId}'`).get(),
+  getNotifications: (companyId) =>
+    db
+      .model('companyNotifications')
+      .filter(`companyId == '${companyId}'`)
+      .lookup({ field: 'user' })
+      .omit(
+        'user.savedFilters',
+        'user.notifications',
+        'user.canCreateCompany',
+        'user.disableAllNotifications',
+        'user.emailVerified',
+        'user.isDeleted',
+        'user.isInvited',
+        'user.lastLoginAt',
+        'user.provider',
+        'user.providerUserId',
+        'user.signUpAt'
+      )
+      .get(),
   getUnreadcompanyNotifications: (userId) =>
     db.model('companyNotifications').filter(`user == '${userId}' && isRead == false`).get(),
   markNotificationAsRead: (userId) =>
