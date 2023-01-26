@@ -82,7 +82,7 @@ export default function ChangeEmail({ user }) {
       <form onSubmit={handleSubmit(formSubmit)} className="space-y-6">
         <Input
           label="Current Email"
-          type="email"
+          type="text"
           name="email"
           id="email"
           value={user?.email}
@@ -91,7 +91,7 @@ export default function ChangeEmail({ user }) {
         />
         <Input
           label="New Email"
-          type="email"
+          type="text"
           name="newEmail"
           id="newEmail"
           register={register('newEmail')}

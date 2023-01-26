@@ -1,5 +1,4 @@
 import { companyActions } from '@/redux/company/companySlice';
-import { notificationActions } from '@/redux/notification/notificationSlice';
 import { realtime } from '@/utils/altogic';
 import cn from 'classnames';
 import { useEffect, useRef, useState } from 'react';
@@ -31,13 +30,13 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
           id,
           isRegistered
         });
-        dispatch(
-          notificationActions.sendNotification({
-            user: userId,
-            companyId: company._id,
-            message: `You have been removed from <b>${company?.name}</b>`
-          })
-        );
+        // dispatch(
+        //   notificationActions.sendNotification({
+        //     user: userId,
+        //     companyId: company._id,
+        //     message: `You have been removed from <b>${company?.name}</b>`
+        //   })
+        // );
       }
     } else {
       dispatch(
@@ -79,18 +78,18 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
         id,
         companyId: company._id
       });
-      dispatch(
-        notificationActions.sendNotification({
-          user: userId,
-          companyId: company._id,
-          message: `Your role has been changed to <b>${role}</b> in <b>${company?.name}</b>`
-        })
-      );
-      realtime.send(userId, 'notification', {
-        userId,
-        companyId: company._id,
-        message: `Your role has been changed to <b>${role}</b> in <b>${company?.name}</b>`
-      });
+      // dispatch(
+      //   notificationActions.sendNotification({
+      //     user: userId,
+      //     companyId: company._id,
+      //     message: `Your role has been changed to <b>${role}</b> in <b>${company?.name}</b>`
+      //   })
+      // );
+      // realtime.send(userId, 'notification', {
+      //   userId,
+      //   companyId: company._id,
+      //   message: `Your role has been changed to <b>${role}</b> in <b>${company?.name}</b>`
+      // });
     } else {
       dispatch(
         companyActions.updateCompanyMemberRole({
@@ -157,7 +156,7 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
                 text="Resend Invitation"
                 size="xs"
                 height="8"
-                className="p-0 text-slate-400 dark:text-aa-300 purple:text-pt-300 text-sm tracking-sm"
+                className="p-0 text-slate-400 dark:text-aa-300 purple:text-pt-300 text-sm tracking-sm hover:text-indigo-500 dark:hover:text-aa-100 purple:hover:text-pt-100"
                 onClick={() => {
                   isSent.current = true;
                   dispatch(

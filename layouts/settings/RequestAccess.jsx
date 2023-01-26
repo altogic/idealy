@@ -74,7 +74,7 @@ export default function RequestAccess() {
                     variant="red"
                     size="sm"
                     height="8"
-                    onClick={() => dispatch(companyActions.rejectCompanyAccessRequest(request._id))}
+                    onClick={() => dispatch(companyActions.rejectCompanyAccessRequest(request))}
                   />
                 </div>
               </div>

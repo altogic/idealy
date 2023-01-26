@@ -75,7 +75,7 @@ export default function Layout({ children }) {
       <Head>
         <link rel="icon" href={company?.favicon} />
       </Head>
-      <div className="flex flex-col min-h-screen">
+      <div className="min-h-screen relative">
         <Header />
         <main className="pt-[93px] px-4">
           {children}

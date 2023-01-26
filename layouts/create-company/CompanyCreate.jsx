@@ -117,6 +117,7 @@ export default function FirstWizard() {
       <div className="max-h-[300px] md:max-h-[200px] mx-auto mb-4">
         <div className="mt-4">
           <Input
+            type="text"
             name="companyName"
             id="companyName"
             placeholder="Company name"
@@ -128,6 +129,7 @@ export default function FirstWizard() {
         </div>
         <div className="mt-4 pb-4">
           <Input
+            type="text"
             name="subdomain"
             id="subdomain"
             placeholder="Subdomain"

@@ -100,3 +100,6 @@
 .ql-snow .ql-tooltip {
   left: 0 !important;
 }
+.request-access {
+  height: calc(100vh - 6rem);
+}
