@@ -182,7 +182,7 @@ export default function SettingsActionCard({
           {isEdit ? (
             <form className="flex flex-col w-full">
               <Input
-                type="name"
+                type="text"
                 id="name"
                 name="name"
                 error={errors.name}
@@ -199,7 +199,7 @@ export default function SettingsActionCard({
               />
               {roadMapDescription && (
                 <Input
-                  type="description"
+                  type="text"
                   id="description"
                   name="name"
                   error={errors.description}

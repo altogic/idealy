@@ -3,13 +3,14 @@ import { useDispatch } from 'react-redux';
 
 export default function useUpdateIdea(idea) {
   const dispatch = useDispatch();
-  const updateIdea = (req) => {
+  const updateIdea = (req, onSuccess) => {
     dispatch(
       ideaActions.updateIdea({
         idea: {
           _id: idea._id,
           ...req
-        }
+        },
+        onSuccess
       })
     );
   };

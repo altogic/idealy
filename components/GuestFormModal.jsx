@@ -46,10 +46,10 @@ export default function GuestFormModal({ title, onSubmit, open, onClose, showLog
           <Button type="submit" variant="indigo" text="Submit" />
         </div>
         {showLoginLink && (
-          <div className="text-center text-sm">
+          <div className="text-center text-sm text-slate-800 dark:text-aa-200 purple:text-pt-200 tracking-sm">
             Already have an account?{' '}
             <Link href="/login">
-              <a className="text-indigo-700 ml-2">Login</a>
+              <a className="text-indigo-700 dark:text-aa-200 purple:text-pt-200 ml-2">Login</a>
             </Link>
           </div>
         )}

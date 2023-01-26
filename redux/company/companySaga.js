@@ -490,6 +490,7 @@ function* requestAccessSaga({ payload }) {
       throw error;
     }
     yield put(companyActions.requestAccessSuccess(data));
+    realtime.send(payload.companyId, 'request-access', data);
   } catch (error) {
     yield put(companyActions.requestAccessFailed(error));
   }
@@ -523,17 +524,21 @@ function* approveCompanyAccessRequestSaga({ payload }) {
       throw error;
     }
     yield put(companyActions.approveCompanyAccessRequestSuccess(data));
+    realtime.send(payload.companyId, 'approve-access', data);
+    realtime.send(data.userId, 'approve-access', data);
   } catch (error) {
     yield put(companyActions.approveCompanyAccessRequestFailed(error));
   }
 }
-function* rejectCompanyAccessRequestSaga({ payload: requestId }) {
+function* rejectCompanyAccessRequestSaga({ payload: request }) {
   try {
-    const { error } = yield call(companyService.rejectCompanyAccessRequest, requestId);
+    const { error } = yield call(companyService.rejectCompanyAccessRequest, request._id);
     if (error) {
       throw error;
     }
-    yield put(companyActions.rejectCompanyAccessRequestSuccess(requestId));
+    yield put(companyActions.rejectCompanyAccessRequestSuccess(request._id));
+    realtime.send(request.companyId, 'reject-access', request);
+    realtime.send(request.userId, 'reject-access', request);
   } catch (error) {
     yield put(companyActions.rejectCompanyAccessRequestFailed(error));
   }

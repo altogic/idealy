@@ -98,6 +98,7 @@ function AutoComplete({
           <Input
             type="text"
             id="user"
+            name="user"
             label="User"
             placeholder={!selectedSuggestion ? 'Search for a user...' : ''}
             value={input}

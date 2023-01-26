@@ -35,7 +35,8 @@ const initialState = {
   logoLoading: false,
   companyUsers: [],
   accessRequest: {},
-  accessRequests: []
+  accessRequests: [],
+  getAccessRequestLoading: false
 };
 
 export const companySlice = createSlice({
@@ -102,17 +103,6 @@ export const companySlice = createSlice({
     },
     createCompanyFailed(state, action) {
       state.isLoading = false;
-      state.error = action.payload;
-    },
-    getCompany(state) {
-      state.getCompanyLoading = true;
-    },
-    getCompanySuccess(state, action) {
-      state.getCompanyLoading = false;
-      state.company = action.payload;
-    },
-    getCompanyFailed(state, action) {
-      state.getCompanyLoading = false;
       state.error = action.payload;
     },
     getCompanyMembers(state) {
@@ -578,14 +568,14 @@ export const companySlice = createSlice({
       }
     },
     getCompanyBySubdomain(state) {
-      state.isLoading = true;
+      state.getCompanyLoading = true;
     },
     getCompanyBySubdomainSuccess(state, action) {
-      state.isLoading = false;
+      state.getCompanyLoading = false;
       state.company = action.payload;
     },
     getCompanyBySubdomainFailed(state, action) {
-      state.isLoading = false;
+      state.getCompanyLoading = false;
       state.error = action.payload;
     },
     resendInvite(state) {
@@ -613,21 +603,21 @@ export const companySlice = createSlice({
     },
     requestAccessSuccess(state, action) {
       state.isLoading = false;
-      state.accessRequests = action.payload;
+      state.accessRequest = action.payload;
     },
     requestAccessFailed(state, action) {
       state.isLoading = false;
       state.error = action.payload;
     },
     getAccessRequest(state) {
-      state.isLoading = true;
+      state.getAccessRequestLoading = true;
     },
     getAccessRequestSuccess(state, action) {
-      state.isLoading = false;
+      state.getAccessRequestLoading = false;
       state.accessRequest = action.payload;
     },
     getAccessRequestFailed(state, action) {
-      state.isLoading = false;
+      state.getAccessRequestLoading = false;
       state.error = action.payload;
     },
     getAccessRequestsByCompany(state) {
@@ -667,6 +657,17 @@ export const companySlice = createSlice({
     rejectCompanyAccessRequestFailed(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    approvedAccessRequest(state) {
+      state.company = {
+        ...state.company,
+        role: 'Guest'
+      };
+    },
+    requestAccessRealtime(state, action) {
+      if (!state.accessRequests.some((ar) => ar._id === action.payload._id)) {
+        state.accessRequests = [action.payload, ...state.accessRequests];
+      }
     }
   },
 

@@ -135,7 +135,7 @@ export default function InviteTeam() {
               onClick={() => setIsInvite(!isInvite)}
             />
           </div>
-          <Modal show={isInvite} onClose={() => handleCloseDialog()}>
+          <Modal show={isInvite} onClose={() => handleCloseDialog()} size="xl">
             <div>
               <div className="absolute top-8 right-8">
                 <Button
@@ -181,14 +181,6 @@ export default function InviteTeam() {
                 <div className="flex items-center min-h-[60px] bg-slate-100 dark:bg-aa-600 purple:bg-pt-800 text-slate-500 dark:text-aa-100 purple:text-pt-100 my-8 py-2 px-4 text-sm tracking-sm rounded-lg">
                   {setRoleDescription(roleSelected)}
                 </div>
-                {/* <div className="text-indigo-700">
-                            <Button
-                              type="button"
-                              text="Add another"
-                              variant="icon"
-                              icon={<Plus className="w-5 h-5 text-indigo-700" />}
-                            />
-                          </div> */}
                 <div className="grid grid-cols-2 gap-3">
                   <Button
                     text="Cancel"

@@ -28,7 +28,7 @@ export default function IdeaActions() {
       type: 'Bug',
       onClick: () => updateIdea({ isBug: !idea.isBug }),
       Icon: Bug,
-      color: 'red',
+      color: 'rose',
       control: idea.isBug
     },
     {

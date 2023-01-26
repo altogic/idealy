@@ -118,13 +118,9 @@ export default function SubmitIdea({ idea }) {
     };
     delete reqData.privacyPolicy;
     if (idea) {
-      updateIdea({
-        _id: idea._id,
-        ...reqData,
-        onSuccess: () => {
-          addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
-          handleClose();
-        }
+      updateIdea(reqData, () => {
+        addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
+        handleClose();
       });
     } else {
       dispatch(
@@ -291,6 +287,7 @@ export default function SubmitIdea({ idea }) {
           )}
           <div className={user && company?.role ? 'mb-8' : 'my-8'}>
             <Input
+              type="text"
               name="title"
               id="title"
               label="Title"

@@ -7,8 +7,9 @@ export const BREAKPOINT = {
 };
 
 export const ROLE = [
-  { id: 1, name: 'Admin' },
-  { id: 2, name: 'Moderator' }
+  { id: 1, name: 'Admin', isGuest: false },
+  { id: 2, name: 'Moderator', isGuest: false },
+  { id: 2, name: 'Guest', isGuest: true }
 ];
 export const SUBDOMAIN_REGEX = /^[a-z0-9-_]{3,20}$/;
 
@@ -83,7 +84,7 @@ export const IDEA_BADGES = [
   {
     name: 'Bug',
     icon: Bug,
-    color: 'red',
+    color: 'rose',
     field: 'isBug'
   },
   {

@@ -68,7 +68,7 @@ export default function CompanyFavicon() {
       <div className="flex gap-6 mb-6">
         {loading ? (
           <div className="flex items-center justify-center">
-            <ClipLoader loading={loading} color="#4338ca" size={30} />
+            <ClipLoader loading={loading} color="#312E81" size={30} />
           </div>
         ) : (
           company?.favicon && (

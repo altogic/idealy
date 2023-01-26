@@ -137,7 +137,7 @@ export default function Login({ invitation, clearSession, isInvited }) {
                   <form onSubmit={handleSubmit(formSubmit)} className="space-y-5">
                     <Input
                       label="Email"
-                      type="email"
+                      type="text"
                       id="email"
                       name="email"
                       error={errors.email}

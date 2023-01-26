@@ -139,7 +139,7 @@ export default function CreateAnAccount({ company, invitation, isInvited }) {
                       placeholder="Enter your email"
                       register={register('email')}
                       error={errors.email}
-                      type="email"
+                      type="text"
                       disabled={!!invitation?.email && isInvited}
                     />
 
