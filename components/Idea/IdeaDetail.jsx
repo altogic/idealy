@@ -39,6 +39,7 @@ export default function IdeaDetail({ idea, company, query, voted }) {
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const canComment = useRegisteredUserValidation('commentIdea');
   const canEdit = useIdeaActionValidation(idea);
+  console.log({ canEdit });
   const [isFetched, setIsFetched] = useState(false);
   const updateIdea = useUpdateIdea(idea);
   function handleClose() {

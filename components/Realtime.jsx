@@ -136,7 +136,9 @@ export default function Realtime() {
     }
   }
   function createIdeasHandler({ message }) {
-    dispatch(ideaActions.createIdeaSuccess(message));
+    if (message.isApproved) {
+      dispatch(ideaActions.createIdeaSuccess(message));
+    }
   }
   function updateIdeaHandler({ message }) {
     dispatch(ideaActions.updateIdeaRealtime(message));
@@ -168,15 +170,9 @@ export default function Realtime() {
     }
   }
   function addCommentHandler({ message }) {
+    console.count('realtime');
     dispatch(commentActions.addCommentSuccess(message));
-
-    if (
-      (user && user._id !== message.user._id) ||
-      (!user && userIp !== message.ip) ||
-      (!user && guestInfo.guestEmail !== message.email)
-    ) {
-      dispatch(ideaActions.addedNewComment(message.ideaId));
-    }
+    dispatch(ideaActions.addedNewComment(message.ideaId));
   }
   function updateCommentHandler({ message }) {
     dispatch(commentActions.updateCommentSuccess(message));
@@ -186,9 +182,7 @@ export default function Realtime() {
   }
   function addReplyHandler({ message }) {
     dispatch(repliesActions.createReplySuccess(message));
-    if ((user && user._id !== message.user._id) || (!user && userIp !== message.ip)) {
-      dispatch(commentActions.addedReply(message.commentId));
-    }
+    dispatch(commentActions.addedReply(message.commentId));
   }
   function updateReplyHandler({ message }) {
     dispatch(repliesActions.updateReplySuccess(message));
@@ -250,17 +244,6 @@ export default function Realtime() {
       realtime.on('update-company', updateCompanyHandler);
       realtime.on('accept-invitation', acceptedInvitationHandler);
       realtime.on('update-sublist', updateSublistHandler);
-      realtime.on('create-idea', createIdeasHandler);
-      realtime.on('update-idea', updateIdeaHandler);
-      realtime.on('delete-idea', deleteIdeaHandler);
-      realtime.on('vote-idea', voteIdeaHandler);
-      realtime.on('downVote-idea', downVoteIdeaHandler);
-      realtime.on('add-comment', addCommentHandler);
-      realtime.on('update-comment', updateCommentHandler);
-      realtime.on('delete-comment', deleteCommentHandler);
-      realtime.on('add-reply', addReplyHandler);
-      realtime.on('update-reply', updateReplyHandler);
-      realtime.on('delete-reply', deleteReplyHandler);
       realtime.on('request-access', requestAccessHandler);
       realtime.on('approve-access', approveAccessHandler);
       realtime.on('reject-access', rejectAccessHandler);

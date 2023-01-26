@@ -36,7 +36,9 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
     if (reply) {
       dispatch(repliesActions.updateReply({ ...data, _id: reply._id }));
     } else {
-      dispatch(repliesActions.createReply({ ...data, commentId, ip, user: user._id }));
+      dispatch(
+        repliesActions.createReply({ ...data, commentId, ...(!user && { ip }), user: user?._id })
+      );
     }
   };
 
