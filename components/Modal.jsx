@@ -5,7 +5,7 @@ import cn from 'classnames';
 export default function Modal({ open, onClose, children, size = 'md', ...props }) {
   return (
     <Transition appear show={open} as={Fragment} {...props}>
-      <Dialog as="div" className="relative z-50" onClose={() => onClose()} {...props}>
+      <Dialog as="div" className="relative z-[101]" onClose={() => onClose()} {...props}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

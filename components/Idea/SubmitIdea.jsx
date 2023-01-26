@@ -110,10 +110,12 @@ export default function SubmitIdea({ idea }) {
       content,
       topics,
       images: fileLinks,
-      author: member?._id || user?._id,
+      author: member?.provider ? member._id : undefined,
+      guestEmail: data.guestEmail || !member?.provider ? member?.email : undefined,
+      guestName: data.guestName || !member?.provider ? member?.name : undefined,
       company: company._id,
       companySubdomain: company.subdomain,
-      ip: userIp,
+      ...(!user && !data.guestEmail && { ip: userIp }),
       isApproved: !company?.privacy?.ideaApproval
     };
     delete reqData.privacyPolicy;
@@ -266,7 +268,7 @@ export default function SubmitIdea({ idea }) {
         onClick={() => dispatch(toggleFeedBackSubmitModal())}
       />
 
-      <Drawer open={feedBackSubmitModal} onClose={() => handleClose()} className="z-[9999]">
+      <Drawer open={feedBackSubmitModal} onClose={() => handleClose()} className="z-[100]">
         <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all">
           Tell us your idea
         </h2>

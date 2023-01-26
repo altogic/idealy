@@ -12,7 +12,6 @@ function* addCommentSaga({ payload }) {
       throw new Error(errors);
     }
     yield put(commentActions.addCommentSuccess(data));
-    yield put(ideaActions.addedNewComment(data.ideaId));
     realtime.send(company._id, 'add-comment', data);
   } catch (error) {
     yield put(commentActions.addCommentFailure(error));
