@@ -11,7 +11,7 @@ import Button from './Button';
 import Editor from './Editor';
 import GuestForm from './GuestForm';
 
-export default function CommentForm({ ideaId, editedComment, setEditComment }) {
+export default function CommentForm({ ideaId, editedComment, setEditComment, setIsFetched }) {
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.comments.createCommentLoading);
   const updateCommentLoading = useSelector((state) => state.comments.updateCommentLoading);
@@ -19,7 +19,8 @@ export default function CommentForm({ ideaId, editedComment, setEditComment }) {
   const [comment, setComment] = useState('');
   const guestValidation = useGuestValidation('commentIdea');
   const userIp = useSelector((state) => state.auth.userIp);
-
+  const guestInfo = useSelector((state) => state.idea.guestInfo);
+  const feedBackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const schema = yup.object().shape({
     text: yup.string(),
     guestName: yup.string().when([], {
@@ -56,8 +57,8 @@ export default function CommentForm({ ideaId, editedComment, setEditComment }) {
       addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
       dispatch(
         ideaActions.setGuestInfo({
-          name: data.guestName,
-          email: data.guestEmail
+          guestName: data.guestName,
+          guestEmail: data.guestEmail
         })
       );
     }
@@ -66,21 +67,21 @@ export default function CommentForm({ ideaId, editedComment, setEditComment }) {
         commentActions.updateComment({
           _id: editedComment._id,
           text: comment,
-          name: user?.name || data.guestName,
-          email: user?.email || data.guestEmail
+          guestName: user?.name || data.guestName,
+          guestEmail: user?.email || data.guestEmail
         })
       );
     } else {
       dispatch(
         commentActions.addComment({
+          ...data,
           ideaId,
           text: comment,
           user: user?._id,
-          name: user?.name || data.guestName,
-          email: user?.email || data.guestEmail,
           ...(!user && !data.guestEmail && { ip: userIp })
         })
       );
+      setIsFetched(true);
       setComment('');
     }
   };
@@ -96,6 +97,14 @@ export default function CommentForm({ ideaId, editedComment, setEditComment }) {
       setValue('privacyPolicy', true);
     }
   }, [editedComment]);
+
+  useEffect(() => {
+    if (guestInfo) {
+      setValue('guestName', guestInfo.guestName);
+      setValue('guestEmail', guestInfo.guestEmail);
+      setValue('privacyPolicy', true);
+    }
+  }, [feedBackSubmitModal, guestInfo]);
 
   useEffect(() => {
     if (!updateCommentLoading && setEditComment && isSubmitSuccessful) {

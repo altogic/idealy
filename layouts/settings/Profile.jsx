@@ -9,7 +9,7 @@ import { deleteCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Avatar from '@/components/Avatar';
+import Avatar from '@/layouts/settings/Profile/Avatar';
 import ChangeEmail from './Profile/ChangeEmail';
 import ChangePassword from './Profile/ChangePassword';
 import PersonalInformation from './Profile/PersonalInformation';
@@ -51,6 +51,7 @@ export default function Profile() {
         <PersonalInformation user={user} />
         <Divider className="my-8" />
         <Avatar user={user} />
+        <Divider className="my-8" />
         {user?.provider === 'altogic' && (
           <>
             <ChangeEmail user={user} />

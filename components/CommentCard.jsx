@@ -4,16 +4,15 @@ import { repliesActions } from '@/redux/replies/repliesSlice';
 import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import _ from 'lodash';
 import Avatar from './Avatar';
 import CommentForm from './CommentForm';
 import CommentSkeleton from './CommentSkeleton';
-import InfoModal from './InfoModal';
+import Divider from './Divider';
 import { Danger, Pen, Trash } from './icons';
+import InfoModal from './InfoModal';
 import ReplyCard from './ReplyCard';
 import ReplyForm from './ReplyForm';
 import SanitizeHtml from './SanitizeHtml';
-import Divider from './Divider';
 
 export default function CommentCard({ comment }) {
   const [isReplying, setIsReplying] = useState(false);
@@ -27,7 +26,7 @@ export default function CommentCard({ comment }) {
   const replies = useSelector((state) => state.replies.replies);
   const countInfo = useSelector((state) => state.replies.countInfo);
   const loading = useSelector((state) => state.replies.isLoading);
-  const canEdit = useIdeaActionValidation(comment);
+  const canEdit = useIdeaActionValidation(comment, 'commentIdea');
   useEffect(() => {
     if (page) {
       dispatch(repliesActions.getReplies({ commentId: comment?._id, page }));
@@ -46,19 +45,29 @@ export default function CommentCard({ comment }) {
         <div className="flex gap-5">
           {/* Name First Letter Icon */}
           <Avatar
-            src={comment?.profilePicture}
-            alt={comment?.name || 'Anonymous'}
+            src={comment?.user?.profilePicture}
+            alt={
+              comment?.user
+                ? comment?.user.name
+                : comment?.guestName
+                ? comment?.guestName
+                : 'Anonymous'
+            }
             size="w-7 h-7"
             fontSize="text-sm"
           />
           <div className="w-full space-y-w">
             <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
-              {comment?.name || 'Anonymous'}
+              {comment?.user
+                ? comment?.user.name
+                : comment?.guestName
+                ? comment?.guestName
+                : 'Anonymous'}
             </h6>
             <div className="prose prose-p:text-slate-500 prose-p:my-2 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
               <SanitizeHtml html={comment?.text} />
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <span className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-sm tracking-sm">
                 {DateTime.fromISO(comment?.createdAt).setLocale('en').toRelative()}
               </span>
@@ -68,18 +77,16 @@ export default function CommentCard({ comment }) {
                 viewBox="0 0 8 8">
                 <circle cx={4} cy={4} r={3} />
               </svg>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsReplying(!isReplying);
-                  setShowReplies(!showReplies);
-                  if (comment?.replyCount && _.isEmpty(replies)) {
-                    dispatch(repliesActions.getReplies({ commentId: comment?._id, page }));
-                  }
-                }}
-                className="inline-flex text-slate-500 hover:text-indigo-600 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
-                Reply
-              </button>
+              {!comment?.replyCount && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsReplying(!isReplying);
+                  }}
+                  className="inline-flex text-slate-500 hover:text-indigo-600 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
+                  Reply
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => {
@@ -91,22 +98,14 @@ export default function CommentCard({ comment }) {
                 }}
                 className="inline-flex items-center justify-center gap-2">
                 {!!comment?.replyCount && (
-                  <>
-                    <svg
-                      className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
-                      fill="currentColor"
-                      viewBox="0 0 8 8">
-                      <circle cx={4} cy={4} r={3} />
-                    </svg>
-                    <span className="text-slate-500 hover:text-indigo-600 dark:text-aa-400 purple:text-pt-400 text-sm tracking-sm">
-                      {showReplies ? 'Hide' : 'Show'}{' '}
-                      {comment?.replyCount > 1 ? ` ${comment?.replyCount} Replies` : 'Reply'}
-                    </span>
-                  </>
+                  <span className="text-slate-500 hover:text-indigo-600 dark:text-aa-400 purple:text-pt-400 text-sm tracking-sm">
+                    {showReplies ? 'Hide' : 'Show'}{' '}
+                    {comment?.replyCount > 1 ? ` ${comment?.replyCount} Replies` : 'Reply'}
+                  </span>
                 )}
               </button>
               {canEdit && (
-                <div className=" hidden group-hover:flex items-center gap-3 ">
+                <div className=" hidden group-hover:flex items-center gap-2">
                   <svg
                     className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
                     fill="currentColor"
@@ -116,14 +115,14 @@ export default function CommentCard({ comment }) {
                   <button
                     type="button"
                     onClick={() => setEditComment(true)}
-                    className="w-8 h-8 flex items-center justify-center rounded-full text-slate-500 dark:text-aa-200 purple:text-pt-200 hover:text-blue-800 hover:bg-blue-100 dark:hover:bg-gray-700 dark:hover:text-blue-400 purple:hover:bg-gray-700 purple:hover:text-blue-400">
-                    <Pen />
+                    className="w-5 h-5 flex items-center justify-center rounded-full text-slate-500 dark:text-aa-200 purple:text-pt-200 hover:text-blue-800 hover:bg-blue-100 dark:hover:bg-gray-700 dark:hover:text-blue-400 purple:hover:bg-gray-700 purple:hover:text-blue-400">
+                    <Pen className="w-[0.9rem] h-[0.9rem]" />
                   </button>
                   <button
                     type="button"
                     onClick={() => setIsDelete(true)}
-                    className="w-8 h-8 flex items-center justify-center rounded-full text-slate-500 hover:text-red-600 dark:text-aa-200 purple:text-pt-200 hover:bg-red-100 dark:hover:bg-gray-700 dark:hover:text-red-400 purple:hover:bg-gray-700 purple:hover:text-red-400">
-                    <Trash />
+                    className="w-5 h-5 flex items-center justify-center rounded-full text-slate-500 hover:text-red-600 dark:text-aa-200 purple:text-pt-200 hover:bg-red-100 dark:hover:bg-gray-700 dark:hover:text-red-400 purple:hover:bg-gray-700 purple:hover:text-red-400">
+                    <Trash className="w-[0.9rem] h-[0.9rem]" />
                   </button>
                 </div>
               )}

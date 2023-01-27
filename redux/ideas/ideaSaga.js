@@ -120,9 +120,9 @@ function* deleteIdeaCoverImage({ payload: id }) {
     yield put(ideaActions.deleteIdeaCoverImageFailure(error));
   }
 }
-function* getUserVotesSaga({ payload: { ip, companyId, userId } }) {
+function* getUserVotesSaga({ payload: { ip, companyId, userId, email } }) {
   try {
-    const { data, errors } = yield call(ideaService.getUserVotes, { ip, companyId, userId });
+    const { data, errors } = yield call(ideaService.getUserVotes, { ip, companyId, userId, email });
     if (errors) {
       throw new Error(errors);
     }
