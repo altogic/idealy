@@ -16,7 +16,6 @@ export default function Layout({ children }) {
   const company = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const user = useSelector((state) => state.auth.user);
 
   const dispatch = useDispatch();
 
@@ -47,6 +46,7 @@ export default function Layout({ children }) {
     const session = JSON.parse(getCookie('session') || null);
     if (userFromCookie && session) {
       dispatch(authActions.authStateChange({ user: userFromCookie, session }));
+      dispatch(companyActions.getUserCompanies(userFromCookie?._id));
     }
 
     const wildcard = window.location.hostname.split('.')[0];
@@ -63,12 +63,6 @@ export default function Layout({ children }) {
       );
     }
   }, []);
-
-  useEffect(() => {
-    if (isAuthenticated && _.isEmpty(companies)) {
-      dispatch(companyActions.getUserCompanies(user?._id));
-    }
-  }, [isAuthenticated]);
 
   return (
     <div className="bg-white dark:bg-aa-900 purple:bg-pt-1000">

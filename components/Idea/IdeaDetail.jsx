@@ -38,8 +38,7 @@ export default function IdeaDetail({ idea, company, query, voted }) {
   const loading = useSelector((state) => state.comments.isLoading);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const canComment = useRegisteredUserValidation('commentIdea');
-  const canEdit = useIdeaActionValidation(idea);
-  console.log({ canEdit });
+  const canEdit = useIdeaActionValidation(idea, 'submitIdeas');
   const [isFetched, setIsFetched] = useState(false);
   const updateIdea = useUpdateIdea(idea);
   function handleClose() {
@@ -170,7 +169,7 @@ export default function IdeaDetail({ idea, company, query, voted }) {
         </div>
       </div>
 
-      {canComment && <CommentForm ideaId={idea?._id} />}
+      {canComment && <CommentForm ideaId={idea?._id} setIsFetched={setIsFetched} />}
       <InfiniteScroll
         items={comments}
         countInfo={commentCountInfo}
@@ -189,7 +188,7 @@ export default function IdeaDetail({ idea, company, query, voted }) {
         ) : (
           <EmptyState title="No Comments" description="This idea does not have any comments yet" />
         )}
-        {loading && !!comments.length && <CommentSkeleton />}
+        {loading && !!idea?.commentCount && <CommentSkeleton />}
       </InfiniteScroll>
     </Drawer>
   );

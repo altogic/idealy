@@ -28,6 +28,7 @@
     overflow-y: scroll;
     overflow-x: scroll;
   }
+
   textarea {
     resize: none;
   }
@@ -100,6 +101,44 @@
 .ql-snow .ql-tooltip {
   left: 0 !important;
 }
+.theme-purple .ql-snow .ql-tooltip {
+  background: #56508e !important;
+  color: #ecebf5 !important;
+  border: 1px solid #6f67b7 !important;
+  box-shadow: 0 0 0 1px #8780c6 !important;
+}
+.dark .ql-snow .ql-tooltip {
+  background: #202630 !important;
+  color: #ecebf5 !important;
+  border: 1px solid #29323e !important;
+  box-shadow: 0 0 0 1px #575b62 !important;
+}
+.theme-purple .ql-snow .ql-tooltip input[type='text'] {
+  background: #56508e !important;
+  color: #ecebf5 !important;
+  border: 1px solid #8780c6 !important;
+}
+.dark .ql-snow .ql-tooltip input[type='text'] {
+  background: #202630 !important;
+  color: #ecebf5 !important;
+  border: 1px solid #575b62 !important;
+}
+.theme-purple .ql-snow .ql-tooltip input[type='text']:focus {
+  box-shadow: 0 0 0 1px #a6a2d3 !important;
+}
+.dark .ql-snow .ql-tooltip input[type='text']:focus {
+  box-shadow: 0 0 0 1px #8a8c90 !important;
+}
+.theme-purple .ql-snow a {
+  color: #ecebf5 !important;
+}
+.dark .ql-snow a {
+  color: #e7e8e8 !important;
+}
+
 .request-access {
   height: calc(100vh - 6rem);
+}
+.ql-snow .ql-tooltip {
+  @apply border-slate-300 dark:border-aa-600 purple:border-pt-800 !important;
 }

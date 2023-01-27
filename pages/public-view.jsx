@@ -183,7 +183,7 @@ export default function PublicView({ userIp }) {
 
       dispatch(
         ideaActions.getUserVotes({
-          ip: userIp,
+          ...(voteGuestAuth ? { email: guestInfo.guestEmail } : { ip: userIp }),
           email: guestInfo?.guestEmail,
           companyId: company?._id,
           userId: user?._id

@@ -73,8 +73,12 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
         onFocus={() => setIsFormFocus(true)}
         onBlur={() => setIsFormFocus(false)}
         className={cn(
-          'flex flex-col w-full relative z-1 rounded-lg border-2 border-gray-300 bg-white',
-          isFormFocus && !errors.content && 'border-indigo-500',
+          'flex flex-col w-full relative z-1 rounded-lg border-2',
+          'bg-white dark:bg-aa-800 purple:bg-pt-800',
+          !isFormFocus && 'border-gray-300 dark:border-aa-600 purple:border-pt-600',
+          isFormFocus &&
+            !errors.content &&
+            'border-indigo-500 dark:border-aa-400 purple:border-pt-400',
           isFormFocus && errors.content && 'border-red-600',
           errors.content && 'border-red-600'
         )}>

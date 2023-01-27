@@ -111,8 +111,8 @@ export default function SubmitIdea({ idea }) {
       topics,
       images: fileLinks,
       author: member?.provider ? member._id : undefined,
-      guestEmail: data.guestEmail || !member?.provider ? member?.email : undefined,
-      guestName: data.guestName || !member?.provider ? member?.name : undefined,
+      guestEmail: data.guestEmail ? data.guestEmail : !member?.provider ? member?.email : undefined,
+      guestName: data.guestName ? data.guestName : !member?.provider ? member?.name : undefined,
       company: company._id,
       companySubdomain: company.subdomain,
       ...(!user && !data.guestEmail && { ip: userIp }),
@@ -260,7 +260,7 @@ export default function SubmitIdea({ idea }) {
     <>
       <Button
         type="button"
-        text="Submit Feedback"
+        text="Submit Idea"
         icon={<Plus className="w-5 h-5" />}
         variant="indigo"
         size="sm"
