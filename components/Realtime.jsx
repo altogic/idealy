@@ -9,7 +9,7 @@ import { realtime } from '@/utils/altogic';
 import localStorageUtil from '@/utils/localStorageUtil';
 import { COMPANY_TABS } from 'constants';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateUrl } from '../utils';
 import { Email } from './icons';
@@ -27,9 +27,20 @@ export default function Realtime() {
   const company = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
   const guestInfo = useSelector((state) => state.idea.guestInfo);
+  const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const voteGuestAuth = useGuestValidation('voteIdea');
+
   const dispatch = useDispatch();
   const router = useRouter();
+  const ideaDetailModal = useRef(false);
+  const voteGuest = useRef(false);
+  useEffect(() => {
+    ideaDetailModal.current = feedBackDetailModal;
+  }, [feedBackDetailModal]);
+
+  useEffect(() => {
+    voteGuest.current = voteGuestAuth;
+  }, [voteGuestAuth]);
 
   function deleteMembershipHandler(data) {
     dispatch(companyActions.deleteCompanyMemberRealtime(data.message));
@@ -154,8 +165,8 @@ export default function Realtime() {
   function voteIdeaHandler({ message }) {
     if (
       (user && user._id !== message.userId) ||
-      (!user && userIp !== message.ip) ||
-      (voteGuestAuth && guestInfo.guestEmail !== message.guestEmail)
+      (!user && !voteGuest.current && userIp !== message.ip) ||
+      (voteGuest.current && guestInfo.guestEmail !== message.guestEmail)
     ) {
       dispatch(ideaActions.upVoteIdeaRealtime(message.ideaId));
     }
@@ -164,16 +175,19 @@ export default function Realtime() {
     if (
       (user && user._id !== message.userId) ||
       (!user && userIp !== message.ip) ||
-      (voteGuestAuth && guestInfo.guestEmail !== message.guestEmail)
+      (voteGuest.current && guestInfo.guestEmail !== message.guestEmail)
     ) {
       dispatch(ideaActions.downVoteIdeaRealtime(message.ideaId));
     }
   }
+
   function addCommentHandler({ message }) {
-    console.count('realtime');
-    dispatch(commentActions.addCommentSuccess(message));
+    if (ideaDetailModal.current) {
+      dispatch(commentActions.addCommentSuccess(message));
+    }
     dispatch(ideaActions.addedNewComment(message.ideaId));
   }
+
   function updateCommentHandler({ message }) {
     dispatch(commentActions.updateCommentSuccess(message));
   }
@@ -181,8 +195,10 @@ export default function Realtime() {
     dispatch(commentActions.deleteCommentSuccess(message));
   }
   function addReplyHandler({ message }) {
-    dispatch(repliesActions.createReplySuccess(message));
-    dispatch(commentActions.addedReply(message.commentId));
+    if (ideaDetailModal.current) {
+      dispatch(repliesActions.createReplySuccess(message));
+      dispatch(commentActions.addedReply(message.commentId));
+    }
   }
   function updateReplyHandler({ message }) {
     dispatch(repliesActions.updateReplySuccess(message));
@@ -412,8 +428,10 @@ export default function Realtime() {
         cancelOnClick={() => {}}
         icon={<Email className="w-6 h-6 text-indigo-600" />}
         title="The idea you are viewing has been deleted."
-        description="Please contact your company admin for more information"
-        onConfirm={() => setDeleteIdeaModal(false)}
+        onConfirm={() => {
+          setDeleteIdeaModal(false);
+          dispatch(ideaActions.setSelectedIdea(null));
+        }}
         confirmColor="indigo"
         confirmText="OK"
       />

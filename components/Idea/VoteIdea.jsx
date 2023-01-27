@@ -29,7 +29,14 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
   const downVote = () => {
     setVoteCountState((prev) => prev - 1);
     setVotedState(false);
-    dispatch(ideaActions.downVoteIdea({ ideaId, ...(!user && { ip: userIp }), userId: user?._id }));
+    dispatch(
+      ideaActions.downVoteIdea({
+        ideaId,
+        ...(!user && { ip: userIp }),
+        ...(voteGuestAuthentication && { email: guestInfo.guestEmail }),
+        userId: user?._id
+      })
+    );
   };
 
   const upVote = () => {
@@ -42,7 +49,7 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
         dispatch(
           ideaActions.voteIdea({
             ideaId,
-            ...(!user && { ip: userIp }),
+            ...(!user && !voteGuestAuthentication && { ip: userIp }),
             ...(voteGuestAuthentication && guestInfo),
             companyId: company._id,
             userId: user?._id,

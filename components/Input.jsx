@@ -40,6 +40,7 @@ export default function Input({
               error && postfix ? 'border-r-gray-300' : ''
             )}
             type={type}
+            spellCheck="false"
             {...register}
             {...props}
           />
