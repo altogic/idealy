@@ -6,6 +6,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ClipLoader } from 'react-spinners';
 import { generateUrl, setCookie } from '../utils';
 import Badge from './Badge';
 import Header from './Header';
@@ -16,7 +17,7 @@ export default function Layout({ children }) {
   const company = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
+  const loading = useSelector((state) => state.company.getCompanyLoading);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -65,24 +66,35 @@ export default function Layout({ children }) {
 
   return (
     <div className="bg-white dark:bg-aa-900 purple:bg-pt-1000">
-      <Head>
-        <link rel="icon" href={company?.favicon} />
-      </Head>
-      <div className="min-h-screen relative">
-        <Header />
-        <main className="pt-[93px] px-4">
-          {children}
-          <Realtime />
-        </main>
-      </div>
-      {!company?.whiteLabel?.isHideBanner && (
-        <a href="https://www.idealy.io/" target="_blank" rel="noopener noreferrer" className="">
-          <Badge
-            text="Powered by Idealy"
-            color="blue"
-            className="fixed bottom-8 right-8 p-4 text-base"
-          />
-        </a>
+      {loading ? (
+        <div className="flex flex-col gap-y-4 justify-center items-center h-screen">
+          <ClipLoader color="#3B82F6" size={125} />
+          <span className="text-2xl text-slate-500 dark:text-aa-300 purple:text-pt-300 mt-2">
+            Company Loading...
+          </span>
+        </div>
+      ) : (
+        <>
+          <Head>
+            <link rel="icon" href={company?.favicon} />
+          </Head>
+          <div className="min-h-screen relative">
+            <Header />
+            <main className="pt-[93px] px-4">
+              {children}
+              <Realtime />
+            </main>
+          </div>
+          {!company?.whiteLabel?.isHideBanner && (
+            <a href="https://www.idealy.io/" target="_blank" rel="noopener noreferrer" className="">
+              <Badge
+                text="Powered by Idealy"
+                color="blue"
+                className="fixed bottom-8 right-8 p-4 text-base"
+              />
+            </a>
+          )}
+        </>
       )}
     </div>
   );
