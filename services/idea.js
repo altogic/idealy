@@ -26,7 +26,7 @@ const ideaService = {
       .object(id)
       .updateFields([
         { field: 'status', updateType: 'unset', value: null },
-        { field: 'statusUpdatedAt', updateType: 'set', value: Date.now() },
+        { field: 'statusUpdatedAt', updateType: 'set', value: new Date() },
         { field: 'isCompleted', updateType: 'set', value: false }
       ]),
   searchCompanyMembers: (companyId, searchText) =>

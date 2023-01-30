@@ -221,7 +221,9 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
-      state.selectedIdea.commentCount -= 1;
+      if (state.selectedIdea) {
+        state.selectedIdea.commentCount -= 1;
+      }
     },
     searchCompanyMembers(state) {
       state.isLoading = true;

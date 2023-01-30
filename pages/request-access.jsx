@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
 import { realtime } from '@/utils/altogic';
 import { notificationActions } from '@/redux/notification/notificationSlice';
+import { generateUrl } from '../utils';
 
 export default function RequestAccess() {
   const sessionUser = useSelector((state) => state.auth.user);
@@ -66,7 +67,8 @@ export default function RequestAccess() {
                 {user && userApproval ? (
                   accessRequest ? (
                     <span className="text-slate-800 dark:text-aa-200 purple:text-pt-200">
-                      Your request has been reviewing
+                      Your access request has been submitted. <br />
+                      You will be notified by email when your request has been accepted or rejected.
                     </span>
                   ) : (
                     <Button
@@ -105,7 +107,7 @@ export default function RequestAccess() {
                         {' '}
                         Already have an account?{' '}
                       </span>
-                      <Link href="/login">
+                      <Link href={generateUrl('/login')}>
                         <a className="text-indigo-700  dark:text-aa-200 purple:text-pt-200 ml-2">
                           Login
                         </a>

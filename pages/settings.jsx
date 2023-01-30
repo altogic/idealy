@@ -19,11 +19,13 @@ import Authentication from '@/layouts/settings/Authentication';
 import Miscellaneous from '@/layouts/settings/Miscellaneous';
 import { useRouter } from 'next/router';
 import { PROFILE_TABS, COMPANY_TABS, BREAKPOINT } from 'constants';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Close, HamburgerMenu } from '@/components/icons';
 import useWindowSize from '@/hooks/useWindowSize';
 import _ from 'lodash';
 import RequestAccess from '@/layouts/settings/RequestAccess';
+import Indicator from '@/components/Indicator';
+import { companyActions } from '@/redux/company/companySlice';
 
 export default function Settings() {
   const [loading, setLoading] = useState(true);
@@ -34,7 +36,8 @@ export default function Settings() {
   const router = useRouter();
   const company = useSelector((state) => state.company.company);
   const size = useWindowSize();
-
+  const dispatch = useDispatch();
+  const accessRequests = useSelector((state) => state.company.accessRequests);
   useEffect(() => {
     if (router.query?.tab) {
       const filteredCompanyTabs = COMPANY_TABS.filter((tab) => tab.roles.includes(company?.role));
@@ -43,6 +46,11 @@ export default function Settings() {
       setTabIndex(index);
     }
   }, [router, company]);
+  useEffect(() => {
+    if (company) {
+      dispatch(companyActions.getAccessRequestsByCompany(company._id));
+    }
+  }, [company]);
 
   useEffect(() => {
     if (PROFILE_TABS) {
@@ -109,7 +117,7 @@ export default function Settings() {
                       {tab.name}
                     </Tab>
                   ))}
-                  {company?.role !== 'Moderator' && (
+                  {company?.role !== 'Moderator' && company?.role !== 'Guest' && (
                     <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 p-4 mt-3 lg:mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
                       {company?.name}
                     </h2>
@@ -120,7 +128,7 @@ export default function Settings() {
                         <Tab
                           className={({ selected }) =>
                             cn(
-                              'px-4 py-3 text-sm font-medium tracking-sm border-2 rounded-md text-left focus:outline-none',
+                              'relative px-4 py-3 text-sm font-medium tracking-sm border-2 rounded-md text-left focus:outline-none',
                               selected
                                 ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-100 purple:text-pt-100 border-indigo-700 dark:border-aa-600 purple:border-pt-800'
                                 : 'text-slate-500 dark:text-aa-200 purple:text-pt-200 border-transparent'
@@ -132,6 +140,9 @@ export default function Settings() {
                             setOpenSidebar(!openSidebar);
                           }}>
                           {tab.name}
+                          {tab.name === 'Access Requests' && !!accessRequests.length && (
+                            <Indicator count={accessRequests.length} />
+                          )}
                         </Tab>
                       )
                   )}

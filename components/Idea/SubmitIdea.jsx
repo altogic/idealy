@@ -273,7 +273,7 @@ export default function SubmitIdea({ idea }) {
           Tell us your idea
         </h2>
         <form onSubmit={handleSubmit(onSubmit)}>
-          {user && company?.role && (
+          {user && company?.role && company?.role !== 'Guest' && (
             <div className="my-8">
               <AutoComplete
                 suggestions={companyMembers}
@@ -394,7 +394,7 @@ export default function SubmitIdea({ idea }) {
               )}
             />
           </div>
-          <Divider className="m-8" />
+          <Divider className="my-8" />
           <div>
             {((idea?.guestName && idea?.guestEmail) || guestValidation) && (
               <GuestForm register={register} errors={errors} />

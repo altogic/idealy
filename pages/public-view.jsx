@@ -109,7 +109,7 @@ export default function PublicView({ userIp }) {
         sort: handleSort(router.query.sort),
         page
       };
-      if (!user || !company?.role) {
+      if (!user || !company?.role || company?.role === 'Guest') {
         req.filter += ` this.isApproved == true &&`;
       }
       dispatch(ideaActions.getIdeasByCompany(req));
@@ -233,28 +233,28 @@ export default function PublicView({ userIp }) {
                 {loading && page === 1 ? (
                   <div
                     role="status"
-                    className="w-full space-y-4 divide-y divide-gray-300 animate-pulse">
+                    className="w-full space-y-4 divide-y divide-gray-300 dark:divide-aa-600 purple:divide-pt-800 animate-pulse">
                     <div className="flex justify-between items-center px-4 py-8">
                       <div className="flex items-center gap-6">
-                        <div className="w-[62px] h-20 bg-gray-300 rounded-lg" />
+                        <div className="w-[62px] h-20 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-lg" />
                         <div>
-                          <div className="w-64 h-2.5 bg-gray-300 rounded-full mb-2.5" />
-                          <div className="w-32 h-2 bg-gray-300 rounded-full mb-2.5" />
-                          <div className="h-2.5 bg-gray-300 rounded-full w-24" />
+                          <div className="w-64 h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full mb-2.5" />
+                          <div className="w-32 h-2 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full mb-2.5" />
+                          <div className="h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full w-24" />
                         </div>
                       </div>
-                      <div className="h-2.5 bg-gray-300 rounded-full w-12" />
+                      <div className="h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full w-12" />
                     </div>
                     <div className="flex justify-between items-center px-4 py-8">
                       <div className="flex items-center gap-6">
-                        <div className="w-[62px] h-20 bg-gray-300 rounded-lg" />
+                        <div className="w-[62px] h-20 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-lg" />
                         <div>
-                          <div className="w-64 h-2.5 bg-gray-300 rounded-full mb-2.5" />
-                          <div className="w-32 h-2 bg-gray-300 rounded-full mb-2.5" />
-                          <div className="h-2.5 bg-gray-300 rounded-full w-24" />
+                          <div className="w-64 h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full mb-2.5" />
+                          <div className="w-32 h-2 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full mb-2.5" />
+                          <div className="h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full w-24" />
                         </div>
                       </div>
-                      <div className="h-2.5 bg-gray-300 rounded-full w-12" />
+                      <div className="h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full w-12" />
                     </div>
                     <span className="sr-only">Loading...</span>
                   </div>
