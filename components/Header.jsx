@@ -11,6 +11,7 @@ import UserDropdown from './Header/UserDropdown';
 import { Announcements, Feedback, People, Roadmap, Search } from './icons';
 import ThemeChanger from './ThemeChanger';
 import Notifications from './Notifications';
+import { generateUrl } from '../utils';
 
 export default function Header() {
   const router = useRouter();
@@ -32,10 +33,14 @@ export default function Header() {
 
   useEffect(() => {
     if (companies.length > 0 && selectedCompany) {
-      setUserCompanies([
-        selectedCompany,
-        ...companies.filter((company) => company._id !== selectedCompany._id)
-      ]);
+      if (!selectedCompany?.role) {
+        setUserCompanies(companies);
+      } else {
+        setUserCompanies([
+          selectedCompany,
+          ...companies.filter((company) => company._id !== selectedCompany._id)
+        ]);
+      }
       if (_.isEmpty(notifications)) {
         dispatch(notificationActions.getNotifications(selectedCompany._id));
       }
@@ -149,12 +154,12 @@ export default function Header() {
             !loading && (
               <ul className="flex items-center gap-4">
                 <li>
-                  <Link href="/login">
+                  <Link href={generateUrl('/login')}>
                     <a className="inline-flex text-indigo-50 text-sm tracking-sm">Login</a>
                   </Link>
                 </li>
                 <li>
-                  <Link href="/register">
+                  <Link href={generateUrl('/register')}>
                     <a className="inline-flex text-indigo-400 text-sm tracking-sm">Signup</a>
                   </Link>
                 </li>

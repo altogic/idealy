@@ -45,7 +45,6 @@ export default function Layout({ children }) {
     const userFromCookie = JSON.parse(getCookie('user') || null);
     const session = JSON.parse(getCookie('session') || null);
     if (userFromCookie && session) {
-      dispatch(authActions.authStateChange({ user: userFromCookie, session }));
       dispatch(companyActions.getUserCompanies(userFromCookie?._id));
     }
 
@@ -80,7 +79,7 @@ export default function Layout({ children }) {
         <a href="https://www.idealy.io/" target="_blank" rel="noopener noreferrer" className="">
           <Badge
             text="Powered by Idealy"
-            color="purple"
+            color="blue"
             className="fixed bottom-8 right-8 p-4 text-base"
           />
         </a>

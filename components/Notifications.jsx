@@ -6,15 +6,14 @@ import { DateTime } from 'luxon';
 import Avatar from './Avatar';
 import { Notification, Settings } from './icons';
 import SanitizeHtml from './SanitizeHtml';
+import Indicator from './Indicator';
 
 export default function Notifications() {
   const router = useRouter();
   const notifications = useSelector((state) => state.notification.notifications);
   return (
     <Menu as="div" className="relative">
-      <span className="absolute top-[10px] right-[8px] inline-flex items-center justify-center px-1 py-0.5 text-[10px] font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full">
-        {notifications.length}
-      </span>
+      <Indicator count={notifications?.length} className="absolute -top-1 -right-1" />
       <Menu.Button className="relative inline-flex items-center justify-center w-10 h-10 p-[10px] rounded-full text-gray-500 focus:outline-none">
         <Notification className="w-5 h-5 text-white" />
       </Menu.Button>

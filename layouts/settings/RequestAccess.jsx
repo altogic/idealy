@@ -1,21 +1,14 @@
-import React, { useEffect } from 'react';
-import EmptyState from '@/components/EmptyState';
-import SectionTitle from '@/components/SectionTitle';
-import { useDispatch, useSelector } from 'react-redux';
-import { companyActions } from '@/redux/company/companySlice';
 import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
-import { XIcon, CheckIcon } from '@heroicons/react/outline';
+import EmptyState from '@/components/EmptyState';
+import SectionTitle from '@/components/SectionTitle';
+import { companyActions } from '@/redux/company/companySlice';
+import { CheckIcon, XIcon } from '@heroicons/react/outline';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function RequestAccess() {
   const dispatch = useDispatch();
   const accessRequests = useSelector((state) => state.company.accessRequests);
-  const company = useSelector((state) => state.company.company);
-  useEffect(() => {
-    if (company) {
-      dispatch(companyActions.getAccessRequestsByCompany(company._id));
-    }
-  }, [company]);
 
   return (
     <div>

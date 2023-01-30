@@ -192,7 +192,8 @@ export default function Realtime() {
     dispatch(commentActions.updateCommentSuccess(message));
   }
   function deleteCommentHandler({ message }) {
-    dispatch(commentActions.deleteCommentSuccess(message));
+    dispatch(commentActions.deleteCommentSuccess(message.commentId));
+    dispatch(ideaActions.deleteComment(message.ideaId));
   }
   function addReplyHandler({ message }) {
     if (ideaDetailModal.current) {
@@ -205,6 +206,7 @@ export default function Realtime() {
   }
   function deleteReplyHandler({ message }) {
     dispatch(repliesActions.deleteReplySuccess(message));
+    dispatch(commentActions.deleteReply(message.commentId));
   }
   function approveAccessHandler({ message }) {
     if (user._id === message.user._id) {

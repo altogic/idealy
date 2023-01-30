@@ -1,7 +1,6 @@
 import CommentsService from '@/services/comments';
 import { realtime } from '@/utils/altogic';
 import { call, put, select, takeEvery } from 'redux-saga/effects';
-import { ideaActions } from '../ideas/ideaSlice';
 import { commentActions } from './commentsSlice';
 
 function* addCommentSaga({ payload }) {
@@ -36,8 +35,7 @@ function* deleteCommentSaga({ payload: { commentId, ideaId } }) {
       throw new Error(errors);
     }
     yield put(commentActions.deleteCommentSuccess(commentId));
-    yield put(ideaActions.deleteComment(ideaId));
-    realtime.send(company._id, 'delete-comment', commentId);
+    realtime.send(company._id, 'delete-comment', { commentId, ideaId });
   } catch (error) {
     yield put(commentActions.deleteCommentFailure(error));
   }
