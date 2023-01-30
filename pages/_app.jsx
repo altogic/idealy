@@ -32,15 +32,18 @@ function MyApp({ Component, pageProps }) {
     if (company) {
       document.title = company.name;
       document.body.className = company.theme;
+      if (company?.authentication.type !== 'Guest Authentication') {
+        localStorage.removeItem('guestAuthentication');
+      }
     }
   }, [company]);
 
   useEffect(() => {
     const userFromCookie = JSON.parse(getCookie('user') || null);
     const session = JSON.parse(getCookie('session') || null);
-    console.log(userFromCookie, session);
     if (userFromCookie && session) {
       dispatch(authActions.authStateChange({ user: userFromCookie, session }));
+      localStorage.removeItem('guestAuthentication');
     }
   }, []);
 
