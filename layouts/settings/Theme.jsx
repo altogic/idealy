@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
 import SectionTitle from '@/components/SectionTitle';
-import { THEMES } from 'constants';
 import ThemeButton from '@/components/ThemeButton';
-import { useSelector, useDispatch } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
 import localStorageUtil from '@/utils/localStorageUtil';
+import { THEMES } from 'constants';
+import { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Theme() {
-  const [selectedTheme, setSelectedTheme] = useState();
+  const selectedTheme = useRef();
   const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
   useEffect(() => {
     if (company) {
-      setSelectedTheme(company.theme);
+      selectedTheme.current = company.theme;
     }
   }, [selectedTheme, company]);
 
   const handleThemeChange = (theme) => {
-    setSelectedTheme(theme);
+    selectedTheme.current = theme;
     localStorageUtil.set('theme', theme);
     dispatch(
       companyActions.updateCompany({
@@ -46,7 +46,7 @@ export default function Theme() {
               key={theme.id}
               theme={theme}
               onClick={() => handleThemeChange(theme.value)}
-              isSelected={selectedTheme === theme.value}
+              isSelected={selectedTheme.current === theme.value}
             />
           ))}
         </div>

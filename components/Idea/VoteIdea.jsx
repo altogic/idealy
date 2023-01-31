@@ -24,7 +24,6 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
   const isLoading = useSelector((state) => state.idea.isLoading);
   useEffect(() => {
     setVoteCountState(voteCount);
-
     setVotedState(voted);
   }, [voteCount, voted]);
 

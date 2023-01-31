@@ -35,6 +35,8 @@ function MyApp({ Component, pageProps }) {
       if (company?.authentication.type !== 'Guest Authentication') {
         localStorage.removeItem('guestAuthentication');
       }
+      document.body.className = company.theme;
+      localStorageUtil.set('theme', company.theme);
     }
   }, [company]);
 

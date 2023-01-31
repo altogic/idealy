@@ -8,6 +8,7 @@ import { repliesActions } from '@/redux/replies/repliesSlice';
 import { realtime } from '@/utils/altogic';
 import localStorageUtil from '@/utils/localStorageUtil';
 import { COMPANY_TABS } from 'constants';
+import _ from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -151,7 +152,19 @@ export default function Realtime() {
     }
   }
   function createIdeasHandler({ message }) {
-    if (message.isApproved || (company.role && company.role !== 'Guest')) {
+    const topics = router.query.topics.split(',');
+
+    const intersection = topics.filter((topic) => message.topics.includes(topic));
+    console.log(
+      intersection,
+      _.isNil(router.query.status),
+      _.isNil(router.query.status) && intersection.length > 0
+    );
+    if (
+      (message.isApproved || (company.role && company.role !== 'Guest')) &&
+      _.isNil(router.query.status) &&
+      intersection.length > 0
+    ) {
       dispatch(ideaActions.createIdeaSuccess(message));
     }
   }

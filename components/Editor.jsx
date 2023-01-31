@@ -23,8 +23,7 @@ export default function Editor({ content, setContent, errors, children, ...props
         onBlur={() => setIsEditorFocus(false)}
         {...props}
       />
-      <EditorToolbar />
-      {children}
+      <EditorToolbar>{children}</EditorToolbar>
     </>
   );
 }

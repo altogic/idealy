@@ -75,7 +75,8 @@ export default function Header() {
           )}
 
           <ul className="hidden lg:flex items-center gap-2">
-            {selectedCompany?.siteNavigation?.feedback && (
+            {(selectedCompany?.siteNavigation?.feedback ||
+              (selectedCompany?.role && selectedCompany?.role !== 'Guest')) && (
               <li
                 className={cn(
                   `flex items-center justify-center py-2 px-3 rounded-md transition`,
@@ -91,7 +92,8 @@ export default function Header() {
                 </Link>
               </li>
             )}
-            {selectedCompany?.siteNavigation?.roadmap && (
+            {(selectedCompany?.siteNavigation?.roadmap ||
+              (selectedCompany?.role && selectedCompany?.role !== 'Guest')) && (
               <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
                 <Link href="/">
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
@@ -101,7 +103,8 @@ export default function Header() {
                 </Link>
               </li>
             )}
-            {selectedCompany?.siteNavigation?.announcements && (
+            {(selectedCompany?.siteNavigation?.announcements ||
+              (selectedCompany?.role && selectedCompany?.role !== 'Guest')) && (
               <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
                 <Link href="/">
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
@@ -111,7 +114,7 @@ export default function Header() {
                 </Link>
               </li>
             )}
-            {selectedCompany?.role && (
+            {selectedCompany?.role && selectedCompany?.role !== 'Guest' && (
               <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
                 <Link href="/">
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
