@@ -123,6 +123,12 @@ export default function SubmitIdea({ idea }) {
     if (idea) {
       updateIdea(reqData, () => {
         addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
+        dispatch(
+          ideaActions.setGuestInfo({
+            guestEmail: data.guestEmail,
+            guestName: data.guestName
+          })
+        );
         handleClose();
         dispatch(fileActions.clearFileLinks());
       });
@@ -132,6 +138,12 @@ export default function SubmitIdea({ idea }) {
           idea: reqData,
           onSuccess: () => {
             addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
+            dispatch(
+              ideaActions.setGuestInfo({
+                guestEmail: data.guestEmail,
+                guestName: data.guestName
+              })
+            );
             handleClose();
             dispatch(fileActions.clearFileLinks());
           }
@@ -349,10 +361,7 @@ export default function SubmitIdea({ idea }) {
               render={() => (
                 <Editor content={content} setContent={setContent} errors={errors.content}>
                   {images.length < 5 && (
-                    <button
-                      type="button"
-                      className="absolute bottom-0 right-0 p-2 z-50"
-                      onClick={imageHandler}>
+                    <button type="button" onClick={imageHandler}>
                       <Photo className="w-6 h-6 text-slate-500 dark:text-aa-200 purple:text-pt-200 hover:text-[#06c] dark:hover:text-[#06c] purple:hover:text-[#06c]" />
                     </button>
                   )}

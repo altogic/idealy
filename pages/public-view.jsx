@@ -1,10 +1,11 @@
-import InfoModal from '@/components/InfoModal';
+import Divider from '@/components/Divider';
 import EmptyState from '@/components/EmptyState';
 import { Danger } from '@/components/icons';
 import FilterIdea from '@/components/Idea/FilterIdea';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
 import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfiniteScroll from '@/components/InfiniteScroll';
+import InfoModal from '@/components/InfoModal';
 import Layout from '@/components/Layout';
 import PublicViewCard from '@/components/PublicViewCard';
 import useGuestValidation from '@/hooks/useGuestValidation';
@@ -17,7 +18,6 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Divider from '@/components/Divider';
 
 export default function PublicView({ userIp }) {
   const [page, setPage] = useState(1);
@@ -261,15 +261,14 @@ export default function PublicView({ userIp }) {
                   endOfList={() => setPage((page) => page + 1)}>
                   {ideas.length > 0 ? (
                     ideas?.map((idea, index) => (
-                      <>
+                      <div key={idea._id}>
                         <PublicViewCard
-                          key={idea._id}
                           idea={idea}
                           onClick={() => handleClickIdea(idea)}
                           voted={handleVoted(idea._id)}
                         />
                         {ideas.length - 1 !== index && <Divider className="my-4" />}
-                      </>
+                      </div>
                     ))
                   ) : (
                     <EmptyState
@@ -303,6 +302,7 @@ export default function PublicView({ userIp }) {
               company={company}
               query={routerQuery}
               voted={handleVoted(selectedIdea?._id)}
+              onClose={() => handleCloseIdea()}
             />
             <InfoModal
               show={deleteFeedBackModal}

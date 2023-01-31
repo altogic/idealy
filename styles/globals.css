@@ -56,10 +56,12 @@
 .ql-toolbar.ql-snow {
   position: absolute;
   bottom: 0;
-  right: 10px;
+  right: 2px;
   z-index: 40;
 }
-
+.ql-toolbar.ql-snow .ql-formats {
+  margin-right: 0 !important;
+}
 .ql-editor {
   overflow: hidden !important;
 }
