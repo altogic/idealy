@@ -19,6 +19,7 @@
 
   body {
     @apply antialiased;
+    @apply h-screen;
   }
 
   [contenteditable='true'] {

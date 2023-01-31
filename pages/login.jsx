@@ -48,7 +48,9 @@ export default function Login({ invitation, clearSession, isInvited }) {
       isDeleted: user.isDeleted
     });
     if (_.isNil(invitation)) {
-      if (companies.length === 0) {
+      if (router.query?.redirect) {
+        router.push(router.query.redirect);
+      } else if (companies.length === 0) {
         router.push(generateUrl('create-new-company'));
       } else if (companies.length === 1) {
         router.push(generateUrl('public-view', companies[0].subdomain));

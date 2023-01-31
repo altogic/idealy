@@ -116,7 +116,7 @@ export default function Header() {
                 <Link href="/">
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
                     <People className="w-6 h-6 text-indigo-50 mr-3" />
-                    User
+                    Users
                   </a>
                 </Link>
               </li>
@@ -154,12 +154,12 @@ export default function Header() {
             !loading && (
               <ul className="flex items-center gap-4">
                 <li>
-                  <Link href={generateUrl('/login')}>
+                  <Link href={generateUrl('login')}>
                     <a className="inline-flex text-indigo-50 text-sm tracking-sm">Login</a>
                   </Link>
                 </li>
                 <li>
-                  <Link href={generateUrl('/register')}>
+                  <Link href={generateUrl('register')}>
                     <a className="inline-flex text-indigo-400 text-sm tracking-sm">Signup</a>
                   </Link>
                 </li>

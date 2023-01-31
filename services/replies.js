@@ -9,6 +9,6 @@ const replyService = {
     }),
   createReply: (data) => endpoint.post('/replies/', data),
   updateReply: (id, data) => endpoint.put(`/replies/${id}`, data),
-  deleteReply: (id) => endpoint.delete(`/replies/${id}`)
+  deleteReply: ({ replyId, commentId }) => endpoint.delete('/replies', { replyId, commentId })
 };
 export default replyService;

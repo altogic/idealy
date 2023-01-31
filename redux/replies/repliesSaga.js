@@ -47,7 +47,7 @@ function* updateReply({ payload: reply }) {
 function* deleteReply({ payload: { replyId, commentId } }) {
   try {
     const company = yield select((state) => state.company.company);
-    const { errors } = yield call(replyService.deleteReply, replyId);
+    const { errors } = yield call(replyService.deleteReply, { replyId, commentId });
     if (errors) {
       throw new Error(errors);
     }

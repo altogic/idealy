@@ -3,6 +3,7 @@ import { companyActions } from '@/redux/company/companySlice';
 import { deleteCookie, getCookie } from 'cookies-next';
 import _ from 'lodash';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -86,13 +87,16 @@ export default function Layout({ children }) {
             </main>
           </div>
           {!company?.whiteLabel?.isHideBanner && (
-            <a href="https://www.idealy.io/" target="_blank" rel="noopener noreferrer" className="">
-              <Badge
-                text="Powered by Idealy"
-                color="blue"
-                className="fixed bottom-8 right-8 p-4 text-base"
-              />
-            </a>
+            <Link href="https://www.idealy.io/">
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                className="fixed bottom-8 right-8 p-4 text-base">
+                <div className="inline-flex items-center text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full border bg-indigo-100 text-indigo-500 dark:bg-aa-600 purple:bg-pt-800 dark:text-aa-400 purple:text-pt-400 border-transparent">
+                  Powered by Idealy
+                </div>
+              </a>
+            </Link>
           )}
         </>
       )}
