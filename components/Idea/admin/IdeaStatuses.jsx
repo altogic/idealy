@@ -2,8 +2,8 @@ import { CircleCheck } from '@/components/icons';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { RadioGroup } from '@headlessui/react';
-import { useState, useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
 import IdeaAdminTab from './IdeaAdminTab';
 
@@ -37,9 +37,6 @@ export default function IdeaStatuses() {
     }
   };
 
-  useEffect(() => {
-    console.log('changedIndex.current', changedIndex.current);
-  }, [changedIndex.current]);
   return (
     <IdeaAdminTab title="Statuses">
       <div className="flex flex-col gap-4">
