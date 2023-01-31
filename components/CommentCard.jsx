@@ -135,7 +135,7 @@ export default function CommentCard({ comment }) {
                 ) : (
                   <div className="space-y-6">
                     {replies[comment?._id]?.map((reply) => (
-                      <ReplyCard reply={reply} key={reply?._id} />
+                      <ReplyCard reply={reply} key={reply?._id} setShowReplies={setShowReplies} />
                     ))}
                   </div>
                 )}

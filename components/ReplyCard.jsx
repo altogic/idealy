@@ -8,7 +8,7 @@ import InfoModal from './InfoModal';
 import { Danger, Pen, Trash } from './icons';
 import ReplyForm from './ReplyForm';
 
-export default function ReplyCard({ reply }) {
+export default function ReplyCard({ reply, setShowReplies }) {
   const [isDelete, setIsDelete] = useState(false);
   const [editReply, setEditReply] = useState();
   const canEdit = useIdeaActionValidation(reply, 'reply');
@@ -74,6 +74,7 @@ export default function ReplyCard({ reply }) {
             })
           );
           setIsDelete(!isDelete);
+          setShowReplies(false);
         }}
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title="Delete Reply"

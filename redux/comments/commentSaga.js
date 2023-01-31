@@ -8,10 +8,13 @@ function* addCommentSaga({ payload }) {
     const company = yield select((state) => state.company.company);
     const { data, errors } = yield call(CommentsService.addComment, payload);
     if (errors) {
-      throw new Error(errors);
+      throw errors.items;
     }
     yield put(commentActions.addCommentSuccess(data));
     realtime.send(company._id, 'add-comment', data);
+    if (payload.onSuccess) {
+      payload.onSuccess();
+    }
   } catch (error) {
     yield put(commentActions.addCommentFailure(error));
   }
@@ -20,7 +23,7 @@ function* getCommentsSaga({ payload: { ideaId, page } }) {
   try {
     const { data: comments, errors } = yield call(CommentsService.getComments, ideaId, page);
     if (errors) {
-      throw new Error(errors);
+      throw errors.items;
     }
     yield put(commentActions.getCommentsSuccess(comments));
   } catch (error) {
@@ -32,7 +35,7 @@ function* deleteCommentSaga({ payload: { commentId, ideaId } }) {
     const company = yield select((state) => state.company.company);
     const { errors } = yield call(CommentsService.deleteComment, commentId);
     if (errors) {
-      throw new Error(errors);
+      throw errors.items;
     }
     yield put(commentActions.deleteCommentSuccess(commentId));
     realtime.send(company._id, 'delete-comment', { commentId, ideaId });
@@ -45,10 +48,13 @@ function* updateCommentSaga({ payload }) {
     const company = yield select((state) => state.company.company);
     const { data, errors } = yield call(CommentsService.updateComment, payload);
     if (errors) {
-      throw new Error(errors);
+      throw errors.items;
     }
     yield put(commentActions.updateCommentSuccess(data));
     realtime.send(company._id, 'update-comment', data);
+    if (payload.onSuccess) {
+      payload.onSuccess();
+    }
   } catch (error) {
     yield put(commentActions.updateCommentFailure(error));
   }

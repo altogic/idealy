@@ -21,6 +21,7 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
   const userIp = useSelector((state) => state.auth.userIp);
   const guestInfo = useSelector((state) => state.idea.guestInfo);
   const feedBackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
+  const error = useSelector((state) => state.comments.error);
   const schema = yup.object().shape({
     text: yup.string(),
     guestName: yup.string().when([], {
@@ -44,15 +45,12 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
     handleSubmit,
     formState: { errors, isSubmitSuccessful },
     setValue,
+    setError,
     control
   } = useForm({
     resolver: yupResolver(schema)
   });
-
-  const submitComment = (data) => {
-    if (comment.trim() === '') {
-      return;
-    }
+  const saveGuestInfo = (data) => {
     if (data.guestEmail) {
       addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
       dispatch(
@@ -62,13 +60,20 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
         })
       );
     }
+  };
+
+  const submitComment = (data) => {
+    if (comment.trim() === '') {
+      return;
+    }
     if (editedComment) {
       dispatch(
         commentActions.updateComment({
           _id: editedComment._id,
           text: comment,
           guestName: user?.name || data.guestName,
-          guestEmail: user?.email || data.guestEmail
+          guestEmail: user?.email || data.guestEmail,
+          onSuccess: () => saveGuestInfo(data)
         })
       );
     } else {
@@ -78,7 +83,8 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
           ideaId,
           text: comment,
           user: user?._id,
-          ...(!user && !data.guestEmail && { ip: userIp })
+          ...(!user && !data.guestEmail && { ip: userIp }),
+          onSuccess: () => saveGuestInfo(data)
         })
       );
       setIsFetched(true);
@@ -112,6 +118,18 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
       setComment('');
     }
   }, [updateCommentLoading, setEditComment, isSubmitSuccessful]);
+  useEffect(() => {
+    if (Symbol.iterator in Object(error)) {
+      error.forEach((err) => {
+        if (err.code === 'user_exist') {
+          setError('guestEmail', {
+            type: 'manual',
+            message: err.message
+          });
+        }
+      });
+    }
+  }, [error]);
   return (
     <form onSubmit={handleSubmit(submitComment)} className="my-4">
       <Controller

@@ -80,7 +80,7 @@ export default function Privacy() {
               descriptionText="Stop Ideas from going live on your board until you approve them."
               enabled={ideaApproval}
               onChange={() => {
-                if (!ideaApproval) {
+                if (ideaApproval) {
                   setIdeaApproveModal(true);
                 } else {
                   setIdeaApproval(!ideaApproval);
@@ -102,7 +102,7 @@ export default function Privacy() {
       <InfoModal
         show={ideaApproveModal}
         title="Idea Approval"
-        description="this change will approve all ideas pending approval."
+        description="This will approve all ideas waiting for approval"
         onConfirm={() => {
           setIdeaApproval(!ideaApproval);
           updateCompanyPrivacy('ideaApproval', !ideaApproval);
