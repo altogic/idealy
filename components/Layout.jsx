@@ -9,7 +9,6 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
 import { generateUrl, setCookie } from '../utils';
-import Badge from './Badge';
 import Header from './Header';
 import Realtime from './Realtime';
 

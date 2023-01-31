@@ -18,7 +18,6 @@ export default function IdeaApproval() {
         isApproved
       },
       () => {
-        console.log('Idea approved', idea.author.email);
         endpoint.post('/idea/approval', {
           companyName: company.name,
           email: idea.author.email || idea.guestEmail,

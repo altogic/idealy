@@ -176,7 +176,6 @@ export default function Realtime() {
     }
   }
   function downVoteIdeaHandler({ message }) {
-    console.log(message);
     if (
       (user && user._id !== message.userId) ||
       (!user && !voteGuest.current && userIp !== message.ip) ||
