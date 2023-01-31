@@ -17,12 +17,14 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
   const company = useSelector((state) => state.company.company);
   const voteGuestAuthentication = useGuestValidation('voteIdea');
   const guestInfo = useSelector((state) => state.idea.guestInfo);
+  const error = useSelector((state) => state.idea.error);
   const [voteCountState, setVoteCountState] = useState();
   const [votedState, setVotedState] = useState();
   const [openGuestForm, setOpenGuestForm] = useState(false);
   const isLoading = useSelector((state) => state.idea.isLoading);
   useEffect(() => {
     setVoteCountState(voteCount);
+
     setVotedState(voted);
   }, [voteCount, voted]);
 
@@ -54,7 +56,9 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
             companyId: company._id,
             userId: user?._id,
             onError: () => {
-              setVoteCountState((prev) => prev - 1);
+              if (voteCountState > 0) {
+                setVoteCountState((prev) => prev - 1);
+              }
               setVotedState(false);
             }
           })
@@ -64,17 +68,36 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
       downVote();
     }
   };
-  const guestVote = (data) => {
-    addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
+  const handleGuestFormSubmit = (data) => {
+    setVotedState(true);
+    setVoteCountState((prev) => prev + 1);
     dispatch(
-      ideaActions.setGuestInfo({
-        name: data.guestName,
-        email: data.guestEmail
+      ideaActions.voteIdea({
+        ideaId,
+        ...(!user && !voteGuestAuthentication && { ip: userIp }),
+        ...(voteGuestAuthentication && { ...data }),
+        companyId: company._id,
+        userId: user?._id,
+        onError: () => {
+          setVoteCountState((prev) => prev - 1);
+          setVotedState(false);
+        },
+        onSuccess: (res) => {
+          if (voteGuestAuthentication) {
+            addGuestInfoToLocalStorage(res.guestEmail, res.guestName);
+            dispatch(
+              ideaActions.setGuestInfo({
+                guestName: res.guestName,
+                guestEmail: res.guestEmail
+              })
+            );
+            setOpenGuestForm(false);
+          }
+        }
       })
     );
-    setOpenGuestForm(false);
-    upVote();
   };
+
   return (
     <div
       className={`flex flex-col items-center bg-white dark:bg-aa-50 purple:bg-pt-50 dark:bg-opacity-10 purple:bg-opacity-10 py-1 px-3 md:px-5 border rounded-lg h-20 ${
@@ -113,9 +136,10 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
       )}
       <GuestFormModal
         title="Please enter your details to vote"
-        onSubmit={guestVote}
+        onSubmit={handleGuestFormSubmit}
         open={openGuestForm}
         onClose={() => setOpenGuestForm(false)}
+        error={error}
         showLoginLink
       />
     </div>

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
 import { realtime } from '@/utils/altogic';
 import { notificationActions } from '@/redux/notification/notificationSlice';
+import { generateUrl } from '../utils';
 
 export default function RequestAccess() {
   const sessionUser = useSelector((state) => state.auth.user);
@@ -21,7 +22,7 @@ export default function RequestAccess() {
   const dispatch = useDispatch();
   useEffect(() => {
     if (sessionUser) setUser(sessionUser);
-  }, [user]);
+  }, [sessionUser]);
 
   useEffect(() => {
     if (user && company) {
@@ -66,7 +67,8 @@ export default function RequestAccess() {
                 {user && userApproval ? (
                   accessRequest ? (
                     <span className="text-slate-800 dark:text-aa-200 purple:text-pt-200">
-                      Your request has been reviewing
+                      Your access request has been submitted. <br />
+                      You will be notified by email when your request has been accepted or rejected.
                     </span>
                   ) : (
                     <Button
@@ -101,12 +103,19 @@ export default function RequestAccess() {
                 ) : (
                   !user && (
                     <>
-                      <span className="text-slate-800 dark:text-aa-200 purple:text-pt-200 tracking-sm">
+                      <span className="text-slate-800 dark:text-aa-100 purple:text-pt-100 tracking-sm">
                         {' '}
                         Already have an account?{' '}
                       </span>
-                      <Link href="/login">
-                        <a className="text-indigo-700  dark:text-aa-200 purple:text-pt-200 ml-2">
+                      <Link
+                        href={generateUrl(
+                          `/login${
+                            userApproval
+                              ? `?redirect=${generateUrl('request-access', company.subdomain)}`
+                              : ''
+                          }`
+                        )}>
+                        <a className="text-indigo-700  dark:text-aa-300 purple:dark:text-aa-200 purple:text-pt-400 purple:hover:text-pt-300 underline ml-2">
                           Login
                         </a>
                       </Link>

@@ -10,11 +10,13 @@ export default function useIdeaActionValidation(model, fieldName) {
   const guestValidation = useGuestValidation(fieldName);
 
   if (user) {
-    return user?._id === model?.author?._id || company?.role;
+    return !company?.role || company?.role === 'Guest' ? user?._id === model?.author?._id : true;
   }
   if (!_.isEmpty(guestInfo) && guestValidation) {
-    return guestInfo?.guestEmail === model?.guestEmail || company?.role;
+    return (
+      guestInfo?.guestEmail === model?.guestEmail || (company?.role && company?.role !== 'Guest')
+    );
   }
 
-  return userIp === model?.ip || company?.role;
+  return userIp === model?.ip || (company?.role && company?.role !== 'Guest');
 }

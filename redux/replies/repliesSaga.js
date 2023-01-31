@@ -1,8 +1,7 @@
-import { call, put, takeEvery, select } from 'redux-saga/effects';
 import replyService from '@/services/replies';
 import { realtime } from '@/utils/altogic';
+import { call, put, select, takeEvery } from 'redux-saga/effects';
 import { repliesActions } from './repliesSlice';
-import { commentActions } from '../comments/commentsSlice';
 
 function* getReplies({ payload: { commentId, page } }) {
   try {
@@ -48,12 +47,12 @@ function* updateReply({ payload: reply }) {
 function* deleteReply({ payload: { replyId, commentId } }) {
   try {
     const company = yield select((state) => state.company.company);
-    const { errors } = yield call(replyService.deleteReply, replyId);
+    const { errors } = yield call(replyService.deleteReply, { replyId, commentId });
     if (errors) {
       throw new Error(errors);
     }
     yield put(repliesActions.deleteReplySuccess({ replyId, commentId }));
-    yield put(commentActions.deleteReply(commentId));
+
     realtime.send(company._id, 'delete-reply', { replyId, commentId });
   } catch (error) {
     yield put(repliesActions.deleteReplyFailure(error));

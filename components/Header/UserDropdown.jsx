@@ -62,7 +62,7 @@ export default function UserDropdown({ companies }) {
             </div>
           </Menu.Item>
           <div className="flex flex-col divide-y divide-gray-200 dark:divide-aa-600 purple:divide-pt-800">
-            {selectedCompany?.role !== 'Moderator' && (
+            {selectedCompany?.role !== 'Moderator' && selectedCompany?.role !== 'Guest' && (
               <Menu.Button onClick={() => Router.push('/settings?tab=general%20settings')}>
                 <span className="inline-flex items-center gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700">
                   <Settings className="w-4 h-4 text-slate-500 dark:text-aa-300 purple:text-pt-300" />

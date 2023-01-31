@@ -72,9 +72,9 @@ export const ideaSlice = createSlice({
     },
     downVoteIdeaSuccess(state, action) {
       state.isLoading = false;
-      state.ideaVotes = state.ideaVotes.filter((vote) => vote.ideaId !== action.payload);
+      state.ideaVotes = state.ideaVotes.filter((vote) => vote._id !== action.payload._id);
       state.ideas = state.ideas.map((idea) => {
-        if (idea._id === action.payload) {
+        if (idea._id === action.payload.ideaId) {
           return {
             ...idea,
             voteCount: idea.voteCount ? idea.voteCount - 1 : 0
@@ -221,7 +221,9 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
-      state.selectedIdea.commentCount -= 1;
+      if (state.selectedIdea) {
+        state.selectedIdea.commentCount -= 1;
+      }
     },
     searchCompanyMembers(state) {
       state.isLoading = true;

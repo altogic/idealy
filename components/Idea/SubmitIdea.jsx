@@ -13,6 +13,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
+import { companyActions } from '@/redux/company/companySlice';
 import AutoComplete from '../AutoComplete';
 import Avatar from '../Avatar';
 import Button from '../Button';
@@ -123,6 +124,7 @@ export default function SubmitIdea({ idea }) {
       updateIdea(reqData, () => {
         addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
         handleClose();
+        dispatch(fileActions.clearFileLinks());
       });
     } else {
       dispatch(
@@ -131,6 +133,7 @@ export default function SubmitIdea({ idea }) {
           onSuccess: () => {
             addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
             handleClose();
+            dispatch(fileActions.clearFileLinks());
           }
         })
       );
@@ -185,6 +188,13 @@ export default function SubmitIdea({ idea }) {
     setMember(user);
     setOpenGuestForm(false);
     setInpTitle('');
+    dispatch(
+      companyActions.createCompanyUser({
+        companyId: company._id,
+        name: data.guestName,
+        email: data.guestEmail
+      })
+    );
   };
   useEffect(() => {
     if (!_.isNil(idea)) {
@@ -273,7 +283,7 @@ export default function SubmitIdea({ idea }) {
           Tell us your idea
         </h2>
         <form onSubmit={handleSubmit(onSubmit)}>
-          {user && company?.role && (
+          {user && company?.role && company?.role !== 'Guest' && (
             <div className="my-8">
               <AutoComplete
                 suggestions={companyMembers}
@@ -394,7 +404,7 @@ export default function SubmitIdea({ idea }) {
               )}
             />
           </div>
-          <Divider className="m-8" />
+          <Divider className="my-8" />
           <div>
             {((idea?.guestName && idea?.guestEmail) || guestValidation) && (
               <GuestForm register={register} errors={errors} />

@@ -1,38 +1,42 @@
-import React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import Link from 'next/link';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import Link from 'next/link';
-import { useDispatch, useSelector } from 'react-redux';
-import { companyActions } from '@/redux/company/companySlice';
 import Button from './Button';
 import GuestForm from './GuestForm';
 import Modal from './Modal';
 
-export default function GuestFormModal({ title, onSubmit, open, onClose, showLoginLink }) {
+export default function GuestFormModal({ title, onSubmit, open, onClose, showLoginLink, error }) {
   const schema = yup.object().shape({
     guestName: yup.string().required('Name is required'),
     guestEmail: yup.string().email('Email is invalid').required('Email is required')
   });
-  const company = useSelector((state) => state.company.company);
-  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors }
   } = useForm({
     resolver: yupResolver(schema)
   });
   const submit = (data) => {
     onSubmit(data);
-    dispatch(
-      companyActions.createCompanyUser({
-        companyId: company._id,
-        name: data.guestName,
-        email: data.guestEmail
-      })
-    );
   };
+
+  useEffect(() => {
+    if (Symbol.iterator in Object(error)) {
+      error.forEach((err) => {
+        if (err.code === 'user_exist') {
+          setError('guestEmail', {
+            type: 'manual',
+            message: err.message
+          });
+        }
+      });
+    }
+  }, [error]);
   return (
     <Modal show={open} onClose={() => onClose()}>
       <h1 className="mb-8 text-lg md:text-xl lg:text-2xl font-bold leading-none tracking-tight text-gray-900 dark:text-aa-100 purple:text-pt-100 text-center">

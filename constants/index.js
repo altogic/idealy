@@ -46,7 +46,7 @@ export const COMPANY_TABS = [
   { id: 14, name: 'Access Requests', roles: ['Owner', 'Admin'] }
 ];
 export const IDEA_SORT_TYPES = [
-  { name: 'Trending', url: 'trending', query: 'trending' },
+  { name: 'Trending', url: 'trending', query: 'trendingScore:desc' },
   { name: 'Top', url: 'top', query: 'voteCount:desc' },
   { name: 'Newest', url: 'newest', query: 'createdAt:desc' },
   { name: 'Status Changed', url: 'status_changed', query: 'statusUpdatedAt:desc' }

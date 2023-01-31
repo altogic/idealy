@@ -1,12 +1,14 @@
+import { authActions } from '@/redux/auth/authSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { wrapper } from '@/redux/store';
 import localStorageUtil from '@/utils/localStorageUtil';
 import 'animate.css/animate.min.css';
+import { getCookie } from 'cookies-next';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { cssTransition, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/globals.css';
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 
 function MyApp({ Component, pageProps }) {
   const toastTransition = cssTransition({
@@ -30,8 +32,21 @@ function MyApp({ Component, pageProps }) {
     if (company) {
       document.title = company.name;
       document.body.className = company.theme;
+      if (company?.authentication.type !== 'Guest Authentication') {
+        localStorage.removeItem('guestAuthentication');
+      }
     }
   }, [company]);
+
+  useEffect(() => {
+    const userFromCookie = JSON.parse(getCookie('user') || null);
+    const session = JSON.parse(getCookie('session') || null);
+    if (userFromCookie && session) {
+      dispatch(authActions.authStateChange({ user: userFromCookie, session }));
+      localStorage.removeItem('guestAuthentication');
+    }
+  }, []);
+
   return (
     <>
       <ToastContainer

@@ -79,9 +79,9 @@ export default function CompanyLogo() {
       </div>
 
       <div className="flex items-center gap-3">
-        {company?.logoUrl ? (
+        {company?.logoUrl && (
           <Button onClick={deletePhotoHandler} type="button" text="Delete" variant="red" />
-        ) : null}
+        )}
         <Button onClick={uploadPhotoHandler} type="button" text="Upload" variant="indigo" />
       </div>
     </>

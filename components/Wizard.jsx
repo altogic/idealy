@@ -29,7 +29,7 @@ export default function Wizard({ children, activePageIndex, setActivePageIndex, 
     }
     dispatch(
       companyActions.createCompany({
-        userId: user._id,
+        userId: user?._id,
         userIp,
         onSuccess: (company) => Router.push(generateUrl('public-view', company.subdomain))
       })

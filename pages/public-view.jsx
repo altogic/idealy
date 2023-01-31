@@ -56,7 +56,7 @@ export default function PublicView({ userIp }) {
     if (filterStatus?.length) {
       const statusFilter = [];
       filterStatus.forEach((status) => {
-        statusFilter.push(`this.status._id == '${status}'`);
+        statusFilter.push(`this.status.name == '${status}'`);
       });
       return `(${statusFilter.join(' || ')})`;
     }
@@ -109,7 +109,7 @@ export default function PublicView({ userIp }) {
         sort: handleSort(router.query.sort),
         page
       };
-      if (!user || !company?.role) {
+      if (!user || !company?.role || company?.role === 'Guest') {
         req.filter += ` this.isApproved == true &&`;
       }
       dispatch(ideaActions.getIdeasByCompany(req));
@@ -226,75 +226,77 @@ export default function PublicView({ userIp }) {
                   setFilterStatus={setFilterStatus}
                 />
               </div>
-              <InfiniteScroll
-                items={ideas}
-                countInfo={countInfo}
-                endOfList={() => setPage((page) => page + 1)}>
-                {loading && page === 1 ? (
-                  <div
-                    role="status"
-                    className="w-full space-y-4 divide-y divide-gray-300 animate-pulse">
-                    <div className="flex justify-between items-center px-4 py-8">
-                      <div className="flex items-center gap-6">
-                        <div className="w-[62px] h-20 bg-gray-300 rounded-lg" />
-                        <div>
-                          <div className="w-64 h-2.5 bg-gray-300 rounded-full mb-2.5" />
-                          <div className="w-32 h-2 bg-gray-300 rounded-full mb-2.5" />
-                          <div className="h-2.5 bg-gray-300 rounded-full w-24" />
-                        </div>
+              {loading && page === 1 ? (
+                <div
+                  role="status"
+                  className="w-full space-y-4 divide-y divide-gray-300 dark:divide-aa-600 purple:divide-pt-800 animate-pulse">
+                  <div className="flex justify-between items-center px-4 py-8">
+                    <div className="flex items-center gap-6">
+                      <div className="w-[62px] h-20 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-lg" />
+                      <div>
+                        <div className="w-64 h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full mb-2.5" />
+                        <div className="w-32 h-2 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full mb-2.5" />
+                        <div className="h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full w-24" />
                       </div>
-                      <div className="h-2.5 bg-gray-300 rounded-full w-12" />
                     </div>
-                    <div className="flex justify-between items-center px-4 py-8">
-                      <div className="flex items-center gap-6">
-                        <div className="w-[62px] h-20 bg-gray-300 rounded-lg" />
-                        <div>
-                          <div className="w-64 h-2.5 bg-gray-300 rounded-full mb-2.5" />
-                          <div className="w-32 h-2 bg-gray-300 rounded-full mb-2.5" />
-                          <div className="h-2.5 bg-gray-300 rounded-full w-24" />
-                        </div>
-                      </div>
-                      <div className="h-2.5 bg-gray-300 rounded-full w-12" />
-                    </div>
-                    <span className="sr-only">Loading...</span>
+                    <div className="h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full w-12" />
                   </div>
-                ) : ideas.length > 0 ? (
-                  ideas?.map((idea, index) => (
-                    <>
-                      <PublicViewCard
-                        key={idea._id}
-                        idea={idea}
-                        onClick={() => handleClickIdea(idea)}
-                        voted={handleVoted(idea._id)}
-                      />
-                      {ideas.length - 1 !== index && <Divider className="my-4" />}
-                    </>
-                  ))
-                ) : (
-                  <EmptyState
-                    title="No feature ideas found"
-                    description="Your search did not match any data or this company does not have any feature ideas yet."
-                  />
-                )}
-                {loading && page > 1 && (
-                  <div
-                    role="status"
-                    className="w-full space-y-4 divide-y divide-gray-300 animate-pulse">
-                    <div className="flex justify-between items-center px-4 py-8">
-                      <div className="flex items-center gap-6">
-                        <div className="w-[62px] h-20 bg-gray-300 rounded-lg" />
-                        <div>
-                          <div className="w-64 h-2.5 bg-gray-300 rounded-full mb-2.5" />
-                          <div className="w-32 h-2 bg-gray-300 rounded-full mb-2.5" />
-                          <div className="h-2.5 bg-gray-300 rounded-full w-24" />
-                        </div>
+                  <div className="flex justify-between items-center px-4 py-8">
+                    <div className="flex items-center gap-6">
+                      <div className="w-[62px] h-20 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-lg" />
+                      <div>
+                        <div className="w-64 h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full mb-2.5" />
+                        <div className="w-32 h-2 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full mb-2.5" />
+                        <div className="h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full w-24" />
                       </div>
-                      <div className="h-2.5 bg-gray-300 rounded-full w-12" />
                     </div>
-                    <span className="sr-only">Loading...</span>
+                    <div className="h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full w-12" />
                   </div>
-                )}
-              </InfiniteScroll>
+                  <span className="sr-only">Loading...</span>
+                </div>
+              ) : (
+                <InfiniteScroll
+                  items={ideas}
+                  countInfo={countInfo}
+                  endOfList={() => setPage((page) => page + 1)}>
+                  {ideas.length > 0 ? (
+                    ideas?.map((idea, index) => (
+                      <>
+                        <PublicViewCard
+                          key={idea._id}
+                          idea={idea}
+                          onClick={() => handleClickIdea(idea)}
+                          voted={handleVoted(idea._id)}
+                        />
+                        {ideas.length - 1 !== index && <Divider className="my-4" />}
+                      </>
+                    ))
+                  ) : (
+                    <EmptyState
+                      title="No feature ideas found"
+                      description="Your search did not match any data or this company does not have any feature ideas yet."
+                    />
+                  )}
+                  {loading && page > 1 && (
+                    <div
+                      role="status"
+                      className="w-full space-y-4 divide-y divide-gray-300 animate-pulse">
+                      <div className="flex justify-between items-center px-4 py-8">
+                        <div className="flex items-center gap-6">
+                          <div className="w-[62px] h-20 bg-gray-300 rounded-lg" />
+                          <div>
+                            <div className="w-64 h-2.5 bg-gray-300 rounded-full mb-2.5" />
+                            <div className="w-32 h-2 bg-gray-300 rounded-full mb-2.5" />
+                            <div className="h-2.5 bg-gray-300 rounded-full w-24" />
+                          </div>
+                        </div>
+                        <div className="h-2.5 bg-gray-300 rounded-full w-12" />
+                      </div>
+                      <span className="sr-only">Loading...</span>
+                    </div>
+                  )}
+                </InfiniteScroll>
+              )}
             </div>
             <IdeaDetail
               idea={selectedIdea}

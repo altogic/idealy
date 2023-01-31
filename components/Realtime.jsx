@@ -34,6 +34,7 @@ export default function Realtime() {
   const router = useRouter();
   const ideaDetailModal = useRef(false);
   const voteGuest = useRef(false);
+  const guestInfoState = useRef({});
   useEffect(() => {
     ideaDetailModal.current = feedBackDetailModal;
   }, [feedBackDetailModal]);
@@ -41,6 +42,9 @@ export default function Realtime() {
   useEffect(() => {
     voteGuest.current = voteGuestAuth;
   }, [voteGuestAuth]);
+  useEffect(() => {
+    guestInfoState.current = guestInfo;
+  }, [guestInfo]);
 
   function deleteMembershipHandler(data) {
     dispatch(companyActions.deleteCompanyMemberRealtime(data.message));
@@ -147,7 +151,7 @@ export default function Realtime() {
     }
   }
   function createIdeasHandler({ message }) {
-    if (message.isApproved) {
+    if (message.isApproved || (company.role && company.role !== 'Guest')) {
       dispatch(ideaActions.createIdeaSuccess(message));
     }
   }
@@ -166,7 +170,7 @@ export default function Realtime() {
     if (
       (user && user._id !== message.userId) ||
       (!user && !voteGuest.current && userIp !== message.ip) ||
-      (voteGuest.current && guestInfo.guestEmail !== message.guestEmail)
+      (voteGuest.current && guestInfoState.current.guestEmail !== message.guestEmail)
     ) {
       dispatch(ideaActions.upVoteIdeaRealtime(message.ideaId));
     }
@@ -174,8 +178,8 @@ export default function Realtime() {
   function downVoteIdeaHandler({ message }) {
     if (
       (user && user._id !== message.userId) ||
-      (!user && userIp !== message.ip) ||
-      (voteGuest.current && guestInfo.guestEmail !== message.guestEmail)
+      (!user && !voteGuest.current && userIp !== message.ip) ||
+      (voteGuest.current && guestInfoState.current.guestEmail !== message.guestEmail)
     ) {
       dispatch(ideaActions.downVoteIdeaRealtime(message.ideaId));
     }
@@ -192,7 +196,8 @@ export default function Realtime() {
     dispatch(commentActions.updateCommentSuccess(message));
   }
   function deleteCommentHandler({ message }) {
-    dispatch(commentActions.deleteCommentSuccess(message));
+    dispatch(commentActions.deleteCommentSuccess(message.commentId));
+    dispatch(ideaActions.deleteComment(message.ideaId));
   }
   function addReplyHandler({ message }) {
     if (ideaDetailModal.current) {
@@ -205,6 +210,7 @@ export default function Realtime() {
   }
   function deleteReplyHandler({ message }) {
     dispatch(repliesActions.deleteReplySuccess(message));
+    dispatch(commentActions.deleteReply(message.commentId));
   }
   function approveAccessHandler({ message }) {
     if (user._id === message.user._id) {

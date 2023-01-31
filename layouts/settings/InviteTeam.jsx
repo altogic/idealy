@@ -100,7 +100,7 @@ export default function InviteTeam() {
       case 'Moderator':
         return <>Can only moderate ideas, roadmap and announcements</>;
       default:
-        return 'Users can sign up and sign in using their email address.';
+        return 'Users can sign up and sign in using the email address specified above.';
     }
   };
   return (
