@@ -21,15 +21,6 @@
     @apply antialiased;
     @apply h-screen;
   }
-
-  [contenteditable='true'] {
-    min-height: 200px !important;
-    max-height: 300px;
-    overflow: hidden;
-    overflow-y: scroll;
-    overflow-x: scroll;
-  }
-
   textarea {
     resize: none;
   }
@@ -49,6 +40,13 @@
   .company-name {
     word-break: break-word;
   }
+}
+.ql-editor {
+  min-height: 200px !important;
+  max-height: 300px;
+  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: scroll;
 }
 .ql-snow {
   border: none !important;
@@ -144,4 +142,7 @@
 }
 .ql-snow .ql-tooltip {
   @apply border-slate-300 dark:border-aa-600 purple:border-pt-800 !important;
+}
+.ql-editor .mention {
+  @apply text-slate-500 bg-transparent dark:text-aa-100 purple:text-pt-100;
 }

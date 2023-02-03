@@ -14,18 +14,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { companyActions } from '@/redux/company/companySlice';
+import dynamic from 'next/dynamic';
 import AutoComplete from '../AutoComplete';
 import Avatar from '../Avatar';
 import Button from '../Button';
 import Divider from '../Divider';
 import Drawer from '../Drawer';
-import Editor from '../Editor';
 import GuestForm from '../GuestForm';
 import { ChevronUp, Photo, Plus } from '../icons';
 import Input from '../Input';
 import SimilarIdeaCard from '../SimilarIdeaCard';
 import TopicButton from '../TopicButton';
 import GuestFormModal from '../GuestFormModal';
+
+const Editor = dynamic(() => import('../Editor'), { ssr: false });
 
 export default function SubmitIdea({ idea }) {
   const company = useSelector((state) => state.company.company);
@@ -120,6 +122,15 @@ export default function SubmitIdea({ idea }) {
       isApproved: !company?.privacy?.ideaApproval
     };
     delete reqData.privacyPolicy;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, 'text/html');
+    const mentions = doc.querySelectorAll('.mention');
+    if (mentions.length) {
+      const mentionsArray = Array.from(mentions);
+      const mentionsIds = mentionsArray.map((mention) => mention.dataset.id);
+      const uniqueMentions = [...new Set(mentionsIds)];
+      console.log(uniqueMentions);
+    }
     if (idea) {
       updateIdea(reqData, () => {
         addGuestInfoToLocalStorage(data.guestEmail, data.guestName);

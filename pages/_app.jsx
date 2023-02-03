@@ -37,6 +37,7 @@ function MyApp({ Component, pageProps }) {
       }
       document.body.className = company.theme;
       localStorageUtil.set('theme', company.theme);
+      localStorageUtil.set('companyId', company._id);
     }
   }, [company]);
 

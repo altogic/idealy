@@ -7,9 +7,11 @@ import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
+import dynamic from 'next/dynamic';
 import Button from './Button';
-import Editor from './Editor';
 import GuestForm from './GuestForm';
+
+const Editor = dynamic(() => import('./Editor'), { ssr: false });
 
 export default function CommentForm({ ideaId, editedComment, setEditComment, setIsFetched }) {
   const dispatch = useDispatch();
