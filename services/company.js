@@ -66,7 +66,6 @@ const companyService = {
   updateCompanyMemberRole: (req) => endpoint.put('/company/member', req),
   updateCompanySubListsOrder: ({ modelName, value }) =>
     endpoint.put(`/company/${modelName}/order`, value),
-
   updateCompanyProperties: ({ id, modelName, fieldName, value }) =>
     db
       .model(modelName)
