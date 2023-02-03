@@ -133,8 +133,7 @@ export default function PublicView({ userIp }) {
 
   const handleDelete = () => {
     dispatch(toggleDeleteFeedBackModal());
-    dispatch(ideaActions.deleteIdea(selectedIdea._id));
-    handleCloseIdea();
+    dispatch(ideaActions.deleteIdea({ id: selectedIdea._id, onSuccess: handleCloseIdea }));
   };
 
   const handleVoted = (ideaId) => {
@@ -156,6 +155,7 @@ export default function PublicView({ userIp }) {
       dispatch(toggleFeedBackDetailModal());
     }
   };
+
   useEffect(() => {
     if (router) {
       const { topics, status, sort, feedback } = router.query;
@@ -191,6 +191,7 @@ export default function PublicView({ userIp }) {
       );
     }
   }, [company]);
+
   useEffect(() => {
     if (userIp) {
       dispatch(authActions.setUserIp(userIp));

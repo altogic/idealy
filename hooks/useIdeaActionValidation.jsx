@@ -12,7 +12,7 @@ export default function useIdeaActionValidation(model, fieldName) {
   if (user) {
     return !company?.role || company?.role === 'Guest' ? user?._id === model?.author?._id : true;
   }
-  if (!_.isEmpty(guestInfo) && guestValidation) {
+  if (!_.isEmpty(guestInfo) && guestValidation && fieldName !== 'reply') {
     return (
       guestInfo?.guestEmail === model?.guestEmail || (company?.role && company?.role !== 'Guest')
     );
