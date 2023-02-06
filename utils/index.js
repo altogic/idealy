@@ -51,11 +51,112 @@ export function shadeHexColor(color, percent) {
     .toString(16)
     .slice(1)}`;
 }
-export const addGuestInfoToLocalStorage = (guestEmail, guestName) => {
-  if (guestEmail && guestName) {
-    localStorageUtil.set('guestAuthentication', {
-      guestName,
-      guestEmail
-    });
-  }
+export const addGuestInfoToLocalStorage = (email, name, avatar) => {
+  console.log('addGuestInfoToLocalStorage', email, name, avatar);
+  localStorageUtil.set('guestAuthentication', {
+    name,
+    email,
+    avatar
+  });
+};
+
+export const generateRandomName = () => {
+  const names = [
+    'Harry',
+    'Hermione',
+    'Ron',
+    'Hagrid',
+    'Dumbledore',
+    'Snape',
+    'Hannah',
+    'Oliver',
+    'George',
+    'Fred',
+    'James',
+    'Lily',
+    'Albus',
+    'Severus',
+    'Minerva',
+    'Remus',
+    'Sirius',
+    'Peter',
+    'Neville',
+    'Ginny',
+    'Draco',
+    'Lucius',
+    'Bellatrix',
+    'Voldemort',
+    'Dobby',
+    'Sirius',
+    'Tonks',
+    'Nymphadora',
+    'Luna',
+    'Cho',
+    'Cedric',
+    'Fleur',
+    'Kingsley',
+    'Arthur',
+    'Molly',
+    'Bill',
+    'Charlie',
+    'Percy',
+    'Fleur',
+    'Ginny',
+    'Fred',
+    'George',
+    'Mundungus',
+    'Narcissa',
+    'Rita',
+    'Lavender',
+    'Parvati',
+    'Padma',
+    'Lily',
+    'James',
+    'Remus',
+    'Sirius',
+    'Peter',
+    'Neville',
+    'Ginny',
+    'Draco',
+    'Lucius',
+    'Bellatrix',
+    'Voldemort',
+    'Dobby',
+    'Sirius',
+    'Tonks',
+    'Nymphadora',
+    'Luna',
+    'Cho',
+    'Cedric',
+    'Fleur',
+    'Kingsley',
+    'Arthur',
+    'Molly',
+    'Bill',
+    'Charlie',
+    'Percy',
+    'Fleur',
+    'Ginny',
+    'Fred',
+    'George',
+    'Mundungus',
+    'Narcissa',
+    'Rita',
+    'Lavender',
+    'Parvati',
+    'Padma',
+    'Lily',
+    'James',
+    'Remus',
+    'Sirius',
+    'Peter',
+    'Neville',
+    'Ginny',
+    'Draco',
+    'Lucius',
+    'Bellatrix',
+    'Voldemort'
+  ];
+  const randomIndex = Math.floor(Math.random() * names.length);
+  return `Anonymous ${names[randomIndex]}`;
 };

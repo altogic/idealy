@@ -1,31 +1,31 @@
 import ImageList from '@/components/ImageList';
 import useGuestValidation from '@/hooks/useGuestValidation';
+import useSaveGuestInformation from '@/hooks/useSaveGuestInformation';
+import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { fileActions } from '@/redux/file/fileSlice';
 import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import { addGuestInfoToLocalStorage } from '@/utils/index';
+import { generateRandomName } from '@/utils/index';
 import { Disclosure } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import cn from 'classnames';
 import _ from 'lodash';
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
-import useUpdateIdea from '@/hooks/useUpdateIdea';
-import { companyActions } from '@/redux/company/companySlice';
-import dynamic from 'next/dynamic';
 import AutoComplete from '../AutoComplete';
 import Avatar from '../Avatar';
 import Button from '../Button';
 import Divider from '../Divider';
 import Drawer from '../Drawer';
 import GuestForm from '../GuestForm';
+import GuestFormModal from '../GuestFormModal';
 import { ChevronUp, Photo, Plus } from '../icons';
 import Input from '../Input';
 import SimilarIdeaCard from '../SimilarIdeaCard';
 import TopicButton from '../TopicButton';
-import GuestFormModal from '../GuestFormModal';
 
 const Editor = dynamic(() => import('../Editor'), { ssr: false });
 
@@ -41,7 +41,7 @@ export default function SubmitIdea({ idea }) {
   const companyMembers = useSelector((state) => state.idea.searchedCompanyMembers);
   const searchLoading = useSelector((state) => state.idea.isLoading);
   const error = useSelector((state) => state.idea.error);
-  const guestInfo = useSelector((state) => state.idea.guestInfo);
+  const guestInfo = useSelector((state) => state.auth.guestInfo);
   const [images, setImages] = useState([]);
   const guestValidation = useGuestValidation('submitIdeas');
   const [openGuestForm, setOpenGuestForm] = useState(false);
@@ -51,6 +51,8 @@ export default function SubmitIdea({ idea }) {
   const [member, setMember] = useState();
   const dispatch = useDispatch();
   const updateIdea = useUpdateIdea(idea);
+  const saveGuestInformation = useSaveGuestInformation();
+
   const schema = yup.object().shape({
     title: yup.string().max(140, 'Title must be under 140 character').required('Title is required'),
     content: yup.string(),
@@ -108,14 +110,21 @@ export default function SubmitIdea({ idea }) {
   };
 
   const onSubmit = (data) => {
+    const guestName = generateRandomName();
+    if (!user && !guestValidation && !guestInfo.name) {
+      saveGuestInformation({
+        name: guestName
+      });
+    }
+
     const reqData = {
       ...data,
       content,
       topics,
       images: fileLinks,
       author: member?.provider ? member._id : undefined,
-      guestEmail: data.guestEmail ? data.guestEmail : !member?.provider ? member?.email : undefined,
-      guestName: data.guestName ? data.guestName : !member?.provider ? member?.name : undefined,
+      name: member?.name || guestName,
+      email: member?.email,
       company: company._id,
       companySubdomain: company.subdomain,
       ...(!user && !data.guestEmail && { ip: userIp }),
@@ -129,17 +138,25 @@ export default function SubmitIdea({ idea }) {
       const mentionsArray = Array.from(mentions);
       const mentionsIds = mentionsArray.map((mention) => mention.dataset.id);
       const uniqueMentions = [...new Set(mentionsIds)];
-      console.log(uniqueMentions);
+      uniqueMentions.forEach((id) => {
+        const isRegistered = JSON.parse(id.split('-')[1]);
+        if (isRegistered) {
+          // TODO send notification
+          // dispatch(
+          //   notificationActions.sendNotification({
+          //     user: user._id,
+          //     companyId: company._id,
+          //     message: `New request access for <b>${company?.name}</b>`
+          //   })
+          // );
+        }
+      });
     }
     if (idea) {
       updateIdea(reqData, () => {
-        addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
-        dispatch(
-          ideaActions.setGuestInfo({
-            guestEmail: data.guestEmail,
-            guestName: data.guestName
-          })
-        );
+        if (data.guestEmail && data.guestName) {
+          saveGuestInformation({ email: data.guestEmail, name: data.guestName });
+        }
         handleClose();
         dispatch(fileActions.clearFileLinks());
       });
@@ -148,13 +165,9 @@ export default function SubmitIdea({ idea }) {
         ideaActions.createIdea({
           idea: reqData,
           onSuccess: () => {
-            addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
-            dispatch(
-              ideaActions.setGuestInfo({
-                guestEmail: data.guestEmail,
-                guestName: data.guestName
-              })
-            );
+            if (data.guestEmail && data.guestName) {
+              saveGuestInformation({ email: data.guestEmail, name: data.guestName });
+            }
             handleClose();
             dispatch(fileActions.clearFileLinks());
           }
@@ -203,21 +216,10 @@ export default function SubmitIdea({ idea }) {
       </span>
     </div>
   );
-  const createNewUser = (data) => {
-    const user = {
-      name: data.guestName,
-      email: data.guestEmail
-    };
+  const createNewUser = () => {
     setMember(user);
     setOpenGuestForm(false);
     setInpTitle('');
-    dispatch(
-      companyActions.createCompanyUser({
-        companyId: company._id,
-        name: data.guestName,
-        email: data.guestEmail
-      })
-    );
   };
   useEffect(() => {
     if (!_.isNil(idea)) {
@@ -271,8 +273,8 @@ export default function SubmitIdea({ idea }) {
 
   useEffect(() => {
     if (guestInfo) {
-      setValue('guestName', guestInfo.guestName);
-      setValue('guestEmail', guestInfo.guestEmail);
+      setValue('guestName', guestInfo.name);
+      setValue('guestEmail', guestInfo.email);
       setValue('privacyPolicy', true);
     }
   }, [feedBackSubmitModal, guestInfo]);

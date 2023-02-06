@@ -38,7 +38,7 @@ export default function PublicView({ userIp }) {
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const deleteFeedBackModal = useSelector((state) => state.general.deleteFeedBackModal);
-  const guestInfo = useSelector((state) => state.idea.guestInfo);
+  const guestInfo = useSelector((state) => state.auth.guestInfo);
   const user = useSelector((state) => state.auth.user);
   const voteGuestAuth = useGuestValidation('voteIdea');
 
@@ -133,7 +133,8 @@ export default function PublicView({ userIp }) {
 
   const handleDelete = () => {
     dispatch(toggleDeleteFeedBackModal());
-    dispatch(ideaActions.deleteIdea({ id: selectedIdea._id, onSuccess: handleCloseIdea }));
+    dispatch(ideaActions.deleteIdea({ id: selectedIdea._id }));
+    handleCloseIdea();
   };
 
   const handleVoted = (ideaId) => {
@@ -142,7 +143,7 @@ export default function PublicView({ userIp }) {
     }
     if (voteGuestAuth) {
       return ideaVotes.find(
-        (v) => v.ideaId === ideaId && guestInfo.guestEmail === v.guestEmail && !v.userId
+        (v) => v.ideaId === ideaId && guestInfo.email === v.guestEmail && !v.userId
       );
     }
     return ideaVotes.find((v) => v.ideaId === ideaId && v.ip === userIp && !v.userId);
@@ -183,8 +184,8 @@ export default function PublicView({ userIp }) {
 
       dispatch(
         ideaActions.getUserVotes({
-          ...(voteGuestAuth ? { email: guestInfo.guestEmail } : { ip: userIp }),
-          email: guestInfo?.guestEmail,
+          ...(voteGuestAuth ? { email: guestInfo.email } : { ip: userIp }),
+          email: guestInfo?.email,
           companyId: company?._id,
           userId: user?._id
         })

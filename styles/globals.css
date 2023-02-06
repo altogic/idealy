@@ -99,9 +99,6 @@
 .ql-editor {
   @apply bg-white dark:bg-aa-800 purple:bg-pt-800 rounded-md;
 }
-.ql-snow .ql-tooltip {
-  left: 0 !important;
-}
 .theme-purple .ql-snow .ql-tooltip {
   background: #56508e !important;
   color: #ecebf5 !important;
@@ -141,8 +138,31 @@
   height: calc(100vh - 6rem);
 }
 .ql-snow .ql-tooltip {
+  left: 0 !important;
   @apply border-slate-300 dark:border-aa-600 purple:border-pt-800 !important;
 }
 .ql-editor .mention {
   @apply text-slate-500 bg-transparent dark:text-aa-100 purple:text-pt-100;
+}
+html:has(:not(:is(.modal, .drawer))) {
+  overflow: auto !important;
+}
+html:has(:is(.modal, .drawer)) {
+  overflow: hidden !important;
+}
+.ql-mention-list-container {
+  @apply border-slate-300 dark:border-aa-1000 purple:border-pt-1000 !important;
+  @apply shadow-lg !important;
+  @apply overflow-hidden !important;
+}
+.ql-mention-list-item {
+  @apply text-sm tracking-sm p-4 !important;
+  @apply bg-slate-50 dark:bg-aa-800 purple:bg-pt-800 !important;
+  @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 !important;
+}
+.ql-mention-list-item:hover {
+  @apply bg-slate-100 dark:bg-aa-700 purple:bg-pt-700 !important;
+}
+.ql-mention-list-item.selected {
+  @apply bg-slate-200 dark:bg-aa-600 purple:bg-pt-600 !important;
 }

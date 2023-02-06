@@ -1,8 +1,38 @@
-import React from 'react';
+import { fileActions } from '@/redux/file/fileSlice';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { ClipLoader } from 'react-spinners';
+import Avatar from './Avatar';
 import Divider from './Divider';
 import Input from './Input';
 
 export default function GuestForm({ register, errors, vertical }) {
+  const dispatch = useDispatch();
+  const guestInfo = useSelector((state) => state.auth.guestInfo);
+  const loading = useSelector((state) => state.file.isLoading);
+  const [fileLink, setFileLink] = useState();
+
+  const handleUploadAvatar = (e) => {
+    e.stopPropagation();
+    const fileInput = document.createElement('input');
+
+    fileInput.setAttribute('type', 'file');
+    fileInput.setAttribute('accept', 'image/*');
+    fileInput.click();
+
+    fileInput.onchange = async () => {
+      const file = fileInput.files[0];
+      setFileLink(URL.createObjectURL(file));
+      dispatch(
+        fileActions.uploadFileRequest({
+          file,
+          name: guestInfo?.email,
+          existingFile: guestInfo?.avatar
+        })
+      );
+    };
+  };
+
   return (
     <>
       <div className={`flex gap-4 ${vertical ? 'flex-col' : 'max-h-[46px]'} my-4 relative`}>
@@ -10,6 +40,22 @@ export default function GuestForm({ register, errors, vertical }) {
           <span className="inline-block text-slate-600 dark:text-aa-100 purple:text-pt-100 text-base tracking-sm whitespace-nowrap m-auto">
             Your details
           </span>
+        )}
+        {vertical && (
+          <button type="button" className="m-auto mb-4" onClick={handleUploadAvatar}>
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <ClipLoader loading={loading} color="#312E81" size={30} />
+              </div>
+            ) : (
+              <Avatar
+                src={fileLink || guestInfo?.avatar}
+                alt={guestInfo?.name}
+                size="w-20 h-20"
+                fontSize="text-4xl"
+              />
+            )}
+          </button>
         )}
         <Input
           type="text"

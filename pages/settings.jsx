@@ -128,7 +128,7 @@ export default function Settings() {
                         <Tab
                           className={({ selected }) =>
                             cn(
-                              'relative px-4 py-3 text-sm font-medium tracking-sm border-2 rounded-md text-left focus:outline-none',
+                              'relative px-4 py-3 text-sm font-medium tracking-sm border-2 rounded-md text-left focus:outline-none flex items-center',
                               selected
                                 ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-100 purple:text-pt-100 border-indigo-700 dark:border-aa-600 purple:border-pt-800'
                                 : 'text-slate-500 dark:text-aa-200 purple:text-pt-200 border-transparent'
@@ -147,7 +147,7 @@ export default function Settings() {
                       )
                   )}
                 </Tab.List>
-                <Tab.Panels className="pt-10 pb-28 lg:p-10 xl:px-20 xl:py-16">
+                <Tab.Panels className="pt-10  pb-28 lg:p-10 xl:px-20 xl:py-16">
                   {/* Profile */}
                   <Tab.Panel>
                     <Profile />
