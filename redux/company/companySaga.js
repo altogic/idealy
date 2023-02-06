@@ -7,6 +7,7 @@ import { SUBDOMAIN_REGEX } from 'constants';
 import _ from 'lodash';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { authActions } from '../auth/authSlice';
+import { ideaActions } from '../ideas/ideaSlice';
 import { companyActions } from './companySlice';
 
 function* setCreatedCompanySaga({ payload }) {
@@ -479,6 +480,13 @@ function* createCompanyUser({ payload }) {
       throw error;
     }
     yield put(companyActions.createCompanyUserSuccess(data));
+    yield put(
+      ideaActions.updateGuestAuthor({
+        email: payload.email,
+        name: payload.name,
+        avatar: payload.avatar
+      })
+    );
   } catch (error) {
     yield put(companyActions.createCompanyUserFailed(error));
   }
@@ -519,13 +527,17 @@ function* getAccessRequestsByCompanySaga({ payload: companyId }) {
 }
 function* approveCompanyAccessRequestSaga({ payload }) {
   try {
+    const user = yield select((state) => state.auth.user);
     const { data, error } = yield call(companyService.approveCompanyAccessRequest, payload);
     if (error) {
       throw error;
     }
     yield put(companyActions.approveCompanyAccessRequestSuccess(data));
-    realtime.send(payload.companyId, 'approve-access', data);
-    realtime.send(data.userId, 'approve-access', data);
+    realtime.send(payload.companyId, 'approve-access', {
+      ...data,
+      sender: user._id
+    });
+    realtime.send(data.user._id, 'approve-access', data);
   } catch (error) {
     yield put(companyActions.approveCompanyAccessRequestFailed(error));
   }
@@ -537,6 +549,7 @@ function* rejectCompanyAccessRequestSaga({ payload: request }) {
       throw error;
     }
     yield put(companyActions.rejectCompanyAccessRequestSuccess(request._id));
+
     realtime.send(request.companyId, 'reject-access', request);
     realtime.send(request.userId, 'reject-access', request);
   } catch (error) {

@@ -1,8 +1,9 @@
 import { ChevronDown, ChevronUp } from '@/components/icons';
 import useGuestValidation from '@/hooks/useGuestValidation';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
+import useSaveGuestInformation from '@/hooks/useSaveGuestInformation';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import { addGuestInfoToLocalStorage } from '@/utils/index';
+import { generateRandomName } from '@/utils/index';
 import cn from 'classnames';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
@@ -16,12 +17,13 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
   const user = useSelector((state) => state.auth.user);
   const company = useSelector((state) => state.company.company);
   const voteGuestAuthentication = useGuestValidation('voteIdea');
-  const guestInfo = useSelector((state) => state.idea.guestInfo);
+  const guestInfo = useSelector((state) => state.auth.guestInfo);
   const error = useSelector((state) => state.idea.error);
   const [voteCountState, setVoteCountState] = useState();
   const [votedState, setVotedState] = useState();
   const [openGuestForm, setOpenGuestForm] = useState(false);
   const isLoading = useSelector((state) => state.idea.isLoading);
+  const saveGuestInfo = useSaveGuestInformation();
   useEffect(() => {
     setVoteCountState(voteCount);
     setVotedState(voted);
@@ -34,7 +36,7 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
       ideaActions.downVoteIdea({
         ideaId,
         ...(!user && { ip: userIp }),
-        ...(voteGuestAuthentication && { email: guestInfo.guestEmail }),
+        ...(voteGuestAuthentication && { email: guestInfo.email }),
         userId: user?._id
       })
     );
@@ -51,7 +53,10 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
           ideaActions.voteIdea({
             ideaId,
             ...(!user && !voteGuestAuthentication && { ip: userIp }),
-            ...(voteGuestAuthentication && guestInfo),
+            ...(voteGuestAuthentication && {
+              guestEmail: guestInfo.email,
+              guestName: guestInfo.name
+            }),
             companyId: company._id,
             userId: user?._id,
             onError: () => {
@@ -62,6 +67,11 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
             }
           })
         );
+        if (!user && !voteGuestAuthentication && !guestInfo.name) {
+          saveGuestInfo({
+            name: generateRandomName()
+          });
+        }
       }
     } else {
       downVote();
@@ -70,6 +80,7 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
   const handleGuestFormSubmit = (data) => {
     setVotedState(true);
     setVoteCountState((prev) => prev + 1);
+    setOpenGuestForm(false);
     dispatch(
       ideaActions.voteIdea({
         ideaId,
@@ -80,18 +91,6 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
         onError: () => {
           setVoteCountState((prev) => prev - 1);
           setVotedState(false);
-        },
-        onSuccess: (res) => {
-          if (voteGuestAuthentication) {
-            addGuestInfoToLocalStorage(res.guestEmail, res.guestName);
-            dispatch(
-              ideaActions.setGuestInfo({
-                guestName: res.guestName,
-                guestEmail: res.guestEmail
-              })
-            );
-            setOpenGuestForm(false);
-          }
         }
       })
     );
@@ -135,10 +134,10 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
       )}
       <GuestFormModal
         title="Please enter your details to vote"
-        onSubmit={handleGuestFormSubmit}
         open={openGuestForm}
         onClose={() => setOpenGuestForm(false)}
         error={error}
+        onSubmit={handleGuestFormSubmit}
         showLoginLink
       />
     </div>

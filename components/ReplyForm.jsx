@@ -1,10 +1,12 @@
+import useSaveGuestInformation from '@/hooks/useSaveGuestInformation';
+import { repliesActions } from '@/redux/replies/repliesSlice';
+import { generateRandomName } from '@/utils/index';
 import { yupResolver } from '@hookform/resolvers/yup';
+import cn from 'classnames';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
-import { repliesActions } from '@/redux/replies/repliesSlice';
-import { useEffect, useState, useRef } from 'react';
-import cn from 'classnames';
 import Button from './Button';
 import TextArea from './TextArea';
 
@@ -14,8 +16,10 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
   const user = useSelector((state) => state.auth.user);
   const createReplyLoading = useSelector((state) => state.replies.createReplyLoading);
   const updateReplyLoading = useSelector((state) => state.replies.updateReplyLoading);
+  const guestInfo = useSelector((state) => state.auth.guestInfo);
   const [isFormFocus, setIsFormFocus] = useState(false);
   const isLoading = useRef(false);
+  const saveGuestInfo = useSaveGuestInformation();
   const schema = yup.object().shape({
     content: yup.string().required('Content is required')
   });
@@ -33,12 +37,23 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
 
   const onSubmit = (data) => {
     isLoading.current = true;
+    const name = generateRandomName();
     if (reply) {
       dispatch(repliesActions.updateReply({ ...data, _id: reply._id }));
     } else {
       dispatch(
-        repliesActions.createReply({ ...data, commentId, ...(!user && { ip }), user: user?._id })
+        repliesActions.createReply({
+          ...data,
+          commentId,
+          ...(!user && { ip, name: guestInfo.name || name }),
+          user: user?._id
+        })
       );
+    }
+    if (!user && !guestInfo.name) {
+      saveGuestInfo({
+        name
+      });
     }
   };
 

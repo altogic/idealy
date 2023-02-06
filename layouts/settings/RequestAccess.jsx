@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from 'react-redux';
 export default function RequestAccess() {
   const dispatch = useDispatch();
   const accessRequests = useSelector((state) => state.company.accessRequests);
-
   return (
     <div>
       <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">

@@ -22,7 +22,8 @@ const initialState = {
   isAuthenticated: !!AuthService.getUser(),
   sessions: [],
   foundUsers: [],
-  userIp: null
+  userIp: null,
+  guestInfo: {}
 };
 
 export const authSlice = createSlice({
@@ -253,6 +254,9 @@ export const authSlice = createSlice({
     disableAllNotificationsFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    setGuestInfo(state, action) {
+      state.guestInfo = action.payload;
     }
   },
   extraReducers: (builder) => {
