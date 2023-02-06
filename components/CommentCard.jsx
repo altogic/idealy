@@ -67,8 +67,8 @@ export default function CommentCard({ comment }) {
             <div className="prose prose-p:text-slate-500 prose-p:my-2 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
               <SanitizeHtml html={comment?.text} />
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-sm tracking-sm">
+            <div className="flex items-center gap-2 min-h-[32px]">
+              <span className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-xs tracking-sm">
                 {DateTime.fromISO(comment?.createdAt).setLocale('en').toRelative()}
               </span>
               <svg
@@ -83,29 +83,29 @@ export default function CommentCard({ comment }) {
                   onClick={() => {
                     setIsReplying(!isReplying);
                   }}
-                  className="inline-flex text-slate-500 hover:text-indigo-600 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
+                  className="inline-flex text-slate-500 hover:text-indigo-600 dark:text-aa-200 purple:text-pt-200 text-xs tracking-sm">
                   Reply
                 </button>
               )}
-              <button
-                type="button"
-                onClick={() => {
-                  if (!showReplies) {
-                    setPage(1);
-                  }
-                  setIsReplying(!isReplying);
-                  setShowReplies(!showReplies);
-                }}
-                className="inline-flex items-center justify-center gap-2">
-                {!!comment?.replyCount && (
-                  <span className="text-slate-500 hover:text-indigo-600 dark:text-aa-400 purple:text-pt-400 text-sm tracking-sm">
+              {!!comment?.replyCount && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!showReplies) {
+                      setPage(1);
+                    }
+                    setIsReplying(!isReplying);
+                    setShowReplies(!showReplies);
+                  }}
+                  className="inline-flex items-center justify-center gap-2">
+                  <span className="text-slate-500 hover:text-indigo-600 dark:text-aa-400 purple:text-pt-400 text-xs tracking-sm">
                     {showReplies ? 'Hide' : 'Show'}{' '}
                     {comment?.replyCount > 1 ? ` ${comment?.replyCount} Replies` : 'Reply'}
                   </span>
-                )}
-              </button>
+                </button>
+              )}
               {canEdit && (
-                <div className=" hidden group-hover:flex items-center gap-2">
+                <div className="hidden group-hover:flex items-center">
                   <svg
                     className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
                     fill="currentColor"
@@ -115,14 +115,14 @@ export default function CommentCard({ comment }) {
                   <button
                     type="button"
                     onClick={() => setEditComment(true)}
-                    className="w-5 h-5 flex items-center justify-center rounded-full text-slate-500 dark:text-aa-200 purple:text-pt-200 hover:text-blue-800 hover:bg-blue-100 dark:hover:bg-gray-700 dark:hover:text-blue-400 purple:hover:bg-gray-700 purple:hover:text-blue-400">
-                    <Pen className="w-[0.9rem] h-[0.9rem]" />
+                    className="ml-2 w-8 h-8 flex items-center justify-center rounded-full text-slate-500 dark:text-aa-200 purple:text-pt-200 hover:text-blue-800 hover:bg-blue-100 dark:hover:bg-gray-700 dark:hover:text-blue-400 purple:hover:bg-gray-700 purple:hover:text-blue-400">
+                    <Pen />
                   </button>
                   <button
                     type="button"
                     onClick={() => setIsDelete(true)}
-                    className="w-5 h-5 flex items-center justify-center rounded-full text-slate-500 hover:text-red-600 dark:text-aa-200 purple:text-pt-200 hover:bg-red-100 dark:hover:bg-gray-700 dark:hover:text-red-400 purple:hover:bg-gray-700 purple:hover:text-red-400">
-                    <Trash className="w-[0.9rem] h-[0.9rem]" />
+                    className="w-8 h-8 flex items-center justify-center rounded-full text-slate-500 hover:text-red-600 dark:text-aa-200 purple:text-pt-200 hover:bg-red-100 dark:hover:bg-gray-700 dark:hover:text-red-400 purple:hover:bg-gray-700 purple:hover:text-red-400">
+                    <Trash />
                   </button>
                 </div>
               )}

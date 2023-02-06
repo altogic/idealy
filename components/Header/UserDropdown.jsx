@@ -13,7 +13,7 @@ export default function UserDropdown({ companies }) {
   const dispatch = useDispatch();
   const [selectedCompany, setSelectedCompany] = useState();
   const user = useSelector((state) => state.auth.user);
-  const guestInfo = useSelector((state) => state.idea.guestInfo);
+
   const handleLogout = () => {
     dispatch(
       authActions.logout({
