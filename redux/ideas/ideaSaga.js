@@ -85,15 +85,20 @@ function* updateIdeaSaga({ payload: { idea, onSuccess } }) {
     yield put(ideaActions.updateIdeaFailure(error));
   }
 }
-function* deleteIdeaSaga({ payload: id }) {
+function* deleteIdeaSaga({ payload: { id, onSuccess } }) {
   try {
     const { errors } = yield call(ideaService.deleteIdea, id);
     if (errors) {
       throw new Error(errors);
     }
+    if (onSuccess) onSuccess();
     yield put(ideaActions.deleteIdeaSuccess(id));
     const company = yield select((state) => state.company.company);
-    realtime.send(company._id, 'delete-idea', id);
+    const user = yield select((state) => state.auth.user);
+    realtime.send(company._id, 'delete-idea', {
+      id,
+      sender: user._id
+    });
   } catch (error) {
     yield put(ideaActions.deleteIdeaFailure(error));
   }

@@ -6,12 +6,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { generateUrl } from '../utils';
 import CompanyAvatar from './CompanyAvatar';
+import GuestDropdown from './Header/GuestDropdown';
 import UserDropdown from './Header/UserDropdown';
 import { Announcements, Feedback, People, Roadmap, Search } from './icons';
-import ThemeChanger from './ThemeChanger';
 import Notifications from './Notifications';
-import { generateUrl } from '../utils';
+import ThemeChanger from './ThemeChanger';
 
 export default function Header() {
   const router = useRouter();
@@ -19,7 +20,8 @@ export default function Header() {
   const selectedCompany = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
   const notifications = useSelector((state) => state.notification.notifications);
-  const loading = useSelector((state) => state.auth.isLoading);
+
+  const guestInfo = useSelector((state) => state.auth.guestInfo);
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userCompanies, setUserCompanies] = useState();
@@ -41,7 +43,7 @@ export default function Header() {
           ...companies.filter((company) => company._id !== selectedCompany._id)
         ]);
       }
-      if (_.isEmpty(notifications)) {
+      if (_.isEmpty(notifications) && selectedCompany.role !== 'Guest') {
         dispatch(notificationActions.getNotifications(selectedCompany._id));
       }
     }
@@ -153,21 +155,21 @@ export default function Header() {
               {/* <NotificationDropdown /> */}
               <UserDropdown companies={userCompanies} />
             </>
+          ) : !_.isEmpty(guestInfo) ? (
+            <GuestDropdown />
           ) : (
-            !loading && (
-              <ul className="flex items-center gap-4">
-                <li>
-                  <Link href={generateUrl('login')}>
-                    <a className="inline-flex text-indigo-50 text-sm tracking-sm">Login</a>
-                  </Link>
-                </li>
-                <li>
-                  <Link href={generateUrl('register')}>
-                    <a className="inline-flex text-indigo-400 text-sm tracking-sm">Signup</a>
-                  </Link>
-                </li>
-              </ul>
-            )
+            <ul className="flex items-center gap-4">
+              <li>
+                <Link href={generateUrl('login')}>
+                  <a className="inline-flex text-indigo-50 text-sm tracking-sm">Login</a>
+                </Link>
+              </li>
+              <li>
+                <Link href={generateUrl('register')}>
+                  <a className="inline-flex text-indigo-400 text-sm tracking-sm">Signup</a>
+                </Link>
+              </li>
+            </ul>
           )}
         </div>
       </header>
