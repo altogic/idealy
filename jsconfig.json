@@ -4,14 +4,13 @@
     "paths": {
       "@/components/*": ["components/*"],
       "@/layouts/*": ["layouts/*"],
-      "@/hooks/*": ["hooks/*"],
       "@/styles/*": ["styles/*"],
       "@/services/*": ["services/*"],
       "@/utils/*": ["utils/*"],
       "@/features/*": ["features/*"],
       "@/redux/*": ["redux/*"],
       "@/hooks/*": ["hooks/*"],
-      "@/contstants/*": ["contstants/*"]
+      "@/constants/*": ["constants/*"]
     }
   }
 }

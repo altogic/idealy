@@ -4,6 +4,7 @@ import Layout from '@/components/Layout';
 import { companyActions } from '@/redux/company/companySlice';
 import { notificationActions } from '@/redux/notification/notificationSlice';
 import Link from 'next/link';
+import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
@@ -24,6 +25,9 @@ export default function RequestAccess() {
   }, [sessionUser]);
 
   useEffect(() => {
+    if (company?.role) {
+      Router.push(generateUrl('public-view', company.subdomain));
+    }
     if (user && company) {
       dispatch(
         companyActions.getAccessRequest({

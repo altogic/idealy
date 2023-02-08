@@ -277,7 +277,7 @@ export const ideaSlice = createSlice({
         if (idea.guestEmail === action.payload.email) {
           return {
             ...idea,
-            guestEmail: action.payload.guestAuthor,
+            guestEmail: action.payload.email,
             guestName: action.payload.name,
             guestAvatar: action.payload.avatar
           };

@@ -79,6 +79,7 @@ export default function GuestDropdown() {
         onClose={() => setOpenGuestForm(false)}
         onSubmit={handleGuestFormSubmit}
         showLoginLink
+        saveLocal
       />
     </>
   );

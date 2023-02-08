@@ -475,9 +475,10 @@ function* resendInviteSaga({ payload }) {
 }
 function* createCompanyUser({ payload }) {
   try {
-    const { data, error } = yield call(companyService.createCompanyUser, payload);
-    if (error) {
-      throw error;
+    const { data, errors } = yield call(companyService.createCompanyUser, payload);
+
+    if (errors) {
+      throw errors.items;
     }
     yield put(companyActions.createCompanyUserSuccess(data));
     yield put(
@@ -487,6 +488,9 @@ function* createCompanyUser({ payload }) {
         avatar: payload.avatar
       })
     );
+    if (payload.onSuccess) {
+      payload.onSuccess();
+    }
   } catch (error) {
     yield put(companyActions.createCompanyUserFailed(error));
   }
@@ -542,16 +546,16 @@ function* approveCompanyAccessRequestSaga({ payload }) {
     yield put(companyActions.approveCompanyAccessRequestFailed(error));
   }
 }
-function* rejectCompanyAccessRequestSaga({ payload: request }) {
+function* rejectCompanyAccessRequestSaga({ payload: { body, message } }) {
   try {
-    const { error } = yield call(companyService.rejectCompanyAccessRequest, request._id);
+    const { error } = yield call(companyService.rejectCompanyAccessRequest, body);
     if (error) {
       throw error;
     }
-    yield put(companyActions.rejectCompanyAccessRequestSuccess(request._id));
+    yield put(companyActions.rejectCompanyAccessRequestSuccess(body.id));
 
-    realtime.send(request.companyId, 'reject-access', request);
-    realtime.send(request.userId, 'reject-access', request);
+    realtime.send(message.companyId, 'reject-access', message);
+    realtime.send(message.userId, 'reject-access', message);
   } catch (error) {
     yield put(companyActions.rejectCompanyAccessRequestFailed(error));
   }

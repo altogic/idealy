@@ -9,26 +9,44 @@ import Button from './Button';
 import GuestForm from './GuestForm';
 import Modal from './Modal';
 
-export default function GuestFormModal({ title, onSubmit, open, onClose, showLoginLink, error }) {
+export default function GuestFormModal({
+  title,
+  onSubmit,
+  open,
+  onClose,
+  showLoginLink,
+  saveLocal,
+  error
+}) {
   const schema = yup.object().shape({
     guestName: yup.string().required('Name is required'),
     guestEmail: yup.string().email('Email is invalid').required('Email is required'),
     avatar: yup.string().url()
   });
   const guestInfo = useSelector((state) => state.auth.guestInfo);
-  const saveGuestInformation = useSaveGuestInformation();
+  const loading = useSelector((state) => state.company.isLoading);
+  const saveGuestInformation = useSaveGuestInformation(saveLocal);
   const {
     register,
     handleSubmit,
     setError,
     setValue,
+    reset,
     formState: { errors }
   } = useForm({
     resolver: yupResolver(schema)
   });
   const submit = (data) => {
     onSubmit(data);
-    saveGuestInformation({ email: data.guestEmail, name: data.guestName, avatar: data.avatar });
+    saveGuestInformation({
+      email: data.guestEmail,
+      name: data.guestName,
+      avatar: data.avatar,
+      onSuccess: () => {
+        onClose();
+        reset();
+      }
+    });
   };
   const userAvatarLink = useSelector((state) => state.file.fileLink);
 
@@ -68,8 +86,16 @@ export default function GuestFormModal({ title, onSubmit, open, onClose, showLog
       <form onSubmit={handleSubmit(submit)} className="px-8">
         <GuestForm register={register} errors={errors} vertical />
         <div className="flex justify-end gap-2 my-8">
-          <Button type="button" text="Cancel" variant="blank" onClick={() => onClose()} />
-          <Button type="submit" variant="indigo" text="Submit" />
+          <Button
+            type="button"
+            text="Cancel"
+            variant="blank"
+            onClick={() => {
+              onClose();
+              reset();
+            }}
+          />
+          <Button type="submit" variant="indigo" text="Submit" loading={loading} />
         </div>
         {showLoginLink && (
           <div className="text-center text-sm text-slate-800 dark:text-aa-200 purple:text-pt-200 tracking-sm">
