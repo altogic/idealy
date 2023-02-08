@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 export default function RequestAccess() {
   const dispatch = useDispatch();
   const accessRequests = useSelector((state) => state.company.accessRequests);
+  const company = useSelector((state) => state.company.company);
   return (
     <div>
       <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
@@ -51,8 +52,11 @@ export default function RequestAccess() {
                     onClick={() =>
                       dispatch(
                         companyActions.approveCompanyAccessRequest({
-                          ...request,
-                          user: request.user._id
+                          companyId: company._id,
+                          user: request.user._id,
+                          id: request._id,
+                          companyName: company.name,
+                          userEmail: request.user.email
                         })
                       )
                     }
@@ -66,7 +70,18 @@ export default function RequestAccess() {
                     variant="red"
                     size="sm"
                     height="8"
-                    onClick={() => dispatch(companyActions.rejectCompanyAccessRequest(request))}
+                    onClick={() =>
+                      dispatch(
+                        companyActions.rejectCompanyAccessRequest({
+                          body: {
+                            id: request._id,
+                            companyName: company.name,
+                            userEmail: request.user.email
+                          },
+                          message: request
+                        })
+                      )
+                    }
                   />
                 </div>
               </div>

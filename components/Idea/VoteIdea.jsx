@@ -139,6 +139,7 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
         error={error}
         onSubmit={handleGuestFormSubmit}
         showLoginLink
+        saveLocal
       />
     </div>
   );

@@ -1,30 +1,28 @@
 import ImageList from '@/components/ImageList';
-import useGuestValidation from '@/hooks/useGuestValidation';
-import useSaveGuestInformation from '@/hooks/useSaveGuestInformation';
-import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { fileActions } from '@/redux/file/fileSlice';
 import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { generateRandomName } from '@/utils/index';
-import { Disclosure } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import cn from 'classnames';
 import _ from 'lodash';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
+import useGuestValidation from '@/hooks/useGuestValidation';
+import useSaveGuestInformation from '@/hooks/useSaveGuestInformation';
+import useUpdateIdea from '@/hooks/useUpdateIdea';
 import AutoComplete from '../AutoComplete';
-import Avatar from '../Avatar';
 import Button from '../Button';
 import Divider from '../Divider';
 import Drawer from '../Drawer';
 import GuestForm from '../GuestForm';
 import GuestFormModal from '../GuestFormModal';
-import { ChevronUp, Photo, Plus } from '../icons';
+import { Photo, Plus } from '../icons';
 import Input from '../Input';
-import SimilarIdeaCard from '../SimilarIdeaCard';
+import SimilarIdeas from '../SimilarIdeas';
+import Suggestion from '../Suggestion';
 import TopicButton from '../TopicButton';
 
 const Editor = dynamic(() => import('../Editor'), { ssr: false });
@@ -41,6 +39,7 @@ export default function SubmitIdea({ idea }) {
   const companyMembers = useSelector((state) => state.idea.searchedCompanyMembers);
   const searchLoading = useSelector((state) => state.idea.isLoading);
   const error = useSelector((state) => state.idea.error);
+  const companyError = useSelector((state) => state.company.error);
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const [images, setImages] = useState([]);
   const guestValidation = useGuestValidation('submitIdeas');
@@ -77,7 +76,6 @@ export default function SubmitIdea({ idea }) {
   const {
     register,
     handleSubmit,
-    control,
     reset,
     setValue,
     setError,
@@ -90,14 +88,7 @@ export default function SubmitIdea({ idea }) {
     mode: 'all'
   });
   const resetForm = () => {
-    reset({
-      title: undefined,
-      content: undefined,
-      topics: undefined,
-      guestName: undefined,
-      guestEmail: undefined,
-      privacyPolicy: false
-    });
+    reset({});
     setContent('');
     setTopics([]);
     setImages([]);
@@ -108,29 +99,7 @@ export default function SubmitIdea({ idea }) {
     resetForm();
     dispatch(toggleFeedBackSubmitModal());
   };
-
-  const onSubmit = (data) => {
-    const guestName = generateRandomName();
-    if (!user && !guestValidation && !guestInfo.name) {
-      saveGuestInformation({
-        name: guestName
-      });
-    }
-
-    const reqData = {
-      ...data,
-      content,
-      topics,
-      images: fileLinks,
-      author: member?.provider ? member._id : undefined,
-      name: member?.name || guestName,
-      email: member?.email,
-      company: company._id,
-      companySubdomain: company.subdomain,
-      ...(!user && !data.guestEmail && { ip: userIp }),
-      isApproved: !company?.privacy?.ideaApproval
-    };
-    delete reqData.privacyPolicy;
+  const sendMentionNotification = (content) => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(content, 'text/html');
     const mentions = doc.querySelectorAll('.mention');
@@ -152,25 +121,43 @@ export default function SubmitIdea({ idea }) {
         }
       });
     }
-    if (idea) {
-      updateIdea(reqData, () => {
-        if (data.guestEmail && data.guestName) {
-          saveGuestInformation({ email: data.guestEmail, name: data.guestName });
-        }
-        handleClose();
-        dispatch(fileActions.clearFileLinks());
+  };
+  const submitOnSuccess = (guestEmail, guestName) => {
+    if (guestEmail && guestName) {
+      saveGuestInformation({ email: guestEmail, name: guestName });
+    }
+    handleClose();
+    dispatch(fileActions.clearFileLinks());
+  };
+  const onSubmit = (data) => {
+    const guestName = generateRandomName();
+    if (!user && !guestValidation && !guestInfo.name) {
+      saveGuestInformation({
+        name: guestName
       });
+    }
+    const reqData = {
+      ...data,
+      content,
+      topics,
+      images: fileLinks,
+      author: member?.provider ? member._id : undefined,
+      name: member?.name || guestName,
+      email: member?.email,
+      company: company._id,
+      ...(!user && !data.guestEmail && { ip: userIp }),
+      isApproved: !company?.privacy?.ideaApproval
+    };
+    delete reqData.privacyPolicy;
+    sendMentionNotification(content);
+
+    if (idea) {
+      updateIdea(reqData, () => submitOnSuccess(data.guestEmail, data.guestName));
     } else {
       dispatch(
         ideaActions.createIdea({
           idea: reqData,
-          onSuccess: () => {
-            if (data.guestEmail && data.guestName) {
-              saveGuestInformation({ email: data.guestEmail, name: data.guestName });
-            }
-            handleClose();
-            dispatch(fileActions.clearFileLinks());
-          }
+          onSuccess: () => submitOnSuccess(data.guestEmail, data.guestName)
         })
       );
     }
@@ -201,24 +188,11 @@ export default function SubmitIdea({ idea }) {
     }
   };
   const formatResult = (item) => (
-    <div className="flex items-center gap-2 text-slate-500 tracking-[-0.4px] cursor-pointer">
-      <Avatar
-        src={idea?.author?.profilePicture}
-        alt={item.name}
-        size="w-7 h-7"
-        fontSize="text-xs"
-      />
-      <span className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm font-medium tracking-sm">
-        {item.name}
-      </span>
-      <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-xs font-medium tracking-sm">
-        {item.email}
-      </span>
-    </div>
+    <Suggestion item={item} profilePicture={idea?.author?.profilePicture} />
   );
+
   const createNewUser = () => {
     setMember(user);
-    setOpenGuestForm(false);
     setInpTitle('');
   };
   useEffect(() => {
@@ -256,12 +230,10 @@ export default function SubmitIdea({ idea }) {
     if (content) {
       setValue('content', content);
     }
-  }, [content]);
-  useEffect(() => {
     if (topics) {
       setValue('topics', topics);
     }
-  }, [topics]);
+  }, [content, topics]);
 
   useEffect(() => {
     if (idea) {
@@ -278,6 +250,7 @@ export default function SubmitIdea({ idea }) {
       setValue('privacyPolicy', true);
     }
   }, [feedBackSubmitModal, guestInfo]);
+
   useEffect(() => {
     if (Symbol.iterator in Object(error)) {
       error.forEach((err) => {
@@ -337,50 +310,16 @@ export default function SubmitIdea({ idea }) {
                 }
               }}
             />
-
-            {!!similarIdeas?.length && (
-              <div className="w-full mt-8 rounded-lg border border-gray-300 dark:border-aa-600 purple:border-pt-800 overflow-hidden">
-                <Disclosure defaultOpen>
-                  {({ open }) => (
-                    <>
-                      <Disclosure.Button className="flex w-full justify-between bg-slate-100 dark:bg-aa-800 purple:bg-pt-800 text-slate-800 dark:text-aa-200 purple:text-pt-200 px-4 py-2 text-left text-sm font-medium hover:bg-slate-200 focus:outline-none focus-visible:ring focus-visible:ring-slate-500 focus-visible:ring-opacity-75">
-                        <span>{open ? 'Hide' : 'Show'} similar ideas</span>
-                        <ChevronUp
-                          className={`${
-                            open ? 'rotate-180 transform' : ''
-                          } h-5 w-5 text-slate-500 dark:text-aa-200 purple:text-pt-200`}
-                        />
-                      </Disclosure.Button>
-                      <Disclosure.Panel
-                        className={cn(
-                          similarIdeas.length > 1 ? 'max-h-52' : 'max-h-40',
-                          `p-4 text-sm text-gray-500 overflow-hidden overflow-y-auto overflow-scroll-fix`
-                        )}>
-                        {similarIdeas.map((idea) => (
-                          <SimilarIdeaCard key={idea?._id} idea={idea} />
-                        ))}
-                      </Disclosure.Panel>
-                    </>
-                  )}
-                </Disclosure>
-              </div>
-            )}
+            {!!similarIdeas?.length && <SimilarIdeas similarIdeas={similarIdeas} />}
           </div>
           <div className="mb-8 relative">
-            <Controller
-              name="content"
-              control={control}
-              rules={{ required: true }}
-              render={() => (
-                <Editor content={content} setContent={setContent} errors={errors.content}>
-                  {images.length < 5 && (
-                    <button type="button" onClick={imageHandler}>
-                      <Photo className="w-6 h-6 text-slate-500 dark:text-aa-200 purple:text-pt-200 hover:text-[#06c] dark:hover:text-[#06c] purple:hover:text-[#06c]" />
-                    </button>
-                  )}
-                </Editor>
+            <Editor content={content} setContent={setContent} errors={errors.content}>
+              {images.length < 5 && (
+                <button type="button" onClick={imageHandler}>
+                  <Photo className="w-6 h-6 text-slate-500 dark:text-aa-200 purple:text-pt-200 hover:text-[#06c] dark:hover:text-[#06c] purple:hover:text-[#06c]" />
+                </button>
               )}
-            />
+            </Editor>
 
             {errors?.content?.message && (
               <span className="inline-block text-sm text-red-600">{errors.content.message}</span>
@@ -393,38 +332,25 @@ export default function SubmitIdea({ idea }) {
             <span className="inline-block text-slate-600 dark:text-aa-300 purple:text-pt-300 mb-4 text-base tracking-sm">
               Choose up to 3 Topics for this Idea (optional)
             </span>
-            <Controller
-              name="topics"
-              control={control}
-              defaultValue={[]}
-              rules={{
-                required: false,
-                validate: (value) => value.length <= 3
-              }}
-              render={() => (
-                <div className="flex flex-wrap items-center gap-4">
-                  {company?.topics.map((topic) => (
-                    <TopicButton
-                      key={topic._id}
-                      badgeName={topic.name}
-                      onClick={() => {
-                        if (topics.some((t) => t === topic.name)) {
-                          setTopics((prevTopics) => prevTopics.filter((t) => t !== topic.name));
-                        } else if (topics.length < 3) {
-                          setTopics((prevTopics) => [...prevTopics, topic.name]);
-                        }
-                      }}
-                      selected={topics.some((t) => t === topic.name)}
-                    />
-                  ))}
-                  {errors?.topics?.message && (
-                    <span className="inline-block text-sm text-red-600">
-                      {errors.topics.message}
-                    </span>
-                  )}
-                </div>
+            <div className="flex flex-wrap items-center gap-4">
+              {company?.topics.map((topic) => (
+                <TopicButton
+                  key={topic._id}
+                  badgeName={topic.name}
+                  onClick={() => {
+                    if (topics.some((t) => t === topic.name)) {
+                      setTopics((prevTopics) => prevTopics.filter((t) => t !== topic.name));
+                    } else if (topics.length < 3) {
+                      setTopics((prevTopics) => [...prevTopics, topic.name]);
+                    }
+                  }}
+                  selected={topics.some((t) => t === topic.name)}
+                />
+              ))}
+              {errors?.topics?.message && (
+                <span className="inline-block text-sm text-red-600">{errors.topics.message}</span>
               )}
-            />
+            </div>
           </div>
           <Divider className="my-8" />
           <div>
@@ -447,6 +373,8 @@ export default function SubmitIdea({ idea }) {
           open={openGuestForm}
           onClose={() => setOpenGuestForm(false)}
           onSubmit={createNewUser}
+          error={companyError}
+          saveLocal={false}
         />
       </Drawer>
     </>

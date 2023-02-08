@@ -83,6 +83,6 @@ const companyService = {
       .lookup({ field: 'user' })
       .get(),
   approveCompanyAccessRequest: (req) => endpoint.post('/company/access-request/approve', req),
-  rejectCompanyAccessRequest: (id) => endpoint.delete(`/company/access-request/reject/${id}`)
+  rejectCompanyAccessRequest: (req) => endpoint.post(`/company/access-request/reject/`, req)
 };
 export default companyService;
