@@ -18,8 +18,8 @@ export default function TextArea({ id, label, error, register, rows, inlineSubmi
         <textarea
           id={id}
           className={cn(
-            'block w-full text-slate-900 text-base tracking-sm rounded-lg',
-            'text-slate-800 dark:text-aa-200 purple:text-pt-200',
+            'block w-full text-base tracking-sm rounded-lg',
+            'text-slate-500 dark:text-aa-200 purple:text-pt-200',
             'bg-white dark:bg-aa-800 purple:bg-pt-800 placeholder:text-slate-500 dark:placeholder-aa-200 purple:placeholder-pt-200 ',
             error && 'text-red-900 pr-11 border-red-600 placeholder-red-300 focus:ring-red-600',
             inlineSubmit

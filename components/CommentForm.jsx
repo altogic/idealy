@@ -1,15 +1,17 @@
 import useGuestValidation from '@/hooks/useGuestValidation';
+import useSaveGuestInformation from '@/hooks/useSaveGuestInformation';
 import { commentActions } from '@/redux/comments/commentsSlice';
-import { addGuestInfoToLocalStorage } from '@/utils/index';
+import { generateRandomName } from '@/utils/index';
 import { yupResolver } from '@hookform/resolvers/yup';
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
-import { ideaActions } from '@/redux/ideas/ideaSlice';
 import Button from './Button';
-import Editor from './Editor';
 import GuestForm from './GuestForm';
+
+const Editor = dynamic(() => import('./Editor'), { ssr: false });
 
 export default function CommentForm({ ideaId, editedComment, setEditComment, setIsFetched }) {
   const dispatch = useDispatch();
@@ -19,9 +21,10 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
   const [comment, setComment] = useState('');
   const guestValidation = useGuestValidation('commentIdea');
   const userIp = useSelector((state) => state.auth.userIp);
-  const guestInfo = useSelector((state) => state.idea.guestInfo);
+  const guestInfo = useSelector((state) => state.auth.guestInfo);
   const feedBackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const error = useSelector((state) => state.comments.error);
+  const saveGuestInfo = useSaveGuestInformation();
   const schema = yup.object().shape({
     text: yup.string(),
     guestName: yup.string().when([], {
@@ -50,21 +53,16 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
   } = useForm({
     resolver: yupResolver(schema)
   });
-  const saveGuestInfo = (data) => {
-    if (data.guestEmail) {
-      addGuestInfoToLocalStorage(data.guestEmail, data.guestName);
-      dispatch(
-        ideaActions.setGuestInfo({
-          guestName: data.guestName,
-          guestEmail: data.guestEmail
-        })
-      );
-    }
-  };
 
   const submitComment = (data) => {
     if (comment.trim() === '') {
       return;
+    }
+    const guestName = generateRandomName();
+    if (!user && !guestValidation && !guestInfo.name) {
+      saveGuestInfo({
+        name: guestName
+      });
     }
     if (editedComment) {
       dispatch(
@@ -73,7 +71,14 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
           text: comment,
           guestName: user?.name || data.guestName,
           guestEmail: user?.email || data.guestEmail,
-          onSuccess: () => saveGuestInfo(data)
+          onSuccess: () => {
+            if (data.guestEmail) {
+              saveGuestInfo({
+                name: data.guestName,
+                email: data.guestEmail
+              });
+            }
+          }
         })
       );
     } else {
@@ -83,8 +88,16 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
           ideaId,
           text: comment,
           user: user?._id,
+          guestName: data.guestName || guestName,
           ...(!user && !data.guestEmail && { ip: userIp }),
-          onSuccess: () => saveGuestInfo(data)
+          onSuccess: () => {
+            if (data.guestEmail) {
+              saveGuestInfo({
+                name: data.guestName,
+                email: data.guestEmail
+              });
+            }
+          }
         })
       );
       setIsFetched(true);
@@ -106,8 +119,8 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
 
   useEffect(() => {
     if (guestInfo) {
-      setValue('guestName', guestInfo.guestName);
-      setValue('guestEmail', guestInfo.guestEmail);
+      setValue('guestName', guestInfo.name);
+      setValue('guestEmail', guestInfo.email);
       setValue('privacyPolicy', true);
     }
   }, [feedBackSubmitModal, guestInfo]);

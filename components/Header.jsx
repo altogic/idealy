@@ -6,12 +6,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { generateUrl } from '../utils';
 import CompanyAvatar from './CompanyAvatar';
+import GuestDropdown from './Header/GuestDropdown';
 import UserDropdown from './Header/UserDropdown';
 import { Announcements, Feedback, People, Roadmap, Search } from './icons';
-import ThemeChanger from './ThemeChanger';
 import Notifications from './Notifications';
-import { generateUrl } from '../utils';
+import ThemeChanger from './ThemeChanger';
 
 export default function Header() {
   const router = useRouter();
@@ -19,7 +20,8 @@ export default function Header() {
   const selectedCompany = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
   const notifications = useSelector((state) => state.notification.notifications);
-  const loading = useSelector((state) => state.auth.isLoading);
+
+  const guestInfo = useSelector((state) => state.auth.guestInfo);
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userCompanies, setUserCompanies] = useState();
@@ -41,7 +43,7 @@ export default function Header() {
           ...companies.filter((company) => company._id !== selectedCompany._id)
         ]);
       }
-      if (_.isEmpty(notifications)) {
+      if (_.isEmpty(notifications) && selectedCompany.role !== 'Guest') {
         dispatch(notificationActions.getNotifications(selectedCompany._id));
       }
     }
@@ -75,7 +77,8 @@ export default function Header() {
           )}
 
           <ul className="hidden lg:flex items-center gap-2">
-            {selectedCompany?.siteNavigation?.feedback && (
+            {(selectedCompany?.siteNavigation?.feedback ||
+              (selectedCompany?.role && selectedCompany?.role !== 'Guest')) && (
               <li
                 className={cn(
                   `flex items-center justify-center py-2 px-3 rounded-md transition`,
@@ -91,7 +94,8 @@ export default function Header() {
                 </Link>
               </li>
             )}
-            {selectedCompany?.siteNavigation?.roadmap && (
+            {(selectedCompany?.siteNavigation?.roadmap ||
+              (selectedCompany?.role && selectedCompany?.role !== 'Guest')) && (
               <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
                 <Link href="/">
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
@@ -101,7 +105,8 @@ export default function Header() {
                 </Link>
               </li>
             )}
-            {selectedCompany?.siteNavigation?.announcements && (
+            {(selectedCompany?.siteNavigation?.announcements ||
+              (selectedCompany?.role && selectedCompany?.role !== 'Guest')) && (
               <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
                 <Link href="/">
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
@@ -111,7 +116,7 @@ export default function Header() {
                 </Link>
               </li>
             )}
-            {selectedCompany?.role && (
+            {selectedCompany?.role && selectedCompany?.role !== 'Guest' && (
               <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
                 <Link href="/">
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
@@ -150,21 +155,21 @@ export default function Header() {
               {/* <NotificationDropdown /> */}
               <UserDropdown companies={userCompanies} />
             </>
+          ) : !_.isEmpty(guestInfo) ? (
+            <GuestDropdown />
           ) : (
-            !loading && (
-              <ul className="flex items-center gap-4">
-                <li>
-                  <Link href={generateUrl('login')}>
-                    <a className="inline-flex text-indigo-50 text-sm tracking-sm">Login</a>
-                  </Link>
-                </li>
-                <li>
-                  <Link href={generateUrl('register')}>
-                    <a className="inline-flex text-indigo-400 text-sm tracking-sm">Signup</a>
-                  </Link>
-                </li>
-              </ul>
-            )
+            <ul className="flex items-center gap-4">
+              <li>
+                <Link href={generateUrl('login')}>
+                  <a className="inline-flex text-indigo-50 text-sm tracking-sm">Login</a>
+                </Link>
+              </li>
+              <li>
+                <Link href={generateUrl('register')}>
+                  <a className="inline-flex text-indigo-400 text-sm tracking-sm">Signup</a>
+                </Link>
+              </li>
+            </ul>
           )}
         </div>
       </header>

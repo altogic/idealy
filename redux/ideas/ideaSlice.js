@@ -10,8 +10,7 @@ const initialState = {
   selectedIdea: null,
   ideaVotes: [],
   similarIdeas: [],
-  searchedCompanyMembers: [],
-  guestInfo: {}
+  searchedCompanyMembers: []
 };
 
 export const ideaSlice = createSlice({
@@ -258,9 +257,7 @@ export const ideaSlice = createSlice({
         return idea;
       });
     },
-    setGuestInfo(state, action) {
-      state.guestInfo = action.payload;
-    },
+
     approveAllIdeas(state) {
       state.isLoading = true;
     },
@@ -274,6 +271,19 @@ export const ideaSlice = createSlice({
     approveAllIdeasFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    updateGuestAuthor(state, action) {
+      state.ideas = state.ideas.map((idea) => {
+        if (idea.guestEmail === action.payload.email) {
+          return {
+            ...idea,
+            guestEmail: action.payload.email,
+            guestName: action.payload.name,
+            guestAvatar: action.payload.avatar
+          };
+        }
+        return idea;
+      });
     }
   },
 

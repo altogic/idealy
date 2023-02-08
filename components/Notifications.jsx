@@ -13,7 +13,7 @@ export default function Notifications() {
   const notifications = useSelector((state) => state.notification.notifications);
   return (
     <Menu as="div" className="relative">
-      <Indicator count={notifications?.length} className="absolute -top-1 -right-1" />
+      <Indicator count={notifications?.length} className="absolute top-[1px] right-[1px]" />
       <Menu.Button className="relative inline-flex items-center justify-center w-10 h-10 p-[10px] rounded-full text-gray-500 focus:outline-none">
         <Notification className="w-5 h-5 text-white" />
       </Menu.Button>

@@ -1,5 +1,4 @@
 import { authActions } from '@/redux/auth/authSlice';
-import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { wrapper } from '@/redux/store';
 import localStorageUtil from '@/utils/localStorageUtil';
 import 'animate.css/animate.min.css';
@@ -21,7 +20,7 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     const guestInfo = localStorageUtil.get('guestAuthentication');
     if (guestInfo) {
-      dispatch(ideaActions.setGuestInfo(guestInfo));
+      dispatch(authActions.setGuestInfo(guestInfo));
     }
   }, []);
   useEffect(() => {
@@ -32,9 +31,8 @@ function MyApp({ Component, pageProps }) {
     if (company) {
       document.title = company.name;
       document.body.className = company.theme;
-      if (company?.authentication.type !== 'Guest Authentication') {
-        localStorage.removeItem('guestAuthentication');
-      }
+      localStorageUtil.set('theme', company.theme);
+      localStorageUtil.set('companyId', company._id);
     }
   }, [company]);
 

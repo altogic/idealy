@@ -8,6 +8,7 @@ import { repliesActions } from '@/redux/replies/repliesSlice';
 import { realtime } from '@/utils/altogic';
 import localStorageUtil from '@/utils/localStorageUtil';
 import { COMPANY_TABS } from 'constants';
+import _ from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,9 +27,10 @@ export default function Realtime() {
   const userIp = useSelector((state) => state.auth.userIp);
   const company = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
-  const guestInfo = useSelector((state) => state.idea.guestInfo);
+  const guestInfo = useSelector((state) => state.auth.guestInfo);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const voteGuestAuth = useGuestValidation('voteIdea');
+  const ideas = useSelector((state) => state.idea.ideas);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -121,9 +123,9 @@ export default function Realtime() {
     setDeletedCompany(data.message.companyId);
     setDeleteDialog(true);
   }
-  function notificationHandler(data) {
-    if (data.message.user !== user._id) {
-      dispatch(notificationActions.receiveNotificationRealtime(data.message));
+  function notificationHandler({ message }) {
+    if (message.user._id !== user._id) {
+      dispatch(notificationActions.receiveNotificationRealtime(message));
     }
   }
   function userNotificationHandler(data) {
@@ -151,7 +153,16 @@ export default function Realtime() {
     }
   }
   function createIdeasHandler({ message }) {
-    if (message.isApproved || (company.role && company.role !== 'Guest')) {
+    const topics = router.query.topics?.split(',');
+    const statuses = router.query.status?.split(',');
+    const intersection = topics?.filter((topic) => message.topics.includes(topic));
+    const isTopicsMatch = _.isNil(topics) || intersection?.length > 0;
+    const isStatusesMatch = _.isNil(statuses) || statuses.includes(message.status);
+    if (
+      (message.isApproved || (company.role && company.role !== 'Guest')) &&
+      isTopicsMatch &&
+      isStatusesMatch
+    ) {
       dispatch(ideaActions.createIdeaSuccess(message));
     }
   }
@@ -160,17 +171,19 @@ export default function Realtime() {
   }
   function deleteIdeaHandler({ message }) {
     const idea = new URLSearchParams(document.location.search).get('feedback');
-    if (idea === message) {
+    if (idea === message._id && message.sender !== user?._id) {
       dispatch(toggleFeedBackDetailModal());
       setDeleteIdeaModal(true);
     }
-    dispatch(ideaActions.deleteIdeaSuccess(message));
+    if (ideas.some((idea) => idea._id === message)) {
+      dispatch(ideaActions.deleteIdeaSuccess(message));
+    }
   }
   function voteIdeaHandler({ message }) {
     if (
       (user && user._id !== message.userId) ||
       (!user && !voteGuest.current && userIp !== message.ip) ||
-      (voteGuest.current && guestInfoState.current.guestEmail !== message.guestEmail)
+      (voteGuest.current && guestInfoState.current.email !== message.guestEmail)
     ) {
       dispatch(ideaActions.upVoteIdeaRealtime(message.ideaId));
     }
@@ -179,7 +192,7 @@ export default function Realtime() {
     if (
       (user && user._id !== message.userId) ||
       (!user && !voteGuest.current && userIp !== message.ip) ||
-      (voteGuest.current && guestInfoState.current.guestEmail !== message.guestEmail)
+      (voteGuest.current && guestInfoState.current.email !== message.guestEmail)
     ) {
       dispatch(ideaActions.downVoteIdeaRealtime(message.ideaId));
     }
@@ -225,7 +238,7 @@ export default function Realtime() {
     }
   }
   function approveAccessCompanyHandler({ message }) {
-    if (user._id !== message.user._id) {
+    if (user._id !== message.sender) {
       dispatch(companyActions.approveCompanyAccessRequestSuccess(message));
     }
   }
@@ -267,7 +280,6 @@ export default function Realtime() {
       realtime.on('accept-invitation', acceptedInvitationHandler);
       realtime.on('update-sublist', updateSublistHandler);
       realtime.on('request-access', requestAccessHandler);
-      realtime.on('approve-access', approveAccessHandler);
       realtime.on('reject-access', rejectAccessHandler);
     }
     if (company) {

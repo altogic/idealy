@@ -7,10 +7,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ClipLoader } from 'react-spinners';
 import { generateUrl, setCookie } from '../utils';
 import Header from './Header';
 import Realtime from './Realtime';
+import Spinner from './Spinner';
 
 export default function Layout({ children }) {
   const router = useRouter();
@@ -68,10 +68,10 @@ export default function Layout({ children }) {
     <div className="bg-white dark:bg-aa-900 purple:bg-pt-1000">
       {loading ? (
         <div className="flex flex-col gap-y-4 justify-center items-center h-screen">
-          <ClipLoader color="#3B82F6" size={125} />
-          <span className="text-2xl text-slate-500 dark:text-aa-300 purple:text-pt-300 mt-2">
+          <Spinner size={24} />
+          <div className="text-base text-gray-500 dark:text-aa-400 purple:text-pt-400">
             Company Loading...
-          </span>
+          </div>
         </div>
       ) : (
         <>

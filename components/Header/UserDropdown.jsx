@@ -12,6 +12,8 @@ import CompanyAvatar from '../CompanyAvatar';
 export default function UserDropdown({ companies }) {
   const dispatch = useDispatch();
   const [selectedCompany, setSelectedCompany] = useState();
+  const user = useSelector((state) => state.auth.user);
+
   const handleLogout = () => {
     dispatch(
       authActions.logout({
@@ -22,7 +24,6 @@ export default function UserDropdown({ companies }) {
       })
     );
   };
-  const user = useSelector((state) => state.auth.user);
   useEffect(() => {
     if (companies?.length) {
       setSelectedCompany(companies[0]);

@@ -2,12 +2,12 @@ import Button from '@/components/Button';
 import { Check } from '@/components/icons';
 import Layout from '@/components/Layout';
 import { companyActions } from '@/redux/company/companySlice';
+import { notificationActions } from '@/redux/notification/notificationSlice';
 import Link from 'next/link';
+import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
-import { realtime } from '@/utils/altogic';
-import { notificationActions } from '@/redux/notification/notificationSlice';
 import { generateUrl } from '../utils';
 
 export default function RequestAccess() {
@@ -25,6 +25,9 @@ export default function RequestAccess() {
   }, [sessionUser]);
 
   useEffect(() => {
+    if (company?.role) {
+      Router.push(generateUrl('public-view', company.subdomain));
+    }
     if (user && company) {
       dispatch(
         companyActions.getAccessRequest({
@@ -92,11 +95,6 @@ export default function RequestAccess() {
                             message: `New request access for <b>${company?.name}</b>`
                           })
                         );
-                        realtime.send(company._id, 'notification', {
-                          user,
-                          companyId: company._id,
-                          message: `New request access for <b>${company?.name}</b>`
-                        });
                       }}
                     />
                   )

@@ -2,33 +2,28 @@ import CommentCard from '@/components/CommentCard';
 import ImageList from '@/components/ImageList';
 import StatusBadge from '@/components/StatusBadge';
 import TopicBadges from '@/components/TopicBadges';
-import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
-import { commentActions } from '@/redux/comments/commentsSlice';
-import {
-  toggleDeleteFeedBackModal,
-  toggleFeedBackDetailModal,
-  toggleFeedBackSubmitModal
-} from '@/redux/general/generalSlice';
-import { ideaActions } from '@/redux/ideas/ideaSlice';
-import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
 import useIdeaActionValidation from '@/hooks/useIdeaActionValidation';
+import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
+import { commentActions } from '@/redux/comments/commentsSlice';
+import { toggleDeleteFeedBackModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import CommentForm from '../CommentForm';
+import CommentSkeleton from '../CommentSkeleton';
 import Drawer from '../Drawer';
+import EmptyState from '../EmptyState';
 import { Pen, Thumbtack, Trash } from '../icons';
 import InfiniteScroll from '../InfiniteScroll';
+import SanitizeHtml from '../SanitizeHtml';
 import IdeaActionButton from './admin/IdeaActionButton';
 import IdeaBadges from './IdeaBadges';
 import IdeaDetailAdmin from './IdeaDetailAdmin';
 import IdeaInfo from './IdeaInfo';
-import EmptyState from '../EmptyState';
-import CommentSkeleton from '../CommentSkeleton';
 import VoteIdea from './VoteIdea';
-import SanitizeHtml from '../SanitizeHtml';
 
-export default function IdeaDetail({ idea, company, query, voted }) {
+export default function IdeaDetail({ idea, company, voted, onClose }) {
   const dispatch = useDispatch();
 
   const router = useRouter();
@@ -41,20 +36,7 @@ export default function IdeaDetail({ idea, company, query, voted }) {
   const canEdit = useIdeaActionValidation(idea, 'submitIdeas');
   const [isFetched, setIsFetched] = useState(false);
   const updateIdea = useUpdateIdea(idea);
-  function handleClose() {
-    dispatch(toggleFeedBackDetailModal());
-    const temp = query;
-    delete temp?.feedback;
-    router.push(
-      {
-        pathname: router.pathname,
-        query: temp
-      },
-      undefined,
-      { scroll: false }
-    );
-    dispatch(ideaActions.setSelectedIdea(null));
-  }
+
   useEffect(() => {
     const ideaId = router.query.feedback;
     if (router.isReady && !!idea?.commentCount && !isFetched && ideaId) {
@@ -73,7 +55,7 @@ export default function IdeaDetail({ idea, company, query, voted }) {
   return (
     <Drawer
       open={feedBackDetailModal}
-      onClose={() => handleClose()}
+      onClose={() => onClose()}
       title={idea?.title}
       className="z-50"
       sidebar={
@@ -94,7 +76,7 @@ export default function IdeaDetail({ idea, company, query, voted }) {
               <IdeaBadges idea={idea} />
             </div>
           )}
-          <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-400 purple:prose-p:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-8 break-all">
+          <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-200 purple:prose-p:text-pt-200 prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-8 break-all">
             <SanitizeHtml html={idea?.content} />
           </div>
 

@@ -6,13 +6,13 @@ export default function IdeaInfo({ idea }) {
     <>
       {/* Author */}
       <Avatar
-        src={idea?.author?.profilePicture}
-        alt={idea?.author ? idea?.author.name : idea?.guestName ? idea?.guestName : 'Anonymous'}
+        src={idea?.author?.profilePicture || idea?.guestAvatar}
+        alt={idea?.author ? idea?.author.name : idea?.guestName ? idea?.guestName : idea?.name}
         size="w-7 h-7"
         fontSize="text-xs"
       />
       <span className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm font-medium tracking-sm">
-        {idea?.author ? idea?.author.name : idea?.guestName ? idea?.guestName : 'Anonymous'}
+        {idea?.author ? idea?.author.name : idea?.guestName ? idea?.guestName : idea?.name}
       </span>
       <svg
         className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"

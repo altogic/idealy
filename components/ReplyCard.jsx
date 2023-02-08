@@ -22,23 +22,23 @@ export default function ReplyCard({ reply, setShowReplies }) {
         {/* Name First Letter Icon */}
         <Avatar
           src={reply?.user?.profilePicture}
-          alt={reply?.user?.name || 'Anonymous'}
+          alt={reply?.user?.name || reply.name}
           size="w-7 h-7"
           fontSize="text-sm"
         />
         <div className="w-full space-y-3">
           <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
-            {reply?.user?.name || 'Anonymous'}
+            {reply?.user?.name || reply.name}
           </h6>
           <div className="prose prose-p:my-0 prose-p:text-slate-500 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
             <p>{reply?.content}</p>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-sm tracking-sm">
+          <div className="flex items-center gap-3 min-h-[32px]">
+            <span className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-xs tracking-sm">
               {DateTime.fromISO(reply?.createdAt).setLocale('en').toRelative()}
             </span>
             {canEdit && (
-              <div className=" hidden group-hover:flex items-center gap-3">
+              <div className=" hidden group-hover:flex items-center">
                 <svg
                   className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
                   fill="currentColor"
@@ -46,16 +46,16 @@ export default function ReplyCard({ reply, setShowReplies }) {
                   <circle cx={4} cy={4} r={3} />
                 </svg>
                 <button
-                  className="w-5 h-5 flex items-center justify-center rounded-full text-slate-500 dark:text-aa-200 purple:text-pt-200 hover:text-blue-800 hover:bg-blue-100 dark:hover:bg-gray-700 dark:hover:text-blue-400 purple:hover:bg-gray-700 purple:hover:text-blue-400"
                   type="button"
-                  onClick={() => setEditReply(true)}>
-                  <Pen className="w-[0.9rem] h-[0.9rem]" />
+                  onClick={() => setEditReply(true)}
+                  className="ml-2 w-8 h-8 flex items-center justify-center rounded-full text-slate-500 dark:text-aa-200 purple:text-pt-200 hover:text-blue-800 hover:bg-blue-100 dark:hover:bg-gray-700 dark:hover:text-blue-400 purple:hover:bg-gray-700 purple:hover:text-blue-400">
+                  <Pen />
                 </button>
                 <button
                   type="button"
                   onClick={() => setIsDelete(true)}
-                  className="w-5 h-5 flex items-center justify-center rounded-full text-slate-500 hover:text-red-600 dark:text-aa-200 purple:text-pt-200 hover:bg-red-100 dark:hover:bg-gray-700 dark:hover:text-red-400 purple:hover:bg-gray-700 purple:hover:text-red-400">
-                  <Trash className="w-[0.9rem] h-[0.9rem]" />
+                  className="w-8 h-8 flex items-center justify-center rounded-full text-slate-500 hover:text-red-600 dark:text-aa-200 purple:text-pt-200 hover:bg-red-100 dark:hover:bg-gray-700 dark:hover:text-red-400 purple:hover:bg-gray-700 purple:hover:text-red-400">
+                  <Trash />
                 </button>
               </div>
             )}

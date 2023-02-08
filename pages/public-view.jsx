@@ -1,10 +1,11 @@
-import InfoModal from '@/components/InfoModal';
+import Divider from '@/components/Divider';
 import EmptyState from '@/components/EmptyState';
 import { Danger } from '@/components/icons';
 import FilterIdea from '@/components/Idea/FilterIdea';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
 import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfiniteScroll from '@/components/InfiniteScroll';
+import InfoModal from '@/components/InfoModal';
 import Layout from '@/components/Layout';
 import PublicViewCard from '@/components/PublicViewCard';
 import useGuestValidation from '@/hooks/useGuestValidation';
@@ -17,7 +18,6 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Divider from '@/components/Divider';
 
 export default function PublicView({ userIp }) {
   const [page, setPage] = useState(1);
@@ -38,7 +38,7 @@ export default function PublicView({ userIp }) {
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const deleteFeedBackModal = useSelector((state) => state.general.deleteFeedBackModal);
-  const guestInfo = useSelector((state) => state.idea.guestInfo);
+  const guestInfo = useSelector((state) => state.auth.guestInfo);
   const user = useSelector((state) => state.auth.user);
   const voteGuestAuth = useGuestValidation('voteIdea');
 
@@ -133,7 +133,7 @@ export default function PublicView({ userIp }) {
 
   const handleDelete = () => {
     dispatch(toggleDeleteFeedBackModal());
-    dispatch(ideaActions.deleteIdea(selectedIdea._id));
+    dispatch(ideaActions.deleteIdea({ id: selectedIdea._id }));
     handleCloseIdea();
   };
 
@@ -143,7 +143,7 @@ export default function PublicView({ userIp }) {
     }
     if (voteGuestAuth) {
       return ideaVotes.find(
-        (v) => v.ideaId === ideaId && guestInfo.guestEmail === v.guestEmail && !v.userId
+        (v) => v.ideaId === ideaId && guestInfo.email === v.guestEmail && !v.userId
       );
     }
     return ideaVotes.find((v) => v.ideaId === ideaId && v.ip === userIp && !v.userId);
@@ -156,6 +156,7 @@ export default function PublicView({ userIp }) {
       dispatch(toggleFeedBackDetailModal());
     }
   };
+
   useEffect(() => {
     if (router) {
       const { topics, status, sort, feedback } = router.query;
@@ -183,14 +184,15 @@ export default function PublicView({ userIp }) {
 
       dispatch(
         ideaActions.getUserVotes({
-          ...(voteGuestAuth ? { email: guestInfo.guestEmail } : { ip: userIp }),
-          email: guestInfo?.guestEmail,
+          ...(voteGuestAuth ? { email: guestInfo.email } : { ip: userIp }),
+          email: guestInfo?.email,
           companyId: company?._id,
           userId: user?._id
         })
       );
     }
   }, [company]);
+
   useEffect(() => {
     if (userIp) {
       dispatch(authActions.setUserIp(userIp));
@@ -261,15 +263,14 @@ export default function PublicView({ userIp }) {
                   endOfList={() => setPage((page) => page + 1)}>
                   {ideas.length > 0 ? (
                     ideas?.map((idea, index) => (
-                      <>
+                      <div key={idea._id}>
                         <PublicViewCard
-                          key={idea._id}
                           idea={idea}
                           onClick={() => handleClickIdea(idea)}
                           voted={handleVoted(idea._id)}
                         />
                         {ideas.length - 1 !== index && <Divider className="my-4" />}
-                      </>
+                      </div>
                     ))
                   ) : (
                     <EmptyState
@@ -303,6 +304,7 @@ export default function PublicView({ userIp }) {
               company={company}
               query={routerQuery}
               voted={handleVoted(selectedIdea?._id)}
+              onClose={() => handleCloseIdea()}
             />
             <InfoModal
               show={deleteFeedBackModal}
