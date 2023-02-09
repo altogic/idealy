@@ -13,6 +13,7 @@ import * as yup from 'yup';
 import useGuestValidation from '@/hooks/useGuestValidation';
 import useSaveGuestInformation from '@/hooks/useSaveGuestInformation';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
+import useNotification from '@/hooks/useNotification';
 import AutoComplete from '../AutoComplete';
 import Button from '../Button';
 import Divider from '../Divider';
@@ -51,7 +52,7 @@ export default function SubmitIdea({ idea }) {
   const dispatch = useDispatch();
   const updateIdea = useUpdateIdea(idea);
   const saveGuestInformation = useSaveGuestInformation();
-
+  const sendNotification = useNotification();
   const schema = yup.object().shape({
     title: yup.string().max(140, 'Title must be under 140 character').required('Title is required'),
     content: yup.string(),
@@ -110,22 +111,22 @@ export default function SubmitIdea({ idea }) {
       uniqueMentions.forEach((id) => {
         const isRegistered = JSON.parse(id.split('-')[1]);
         if (isRegistered) {
-          // TODO send notification
-          // dispatch(
-          //   notificationActions.sendNotification({
-          //     user: user._id,
-          //     companyId: company._id,
-          //     message: `New request access for <b>${company?.name}</b>`
-          //   })
-          // );
+          sendNotification({
+            message: `You have been mentioned in an idea by ${user.name}`,
+            targetUser: id.split('-')[0],
+            type: 'mention',
+            notificationType: 'user',
+            subject: 'You have been mentioned in an idea'
+          });
         }
       });
     }
   };
-  const submitOnSuccess = (guestEmail, guestName) => {
+  const submitOnSuccess = (guestEmail, guestName, submittedIdea) => {
     if (guestEmail && guestName) {
       saveGuestInformation({ email: guestEmail, name: guestName });
     }
+    sendMentionNotification(submittedIdea.content);
     handleClose();
     dispatch(fileActions.clearFileLinks());
   };
@@ -149,15 +150,17 @@ export default function SubmitIdea({ idea }) {
       isApproved: !company?.privacy?.ideaApproval
     };
     delete reqData.privacyPolicy;
-    sendMentionNotification(content);
 
     if (idea) {
-      updateIdea(reqData, () => submitOnSuccess(data.guestEmail, data.guestName));
+      updateIdea(reqData, (submittedIdea) =>
+        submitOnSuccess(data.guestEmail, data.guestName, submittedIdea)
+      );
     } else {
       dispatch(
         ideaActions.createIdea({
           idea: reqData,
-          onSuccess: () => submitOnSuccess(data.guestEmail, data.guestName)
+          onSuccess: (submittedIdea) =>
+            submitOnSuccess(data.guestEmail, data.guestName, submittedIdea)
         })
       );
     }

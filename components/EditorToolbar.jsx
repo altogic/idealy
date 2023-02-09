@@ -13,13 +13,13 @@ async function suggestPeople(searchTerm) {
     ...members.map((member) => ({
       id: `${member._id}-true`,
       value: member.name,
-      link: member.name,
+      link: `/public-view?userId=${member._id}&type=member`,
       isRegistered: true
     })),
     ...users.map((user) => ({
       id: `${user._id}-false`,
       value: user.name,
-      link: user.name,
+      link: `/public-view?userId=${user._id}&type=user`,
       isRegistered: false
     }))
   ];
@@ -32,12 +32,15 @@ export const modules = {
   mention: {
     allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
     mentionDenotationChars: ['@', '#'],
+    linkTarget: '_self',
     async source(searchTerm, renderList) {
       if (searchTerm.length === 0) {
         renderList([], false);
       }
-      const matchedPeople = await suggestPeople(searchTerm);
-      renderList(matchedPeople);
+      if (searchTerm.length > 0) {
+        const matchedPeople = await suggestPeople(searchTerm);
+        renderList(matchedPeople);
+      }
     },
     onSelect(item, insertItem) {
       insertItem(item);
