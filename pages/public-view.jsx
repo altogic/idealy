@@ -159,12 +159,18 @@ export default function PublicView({ userIp }) {
 
   useEffect(() => {
     if (router) {
-      const { topics, status, sort, feedback } = router.query;
+      const { topics, status, sort, feedback, userId, type } = router.query;
       if (sort) setSortType(IDEA_SORT_TYPES.find((s) => s.url === sort));
       else setSortType(IDEA_SORT_TYPES[2]);
       if (topics) setFilterTopics(topics.split(','));
       if (status) setFilterStatus(status.split(','));
       if (feedback && !feedBackDetailModal) showFeedbackDetail(feedback);
+      if (userId) {
+        console.log('userId', userId);
+      }
+      if (type) {
+        console.log('type', type);
+      }
     }
   }, [router, ideas]);
 

@@ -64,7 +64,7 @@ export default function CommentCard({ comment }) {
                 ? comment?.guestName
                 : 'Anonymous'}
             </h6>
-            <div className="prose prose-p:text-slate-500 prose-p:my-2 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
+            <div className="prose prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-p:text-slate-500 prose-p:my-2 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
               <SanitizeHtml html={comment?.text} />
             </div>
             <div className="flex items-center gap-2 min-h-[32px]">

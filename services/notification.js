@@ -3,7 +3,7 @@ import { db, endpoint } from '@/utils/altogic';
 const notificationService = {
   getNotifications: (companyId) =>
     db
-      .model('companyNotifications')
+      .model('notifications')
       .filter(`companyId == '${companyId}'`)
       .lookup({ field: 'user' })
       .omit(
@@ -20,13 +20,13 @@ const notificationService = {
         'user.signUpAt'
       )
       .get(),
-  getUnreadcompanyNotifications: (userId) =>
-    db.model('companyNotifications').filter(`user == '${userId}' && isRead == false`).get(),
+  getUnreadCompanyNotifications: (userId) =>
+    db.model('notifications').filter(`user == '${userId}' && isRead == false`).get(),
   markNotificationAsRead: (userId) =>
     db
-      .model('companyNotifications')
+      .model('notifications')
       .filter(`userId == '${userId}'`)
       .updateFields([{ field: 'isRead', updateType: 'set', value: true }]),
-  sendNotification: (req) => endpoint.post('/notification/company', req)
+  sendNotification: (req) => endpoint.post('/notification', req)
 };
 export default notificationService;

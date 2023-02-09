@@ -15,7 +15,6 @@ export default function useIdeaActionValidation(model, fieldName) {
       : true;
   }
   if (!_.isEmpty(guestInfo) && guestValidation && fieldName !== 'reply') {
-    console.log('guestInfo?.email === model?.guestEmail', guestInfo?.email === model?.guestEmail);
     return guestInfo?.email === model?.guestEmail || (company?.role && company?.role !== 'Guest');
   }
 

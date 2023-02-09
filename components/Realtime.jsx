@@ -128,10 +128,8 @@ export default function Realtime() {
       dispatch(notificationActions.receiveNotificationRealtime(message));
     }
   }
-  function userNotificationHandler(data) {
-    if (data.message.user === user._id) {
-      dispatch(notificationActions.receiveNotificationRealtime(data.message));
-    }
+  function userNotificationHandler({ message }) {
+    dispatch(notificationActions.receiveNotificationRealtime(message));
   }
   function updateCompanyHandler({ message }) {
     if (message.company._id === company._id || (user && message.sender !== user?._id)) {

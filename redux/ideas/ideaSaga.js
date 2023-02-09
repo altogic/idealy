@@ -31,7 +31,7 @@ function* createIdeaSaga({ payload: { idea, onSuccess } }) {
     }
     yield put(ideaActions.createIdeaSuccess(data));
     realtime.send(company._id, 'create-idea', data);
-    onSuccess();
+    onSuccess(data);
   } catch (error) {
     yield put(ideaActions.createIdeaFailure(error));
   }
@@ -80,7 +80,7 @@ function* updateIdeaSaga({ payload: { idea, onSuccess } }) {
     yield put(ideaActions.updateIdeaSuccess(data));
     const company = yield select((state) => state.company.company);
     realtime.send(company._id, 'update-idea', data);
-    if (onSuccess) onSuccess();
+    if (onSuccess) onSuccess(data);
   } catch (error) {
     yield put(ideaActions.updateIdeaFailure(error));
   }
