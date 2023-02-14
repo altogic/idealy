@@ -13,14 +13,16 @@ async function suggestPeople(searchTerm) {
     ...members.map((member) => ({
       id: `${member._id}-true`,
       value: member.name,
-      link: `/public-view?userId=${member._id}&type=member`,
-      isRegistered: true
+      isRegistered: true,
+      email: member.email,
+      profilePicture: member.profilePicture
     })),
     ...users.map((user) => ({
       id: `${user._id}-false`,
       value: user.name,
-      link: `/public-view?userId=${user._id}&type=user`,
-      isRegistered: false
+      isRegistered: false,
+      email: user.email,
+      profilePicture: user.avatar
     }))
   ];
 }
@@ -32,7 +34,7 @@ export const modules = {
   mention: {
     allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
     mentionDenotationChars: ['@', '#'],
-    linkTarget: '_self',
+    dataAttributes: ['id', 'value', 'link', 'email'],
     async source(searchTerm, renderList) {
       if (searchTerm.length === 0) {
         renderList([], false);

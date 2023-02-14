@@ -6,6 +6,7 @@ const notificationService = {
       .model('notifications')
       .filter(`companyId == '${companyId}'`)
       .lookup({ field: 'user' })
+      .sort('createdAt', 'desc')
       .omit(
         'user.savedFilters',
         'user.notifications',

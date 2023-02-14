@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/prefer-default-export
-import { Archive, Bug, CircleCheck, Eye, Thumbtack } from '@/components/icons';
+import { Archive, Bug, CircleCheck, Eye, Merge, Thumbtack } from '@/components/icons';
 
 export const BREAKPOINT = {
   TABLET_SIZE: 1024,
@@ -60,8 +60,12 @@ export const SESSION_COOKIE_OPTIONS = {
 };
 export const PRIORITY_VALUES = {
   fibonacci: [2, 3, 5, 8, 13, 21],
-  tshirt: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']
+  tshirt: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
 };
+export const PRIORITY_TYPES = [
+  { id: 1, name: 'Fibonacci', value: 'fibonacci' },
+  { id: 2, name: 'T-Shirt', value: 'tshirt' }
+];
 export const IDEA_BADGES = [
   {
     name: 'Pinned',
@@ -92,6 +96,12 @@ export const IDEA_BADGES = [
     icon: CircleCheck,
     color: 'pink',
     field: 'isApproved'
+  },
+  {
+    name: 'Merged',
+    icon: Merge,
+    color: 'orange',
+    field: 'isMerged'
   }
 ];
 

@@ -11,7 +11,7 @@ const companyService = {
   getCompanyMembers: (companyId) =>
     db
       .model('companyMembers')
-      .filter(`companyId == '${companyId}'`)
+      .filter(`companyId == '${companyId} && role != 'Owner''`)
       .lookup({ field: 'user' })
       .get(),
   inviteTeamMember: (req) => endpoint.post('/company/invite', req),

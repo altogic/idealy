@@ -51,6 +51,7 @@ export default function BaseListBox({
           <Listbox.Options
             className={cn(
               'absolute mt-1  overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50',
+              size === 'sm' && 'w-[120px]',
               size === 'md' && 'w-[160px]',
               size === 'lg' && 'max-w-[195px] max-h-60  w-full',
               size === 'xl' && 'w-[220px]',

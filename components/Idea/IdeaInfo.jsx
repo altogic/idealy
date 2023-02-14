@@ -1,9 +1,42 @@
 import { DateTime } from 'luxon';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import Avatar from '../Avatar';
+import UserCard from '../UserCard';
 
-export default function IdeaInfo({ idea }) {
+export default function IdeaInfo({ idea, detail }) {
+  const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
+  const [userCardStyle, setUserCardStyle] = useState({ top: 0, left: 0 });
+  function hideUserCard() {
+    setUserCardStyle({ display: 'none' });
+  }
+
+  useEffect(() => {
+    if (feedBackDetailModal) {
+      const ideaDetail = document.querySelector('.drawer-body');
+      ideaDetail.addEventListener('click', hideUserCard);
+    }
+    document.body.addEventListener('click', hideUserCard);
+    return () => {
+      document.body.removeEventListener('click', hideUserCard);
+    };
+  }, [feedBackDetailModal]);
   return (
-    <>
+    <button
+      className="flex items-center gap-4"
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        const userCards = document.querySelectorAll('.user-card');
+        userCards.forEach((userCard) => {
+          userCard.style.display = 'none';
+        });
+        setUserCardStyle({
+          top: detail ? '-6rem' : '3rem',
+          left: detail ? '-6rem' : '2.5rem',
+          display: 'flex'
+        });
+      }}>
       {/* Author */}
       <Avatar
         src={idea?.author?.profilePicture || idea?.guestAvatar}
@@ -24,6 +57,14 @@ export default function IdeaInfo({ idea }) {
       <span className="text-slate-500 dark:text-aa-300 purple:text-pt-300 text-sm tracking-sm">
         {DateTime.fromISO(idea?.createdAt).setLocale('en').toRelative()}
       </span>
-    </>
+      <UserCard
+        profilePicture={idea?.author?.profilePicture || idea?.guestAvatar}
+        name={idea?.author ? idea?.author.name : idea?.guestName ? idea?.guestName : idea?.name}
+        email={
+          idea?.author ? idea?.author.email : idea?.guestEmail ? idea?.guestEmail : idea?.email
+        }
+        style={userCardStyle}
+      />
+    </button>
   );
 }

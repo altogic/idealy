@@ -37,7 +37,7 @@ export default function Drawer({ open, onClose, children, sidebar, className }) 
               leaveTo="translate-x-full">
               <Dialog.Panel className="pointer-events-auto max-w-screen-lg w-screen flex bg-white">
                 {sidebar}
-                <div className="relative flex w-full h-full flex-col overflow-y-scroll bg-white dark:bg-aa-900 purple:bg-pt-1000 p-10 drop-shadow-sm">
+                <div className="drawer-body relative flex w-full h-full flex-col overflow-y-scroll bg-white dark:bg-aa-900 purple:bg-pt-1000 p-10 drop-shadow-sm">
                   {/* Close Button Submit Feedback Modal */}
                   <div className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                     <button
