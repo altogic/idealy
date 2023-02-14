@@ -57,9 +57,7 @@ export default function PublicViewCard({ idea, onClick, voted }) {
                 <StatusBadge name={idea?.status?.name} color={idea?.status?.color} />
               )}
               {/* Comments Button */}
-              <div
-                type="button"
-                className="inline-flex items-center gap-1 text-slate-400 dark:text-aa-400 purple:text-pt-400">
+              <div className="inline-flex items-center gap-1 text-slate-400 dark:text-aa-400 purple:text-pt-400">
                 <Comment className="w-6 h-6" />
                 {idea?.commentCount}
               </div>

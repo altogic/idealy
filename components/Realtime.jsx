@@ -171,8 +171,8 @@ export default function Realtime() {
     if (idea === message.id && message.sender !== user?._id) {
       dispatch(toggleFeedBackDetailModal());
       setDeleteIdeaModal(true);
-      dispatch(ideaActions.deleteIdeaSuccess(message.id));
     }
+    dispatch(ideaActions.deleteIdeaSuccess(message.id));
   }
   function voteIdeaHandler({ message }) {
     if (
