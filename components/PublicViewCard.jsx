@@ -8,7 +8,7 @@ import TopicBadges from './TopicBadges';
 
 export default function PublicViewCard({ idea, onClick, voted }) {
   return (
-    <div className="px-2 py-6 lg:p-6 inline-block w-full rounded-lg transition hover:bg-slate-50 dark:hover:bg-aa-800 purple:hover:bg-pt-900">
+    <div className="relative px-2 py-6 lg:p-6 inline-block w-full rounded-lg transition hover:bg-slate-50 dark:hover:bg-aa-800 purple:hover:bg-pt-900">
       <div className="flex items-start lg:items-center gap-6">
         <VoteIdea voted={voted} voteCount={idea?.voteCount} ideaId={idea?._id} />
         <button type="button" onClick={onClick} className="w-full">
@@ -17,6 +17,7 @@ export default function PublicViewCard({ idea, onClick, voted }) {
               idea?.isBug ||
               idea?.isArchived ||
               idea?.isPinned ||
+              idea?.isMerged ||
               !idea?.isApproved) && <IdeaBadges idea={idea} />}
             <h2
               className="max-w-[500px] text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left lg:truncate"
@@ -33,7 +34,7 @@ export default function PublicViewCard({ idea, onClick, voted }) {
 
             <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-2 mb-4 lg:mb-0">
               <IdeaInfo idea={idea} />
-              {idea?.topics.length > 0 && (
+              {idea?.topics?.length > 0 && (
                 <>
                   <svg
                     className="hidden lg:block h-1 w-1 text-slate-500"

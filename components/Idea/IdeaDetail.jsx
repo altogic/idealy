@@ -17,6 +17,7 @@ import EmptyState from '../EmptyState';
 import { Pen, Thumbtack, Trash } from '../icons';
 import InfiniteScroll from '../InfiniteScroll';
 import SanitizeHtml from '../SanitizeHtml';
+import UserCard from '../UserCard';
 import IdeaActionButton from './admin/IdeaActionButton';
 import IdeaBadges from './IdeaBadges';
 import IdeaDetailAdmin from './IdeaDetailAdmin';
@@ -35,8 +36,25 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
   const canComment = useRegisteredUserValidation('commentIdea');
   const canEdit = useIdeaActionValidation(idea, 'submitIdeas');
   const [isFetched, setIsFetched] = useState(false);
+  const [userCardStyle, setUserCardStyle] = useState({ top: 0, left: 0 });
+  const [userCardInfo, setUserCardInfo] = useState({});
   const updateIdea = useUpdateIdea(idea);
+  function handleClickMention(e) {
+    e.stopPropagation();
+    const top = e.target.offsetTop - 80;
+    const left = e.target.offsetLeft + 20;
+    setUserCardStyle({ top, left, display: 'flex' });
+    const mention = e.target.parentElement;
+    setUserCardInfo({
+      name: mention.dataset.value,
+      profilePicture: mention.dataset.profilePicture,
+      email: mention.dataset.email
+    });
+  }
 
+  function hideUserCard() {
+    setUserCardStyle({ display: 'none' });
+  }
   useEffect(() => {
     const ideaId = router.query.feedback;
     if (router.isReady && !!idea?.commentCount && !isFetched && ideaId) {
@@ -51,7 +69,24 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
       dispatch(commentActions.clearComments());
     }
   }, [feedBackDetailModal]);
+  useEffect(() => {
+    if (feedBackDetailModal) {
+      const mentions = document.querySelectorAll('.mention');
+      mentions.forEach((mention) => {
+        mention.addEventListener('click', handleClickMention);
+      });
+      const ideaDetail = document.querySelector('.drawer-body');
+      ideaDetail.addEventListener('click', hideUserCard);
+    }
 
+    return () => {
+      hideUserCard();
+      const mentions = document.querySelectorAll('.mention');
+      mentions.forEach((mention) => {
+        mention.removeEventListener('click', handleClickMention);
+      });
+    };
+  }, [feedBackDetailModal]);
   return (
     <Drawer
       open={feedBackDetailModal}
@@ -61,9 +96,9 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
       sidebar={
         user && (company?.role === 'Owner' || company?.role === 'Admin') && <IdeaDetailAdmin />
       }>
-      <div className="flex gap-6">
-        <VoteIdea ideaId={idea?._id} voteCount={idea?.voteCount} voted={voted} />
-        <div className="relative flex-1">
+      <div className="flex gap-6 relative">
+        <VoteIdea voted={voted} voteCount={idea?.voteCount} ideaId={idea?._id} />
+        <div className="flex-1 relative">
           <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all mb-8">
             {idea?.title}
           </h2>
@@ -71,6 +106,7 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
             idea?.isBug ||
             idea?.isArchived ||
             idea?.isPinned ||
+            idea?.isMerged ||
             !idea?.isApproved) && (
             <div className="mb-8">
               <IdeaBadges idea={idea} />
@@ -80,9 +116,9 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
             <SanitizeHtml html={idea?.content} />
           </div>
 
-          <div className="flex items-center gap-2 mb-8">
+          <div className="relative flex items-center gap-2 mb-8">
             {/* User */}
-            <IdeaInfo idea={idea} />
+            <IdeaInfo idea={idea} detail />
             {canEdit && (
               <>
                 <svg
@@ -149,6 +185,12 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
 
           <ImageList images={idea?.images} isPreview />
         </div>
+        <UserCard
+          profilePicture={userCardInfo?.profilePicture}
+          name={userCardInfo?.name}
+          email={userCardInfo?.email}
+          style={userCardStyle}
+        />
       </div>
 
       {canComment && <CommentForm ideaId={idea?._id} setIsFetched={setIsFetched} />}

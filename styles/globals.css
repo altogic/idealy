@@ -176,3 +176,6 @@ html:has(:is(.modal, .drawer)) {
 .ql-mention-list-item.selected {
   @apply bg-slate-200 dark:bg-aa-600 purple:bg-pt-600 !important;
 }
+.mention {
+  @apply text-slate-500 dark:text-aa-100 purple:text-pt-100 bg-transparent underline cursor-pointer select-none !important;
+}

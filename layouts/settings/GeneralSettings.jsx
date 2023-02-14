@@ -5,6 +5,7 @@ import CompanyName from './GeneralSettings/CompanyName';
 import CompanyFavicon from './GeneralSettings/CompanyFavicon';
 import CompanyDisplay from './GeneralSettings/CompanyDisplay';
 import CompanySiteNavigation from './GeneralSettings/CompanySiteNavigation';
+import CompanyPriority from './GeneralSettings/CompanyPriority';
 
 export default function GeneralFunctions() {
   return (
@@ -22,6 +23,8 @@ export default function GeneralFunctions() {
         <CompanyName />
         <Divider className="my-8" />
         <CompanyDisplay />
+        <Divider className="my-8" />
+        <CompanyPriority />
         <Divider className="my-8" />
         <CompanyFavicon />
         <Divider className="my-8" />
