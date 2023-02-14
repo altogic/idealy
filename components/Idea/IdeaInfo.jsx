@@ -29,6 +29,7 @@ export default function IdeaInfo({ idea, detail }) {
         e.stopPropagation();
         const userCards = document.querySelectorAll('.user-card');
         userCards.forEach((userCard) => {
+          // eslint-disable-next-line no-param-reassign
           userCard.style.display = 'none';
         });
         setUserCardStyle({
