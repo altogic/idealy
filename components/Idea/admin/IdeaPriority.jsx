@@ -1,26 +1,25 @@
 import BaseListBox from '@/components/BaseListBox';
-import Input from '@/components/Input';
 import { PRIORITY_VALUES } from 'constants';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import useUpdateIdea from '@/hooks/useUpdateIdea';
 import IdeaAdminTab from './IdeaAdminTab';
 
 export default function IdeaPriority() {
+  const [benefitFactor, setBenefitFactor] = useState();
+  const [costFactor, setCostFactor] = useState();
   const idea = useSelector((state) => state.idea.selectedIdea);
-  const [benefitFactor, setBenefitFactor] = useState(2);
-  const [costFactor, setCostFactor] = useState(2);
   const company = useSelector((state) => state.company.company);
+  useEffect(() => {
+    setBenefitFactor(idea?.benefitFactor);
+    setCostFactor(idea?.costFactor);
+  }, [idea]);
+
+  const updateIdea = useUpdateIdea(idea);
+
   return (
     <IdeaAdminTab title="Priority">
-      <div className="grid grid-cols-3 gap-2">
-        <div>
-          <span className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-sm font-medium">
-            Vote
-          </span>
-          <div className="mt-2">
-            <Input value={idea?.voteCount} disabled />
-          </div>
-        </div>
+      <div className="grid grid-cols-2 gap-2">
         <div>
           <span className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-sm font-medium">
             Benefit
@@ -28,10 +27,20 @@ export default function IdeaPriority() {
           <div className="mt-2">
             <BaseListBox
               value={benefitFactor}
-              onChange={setBenefitFactor}
               options={PRIORITY_VALUES[company?.priorityType]}
               label={benefitFactor}
               size="sm"
+              onChange={(selected) => {
+                setBenefitFactor(selected);
+                const benefitIndex = PRIORITY_VALUES[company?.priorityType].indexOf(selected) + 1;
+                const costIndex =
+                  PRIORITY_VALUES[company?.priorityType].indexOf(Number(costFactor)) + 1;
+                const voteCount = idea?.voteCount || 1;
+                updateIdea({
+                  benefitFactor: selected,
+                  priorityScore: ((benefitIndex * voteCount) / costIndex) * 100
+                });
+              }}
             />
           </div>
         </div>
@@ -42,10 +51,20 @@ export default function IdeaPriority() {
           <div className="mt-2">
             <BaseListBox
               value={setCostFactor}
-              onChange={setCostFactor}
               options={PRIORITY_VALUES[company?.priorityType]}
               label={costFactor}
               size="sm"
+              onChange={(selected) => {
+                setCostFactor(selected);
+                const costIndex = PRIORITY_VALUES[company?.priorityType].indexOf(selected) + 1;
+                const benefitIndex =
+                  PRIORITY_VALUES[company?.priorityType].indexOf(Number(benefitFactor)) + 1;
+                const voteCount = idea?.voteCount || 1;
+                updateIdea({
+                  benefitFactor: selected,
+                  priorityScore: ((benefitIndex * voteCount) / costIndex) * 100
+                });
+              }}
             />
           </div>
         </div>

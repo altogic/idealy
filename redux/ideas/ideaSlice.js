@@ -245,6 +245,11 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
+      if (state.selectedIdea) {
+        state.selectedIdea.voteCount = state.selectedIdea.voteCount
+          ? state.selectedIdea.voteCount - 1
+          : 0;
+      }
     },
     upVoteIdeaRealtime(state, action) {
       state.ideas = state.ideas.map((idea) => {
@@ -256,6 +261,9 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
+      if (state.selectedIdea) {
+        state.selectedIdea.voteCount += 1;
+      }
     },
 
     approveAllIdeas(state) {
@@ -284,6 +292,24 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
+    },
+    mergeIdeas(state) {
+      state.isLoading = true;
+    },
+    mergeIdeasSuccess(state, action) {
+      state.isLoading = false;
+      state.ideas = state.ideas.filter((idea) => idea._id !== action.payload.mergedIdea);
+      state.ideas = state.ideas.map((idea) => {
+        if (idea._id === action.payload.baseIdea._id) {
+          return action.payload.baseIdea;
+        }
+        return idea;
+      });
+      state.selectedIdea = action.payload.baseIdea;
+    },
+    mergeIdeasFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   },
 

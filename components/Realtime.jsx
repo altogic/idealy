@@ -30,7 +30,6 @@ export default function Realtime() {
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const voteGuestAuth = useGuestValidation('voteIdea');
-  const ideas = useSelector((state) => state.idea.ideas);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -169,12 +168,10 @@ export default function Realtime() {
   }
   function deleteIdeaHandler({ message }) {
     const idea = new URLSearchParams(document.location.search).get('feedback');
-    if (idea === message._id && message.sender !== user?._id) {
+    if (idea === message.id && message.sender !== user?._id) {
       dispatch(toggleFeedBackDetailModal());
       setDeleteIdeaModal(true);
-    }
-    if (ideas.some((idea) => idea._id === message)) {
-      dispatch(ideaActions.deleteIdeaSuccess(message));
+      dispatch(ideaActions.deleteIdeaSuccess(message.id));
     }
   }
   function voteIdeaHandler({ message }) {

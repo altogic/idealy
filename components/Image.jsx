@@ -22,7 +22,7 @@ export default function Image({ isPreview, src, alt, loading, onRemove, removabl
           <img
             src={src}
             alt={alt || 'image'}
-            className={cn('object-contain rounded', loading && 'filter blur-sm')}
+            className={cn('object-contain rounded min-h-[3rem] p-1', loading && 'filter blur-sm')}
           />
           {loading && (
             <ClipLoader className="absolute" loading={loading} size={20} color="#312e81" />

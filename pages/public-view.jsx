@@ -1,5 +1,6 @@
 import Divider from '@/components/Divider';
 import EmptyState from '@/components/EmptyState';
+import Errors from '@/components/Errors';
 import { Danger } from '@/components/icons';
 import FilterIdea from '@/components/Idea/FilterIdea';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
@@ -25,6 +26,7 @@ export default function PublicView({ userIp }) {
   const [filterStatus, setFilterStatus] = useState([]);
   const [routerQuery, setRouterQuery] = useState();
   const [sortType, setSortType] = useState();
+  const [error, setError] = useState();
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -102,7 +104,7 @@ export default function PublicView({ userIp }) {
       const req = {
         companyId: company?._id,
         limit: 10,
-        filter: `this.isArchived == false && this.isPrivate == false && this.isCompleted == false && ${handleFilter(
+        filter: `this.isArchived == false && this.isPrivate == false && this.isCompleted == false && this.isMerged == false && ${handleFilter(
           router.query.topics?.split(','),
           router.query.status?.split(',')
         )}`,
@@ -159,18 +161,12 @@ export default function PublicView({ userIp }) {
 
   useEffect(() => {
     if (router) {
-      const { topics, status, sort, feedback, userId, type } = router.query;
+      const { topics, status, sort, feedback } = router.query;
       if (sort) setSortType(IDEA_SORT_TYPES.find((s) => s.url === sort));
       else setSortType(IDEA_SORT_TYPES[2]);
       if (topics) setFilterTopics(topics.split(','));
       if (status) setFilterStatus(status.split(','));
       if (feedback && !feedBackDetailModal) showFeedbackDetail(feedback);
-      if (userId) {
-        console.log('userId', userId);
-      }
-      if (type) {
-        console.log('type', type);
-      }
     }
   }, [router, ideas]);
 
@@ -196,6 +192,15 @@ export default function PublicView({ userIp }) {
           userId: user?._id
         })
       );
+      if (!company?.siteNavigation?.feedback && !(company?.role && company?.role !== 'Guest')) {
+        setError({
+          title: 'Feedback is disabled',
+          message:
+            'Feedback is disabled for this company. Please contact company administrator for detail information.'
+        });
+      } else {
+        setError(null);
+      }
     }
   }, [company]);
 
@@ -215,94 +220,100 @@ export default function PublicView({ userIp }) {
         {company && (
           <>
             <div className="max-w-screen-lg mx-auto lg:my-14">
-              <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-16">
-                <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
-                  Feature Ideas
-                </h1>
-
-                {isSubmitIdeaVisible && (
-                  <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />
-                )}
-              </div>
-              <div className="flex items-start justify-between mb-9">
-                <FilterIdea
-                  sortType={sortType}
-                  setSortType={setSortType}
-                  filterTopics={filterTopics}
-                  filterStatus={filterStatus}
-                  setFilterTopics={setFilterTopics}
-                  setFilterStatus={setFilterStatus}
-                />
-              </div>
-              {loading && page === 1 ? (
-                <div
-                  role="status"
-                  className="w-full space-y-4 divide-y divide-gray-300 dark:divide-aa-600 purple:divide-pt-800 animate-pulse">
-                  <div className="flex justify-between items-center px-4 py-8">
-                    <div className="flex items-center gap-6">
-                      <div className="w-[62px] h-20 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-lg" />
-                      <div>
-                        <div className="w-64 h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full mb-2.5" />
-                        <div className="w-32 h-2 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full mb-2.5" />
-                        <div className="h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full w-24" />
-                      </div>
-                    </div>
-                    <div className="h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full w-12" />
-                  </div>
-                  <div className="flex justify-between items-center px-4 py-8">
-                    <div className="flex items-center gap-6">
-                      <div className="w-[62px] h-20 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-lg" />
-                      <div>
-                        <div className="w-64 h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full mb-2.5" />
-                        <div className="w-32 h-2 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full mb-2.5" />
-                        <div className="h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full w-24" />
-                      </div>
-                    </div>
-                    <div className="h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full w-12" />
-                  </div>
-                  <span className="sr-only">Loading...</span>
-                </div>
+              {error ? (
+                <Errors title={error?.title} message={error?.message} />
               ) : (
-                <InfiniteScroll
-                  items={ideas}
-                  countInfo={countInfo}
-                  endOfList={() => setPage((page) => page + 1)}>
-                  {ideas.length > 0 ? (
-                    ideas?.map((idea, index) => (
-                      <div key={idea._id}>
-                        <PublicViewCard
-                          idea={idea}
-                          onClick={() => handleClickIdea(idea)}
-                          voted={handleVoted(idea._id)}
-                        />
-                        {ideas.length - 1 !== index && <Divider className="my-4" />}
-                      </div>
-                    ))
-                  ) : (
-                    <EmptyState
-                      title="No feature ideas found"
-                      description="Your search did not match any data or this company does not have any feature ideas yet."
+                <>
+                  <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-16">
+                    <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
+                      Feature Ideas
+                    </h1>
+
+                    {isSubmitIdeaVisible && (
+                      <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />
+                    )}
+                  </div>
+                  <div className="flex items-start justify-between mb-9">
+                    <FilterIdea
+                      sortType={sortType}
+                      setSortType={setSortType}
+                      filterTopics={filterTopics}
+                      filterStatus={filterStatus}
+                      setFilterTopics={setFilterTopics}
+                      setFilterStatus={setFilterStatus}
                     />
-                  )}
-                  {loading && page > 1 && (
+                  </div>
+                  {loading && page === 1 ? (
                     <div
                       role="status"
-                      className="w-full space-y-4 divide-y divide-gray-300 animate-pulse">
+                      className="w-full space-y-4 divide-y divide-gray-300 dark:divide-aa-600 purple:divide-pt-800 animate-pulse">
                       <div className="flex justify-between items-center px-4 py-8">
                         <div className="flex items-center gap-6">
-                          <div className="w-[62px] h-20 bg-gray-300 rounded-lg" />
+                          <div className="w-[62px] h-20 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-lg" />
                           <div>
-                            <div className="w-64 h-2.5 bg-gray-300 rounded-full mb-2.5" />
-                            <div className="w-32 h-2 bg-gray-300 rounded-full mb-2.5" />
-                            <div className="h-2.5 bg-gray-300 rounded-full w-24" />
+                            <div className="w-64 h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full mb-2.5" />
+                            <div className="w-32 h-2 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full mb-2.5" />
+                            <div className="h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full w-24" />
                           </div>
                         </div>
-                        <div className="h-2.5 bg-gray-300 rounded-full w-12" />
+                        <div className="h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full w-12" />
+                      </div>
+                      <div className="flex justify-between items-center px-4 py-8">
+                        <div className="flex items-center gap-6">
+                          <div className="w-[62px] h-20 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-lg" />
+                          <div>
+                            <div className="w-64 h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full mb-2.5" />
+                            <div className="w-32 h-2 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full mb-2.5" />
+                            <div className="h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full w-24" />
+                          </div>
+                        </div>
+                        <div className="h-2.5 bg-gray-300 dark:bg-aa-600 purple:bg-pt-800 rounded-full w-12" />
                       </div>
                       <span className="sr-only">Loading...</span>
                     </div>
+                  ) : (
+                    <InfiniteScroll
+                      items={ideas}
+                      countInfo={countInfo}
+                      endOfList={() => setPage((page) => page + 1)}>
+                      {ideas.length > 0 ? (
+                        ideas?.map((idea, index) => (
+                          <div key={idea._id}>
+                            <PublicViewCard
+                              idea={idea}
+                              onClick={() => handleClickIdea(idea)}
+                              voted={handleVoted(idea._id)}
+                            />
+                            {ideas.length - 1 !== index && <Divider className="my-4" />}
+                          </div>
+                        ))
+                      ) : (
+                        <EmptyState
+                          title="No feature ideas found"
+                          description="Your search did not match any data or this company does not have any feature ideas yet."
+                        />
+                      )}
+                      {loading && page > 1 && (
+                        <div
+                          role="status"
+                          className="w-full space-y-4 divide-y divide-gray-300 animate-pulse">
+                          <div className="flex justify-between items-center px-4 py-8">
+                            <div className="flex items-center gap-6">
+                              <div className="w-[62px] h-20 bg-gray-300 rounded-lg" />
+                              <div>
+                                <div className="w-64 h-2.5 bg-gray-300 rounded-full mb-2.5" />
+                                <div className="w-32 h-2 bg-gray-300 rounded-full mb-2.5" />
+                                <div className="h-2.5 bg-gray-300 rounded-full w-24" />
+                              </div>
+                            </div>
+                            <div className="h-2.5 bg-gray-300 rounded-full w-12" />
+                          </div>
+                          <span className="sr-only">Loading...</span>
+                        </div>
+                      )}
+                    </InfiniteScroll>
                   )}
-                </InfiniteScroll>
+                </>
               )}
             </div>
             <IdeaDetail

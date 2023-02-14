@@ -21,7 +21,8 @@ export default function GuestFormModal({
   const schema = yup.object().shape({
     guestName: yup.string().required('Name is required'),
     guestEmail: yup.string().email('Email is invalid').required('Email is required'),
-    avatar: yup.string().url()
+    avatar: yup.string().url(),
+    privacyPolicy: yup.boolean().oneOf([true], 'You must accept the privacy policy')
   });
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const loading = useSelector((state) => state.company.isLoading);
