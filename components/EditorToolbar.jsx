@@ -14,6 +14,7 @@ async function suggestPeople(searchTerm) {
       id: `${member._id}-true`,
       value: member.name,
       isRegistered: true,
+      name: member.name,
       email: member.email,
       profilePicture: member.profilePicture
     })),
@@ -21,6 +22,7 @@ async function suggestPeople(searchTerm) {
       id: `${user._id}-false`,
       value: user.name,
       isRegistered: false,
+      name: user.name,
       email: user.email,
       profilePicture: user.avatar
     }))
@@ -34,7 +36,7 @@ export const modules = {
   mention: {
     allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
     mentionDenotationChars: ['@', '#'],
-    dataAttributes: ['id', 'value', 'link', 'email'],
+    dataAttributes: ['id', 'value', 'link', 'email', 'profilePicture', 'name', 'isRegistered'],
     async source(searchTerm, renderList) {
       if (searchTerm.length === 0) {
         renderList([], false);
