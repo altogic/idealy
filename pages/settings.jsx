@@ -80,7 +80,7 @@ export default function Settings() {
             <button
               type="button"
               onClick={() => setOpenSidebar(!openSidebar)}
-              className="absolute top-[-56px] left-0 inline-flex lg:hidden items-center justify-center text-white">
+              className="fixed top-[22px] left-4 inline-flex lg:hidden items-center justify-center text-white z-50">
               <HamburgerMenu className="w-8 h-8" />
             </button>
             <div className="lg:grid grid-cols-[250px,1fr] xl:grid-cols-[350px,1fr]">
