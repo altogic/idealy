@@ -60,18 +60,6 @@ export default function IdeaInfo({ idea, detail }) {
       <span className="text-slate-500 dark:text-aa-300 purple:text-pt-300 text-sm tracking-sm">
         {DateTime.fromISO(idea?.createdAt).setLocale('en').toRelative()}
       </span>
-<<<<<<< HEAD
-    </div>
-=======
-      <UserCard
-        profilePicture={idea?.author?.profilePicture || idea?.guestAvatar}
-        name={idea?.author ? idea?.author.name : idea?.guestName ? idea?.guestName : idea?.name}
-        email={
-          idea?.author ? idea?.author.email : idea?.guestEmail ? idea?.guestEmail : idea?.email
-        }
-        style={userCardStyle}
-      />
     </button>
->>>>>>> 6b3b453 (merge and mention user card added)
   );
 }
