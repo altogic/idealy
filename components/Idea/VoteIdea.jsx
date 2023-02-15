@@ -98,7 +98,7 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
 
   return (
     <div
-      className={`flex flex-col items-center bg-white dark:bg-aa-50 purple:bg-pt-50 dark:bg-opacity-10 purple:bg-opacity-10 py-1 px-3 md:px-5 border rounded-lg h-20 ${
+      className={`flex flex-col items-center flex-shrink-0 bg-white dark:bg-aa-50 purple:bg-pt-50 dark:bg-opacity-10 purple:bg-opacity-10 py-1 px-3 md:px-5 border rounded-lg h-20 ${
         votedState
           ? 'border-2 border-indigo-500 dark:border-aa-200 purple:border-pt-200'
           : 'border-gray-400'

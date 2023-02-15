@@ -47,17 +47,17 @@ export default function FilterIdea({
   };
 
   return (
-    <div className="flex items-center gap-4 justify-between w-full">
+    <div className="flex items-center gap-4 justify-between md:w-full">
       <BaseListBox
         value={sortType}
-        icon={
-          <UpDown className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200 mr-2" />
-        }
+        icon={<UpDown className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
         label={sortType?.name}
         onChange={handleSortChange}
         field="name"
         options={IDEA_SORT_TYPES}
         size="lg"
+        mobileSize="auto"
+        hidden="mobile"
       />
 
       <div className="flex items-center gap-4">
@@ -67,12 +67,13 @@ export default function FilterIdea({
           field="name"
           options={company?.topics}
           icon={
-            <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200 mr-2" />
+            <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
           }
           label="Topics"
           valueField="name"
           multiple
           size="lg"
+          hidden="mobile"
         />
         <BaseListBox
           value={filterStatus}
@@ -80,12 +81,13 @@ export default function FilterIdea({
           field="name"
           options={company?.statuses}
           icon={
-            <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200 mr-2" />
+            <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
           }
           label="Status"
           valueField="name"
           multiple
           size="lg"
+          hidden="mobile"
         />
       </div>
     </div>

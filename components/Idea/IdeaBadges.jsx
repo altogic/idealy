@@ -4,7 +4,7 @@ import Badge from '../Badge';
 export default function IdeaBadges({ idea }) {
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-1 last:mr-2">
+      <div className="flex items-center gap-1">
         {IDEA_BADGES?.map(
           (badge) =>
             ((badge.field !== 'isApproved' && idea?.[badge.field]) ||
