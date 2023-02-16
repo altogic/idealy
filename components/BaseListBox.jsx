@@ -22,7 +22,7 @@ export default function BaseListBox({
       <div className="relative">
         <Listbox.Button
           className={cn(
-            'relative flex items-center justify-between gap-2 w-full bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-600 purple:border-pt-800 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm',
+            'relative flex items-center justify-between gap-2 w-full bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-600 purple:border-pt-800 rounded-lg text-left cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm',
             size === 'sm' && 'h-11 items-center',
             size === 'md' && 'min-w-[auto] md:min-w-[160px]',
             size === 'lg' && 'min-w-[auto] md:min-w-[195px]',

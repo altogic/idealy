@@ -14,6 +14,7 @@ export default function Button({
   mobileFullWidth,
   disabled,
   loading,
+  fontSize,
   ...props
 }) {
   const override = css`
@@ -27,6 +28,7 @@ export default function Button({
         `text-${size}`,
         `inline-flex items-center justify-center gap-2 tracking-sm border rounded-md transition ease-linear duration-200 focus:outline-none`,
         size === 'sm' ? 'px-2 py-1' : 'px-4 py-2',
+        fontSize ? `text-${fontSize}` : null,
         height ? `h-${height}` : '',
         fullWidth ? 'w-full' : '',
         mobileFullWidth ? 'w-full md:w-auto' : '',
