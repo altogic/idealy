@@ -64,11 +64,10 @@ export default function MergeModal({ openMergeModal, setOpenMergeModal }) {
   return (
     <Modal open={openMergeModal} onClose={() => setOpenMergeModal(false)} size="xl">
       <div>
-        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-6 mb-8 lg:mb-4">
-          <span className="inline-flex items-center justify-center flex-shrink-0 w-10 h-10 rounded-full ring-8 bg-gray-200 dark:bg-aa-200 purple:bg-pt-200  ring-gray-100 dark:ring-aa-100 purple:ring-pt-100">
-            <Merge className="w-5 h-5 text-gray-500 dark:text-aa-100 purple:text-pt-100" />
+        <div className="flex flex-col items-start gap-4 lg:gap-6 mb-8 lg:mb-4">
+          <span className="inline-flex items-center justify-center flex-shrink-0 w-10 h-10 rounded-full ring-8 bg-gray-200 dark:bg-aa-200 purple:bg-pt-200 ring-gray-100 dark:ring-aa-50 purple:ring-pt-50">
+            <Merge className="w-5 h-5 text-gray-500 dark:text-aa-700 purple:text-pt-700" />
           </span>
-
           <div className="text-center lg:text-left space-y-2">
             <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">
               Merge Idea
@@ -79,7 +78,7 @@ export default function MergeModal({ openMergeModal, setOpenMergeModal }) {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit(handleMerge)} className="px-16 mt-8">
+        <form onSubmit={handleSubmit(handleMerge)}>
           <AsyncSelect
             cacheOptions
             loadOptions={filterIdeas}
@@ -101,7 +100,7 @@ export default function MergeModal({ openMergeModal, setOpenMergeModal }) {
               {errors.baseIdea.message}
             </span>
           )}
-          <div className="flex items-center mt-10">
+          <div className="flex items-center mt-4">
             <Input
               id="consent"
               aria-describedby="consent"
@@ -113,7 +112,7 @@ export default function MergeModal({ openMergeModal, setOpenMergeModal }) {
               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:focus:aa-indigo-500 purple:focus:ring-pt-500 dark:bg-aa-800 purple:bg-pt-800 checked:bg-aa-600 checked:purple:bg-pt-600 "
             />
           </div>
-          <div className="flex justify-end gap-2 my-8">
+          <div className="flex justify-end gap-2 mt-8">
             <Button
               type="button"
               text="Cancel"
