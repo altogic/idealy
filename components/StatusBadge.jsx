@@ -8,14 +8,14 @@ export default function StatusBadge({ name, color, className }) {
 
   useEffect(() => {
     if (color) {
-      if (company.theme === 'light') {
+      if (company?.theme === 'light') {
         setBgColor(shadeHexColor(color, 0.85));
       }
 
-      if (company.theme === 'dark') {
+      if (company?.theme === 'dark') {
         setBgColor('#29323E');
       }
-      if (company.theme === 'theme-purple') {
+      if (company?.theme === 'theme-purple') {
         setBgColor('#56508E');
       }
     }
