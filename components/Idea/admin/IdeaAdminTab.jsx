@@ -7,7 +7,7 @@ export default function IdeaAdminTab({ title, children }) {
     <Disclosure defaultOpen>
       {({ open }) => (
         <>
-          <Disclosure.Button className="-mx-2 p-2 flex items-center justify-between rounded transition-colors duration-300 hover:bg-surface-10 outline-none cursor-pointer">
+          <Disclosure.Button className="flex items-center justify-between py-2 rounded transition-colors duration-300 hover:bg-surface-10 outline-none cursor-pointer">
             <span className="text-slate-900 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">
               {title}
             </span>
@@ -17,7 +17,7 @@ export default function IdeaAdminTab({ title, children }) {
               } h-5 w-5 text-slate-500 dark:text-aa-200 purple:text-pt-200`}
             />
           </Disclosure.Button>
-          <Disclosure.Panel>{children}</Disclosure.Panel>
+          <Disclosure.Panel className="mt-2">{children}</Disclosure.Panel>
         </>
       )}
     </Disclosure>
