@@ -7,7 +7,7 @@ export default function UserCard({ name, profilePicture, email, className, style
       className={`user-card absolute hidden items-center justify-center gap-4 p-4 bg-white border border-gray-200 rounded-lg dark:bg-aa-900 purple:bg-pt-1000 dark:border-aa-600 purple:border-pt-800 ${className}`}
       style={style}>
       <Avatar src={profilePicture} alt={name} />
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col">
         <h5 className="text-sm text-slate-900 dark:text-aa-100 purple:text-pt-100">{name}</h5>
         <span className="text-xs text-slate-500 dark:text-aa-200 purple:text-pt-200">{email}</span>
       </div>
