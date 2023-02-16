@@ -4,7 +4,7 @@ import Avatar from './Avatar';
 export default function UserCard({ name, profilePicture, email, className, style }) {
   return (
     <div
-      className={`user-card absolute hidden items-center justify-center gap-4 p-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-aa-900 purple:bg-pt-1000 dark:border-aa-600 purple:border-pt-800 ${className}`}
+      className={`user-card absolute hidden items-center justify-center gap-4 p-4 bg-white border border-gray-200 rounded-lg dark:bg-aa-900 purple:bg-pt-1000 dark:border-aa-600 purple:border-pt-800 ${className}`}
       style={style}>
       <Avatar src={profilePicture} alt={name} />
       <div className="flex flex-col gap-1">
