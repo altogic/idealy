@@ -49,7 +49,8 @@ export const IDEA_SORT_TYPES = [
   { name: 'Trending', url: 'trending', query: 'trendingScore:desc' },
   { name: 'Top', url: 'top', query: 'voteCount:desc' },
   { name: 'Newest', url: 'newest', query: 'createdAt:desc' },
-  { name: 'Status Changed', url: 'status_changed', query: 'statusUpdatedAt:desc' }
+  { name: 'Status Changed', url: 'status_changed', query: 'statusUpdatedAt:desc' },
+  { name: 'Priority', url: 'priority', query: 'priorityScore:desc' }
 ];
 
 export const SESSION_COOKIE_OPTIONS = {
@@ -58,9 +59,11 @@ export const SESSION_COOKIE_OPTIONS = {
   sameSite: 'lax',
   domain: process.env.NEXT_PUBLIC_DOMAIN
 };
+// TODO: change default value if needed
 export const PRIORITY_VALUES = {
   fibonacci: [2, 3, 5, 8, 13, 21],
-  tshirt: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
+  tshirt: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+  default: [3, 5, 8, 14, 20, 32]
 };
 export const PRIORITY_TYPES = [
   { id: 1, name: 'Fibonacci', value: 'fibonacci' },
@@ -102,6 +105,10 @@ export const IDEA_BADGES = [
     icon: Merge,
     color: 'orange',
     field: 'isMerged'
+  },
+  {
+    color: 'blue',
+    field: 'priorityScore'
   }
 ];
 

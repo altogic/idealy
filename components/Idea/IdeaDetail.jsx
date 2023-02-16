@@ -97,7 +97,8 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
             idea?.isArchived ||
             idea?.isPinned ||
             idea?.isMerged ||
-            !idea?.isApproved) && (
+            !idea?.isApproved ||
+            idea.priorityScore > 0) && (
             <div className="mb-8">
               <IdeaBadges idea={idea} />
             </div>
