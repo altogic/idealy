@@ -2,22 +2,79 @@ import notificationService from '@/services/notification';
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { notificationActions } from './notificationSlice';
 
-function* getNotifications(action) {
+function* getUserNotifications({ payload: { userId, companyId } }) {
   try {
-    const { data, errors } = yield call(notificationService.getNotifications, action.payload);
+    const { data, errors } = yield call(notificationService.getUserNotifications, {
+      userId,
+      companyId,
+      filter: '&& isRead == false',
+      limit: 5
+    });
 
     if (errors) {
       throw errors;
     }
-    yield put(notificationActions.getNotificationsSuccess(data));
+    yield put(notificationActions.getUserNotificationsSuccess(data));
   } catch (error) {
-    yield put(notificationActions.getNotificationsFailure(error));
+    yield put(notificationActions.getUserNotificationsFailure(error));
+  }
+}
+function* getAllUserNotifications({ payload: { userId, limit, companyId, page } }) {
+  try {
+    const { data, errors } = yield call(notificationService.getUserNotifications, {
+      userId,
+      limit,
+      companyId,
+      page
+    });
+
+    if (errors) {
+      throw errors;
+    }
+    yield put(notificationActions.getAllUserNotificationsSuccess(data));
+  } catch (error) {
+    yield put(notificationActions.getAllUserNotificationsFailure(error));
+  }
+}
+function* getCompanyNotifications({ payload: companyId }) {
+  try {
+    const { data, errors } = yield call(notificationService.getCompanyNotifications, {
+      companyId,
+      filter: '&& isRead == false',
+      limit: 5
+    });
+
+    if (errors) {
+      throw errors;
+    }
+    yield put(notificationActions.getCompanyNotificationsSuccess(data));
+  } catch (error) {
+    yield put(notificationActions.getCompanyNotificationsFailure(error));
+  }
+}
+function* getAllCompanyNotifications({ payload: { companyId, limit, page } }) {
+  try {
+    const { data, errors } = yield call(notificationService.getCompanyNotifications, {
+      companyId,
+      limit,
+      page
+    });
+
+    if (errors) {
+      throw errors;
+    }
+    yield put(notificationActions.getAllCompanyNotificationsSuccess(data));
+  } catch (error) {
+    yield put(notificationActions.getAllCompanyNotificationsFailure(error));
   }
 }
 
-function* markNotificationAsRead(action) {
+function* markNotificationAsRead({ payload: { userId, companyId } }) {
   try {
-    const { data, errors } = yield call(notificationService.markNotificationAsRead, action.payload);
+    const { data, errors } = yield call(notificationService.markNotificationAsRead, {
+      userId,
+      companyId
+    });
     if (errors) {
       throw errors;
     }
@@ -38,15 +95,13 @@ function* sendNotification({ payload }) {
     yield put(notificationActions.sendNotificationFailure(error));
   }
 }
-function* receiveNotificationRealtime(action) {
-  yield put(notificationActions.receiveNotificationRealtimeSuccess(action.payload));
-}
-
 export default function* notificationSaga() {
   yield all([
-    takeEvery(notificationActions.getNotifications.type, getNotifications),
     takeEvery(notificationActions.markNotificationAsRead.type, markNotificationAsRead),
     takeEvery(notificationActions.sendNotification.type, sendNotification),
-    takeEvery(notificationActions.receiveNotificationRealtime, receiveNotificationRealtime)
+    takeEvery(notificationActions.getUserNotifications.type, getUserNotifications),
+    takeEvery(notificationActions.getAllUserNotifications.type, getAllUserNotifications),
+    takeEvery(notificationActions.getCompanyNotifications.type, getCompanyNotifications),
+    takeEvery(notificationActions.getAllCompanyNotifications.type, getAllCompanyNotifications)
   ]);
 }

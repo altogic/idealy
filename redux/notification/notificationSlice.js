@@ -4,38 +4,79 @@ import { HYDRATE } from 'next-redux-wrapper';
 const initialState = {
   isLoading: false,
   error: null,
-  notifications: []
+  unreadUserNotifications: [],
+  userNotifications: [],
+  unreadCompanyNotifications: [],
+  companyNotifications: [],
+  userCountInfo: null,
+  companyCountInfo: null
 };
 
 export const notificationSlice = createSlice({
   name: 'notification',
   initialState,
   reducers: {
-    getNotifications(state) {
+    getUserNotifications(state) {
       state.isLoading = true;
     },
-    getNotificationsSuccess(state, action) {
+    getUserNotificationsSuccess(state, action) {
       state.isLoading = false;
-      state.notifications = action.payload;
+      state.unreadUserNotifications = action.payload.data;
     },
-    getNotificationsFailure(state, action) {
+    getUserNotificationsFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    getAllUserNotifications(state) {
+      state.isLoading = true;
+    },
+    getAllUserNotificationsSuccess(state, action) {
+      state.isLoading = false;
+      if (action.payload.info.currentPage === 1) {
+        state.userNotifications = action.payload.data;
+      } else {
+        state.userNotifications = [...state.userNotifications, ...action.payload.data];
+      }
+      state.userCountInfo = action.payload.info;
+    },
+    getAllUserNotificationsFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    getCompanyNotifications(state) {
+      state.isLoading = true;
+    },
+    getCompanyNotificationsSuccess(state, action) {
+      state.isLoading = false;
+      state.unreadCompanyNotifications = action.payload.data;
+    },
+    getCompanyNotificationsFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    getAllCompanyNotifications(state) {
+      state.isLoading = true;
+    },
+    getAllCompanyNotificationsSuccess(state, action) {
+      state.isLoading = false;
+      state.companyCountInfo = action.payload.info;
+      if (action.payload.info.currentPage === 1) {
+        state.companyNotifications = action.payload.data;
+      } else {
+        state.companyNotifications = [...state.companyNotifications, ...action.payload.data];
+      }
+    },
+    getAllCompanyNotificationsFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
     },
     markNotificationAsRead(state) {
       state.isLoading = true;
     },
-    markNotificationAsReadSuccess(state, action) {
+    markNotificationAsReadSuccess(state) {
       state.isLoading = false;
-      state.notifications = state.notifications.map((notification) => {
-        if (notification.id === action.payload) {
-          return {
-            ...notification,
-            isRead: true
-          };
-        }
-        return notification;
-      });
+      state.unreadUserNotifications = [];
+      state.unreadCompanyNotifications = [];
     },
     markNotificationAsReadFailure(state, action) {
       state.isLoading = false;
@@ -51,12 +92,13 @@ export const notificationSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    receiveNotificationRealtime(state) {
-      state.isLoading = true;
-    },
-    receiveNotificationRealtimeSuccess(state, action) {
-      state.notifications = [action.payload, ...state.notifications];
-      state.isLoading = false;
+    receiveNotificationRealtime(state, action) {
+      if (action.payload.targetUser) {
+        state.unreadUserNotifications = [action.payload, ...state.unreadUserNotifications];
+      } else {
+        state.unreadCompanyNotifications = [action.payload, ...state.unreadCompanyNotifications];
+        state.isLoading = false;
+      }
     }
   },
   extraReducers: (builder) => {

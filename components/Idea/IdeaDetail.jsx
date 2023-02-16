@@ -2,13 +2,15 @@ import CommentCard from '@/components/CommentCard';
 import ImageList from '@/components/ImageList';
 import StatusBadge from '@/components/StatusBadge';
 import TopicBadges from '@/components/TopicBadges';
+import useClickMention from '@/hooks/useClickMention';
 import useIdeaActionValidation from '@/hooks/useIdeaActionValidation';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { commentActions } from '@/redux/comments/commentsSlice';
 import { toggleDeleteFeedBackModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CommentForm from '../CommentForm';
 import CommentSkeleton from '../CommentSkeleton';
@@ -23,11 +25,13 @@ import IdeaBadges from './IdeaBadges';
 import IdeaDetailAdmin from './IdeaDetailAdmin';
 import IdeaInfo from './IdeaInfo';
 import VoteIdea from './VoteIdea';
+import SimilarIdeas from '../SimilarIdeas';
 
 export default function IdeaDetail({ idea, company, voted, onClose }) {
   const dispatch = useDispatch();
 
   const router = useRouter();
+  const isMergeFetched = useRef(false);
   const user = useSelector((state) => state.auth.user);
   const comments = useSelector((state) => state.comments.comments);
   const commentCountInfo = useSelector((state) => state.comments.countInfo);
@@ -35,26 +39,11 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const canComment = useRegisteredUserValidation('commentIdea');
   const canEdit = useIdeaActionValidation(idea, 'submitIdeas');
-  const [isFetched, setIsFetched] = useState(false);
-  const [userCardStyle, setUserCardStyle] = useState({ top: 0, left: 0 });
-  const [userCardInfo, setUserCardInfo] = useState({});
-  const updateIdea = useUpdateIdea(idea);
-  function handleClickMention(e) {
-    e.stopPropagation();
-    const top = e.target.offsetTop - 80;
-    const left = e.target.offsetLeft + 20;
-    setUserCardStyle({ top, left, display: 'flex' });
-    const mention = e.target.parentElement;
-    setUserCardInfo({
-      name: mention.dataset.value,
-      profilePicture: mention.dataset.profilePicture,
-      email: mention.dataset.email
-    });
-  }
 
-  function hideUserCard() {
-    setUserCardStyle({ display: 'none' });
-  }
+  const [isFetched, setIsFetched] = useState(false);
+  const updateIdea = useUpdateIdea(idea);
+  const { userCardStyle, userCardInfo } = useClickMention();
+
   useEffect(() => {
     const ideaId = router.query.feedback;
     if (router.isReady && !!idea?.commentCount && !isFetched && ideaId) {
@@ -67,26 +56,27 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
     if (!feedBackDetailModal) {
       setIsFetched(false);
       dispatch(commentActions.clearComments());
+      isMergeFetched.current = false;
     }
   }, [feedBackDetailModal]);
-  useEffect(() => {
-    if (feedBackDetailModal) {
-      const mentions = document.querySelectorAll('.mention');
-      mentions.forEach((mention) => {
-        mention.addEventListener('click', handleClickMention);
-      });
-      const ideaDetail = document.querySelector('.drawer-body');
-      ideaDetail.addEventListener('click', hideUserCard);
-    }
 
-    return () => {
-      hideUserCard();
-      const mentions = document.querySelectorAll('.mention');
-      mentions.forEach((mention) => {
-        mention.removeEventListener('click', handleClickMention);
+  useEffect(() => {
+    if (idea && !idea?.mergedIdeasDetail && idea?.mergedIdeas.length > 0) {
+      let filter = '';
+      idea.mergedIdeas.forEach((i, index) => {
+        if (index === idea.mergedIdeas.length - 1) {
+          filter += `this._id == '${i.mergedIdea}'`;
+          return;
+        }
+        filter += `this._id == '${i.mergedIdea}' || `;
       });
-    };
-  }, [feedBackDetailModal]);
+
+      dispatch(ideaActions.getMergedIdeas(filter));
+
+      isMergeFetched.current = true;
+    }
+  }, [idea, router]);
+
   return (
     <Drawer
       open={feedBackDetailModal}
@@ -192,7 +182,9 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
           style={userCardStyle}
         />
       </div>
-
+      {!!idea?.mergedIdeasDetail?.length && (
+        <SimilarIdeas ideas={idea?.mergedIdeasDetail} title="Merged Ideas" />
+      )}
       {canComment && <CommentForm ideaId={idea?._id} setIsFetched={setIsFetched} />}
       <InfiniteScroll
         items={comments}

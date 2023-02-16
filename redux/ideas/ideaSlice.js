@@ -306,8 +306,23 @@ export const ideaSlice = createSlice({
         return idea;
       });
       state.selectedIdea = action.payload.baseIdea;
+      state.ideaVotes = [...state.ideaVotes, ...action.payload.ideaVotes];
     },
     mergeIdeasFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    getMergedIdeas(state) {
+      state.isLoading = true;
+    },
+    getMergedIdeasSuccess(state, action) {
+      state.isLoading = false;
+      state.selectedIdea = {
+        ...state.selectedIdea,
+        mergedIdeasDetail: action.payload.result
+      };
+    },
+    getMergedIdeasFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
     }

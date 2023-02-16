@@ -3,23 +3,32 @@ import { repliesActions } from '@/redux/replies/repliesSlice';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import useClickMention from '@/hooks/useClickMention';
 import Avatar from './Avatar';
 import InfoModal from './InfoModal';
 import { Danger, Pen, Trash } from './icons';
 import ReplyForm from './ReplyForm';
+import SanitizeHtml from './SanitizeHtml';
+import UserCard from './UserCard';
 
 export default function ReplyCard({ reply, setShowReplies }) {
   const [isDelete, setIsDelete] = useState(false);
   const [editReply, setEditReply] = useState();
   const canEdit = useIdeaActionValidation(reply, 'reply');
   const dispatch = useDispatch();
-
+  const { userCardStyle, userCardInfo } = useClickMention();
   return editReply ? (
     <ReplyForm reply={reply} setIsReplying={setEditReply} />
   ) : (
     <div className="group bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 rounded">
       <div className="flex gap-5">
         {/* Name First Letter Icon */}
+        <UserCard
+          profilePicture={userCardInfo?.profilePicture}
+          name={userCardInfo?.name}
+          email={userCardInfo?.email}
+          style={userCardStyle}
+        />
         <Avatar
           src={reply?.user?.profilePicture}
           alt={reply?.user?.name || reply.name}
@@ -31,7 +40,7 @@ export default function ReplyCard({ reply, setShowReplies }) {
             {reply?.user?.name || reply.name}
           </h6>
           <div className="prose prose-p:my-0 prose-p:text-slate-500 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
-            <p>{reply?.content}</p>
+            <SanitizeHtml html={reply?.content} />
           </div>
           <div className="flex items-center gap-3 min-h-[32px]">
             <span className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-xs tracking-sm">

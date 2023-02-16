@@ -14,7 +14,8 @@ const ideaService = {
     }),
   updateIdea: (req) => endpoint.put('/idea', req),
   deleteIdea: (id) => db.model('ideas').object(id).delete(),
-  searchSimilarIdeas: (title, companyId) => endpoint.get('/idea/search', { title, companyId }),
+  searchSimilarIdeas: (title, companyId, random = false) =>
+    endpoint.get('/idea/search', { title, companyId, random }),
   deleteIdeaCoverImage: (id) =>
     db
       .model('ideas')
@@ -36,6 +37,7 @@ const ideaService = {
       .model('ideas')
       .filter(`company == '${companyId}'`)
       .updateFields([{ field: 'isApproved', updateType: 'set', value: true }]),
-  mergeIdeas: (baseIdea, mergedIdea) => endpoint.post('/idea/merge', { baseIdea, mergedIdea })
+  mergeIdeas: (baseIdea, mergedIdea) => endpoint.post('/idea/merge', { baseIdea, mergedIdea }),
+  getMergedIdeas: (filter) => endpoint.get('/idea/merge', { filter })
 };
 export default ideaService;

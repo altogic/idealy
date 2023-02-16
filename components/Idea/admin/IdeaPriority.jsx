@@ -61,7 +61,7 @@ export default function IdeaPriority() {
                   PRIORITY_VALUES[company?.priorityType].indexOf(Number(benefitFactor)) + 1;
                 const voteCount = idea?.voteCount || 1;
                 updateIdea({
-                  benefitFactor: selected,
+                  costFactor: selected,
                   priorityScore: ((benefitIndex * voteCount) / costIndex) * 100
                 });
               }}

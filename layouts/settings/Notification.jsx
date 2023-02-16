@@ -1,236 +1,170 @@
-import { useState, useEffect } from 'react';
+import EmptyState from '@/components/EmptyState';
+import InfiniteScroll from '@/components/InfiniteScroll';
+import NotificationItem from '@/components/NotificationItem';
 import SectionTitle from '@/components/SectionTitle';
-import Toggle from '@/components/Toggle';
+import { notificationActions } from '@/redux/notification/notificationSlice';
+import { Tab } from '@headlessui/react';
+import cn from 'classnames';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { authActions } from '@/redux/auth/authSlice';
-import Divider from '@/components/Divider';
+import NotificationSettings from './NotificationSettings';
 
 export default function Notification() {
+  const router = useRouter();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
-  const company = useSelector((state) => state.company.company);
-  const [selectedNotification, setSelectedNotification] = useState();
+  const [tabIndex, setTabIndex] = useState();
+  const [page, setPage] = useState(1);
+  const [countInfo, setCountInfo] = useState({});
+  const [notifications, setNotifications] = useState([]);
+  const userNotifications = useSelector((state) => state.notification.userNotifications);
+  const companyNotifications = useSelector((state) => state.notification.companyNotifications);
+  const userCountInfo = useSelector((state) => state.notification.userCountInfo);
+  const companyCountInfo = useSelector((state) => state.notification.companyCountInfo);
   const selectedCompany = useSelector((state) => state.company.company);
-  const [disableAll, setDisableAll] = useState();
-  const [dailyDigest, setDailyDigest] = useState(false);
-  const [weeklyDigest, setWeeklyDigest] = useState(false);
-  const [voteOnIdea, setVoteOnIdea] = useState(false);
-  const [commentOnIdea, setCommentOnIdea] = useState(false);
-  const [replyOnIdea, setReplyOnIdea] = useState(false);
-  const [mentionInAComment, setMentionInAComment] = useState(false);
-  const [adminEditIdea, setAdminEditIdea] = useState(false);
-  const [ideaApproved, setIdeaApproved] = useState(false);
-  const [ideaRejected, setIdeaRejected] = useState(false);
-  const [adminAddIdea, setAdminAddIdea] = useState(false);
-  const [adminVoteIdea, setAdminVoteIdea] = useState(false);
-  const [accountApproval, setAccountApproval] = useState(false);
-  const [ideaStatusChange, setIdeaStatusChange] = useState(false);
+  const user = useSelector((state) => state.auth.user);
+  const handleTabChange = (tabName) => {
+    router.push(`/settings?tab=notifications&section=${tabName}`, undefined, { shallow: true });
+  };
+  useEffect(() => {
+    if (router.query?.section) {
+      const index = router.query.section === 'list' ? 0 : 1;
+      setTabIndex(index);
+    }
+  }, [router]);
 
   useEffect(() => {
-    if (user && selectedCompany) {
-      const notification = user.notifications?.find((n) => n.companyId === selectedCompany?._id);
-      if (notification) {
-        setSelectedNotification(notification);
-        setDailyDigest(notification.dailyDigest);
-        setWeeklyDigest(notification.weeklyDigest);
-        setVoteOnIdea(notification.voteOnIdea);
-        setCommentOnIdea(notification.commentOnIdea);
-        setReplyOnIdea(notification.replyOnIdea);
-        setMentionInAComment(notification.mentionInAComment);
-        setAdminEditIdea(notification.adminEditIdea);
-        setIdeaApproved(notification.ideaApproved);
-        setIdeaRejected(notification.ideaRejected);
-        setAdminAddIdea(notification.adminAddIdea);
-        setAdminVoteIdea(notification.adminVoteIdea);
-        setAccountApproval(notification.accountApproval);
-        setIdeaStatusChange(notification.ideaStatusChange);
-        setDisableAll(
-          notification.dailyDigest &&
-            notification.weeklyDigest &&
-            notification.voteOnIdea &&
-            notification.commentOnIdea &&
-            notification.replyOnIdea &&
-            notification.mentionInAComment &&
-            notification.adminEditIdea &&
-            notification.ideaApproved &&
-            notification.ideaRejected &&
-            notification.adminAddIdea &&
-            notification.adminVoteIdea &&
-            notification.accountApproval
+    setTabIndex(0);
+    router.push('/settings?tab=notifications&section=list', undefined, { shallow: true });
+  }, []);
+
+  useEffect(() => {
+    if (page) {
+      if (user) {
+        dispatch(
+          notificationActions.getAllUserNotifications({
+            userId: user?._id,
+            companyId: selectedCompany?._id,
+            limit: 10,
+            page
+          })
+        );
+      }
+      if (selectedCompany && selectedCompany?.role !== 'Guest') {
+        dispatch(
+          notificationActions.getAllCompanyNotifications({
+            companyId: selectedCompany._id,
+            limit: 10,
+            page
+          })
         );
       }
     }
-  }, [user, selectedCompany]);
-  const updateNotification = (fieldName, value) => {
-    dispatch(
-      authActions.updateNotificationSettings({ id: selectedNotification?._id, fieldName, value })
-    );
-  };
-  const toggleAllNotifications = () => {
-    setDailyDigest(!disableAll);
-    setWeeklyDigest(!disableAll);
-    setVoteOnIdea(!disableAll);
-    setCommentOnIdea(!disableAll);
-    setReplyOnIdea(!disableAll);
-    setMentionInAComment(!disableAll);
-    setAdminEditIdea(!disableAll);
-    setIdeaApproved(!disableAll);
-    setIdeaRejected(!disableAll);
-    setAdminAddIdea(!disableAll);
-    setAdminVoteIdea(!disableAll);
-    setAccountApproval(!disableAll);
-    setIdeaStatusChange(!disableAll);
-    setDisableAll(!disableAll);
-    dispatch(
-      authActions.disableAllNotifications({
-        id: selectedNotification?._id,
-        value: {
-          dailyDigest: !disableAll,
-          weeklyDigest: !disableAll,
-          voteOnIdea: !disableAll,
-          commentOnIdea: !disableAll,
-          replyOnIdea: !disableAll,
-          mentionInAComment: !disableAll,
-          adminEditIdea: !disableAll,
-          ideaApproved: !disableAll,
-          ideaRejected: !disableAll,
-          adminAddIdea: !disableAll,
-          adminVoteIdea: !disableAll,
-          accountApproval: !disableAll,
-          ideaStatusChange: !disableAll
-        }
-      })
-    );
-  };
+  }, [user, selectedCompany, page]);
+
+  useEffect(() => {
+    setNotifications([...userNotifications, ...companyNotifications]);
+  }, [userNotifications, companyNotifications]);
+
+  useEffect(() => {
+    if (userCountInfo?.pageSize || companyCountInfo?.pageSize) {
+      setCountInfo({
+        count:
+          userCountInfo?.count >= companyCountInfo?.count
+            ? userCountInfo?.count
+            : companyCountInfo?.count,
+        currentPage:
+          userCountInfo?.currentPage >= companyCountInfo?.currentPage
+            ? userCountInfo?.currentPage
+            : companyCountInfo?.currentPage,
+        pageSize:
+          userCountInfo?.pageSize >= companyCountInfo?.pageSize
+            ? userCountInfo?.pageSize
+            : companyCountInfo?.pageSize,
+        totalPages:
+          userCountInfo?.totalPages >= companyCountInfo?.totalPages
+            ? userCountInfo?.totalPages
+            : companyCountInfo?.totalPages
+      });
+    }
+  }, [userCountInfo, companyCountInfo]);
+
+  useEffect(() => {
+    console.log('countInfo', countInfo);
+  }, [countInfo]);
+
   return (
     <>
-      {company?.name && (
+      {selectedCompany?.name && (
         <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
           <SectionTitle
-            sectionTitle={`${company?.name} Notifications`}
+            sectionTitle={`${selectedCompany?.name} Notifications`}
             sectionDescription="Keep your inbox under control."
             big
           />
         </div>
       )}
-      <div className="max-w-lg">
-        <div className="space-y-6">
-          <Toggle
-            enabled={dailyDigest}
-            title="Daily Admin Digest"
-            onChange={() => {
-              setDailyDigest(!dailyDigest);
-              updateNotification('dailyDigest', !dailyDigest);
-            }}
-          />
-          <Toggle
-            enabled={weeklyDigest}
-            title="Weekly Digest"
-            onChange={() => {
-              setWeeklyDigest(!weeklyDigest);
-              updateNotification('weeklyDigest', !weeklyDigest);
-            }}
-          />
-          <Toggle
-            enabled={voteOnIdea}
-            title="When someone votes on your Idea"
-            onChange={() => {
-              setVoteOnIdea(!voteOnIdea);
-              updateNotification('voteOnIdea', !voteOnIdea);
-            }}
-          />
-          <Toggle
-            enabled={commentOnIdea}
-            title="When someone comments on your Idea"
-            onChange={() => {
-              setCommentOnIdea(!commentOnIdea);
-              updateNotification('commentOnIdea', !commentOnIdea);
-            }}
-          />
-          <Toggle
-            enabled={replyOnIdea}
-            title="When someone replies to your comment"
-            onChange={() => {
-              setReplyOnIdea(!replyOnIdea);
-              updateNotification('replyOnIdea', !replyOnIdea);
-            }}
-          />
-          <Toggle
-            enabled={mentionInAComment}
-            title="When someone mentions you in a comment"
-            onChange={() => {
-              setMentionInAComment(!mentionInAComment);
-              updateNotification('mentionInAComment', !mentionInAComment);
-            }}
-          />
-          <Toggle
-            enabled={ideaStatusChange}
-            title="When the Status of your Idea changes"
-            onChange={() => {
-              setIdeaStatusChange(!ideaStatusChange);
-              updateNotification('ideaStatusChange', !ideaStatusChange);
-            }}
-          />
-          <Toggle
-            enabled={adminEditIdea}
-            title="When an Admin changes the wording of your Idea"
-            onChange={() => {
-              setAdminEditIdea(!adminEditIdea);
-              updateNotification('adminEditIdea', !adminEditIdea);
-            }}
-          />
-          <Toggle
-            enabled={ideaApproved}
-            title="When your Idea is approved"
-            onChange={() => {
-              setIdeaApproved(!ideaApproved);
-              updateNotification('ideaApproved', !ideaApproved);
-            }}
-          />
-          <Toggle
-            enabled={ideaRejected}
-            title="When your Idea is rejected"
-            onChange={() => {
-              setIdeaRejected(!ideaRejected);
-              updateNotification('ideaRejected', !ideaRejected);
-            }}
-          />
-          <Toggle
-            enabled={adminAddIdea}
-            title="When an Admin adds an Idea for you"
-            onChange={() => {
-              setAdminAddIdea(!adminAddIdea);
-              updateNotification('adminAddIdea', !adminAddIdea);
-            }}
-          />
-          <Toggle
-            enabled={adminVoteIdea}
-            title="When an Admin votes on an Idea for you"
-            onChange={() => {
-              setAdminVoteIdea(!adminVoteIdea);
-              updateNotification('adminVoteIdea', !adminVoteIdea);
-            }}
-          />
-          <Toggle
-            enabled={accountApproval}
-            title="When your account is approved"
-            onChange={() => {
-              setAccountApproval(!accountApproval);
-              updateNotification('accountApproval', !accountApproval);
-            }}
-          />
-        </div>
-
-        <Divider className="mb-20" />
-        <div className="pb-4 mb-6 border-b border-slate-200">
-          <SectionTitle sectionTitle="Personal" />
-        </div>
-        <Toggle
-          enabled={disableAll}
-          title={`${!disableAll ? 'Enable' : 'Disable'} all notifications`}
-          onChange={toggleAllNotifications}
-        />
-      </div>
+      <Tab.Group selectedIndex={tabIndex}>
+        <Tab.List className="lg:flex gap-1 fixed lg:static w-full lg:w-auto pb-10 transform px-2 lg:px-6">
+          <Tab
+            className={({ selected }) =>
+              cn(
+                'px-4 py-3 text-sm font-medium tracking-sm border-2 rounded-md text-left focus:outline-none w-1/2 hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-600 hover:border-indigo-400 dark:hover:border-aa-500 purple:hover:border-pt-500',
+                selected
+                  ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-100 purple:text-pt-100 border-indigo-700 dark:border-aa-600 purple:border-pt-800'
+                  : 'text-slate-500 dark:text-aa-200 purple:text-pt-200 border-transparent'
+              )
+            }
+            onClick={() => {
+              handleTabChange('list');
+            }}>
+            Notifications
+          </Tab>
+          <Tab
+            className={({ selected }) =>
+              cn(
+                'px-4 py-3 text-sm font-medium tracking-sm border-2 rounded-md text-left focus:outline-none w-1/2 hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-600 hover:border-indigo-400 dark:hover:border-aa-500 purple:hover:border-pt-500',
+                selected
+                  ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-100 purple:text-pt-100 border-indigo-700 dark:border-aa-600 purple:border-pt-800'
+                  : 'text-slate-500 dark:text-aa-200 purple:text-pt-200 border-transparent'
+              )
+            }
+            onClick={() => {
+              handleTabChange('settings');
+            }}>
+            Settings
+          </Tab>
+        </Tab.List>
+        <Tab.Panels className="pt-5 pb-14 lg:p-5 xl:px-10 xl:py-8">
+          <Tab.Panel>
+            <InfiniteScroll
+              countInfo={countInfo}
+              items={notifications}
+              endOfList={() => {
+                setPage(page + 1);
+                console.log('load more');
+              }}>
+              {notifications?.length > 0 ? (
+                notifications?.map((notification) => (
+                  <NotificationItem
+                    key={notification._id}
+                    notification={notification}
+                    showCompany
+                  />
+                ))
+              ) : (
+                <EmptyState
+                  title="No notifications"
+                  description="You don't have any notifications yet."
+                />
+              )}
+            </InfiniteScroll>
+          </Tab.Panel>
+          <Tab.Panel>
+            <NotificationSettings />
+          </Tab.Panel>
+        </Tab.Panels>
+      </Tab.Group>
     </>
   );
 }

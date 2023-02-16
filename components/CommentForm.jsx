@@ -1,6 +1,6 @@
 import useGuestValidation from '@/hooks/useGuestValidation';
-import useNotification from '@/hooks/useNotification';
 import useSaveGuestInformation from '@/hooks/useSaveGuestInformation';
+import useSendMentionNotification from '@/hooks/useSendMentionNotification';
 import { commentActions } from '@/redux/comments/commentsSlice';
 import { generateRandomName } from '@/utils/index';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -26,7 +26,7 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
   const feedBackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const error = useSelector((state) => state.comments.error);
   const saveGuestInfo = useSaveGuestInformation();
-  const sendNotification = useNotification();
+
   const schema = yup.object().shape({
     text: yup.string(),
     guestName: yup.string().when([], {
@@ -55,28 +55,7 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
   } = useForm({
     resolver: yupResolver(schema)
   });
-  const sendMentionNotification = (content) => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(content, 'text/html');
-    const mentions = doc.querySelectorAll('.mention');
-    if (mentions.length) {
-      const mentionsArray = Array.from(mentions);
-      const mentionsIds = mentionsArray.map((mention) => mention.dataset.id);
-      const uniqueMentions = [...new Set(mentionsIds)];
-      uniqueMentions.forEach((id) => {
-        const isRegistered = JSON.parse(id.split('-')[1]);
-        if (isRegistered) {
-          sendNotification({
-            message: `You have been mentioned in a comment by ${user.name}`,
-            targetUser: id.split('-')[0],
-            type: 'mention',
-            notificationType: 'user',
-            subject: 'You have been mentioned in a comment'
-          });
-        }
-      });
-    }
-  };
+  const sendMentionNotification = useSendMentionNotification('comment');
   const submitComment = (data) => {
     if (comment.trim() === '') {
       return;
