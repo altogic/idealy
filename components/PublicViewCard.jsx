@@ -12,7 +12,7 @@ export default function PublicViewCard({ idea, onClick, voted }) {
       <div className="flex items-start lg:items-center gap-6">
         <VoteIdea voted={voted} voteCount={idea?.voteCount} ideaId={idea?._id} />
         <button type="button" onClick={onClick} className="w-full">
-          <div className="flex items-center mb-2">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-0 mb-2">
             {(idea?.isPrivate ||
               idea?.isBug ||
               idea?.isArchived ||
@@ -20,7 +20,7 @@ export default function PublicViewCard({ idea, onClick, voted }) {
               idea?.isMerged ||
               !idea?.isApproved) && <IdeaBadges idea={idea} />}
             <h2
-              className="max-w-[500px] text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left truncate"
+              className="max-w-[500px] text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left lg:truncate"
               title={idea?.title}>
               {idea?.title}
             </h2>
@@ -32,7 +32,7 @@ export default function PublicViewCard({ idea, onClick, voted }) {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2">
             {/* Bottom Left */}
 
-            <div className="flex flex-col lg:flex-row lg:items-center gap-2">
+            <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-2 mb-4 lg:mb-0">
               <IdeaInfo idea={idea} />
               {idea?.topics?.length > 0 && (
                 <>

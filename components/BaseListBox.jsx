@@ -13,6 +13,7 @@ export default function BaseListBox({
   label,
   multiple,
   valueField,
+  hidden,
   size = 'md',
   ...props
 }) {
@@ -21,22 +22,27 @@ export default function BaseListBox({
       <div className="relative">
         <Listbox.Button
           className={cn(
-            'relative inline-flex w-full bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-600 purple:border-pt-800 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm',
+            'relative flex items-center justify-between gap-2 w-full bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-600 purple:border-pt-800 rounded-lg text-left cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm',
             size === 'sm' && 'h-11 items-center',
-            size === 'md' && 'min-w-[160px]',
-            size === 'lg' && 'min-w-[195px]',
-            size === 'xl' && 'min-w-[220px]'
+            size === 'md' && 'min-w-[auto] md:min-w-[160px]',
+            size === 'lg' && 'min-w-[auto] md:min-w-[195px]',
+            size === 'xl' && 'min-w-[auto] md:min-w-[220px]'
           )}>
-          {icon && <span>{icon}</span>}
-          <div className="text-gray-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm truncate flex gap-2">
-            <span> {label}</span>
-            {multiple && (
-              <span className="inline-flex items-center justify-center w-5 h-5 bg-indigo-700 dark:bg-aa-600 purple:bg-pt-600 text-white dark:text-aa-200 rounded-full">
-                {value?.length || 0}
+          <div className="flex items-center gap-2">
+            {icon && <span>{icon}</span>}
+            <div className="text-gray-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm truncate flex gap-2">
+              <span className={cn(``, hidden === 'mobile' && 'hidden md:inline-block')}>
+                {' '}
+                {label}
               </span>
-            )}
+              {multiple && (
+                <span className="inline-flex items-center justify-center w-5 h-5 bg-indigo-700 dark:bg-aa-600 purple:bg-pt-600 text-white dark:text-aa-200 rounded-full">
+                  {value?.length || 0}
+                </span>
+              )}
+            </div>
           </div>
-          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5">
+          <span className="flex items-center">
             <ChevronDown
               className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200"
               aria-hidden="true"
