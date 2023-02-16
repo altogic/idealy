@@ -170,7 +170,7 @@ function* approveAllIdeasSaga({ payload: { companyId } }) {
     yield put(ideaActions.approveAllIdeasFailure(error));
   }
 }
-function* mergeIdeasSaga({ payload: { baseIdea, mergedIdea } }) {
+function* mergeIdeasSaga({ payload: { baseIdea, mergedIdea, onSuccess } }) {
   try {
     const { data, errors } = yield call(ideaService.mergeIdeas, baseIdea, mergedIdea);
     if (errors) {
@@ -178,12 +178,25 @@ function* mergeIdeasSaga({ payload: { baseIdea, mergedIdea } }) {
     }
     yield put(
       ideaActions.mergeIdeasSuccess({
-        baseIdea: data,
-        mergedIdea
+        baseIdea: data.idea,
+        mergedIdea,
+        ideaVotes: data.ideaVotes
       })
     );
+    if (onSuccess) onSuccess();
   } catch (error) {
     yield put(ideaActions.mergeIdeasFailure(error));
+  }
+}
+function* getMergedIdeasSaga({ payload: filter }) {
+  try {
+    const { data, errors } = yield call(ideaService.getMergedIdeas, filter);
+    if (errors) {
+      throw errors;
+    }
+    yield put(ideaActions.getMergedIdeasSuccess(data));
+  } catch (error) {
+    yield put(ideaActions.getMergedIdeasFailure(error));
   }
 }
 
@@ -201,4 +214,5 @@ export default function* ideaSaga() {
   yield takeEvery(ideaActions.searchCompanyMembers.type, searchCompanyMembersSaga);
   yield takeEvery(ideaActions.approveAllIdeas.type, approveAllIdeasSaga);
   yield takeEvery(ideaActions.mergeIdeas.type, mergeIdeasSaga);
+  yield takeEvery(ideaActions.getMergedIdeas.type, getMergedIdeasSaga);
 }

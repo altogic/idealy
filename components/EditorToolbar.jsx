@@ -48,6 +48,34 @@ export const modules = {
     },
     onSelect(item, insertItem) {
       insertItem(item);
+    },
+    renderItem(item) {
+      const name = item.name.split(' ');
+      return `
+       <div class="mention-suggestion">
+      ${
+        item.profilePicture
+          ? `<img
+            src=${item.profilePicture}
+            alt=${item.name}
+            class="mention-avatar"
+          />`
+          : name &&
+            `<div class="mention-default-avatar">
+              <span class="mention-avatar-name">
+                ${name[0]?.charAt(0).toUpperCase()} 
+                ${name.length > 1 ? name[name.length - 1]?.charAt(0).toUpperCase() : ''}
+              </span>
+            </div>`
+      }
+      <span class="mention-name">
+        ${item.name}
+      </span>
+      <span class="mention-email">
+        ${item.email}
+      </span>
+    </div>
+      `;
     }
   },
   history: {

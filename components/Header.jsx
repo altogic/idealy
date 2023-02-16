@@ -4,7 +4,7 @@ import cn from 'classnames';
 import _ from 'lodash';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateUrl } from '../utils';
 import CompanyAvatar from './CompanyAvatar';
@@ -17,10 +17,11 @@ import ThemeChanger from './ThemeChanger';
 export default function Header() {
   const router = useRouter();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const user = useSelector((state) => state.auth.user);
   const selectedCompany = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
-  const notifications = useSelector((state) => state.notification.notifications);
-
+  const companyNotificationFetched = useRef(false);
+  const userNotificationFetched = useRef(false);
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -43,11 +44,28 @@ export default function Header() {
           ...companies.filter((company) => company._id !== selectedCompany._id)
         ]);
       }
-      if (_.isEmpty(notifications) && selectedCompany.role !== 'Guest') {
-        dispatch(notificationActions.getNotifications(selectedCompany._id));
-      }
     }
   }, [companies, selectedCompany]);
+
+  useEffect(() => {
+    if (user && !userNotificationFetched.current) {
+      userNotificationFetched.current = true;
+      dispatch(
+        notificationActions.getUserNotifications({
+          userId: user?._id,
+          companyId: selectedCompany?._id
+        })
+      );
+    }
+    if (
+      selectedCompany &&
+      selectedCompany?.role !== 'Guest' &&
+      !companyNotificationFetched.current
+    ) {
+      companyNotificationFetched.current = true;
+      dispatch(notificationActions.getCompanyNotifications(selectedCompany._id));
+    }
+  }, [user, selectedCompany]);
 
   return (
     <>
@@ -129,18 +147,30 @@ export default function Header() {
           </ul>
         </div>
         <div className="flex items-center gap-4">
-          {/* <button
-            type="button"
-            className="inline-flex items-center justify-center text-white px-3 py-2.5 text-sm tracking-sm"
-          >
-            Admin View
-          </button>
-          <button
-            type="button"
-            className="inline-flex items-center justify-center text-white px-3 py-2.5 text-sm tracking-sm"
-          >
-            Public View
-          </button> */}
+          {((selectedCompany?.role &&
+            selectedCompany?.role !== 'Guest' &&
+            router.asPath.includes('dashboard')) ||
+            router.asPath.includes('public-view')) && (
+            <div>
+              {router.asPath.includes('dashboard') ? (
+                <div className="flex items-center justify-center rounded-md transition bg-indigo-700 dark:bg-aa-600 purple:bg-pt-900 hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
+                  <Link href="/public-view">
+                    <a className="inline-flex items-center justify-center text-white px-3 py-2.5 text-sm tracking-sm">
+                      Public View
+                    </a>
+                  </Link>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center rounded-md transition bg-indigo-700 dark:bg-aa-600 purple:bg-pt-900 hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
+                  <Link href="/dashboard">
+                    <a className="inline-flex items-center justify-center text-white px-3 py-2.5 text-sm tracking-sm">
+                      Admin View
+                    </a>
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
           {process.env.NODE_ENV === 'development' && <ThemeChanger />}
           {/* Notification */}
           {isLoggedIn && <Notifications />}

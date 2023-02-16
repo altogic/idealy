@@ -6,14 +6,25 @@ export default function useNotification() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const company = useSelector((state) => state.company.company);
-  const sendNotification = ({ message, targetUser, type, notificationType, subject }) => {
+
+  const sendNotification = ({
+    message,
+    targetUser,
+    type,
+    notificationType,
+    subject,
+    guestName,
+    guestAvatar
+  }) => {
     dispatch(
       notificationActions.sendNotification({
-        user: user._id,
+        user: user?._id,
         companyId: company._id,
         message,
         targetUser,
-        type
+        type,
+        guestName,
+        guestAvatar
       })
     );
     realtime.send(
@@ -23,7 +34,10 @@ export default function useNotification() {
         ...(notificationType === 'company' ? { companyId: company._id } : { userId: targetUser }),
         user,
         message,
-        type
+        guestName,
+        guestAvatar,
+        type,
+        createdAt: new Date().toISOString()
       }
     );
 

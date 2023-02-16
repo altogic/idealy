@@ -38,7 +38,7 @@ export default function CompanyPriority() {
           setPrioritySelected(selected);
           updateCompanyPriority('priorityType', selected);
         }}
-        label={prioritySelected.name}
+        label={prioritySelected?.name}
         options={PRIORITY_TYPES}
         valueField="value"
         field="name"

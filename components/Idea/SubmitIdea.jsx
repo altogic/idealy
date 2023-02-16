@@ -1,7 +1,7 @@
 import ImageList from '@/components/ImageList';
 import useGuestValidation from '@/hooks/useGuestValidation';
-import useNotification from '@/hooks/useNotification';
 import useSaveGuestInformation from '@/hooks/useSaveGuestInformation';
+import useSendMentionNotification from '@/hooks/useSendMentionNotification';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { fileActions } from '@/redux/file/fileSlice';
 import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
@@ -53,7 +53,7 @@ export default function SubmitIdea({ idea }) {
   const dispatch = useDispatch();
   const updateIdea = useUpdateIdea(idea);
   const saveGuestInformation = useSaveGuestInformation();
-  const sendNotification = useNotification();
+
   const schema = yup.object().shape({
     title: yup.string().max(140, 'Title must be under 140 character').required('Title is required'),
     content: yup.string(),
@@ -101,28 +101,7 @@ export default function SubmitIdea({ idea }) {
     resetForm();
     dispatch(toggleFeedBackSubmitModal());
   };
-  const sendMentionNotification = (content) => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(content, 'text/html');
-    const mentions = doc.querySelectorAll('.mention');
-    if (mentions.length) {
-      const mentionsArray = Array.from(mentions);
-      const mentionsIds = mentionsArray.map((mention) => mention.dataset.id);
-      const uniqueMentions = [...new Set(mentionsIds)];
-      uniqueMentions.forEach((id) => {
-        const isRegistered = JSON.parse(id.split('-')[1]);
-        if (isRegistered) {
-          sendNotification({
-            message: `You have been mentioned in an idea by ${user.name}`,
-            targetUser: id.split('-')[0],
-            type: 'mention',
-            notificationType: 'user',
-            subject: 'You have been mentioned in an idea'
-          });
-        }
-      });
-    }
-  };
+  const sendMentionNotification = useSendMentionNotification('idea');
   const submitOnSuccess = (guestEmail, guestName, submittedIdea) => {
     if (guestEmail && guestName) {
       saveGuestInformation({ email: guestEmail, name: guestName });
@@ -316,7 +295,7 @@ export default function SubmitIdea({ idea }) {
                 }
               }}
             />
-            {!!similarIdeas?.length && <SimilarIdeas similarIdeas={similarIdeas} />}
+            {!!similarIdeas?.length && <SimilarIdeas ideas={similarIdeas} title="Similar Ideas" />}
           </div>
           <div className="mb-8 relative">
             <Editor content={content} setContent={setContent} errors={errors.content}>

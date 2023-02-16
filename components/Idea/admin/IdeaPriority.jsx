@@ -16,13 +16,26 @@ export default function IdeaPriority() {
   }, [idea]);
 
   const updateIdea = useUpdateIdea(idea);
+  // const handleChangePriority = (selected) => {
+  //   const benefitIndex = PRIORITY_VALUES[company?.priorityType].indexOf(selected) + 1;
+  //   const costIndex = PRIORITY_VALUES[company?.priorityType].indexOf(Number(costFactor)) + 1;
+  //   const voteCount = idea?.voteCount || 1;
+  //   updateIdea({
+  //     benefitFactor,
+  //     costFactor,
+  //     priorityScore:
+  //       0.4 * PRIORITY_VALUES.default[benefitIndex] +
+  //       0.4 * voteCount +
+  //       0.2 * PRIORITY_VALUES.default[costIndex]
+  //   });
+  // };
 
   return (
     <IdeaAdminTab title="Priority">
       <div className="grid grid-cols-2 gap-2">
         <div>
           <span className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-sm font-medium">
-            Benefit
+            Reward
           </span>
           <div className="mt-2">
             <BaseListBox
@@ -32,13 +45,17 @@ export default function IdeaPriority() {
               size="sm"
               onChange={(selected) => {
                 setBenefitFactor(selected);
-                const benefitIndex = PRIORITY_VALUES[company?.priorityType].indexOf(selected) + 1;
-                const costIndex =
-                  PRIORITY_VALUES[company?.priorityType].indexOf(Number(costFactor)) + 1;
-                const voteCount = idea?.voteCount || 1;
+                const benefitIndex = PRIORITY_VALUES[company?.priorityType].indexOf(selected);
+                const costIndex = PRIORITY_VALUES[company?.priorityType].indexOf(
+                  company?.priorityType === 'fibonacci' ? Number(costFactor) : costFactor
+                );
+                // TODO: get weight from company settings
                 updateIdea({
                   benefitFactor: selected,
-                  priorityScore: ((benefitIndex * voteCount) / costIndex) * 100
+                  priorityScore:
+                    0.4 * PRIORITY_VALUES.default[benefitIndex] +
+                    0.8 * idea.voteCount +
+                    0.2 * PRIORITY_VALUES.default[costIndex]
                 });
               }}
             />
@@ -46,7 +63,7 @@ export default function IdeaPriority() {
         </div>
         <div>
           <span className="text-slate-600 dark:text-aa-300 purple:text-pt-300 text-sm font-medium">
-            Cost
+            Effort
           </span>
           <div className="mt-2">
             <BaseListBox
@@ -56,13 +73,16 @@ export default function IdeaPriority() {
               size="sm"
               onChange={(selected) => {
                 setCostFactor(selected);
-                const costIndex = PRIORITY_VALUES[company?.priorityType].indexOf(selected) + 1;
-                const benefitIndex =
-                  PRIORITY_VALUES[company?.priorityType].indexOf(Number(benefitFactor)) + 1;
-                const voteCount = idea?.voteCount || 1;
+                const benefitIndex = PRIORITY_VALUES[company?.priorityType].indexOf(
+                  company?.priorityType === 'fibonacci' ? Number(benefitFactor) : benefitFactor
+                );
+                const costIndex = PRIORITY_VALUES[company?.priorityType].indexOf(selected);
                 updateIdea({
-                  benefitFactor: selected,
-                  priorityScore: ((benefitIndex * voteCount) / costIndex) * 100
+                  costFactor: selected,
+                  priorityScore:
+                    0.4 * PRIORITY_VALUES.default[benefitIndex] +
+                    0.4 * idea.voteCount +
+                    0.2 * PRIORITY_VALUES.default[costIndex]
                 });
               }}
             />

@@ -179,3 +179,21 @@ html:has(:is(.modal, .drawer)) {
 .mention {
   @apply text-slate-500 dark:text-aa-100 purple:text-pt-100 bg-transparent underline cursor-pointer select-none !important;
 }
+.mention-suggestion {
+  @apply flex items-center gap-2 text-slate-500 tracking-[-0.4px] cursor-pointer;
+}
+.mention-avatar {
+  @apply rounded-full object-contain w-7 h-7;
+}
+.mention-default-avatar {
+  @apply relative inline-flex items-center justify-center cursor-pointer overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600  purple:bg-pt-300 w-7 h-7;
+}
+.mention-avatar-name {
+  @apply font-medium text-gray-600 dark:text-gray-300 text-xs;
+}
+.mention-name {
+  @apply text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm font-medium tracking-sm flex-1 truncate;
+}
+.mention-email {
+  @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 text-xs font-medium tracking-sm truncate;
+}

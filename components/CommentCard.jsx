@@ -4,6 +4,7 @@ import { repliesActions } from '@/redux/replies/repliesSlice';
 import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import useClickMention from '@/hooks/useClickMention';
 import Avatar from './Avatar';
 import CommentForm from './CommentForm';
 import CommentSkeleton from './CommentSkeleton';
@@ -13,6 +14,7 @@ import InfoModal from './InfoModal';
 import ReplyCard from './ReplyCard';
 import ReplyForm from './ReplyForm';
 import SanitizeHtml from './SanitizeHtml';
+import UserCard from './UserCard';
 
 export default function CommentCard({ comment }) {
   const [isReplying, setIsReplying] = useState(false);
@@ -27,6 +29,7 @@ export default function CommentCard({ comment }) {
   const countInfo = useSelector((state) => state.replies.countInfo);
   const loading = useSelector((state) => state.replies.isLoading);
   const canEdit = useIdeaActionValidation(comment, 'commentIdea');
+  const { userCardStyle, userCardInfo } = useClickMention();
   useEffect(() => {
     if (page) {
       dispatch(repliesActions.getReplies({ commentId: comment?._id, page }));
@@ -43,7 +46,12 @@ export default function CommentCard({ comment }) {
         />
       ) : (
         <div className="flex gap-5">
-          {/* Name First Letter Icon */}
+          <UserCard
+            profilePicture={userCardInfo?.profilePicture}
+            name={userCardInfo?.name}
+            email={userCardInfo?.email}
+            style={userCardStyle}
+          />
           <Avatar
             src={comment?.user?.profilePicture}
             alt={

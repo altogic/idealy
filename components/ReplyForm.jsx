@@ -3,12 +3,15 @@ import { repliesActions } from '@/redux/replies/repliesSlice';
 import { generateRandomName } from '@/utils/index';
 import { yupResolver } from '@hookform/resolvers/yup';
 import cn from 'classnames';
+import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
+import useSendMentionNotification from '@/hooks/useSendMentionNotification';
 import Button from './Button';
-import TextArea from './TextArea';
+
+const Editor = dynamic(() => import('./Editor'), { ssr: false });
 
 export default function ReplyForm({ setIsReplying, commentId, reply, setShowReplies }) {
   const dispatch = useDispatch();
@@ -17,7 +20,8 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
   const createReplyLoading = useSelector((state) => state.replies.createReplyLoading);
   const updateReplyLoading = useSelector((state) => state.replies.updateReplyLoading);
   const guestInfo = useSelector((state) => state.auth.guestInfo);
-  const [isFormFocus, setIsFormFocus] = useState(false);
+
+  const [inpReply, setInpReply] = useState(false);
   const isLoading = useRef(false);
   const saveGuestInfo = useSaveGuestInformation();
   const schema = yup.object().shape({
@@ -25,8 +29,8 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
   });
 
   const {
-    register,
     handleSubmit,
+    control,
     setValue,
     reset,
     formState: { errors, isSubmitSuccessful }
@@ -34,7 +38,7 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
     resolver: yupResolver(schema),
     mode: 'all'
   });
-
+  const sendMentionNotification = useSendMentionNotification('reply');
   const onSubmit = (data) => {
     isLoading.current = true;
     const name = generateRandomName();
@@ -50,6 +54,7 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
         })
       );
     }
+    sendMentionNotification(data.content);
     if (!user && !guestInfo.name) {
       saveGuestInfo({
         name
@@ -59,9 +64,15 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
 
   useEffect(() => {
     if (reply) {
-      setValue('content', reply.content);
+      setInpReply(reply?.content);
     }
   }, [reply]);
+
+  useEffect(() => {
+    if (inpReply) {
+      setValue('content', inpReply);
+    }
+  }, [inpReply]);
 
   useEffect(() => {
     if (isSubmitSuccessful && !updateReplyLoading && reply) {
@@ -72,6 +83,7 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
     if (isSubmitSuccessful && !createReplyLoading && !reply) {
       setShowReplies(true);
       reset();
+      setInpReply('');
     }
   }, [isSubmitSuccessful, createReplyLoading]);
 
@@ -85,28 +97,25 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
     <div className="w-full mt-6">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        onFocus={() => setIsFormFocus(true)}
-        onBlur={() => setIsFormFocus(false)}
         className={cn(
-          'flex flex-col w-full relative z-1 rounded-lg border-2',
-          'bg-white dark:bg-aa-800 purple:bg-pt-800',
-          !isFormFocus && 'border-gray-300 dark:border-aa-600 purple:border-pt-600',
-          isFormFocus &&
-            !errors.content &&
-            'border-indigo-500 dark:border-aa-400 purple:border-pt-400',
-          isFormFocus && errors.content && 'border-red-600',
-          errors.content && 'border-red-600'
+          'flex flex-col w-full relative z-1 rounded-lg',
+          errors.content && 'border-red-900'
         )}>
-        <div className="flex flex-col gap-5">
-          <TextArea
-            id="content"
-            placeholder="Add a reply"
-            register={register('content')}
-            rows={5}
-            error={errors.content}
-            inlineSubmit
-          />
-        </div>
+        <Controller
+          control={control}
+          name="content"
+          render={() => (
+            <div className="relative">
+              <Editor
+                content={inpReply}
+                setContent={setInpReply}
+                errors={errors.content}
+                placeholder="Type a reply"
+              />
+            </div>
+          )}
+        />
+
         <div className="flex gap-2 w-full justify-end p-3">
           <Button
             type="button"
