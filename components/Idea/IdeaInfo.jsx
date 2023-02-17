@@ -27,7 +27,7 @@ export default function IdeaInfo({ idea, detail }) {
       type="button"
       onClick={(e) => {
         e.stopPropagation();
-        const userCards = document.querySelectorAll('.user-card');
+        const userCards = document.querySelectorAll('.idea-user-card');
         userCards.forEach((userCard) => {
           // eslint-disable-next-line no-param-reassign
           userCard.style.display = 'none';
@@ -61,6 +61,7 @@ export default function IdeaInfo({ idea, detail }) {
         {DateTime.fromISO(idea?.createdAt).setLocale('en').toRelative()}
       </span>
       <UserCard
+        id="idea-user-card"
         profilePicture={idea?.author?.profilePicture || idea?.guestAvatar}
         name={idea?.author ? idea?.author.name : idea?.guestName ? idea?.guestName : idea?.name}
         email={

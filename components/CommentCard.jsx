@@ -29,7 +29,7 @@ export default function CommentCard({ comment }) {
   const countInfo = useSelector((state) => state.replies.countInfo);
   const loading = useSelector((state) => state.replies.isLoading);
   const canEdit = useIdeaActionValidation(comment, 'commentIdea');
-  const { userCardStyle, userCardInfo } = useClickMention();
+  const { userCardStyle, userCardInfo } = useClickMention('comment');
   useEffect(() => {
     if (page) {
       dispatch(repliesActions.getReplies({ commentId: comment?._id, page }));
@@ -73,7 +73,7 @@ export default function CommentCard({ comment }) {
                 : 'Anonymous'}
             </h6>
             <div className="prose prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-p:text-slate-500 prose-p:my-2 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
-              <SanitizeHtml html={comment?.text} />
+              <SanitizeHtml id="comment" html={comment?.text} />
             </div>
             <div className="flex items-center gap-2 min-h-[32px]">
               <span className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-xs tracking-sm">

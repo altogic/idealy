@@ -61,6 +61,9 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
+      if (state.selectedIdea) {
+        state.selectedIdea.voteCount += 1;
+      }
     },
     voteIdeaFailure(state, action) {
       state.isLoading = false;
@@ -81,6 +84,11 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
+      if (state.selectedIdea) {
+        state.selectedIdea.voteCount = state.selectedIdea.voteCount
+          ? state.selectedIdea.voteCount - 1
+          : 0;
+      }
     },
     downVoteIdeaFailure(state, action) {
       state.isLoading = false;

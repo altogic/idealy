@@ -54,7 +54,11 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
         })
       );
     }
-    sendMentionNotification(data.content);
+    sendMentionNotification({
+      content: data.content,
+      name: user?.name || data.guestName || name,
+      email: data.guestEmail
+    });
     if (!user && !guestInfo.name) {
       saveGuestInfo({
         name

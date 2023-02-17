@@ -18,8 +18,7 @@ export default function PublicViewCard({ idea, onClick, voted }) {
               idea?.isArchived ||
               idea?.isPinned ||
               idea?.isMerged ||
-              !idea?.isApproved ||
-              idea.priorityScore > 0) && <IdeaBadges idea={idea} />}
+              !idea?.isApproved) && <IdeaBadges idea={idea} />}
             <h2
               className="max-w-[500px] text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left lg:truncate"
               title={idea?.title}>

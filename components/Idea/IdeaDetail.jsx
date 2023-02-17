@@ -42,7 +42,7 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
 
   const [isFetched, setIsFetched] = useState(false);
   const updateIdea = useUpdateIdea(idea);
-  const { userCardStyle, userCardInfo } = useClickMention();
+  const { userCardStyle, userCardInfo } = useClickMention('idea-detail');
 
   useEffect(() => {
     const ideaId = router.query.feedback;
@@ -61,7 +61,12 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
   }, [feedBackDetailModal]);
 
   useEffect(() => {
-    if (idea && !idea?.mergedIdeasDetail && idea?.mergedIdeas.length > 0) {
+    if (
+      idea &&
+      !idea?.mergedIdeasDetail &&
+      idea?.mergedIdeas.length > 0 &&
+      !isMergeFetched.current
+    ) {
       let filter = '';
       idea.mergedIdeas.forEach((i, index) => {
         if (index === idea.mergedIdeas.length - 1) {
@@ -84,7 +89,9 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
       title={idea?.title}
       className="z-50"
       sidebar={
-        user && (company?.role === 'Owner' || company?.role === 'Admin') && <IdeaDetailAdmin />
+        user &&
+        !idea?.isMerged &&
+        (company?.role === 'Owner' || company?.role === 'Admin') && <IdeaDetailAdmin />
       }>
       <div className="flex gap-6 relative">
         <VoteIdea voted={voted} voteCount={idea?.voteCount} ideaId={idea?._id} />
@@ -97,20 +104,19 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
             idea?.isArchived ||
             idea?.isPinned ||
             idea?.isMerged ||
-            !idea?.isApproved ||
-            idea.priorityScore > 0) && (
+            !idea?.isApproved) && (
             <div className="mb-8">
               <IdeaBadges idea={idea} />
             </div>
           )}
           <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-200 purple:prose-p:text-pt-200 prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-8 break-all">
-            <SanitizeHtml html={idea?.content} />
+            <SanitizeHtml id="idea-detail" html={idea?.content} />
           </div>
 
           <div className="relative flex items-center gap-2 mb-8">
             {/* User */}
             <IdeaInfo idea={idea} detail />
-            {canEdit && (
+            {canEdit && !idea?.isMerged && (
               <>
                 <svg
                   className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
@@ -186,7 +192,9 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
       {!!idea?.mergedIdeasDetail?.length && (
         <SimilarIdeas ideas={idea?.mergedIdeasDetail} title="Merged Ideas" />
       )}
-      {canComment && <CommentForm ideaId={idea?._id} setIsFetched={setIsFetched} />}
+      {canComment && !idea?.isMerged && (
+        <CommentForm ideaId={idea?._id} setIsFetched={setIsFetched} />
+      )}
       <InfiniteScroll
         items={comments}
         countInfo={commentCountInfo}

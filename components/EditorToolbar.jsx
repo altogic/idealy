@@ -71,9 +71,7 @@ export const modules = {
       <span class="mention-name">
         ${item.name}
       </span>
-      <span class="mention-email">
-        ${item.email}
-      </span>
+      
     </div>
       `;
     }

@@ -1,11 +1,10 @@
-import { notificationActions } from '@/redux/notification/notificationSlice';
 import { Dialog, Transition } from '@headlessui/react';
 import cn from 'classnames';
 import _ from 'lodash';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Fragment, useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { Fragment, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { generateUrl } from '../utils';
 import CompanyAvatar from './CompanyAvatar';
 import GuestDropdown from './Header/GuestDropdown';
@@ -17,16 +16,12 @@ import ThemeChanger from './ThemeChanger';
 export default function Header() {
   const router = useRouter();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const user = useSelector((state) => state.auth.user);
-  const selectedCompany = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
-  const companyNotificationFetched = useRef(false);
-  const userNotificationFetched = useRef(false);
+  const selectedCompany = useSelector((state) => state.company.company);
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userCompanies, setUserCompanies] = useState();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -46,26 +41,6 @@ export default function Header() {
       }
     }
   }, [companies, selectedCompany]);
-
-  useEffect(() => {
-    if (user && !userNotificationFetched.current) {
-      userNotificationFetched.current = true;
-      dispatch(
-        notificationActions.getUserNotifications({
-          userId: user?._id,
-          companyId: selectedCompany?._id
-        })
-      );
-    }
-    if (
-      selectedCompany &&
-      selectedCompany?.role !== 'Guest' &&
-      !companyNotificationFetched.current
-    ) {
-      companyNotificationFetched.current = true;
-      dispatch(notificationActions.getCompanyNotifications(selectedCompany._id));
-    }
-  }, [user, selectedCompany]);
 
   return (
     <>
