@@ -177,7 +177,7 @@ html:has(:is(.modal, .drawer)) {
   @apply bg-slate-200 dark:bg-aa-600 purple:bg-pt-600 !important;
 }
 .mention {
-  @apply text-blue-700 dark:text-aa-100 purple:text-pt-100 bg-transparent cursor-pointer select-none !important;
+  @apply text-blue-700 bg-transparent cursor-pointer select-none !important;
 }
 .mention-suggestion {
   @apply flex items-center gap-2 text-slate-500 tracking-[-0.4px] cursor-pointer;
