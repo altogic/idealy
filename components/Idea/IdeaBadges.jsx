@@ -9,12 +9,7 @@ export default function IdeaBadges({ idea }) {
           (badge) =>
             ((badge.field !== 'isApproved' && idea?.[badge.field]) ||
               (badge.field === 'isApproved' && !idea?.[badge.field])) && (
-              <Badge
-                key={badge.name}
-                Icon={badge?.icon}
-                text={badge?.name || idea.priorityScore}
-                color={badge.color}
-              />
+              <Badge key={badge.name} Icon={badge?.icon} text={badge?.name} color={badge.color} />
             )
         )}
       </div>

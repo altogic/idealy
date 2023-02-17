@@ -16,7 +16,7 @@ export default function ReplyCard({ reply, setShowReplies }) {
   const [editReply, setEditReply] = useState();
   const canEdit = useIdeaActionValidation(reply, 'reply');
   const dispatch = useDispatch();
-  const { userCardStyle, userCardInfo } = useClickMention();
+  const { userCardStyle, userCardInfo } = useClickMention('reply');
   return editReply ? (
     <ReplyForm reply={reply} setIsReplying={setEditReply} />
   ) : (
@@ -24,6 +24,7 @@ export default function ReplyCard({ reply, setShowReplies }) {
       <div className="flex gap-5">
         {/* Name First Letter Icon */}
         <UserCard
+          id="reply-user-card"
           profilePicture={userCardInfo?.profilePicture}
           name={userCardInfo?.name}
           email={userCardInfo?.email}
@@ -40,7 +41,7 @@ export default function ReplyCard({ reply, setShowReplies }) {
             {reply?.user?.name || reply.name}
           </h6>
           <div className="prose prose-p:my-0 prose-p:text-slate-500 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
-            <SanitizeHtml html={reply?.content} />
+            <SanitizeHtml id="reply" html={reply?.content} />
           </div>
           <div className="flex items-center gap-3 min-h-[32px]">
             <span className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-xs tracking-sm">

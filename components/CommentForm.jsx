@@ -80,7 +80,11 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
                 email: data.guestEmail
               });
             }
-            sendMentionNotification(comment);
+            sendMentionNotification({
+              content: comment,
+              name: user?.name || data.guestName || guestName,
+              email: data.guestEmail
+            });
           }
         })
       );
@@ -100,7 +104,11 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
                 email: data.guestEmail
               });
             }
-            sendMentionNotification(comment);
+            sendMentionNotification({
+              content: comment,
+              name: user?.name || data.guestName || guestName,
+              email: data.guestEmail
+            });
           }
         })
       );

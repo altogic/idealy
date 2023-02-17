@@ -105,10 +105,6 @@ export const IDEA_BADGES = [
     icon: Merge,
     color: 'orange',
     field: 'isMerged'
-  },
-  {
-    color: 'blue',
-    field: 'priorityScore'
   }
 ];
 

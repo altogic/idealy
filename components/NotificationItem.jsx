@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import Avatar from './Avatar';
 import SanitizeHtml from './SanitizeHtml';
 
-export default function NotificationItem({ notification }) {
+export default function NotificationItem({ notification, dropdown = false }) {
   return (
     <button
       type="button"
@@ -13,6 +13,7 @@ export default function NotificationItem({ notification }) {
         alt={notification?.user?.name || notification.guestName}
         size="w-10 h-10"
       />
+
       <div className="text-left flex-1">
         <div className="text-sm text-slate-500 dark:text-aa-300 purple:text-pt-300  leading-5 tracking-sm flex gap-x-2 gap-y-1 flex-wrap">
           <strong className="text-slate-700 dark:text-aa-200 purple:text-pt-200 font-semibold">
@@ -20,10 +21,19 @@ export default function NotificationItem({ notification }) {
           </strong>{' '}
           <SanitizeHtml html={notification.message} />
         </div>
+        {dropdown && (
+          <span className="text-gray-400 text-xs font-medium tracking-sm">
+            {DateTime.fromISO(notification.createdAt).setLocale('en').toRelative()}
+          </span>
+        )}
       </div>
-      <span className="text-gray-400 text-xs font-medium tracking-sm">
-        {DateTime.fromISO(notification.createdAt).setLocale('en').toRelative()}
-      </span>
+
+      {!dropdown && (
+        <span className="text-gray-400 text-xs font-medium tracking-sm">
+          {DateTime.fromISO(notification.createdAt).setLocale('en').toRelative()}
+        </span>
+      )}
+      {!notification?.isRead && <div className="bg-blue-700 rounded-full p-1" />}
     </button>
   );
 }

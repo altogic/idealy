@@ -106,7 +106,12 @@ export default function SubmitIdea({ idea }) {
     if (guestEmail && guestName) {
       saveGuestInformation({ email: guestEmail, name: guestName });
     }
-    sendMentionNotification(submittedIdea.content);
+    sendMentionNotification({
+      content: submittedIdea.content,
+      name: user?.name || submittedIdea.guestName,
+      email: submittedIdea.guestEmail,
+      title: submittedIdea.title
+    });
     handleClose();
     dispatch(fileActions.clearFileLinks());
   };

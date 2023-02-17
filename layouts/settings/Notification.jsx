@@ -15,12 +15,11 @@ export default function Notification() {
   const dispatch = useDispatch();
   const [tabIndex, setTabIndex] = useState();
   const [page, setPage] = useState(1);
-  const [countInfo, setCountInfo] = useState({});
-  const [notifications, setNotifications] = useState([]);
-  const userNotifications = useSelector((state) => state.notification.userNotifications);
-  const companyNotifications = useSelector((state) => state.notification.companyNotifications);
-  const userCountInfo = useSelector((state) => state.notification.userCountInfo);
-  const companyCountInfo = useSelector((state) => state.notification.companyCountInfo);
+
+  const notifications = useSelector((state) => state.notification.notifications);
+
+  const countInfo = useSelector((state) => state.notification.countInfo);
+
   const selectedCompany = useSelector((state) => state.company.company);
   const user = useSelector((state) => state.auth.user);
   const handleTabChange = (tabName) => {
@@ -28,70 +27,31 @@ export default function Notification() {
   };
   useEffect(() => {
     if (router.query?.section) {
-      const index = router.query.section === 'list' ? 0 : 1;
+      const index = router.query.section === 'settings' ? 0 : 1;
       setTabIndex(index);
     }
   }, [router]);
 
   useEffect(() => {
     setTabIndex(0);
-    router.push('/settings?tab=notifications&section=list', undefined, { shallow: true });
+    router.push('/settings?tab=notifications&section=settings', undefined, { shallow: true });
   }, []);
 
   useEffect(() => {
     if (page) {
-      if (user) {
+      if (user && selectedCompany) {
         dispatch(
-          notificationActions.getAllUserNotifications({
+          notificationActions.getNotifications({
             userId: user?._id,
             companyId: selectedCompany?._id,
             limit: 10,
-            page
-          })
-        );
-      }
-      if (selectedCompany && selectedCompany?.role !== 'Guest') {
-        dispatch(
-          notificationActions.getAllCompanyNotifications({
-            companyId: selectedCompany._id,
-            limit: 10,
-            page
+            page,
+            isMember: selectedCompany.role && selectedCompany?.role !== 'Guest'
           })
         );
       }
     }
   }, [user, selectedCompany, page]);
-
-  useEffect(() => {
-    setNotifications([...userNotifications, ...companyNotifications]);
-  }, [userNotifications, companyNotifications]);
-
-  useEffect(() => {
-    if (userCountInfo?.pageSize || companyCountInfo?.pageSize) {
-      setCountInfo({
-        count:
-          userCountInfo?.count >= companyCountInfo?.count
-            ? userCountInfo?.count
-            : companyCountInfo?.count,
-        currentPage:
-          userCountInfo?.currentPage >= companyCountInfo?.currentPage
-            ? userCountInfo?.currentPage
-            : companyCountInfo?.currentPage,
-        pageSize:
-          userCountInfo?.pageSize >= companyCountInfo?.pageSize
-            ? userCountInfo?.pageSize
-            : companyCountInfo?.pageSize,
-        totalPages:
-          userCountInfo?.totalPages >= companyCountInfo?.totalPages
-            ? userCountInfo?.totalPages
-            : companyCountInfo?.totalPages
-      });
-    }
-  }, [userCountInfo, companyCountInfo]);
-
-  useEffect(() => {
-    console.log('countInfo', countInfo);
-  }, [countInfo]);
 
   return (
     <>
@@ -116,9 +76,9 @@ export default function Notification() {
               )
             }
             onClick={() => {
-              handleTabChange('list');
+              handleTabChange('settings');
             }}>
-            Notifications
+            Settings
           </Tab>
           <Tab
             className={({ selected }) =>
@@ -130,19 +90,21 @@ export default function Notification() {
               )
             }
             onClick={() => {
-              handleTabChange('settings');
+              handleTabChange('list');
             }}>
-            Settings
+            Notifications
           </Tab>
         </Tab.List>
         <Tab.Panels className="pt-5 pb-14 lg:p-5 xl:px-10 xl:py-8">
+          <Tab.Panel>
+            <NotificationSettings />
+          </Tab.Panel>
           <Tab.Panel>
             <InfiniteScroll
               countInfo={countInfo}
               items={notifications}
               endOfList={() => {
                 setPage(page + 1);
-                console.log('load more');
               }}>
               {notifications?.length > 0 ? (
                 notifications?.map((notification) => (
@@ -159,9 +121,6 @@ export default function Notification() {
                 />
               )}
             </InfiniteScroll>
-          </Tab.Panel>
-          <Tab.Panel>
-            <NotificationSettings />
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
