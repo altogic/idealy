@@ -37,6 +37,7 @@ export const notificationSlice = createSlice({
     markNotificationAsReadSuccess(state) {
       state.isLoading = false;
       state.unreadNotificationCount = 0;
+      state.notifications = state.notifications.map((item) => ({ ...item, isRead: true }));
     },
     markNotificationAsReadFailure(state, action) {
       state.isLoading = false;

@@ -11,9 +11,9 @@ export default function useSendMentionNotification(type) {
       case 'idea':
         return `mentioned you in <b>${idea?.title || title}<b>`;
       case 'comment':
-        return `mentioned you in the comments on <b>${idea.title}</b>.`;
+        return `mentioned you in the comments of <b>${idea.title}</b>.`;
       case 'reply':
-        return `mentioned you in the replies on <b>${idea.title}</b>.`;
+        return `mentioned you in the replies of <b>${idea.title}</b>.`;
       default:
         return `'You have been mentioned in an ${type}'`;
     }
