@@ -6,16 +6,16 @@ export default function useSendMentionNotification(type) {
   const guestInfo = useSelector((state) => state.guestInfo);
   const idea = useSelector((state) => state.idea.selectedIdea);
 
-  const handleNotificationMessage = (title) => {
+  const handleNotificationMessage = (title, name) => {
     switch (type) {
       case 'idea':
-        return `mentioned you in <b>${idea?.title || title}<b>`;
+        return `<b>${name}</b> mentioned you in <b>${idea?.title || title}<b>`;
       case 'comment':
-        return `mentioned you in the comments of <b>${idea.title}</b>.`;
+        return `<b>${name}</b> mentioned you in the comments of <b>${idea.title}</b>.`;
       case 'reply':
-        return `mentioned you in the replies of <b>${idea.title}</b>.`;
+        return `<b>${name}</b> mentioned you in the replies of <b>${idea.title}</b>.`;
       default:
-        return `'You have been mentioned in an ${type}'`;
+        return `<b>${name}</b> You have been mentioned in an ${type}`;
     }
   };
   return ({ content, name, email, title }) => {
@@ -31,7 +31,7 @@ export default function useSendMentionNotification(type) {
           const isRegistered = JSON.parse(id.split('-')[1]);
           if (isRegistered) {
             sendNotification({
-              message: handleNotificationMessage(title),
+              message: handleNotificationMessage(title, name),
               targetUser: id.split('-')[0],
               type: 'mention',
               notificationType: 'user',

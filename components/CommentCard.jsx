@@ -29,7 +29,29 @@ export default function CommentCard({ comment }) {
   const countInfo = useSelector((state) => state.replies.countInfo);
   const loading = useSelector((state) => state.replies.isLoading);
   const canEdit = useIdeaActionValidation(comment, 'commentIdea');
-  const { userCardStyle, userCardInfo } = useClickMention('comment');
+  const { userCardStyle, userCardInfo, setUserCardInfo, setUserCardStyle } =
+    useClickMention('comment');
+
+  const handleShowUserCard = (e) => {
+    e.stopPropagation();
+    const userCards = document.querySelectorAll('.idea-user-card');
+    userCards.forEach((userCard) => {
+      // eslint-disable-next-line no-param-reassign
+      userCard.style.display = 'none';
+    });
+    const top = e.target.offsetTop - 80;
+    const left = e.target.offsetLeft + 20;
+    setUserCardStyle({
+      top,
+      left,
+      display: 'flex'
+    });
+    setUserCardInfo({
+      profilePicture: comment?.user?.profilePicture || comment?.guestAvatar,
+      name: comment?.user?.name || comment?.guestName,
+      email: comment?.user?.email || comment?.guestEmail
+    });
+  };
   useEffect(() => {
     if (page) {
       dispatch(repliesActions.getReplies({ commentId: comment?._id, page }));
@@ -52,26 +74,30 @@ export default function CommentCard({ comment }) {
             email={userCardInfo?.email}
             style={userCardStyle}
           />
-          <Avatar
-            src={comment?.user?.profilePicture}
-            alt={
-              comment?.user
-                ? comment?.user.name
-                : comment?.guestName
-                ? comment?.guestName
-                : 'Anonymous'
-            }
-            size="w-7 h-7"
-            fontSize="text-sm"
-          />
+          <button className="w-8 h-8" type="button" onClick={handleShowUserCard}>
+            <Avatar
+              src={comment?.user?.profilePicture}
+              alt={
+                comment?.user
+                  ? comment?.user.name
+                  : comment?.guestName
+                  ? comment?.guestName
+                  : 'Anonymous'
+              }
+              size="w-7 h-7"
+              fontSize="text-sm"
+            />
+          </button>
           <div className="w-full space-y-w">
-            <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
-              {comment?.user
-                ? comment?.user.name
-                : comment?.guestName
-                ? comment?.guestName
-                : 'Anonymous'}
-            </h6>
+            <button type="button" onClick={handleShowUserCard}>
+              <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
+                {comment?.user
+                  ? comment?.user.name
+                  : comment?.guestName
+                  ? comment?.guestName
+                  : 'Anonymous'}
+              </h6>
+            </button>
             <div className="prose prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-p:text-slate-500 prose-p:my-2 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
               <SanitizeHtml id="comment" html={comment?.text} />
             </div>

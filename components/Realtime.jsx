@@ -248,6 +248,9 @@ export default function Realtime() {
       dispatch(companyActions.requestAccessRealtime(message));
     }
   }
+  function mergeIdeaHandler({ message }) {
+    dispatch(ideaActions.mergeIdeasSuccess(message));
+  }
 
   useEffect(() => {
     if (user && company) {
@@ -294,6 +297,7 @@ export default function Realtime() {
       realtime.on('approve-access', approveAccessCompanyHandler);
       realtime.on('reject-access', rejectAccessCompanyHandler);
       realtime.on('request-access', requestAccessHandler);
+      realtime.on('merge-idea', mergeIdeaHandler);
     }
     return () => {
       realtime.off('delete-membership', deleteMembershipHandler);

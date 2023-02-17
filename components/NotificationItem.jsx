@@ -16,9 +16,6 @@ export default function NotificationItem({ notification, dropdown = false }) {
 
       <div className="text-left flex-1">
         <div className="text-sm text-slate-500 dark:text-aa-300 purple:text-pt-300  leading-5 tracking-sm flex gap-x-2 gap-y-1 flex-wrap">
-          <strong className="text-slate-700 dark:text-aa-200 purple:text-pt-200 font-semibold">
-            {notification?.user?.name || notification.guestName}
-          </strong>{' '}
           <SanitizeHtml html={notification.message} />
         </div>
         {dropdown && (

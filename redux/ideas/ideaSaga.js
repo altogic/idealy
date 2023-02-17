@@ -172,6 +172,7 @@ function* approveAllIdeasSaga({ payload: { companyId } }) {
 }
 function* mergeIdeasSaga({ payload: { baseIdea, mergedIdea, onSuccess } }) {
   try {
+    const company = yield select((state) => state.company.company);
     const { data, errors } = yield call(ideaService.mergeIdeas, baseIdea, mergedIdea);
     if (errors) {
       throw errors;
@@ -184,6 +185,11 @@ function* mergeIdeasSaga({ payload: { baseIdea, mergedIdea, onSuccess } }) {
       })
     );
     if (onSuccess) onSuccess();
+    realtime.send(company._id, 'merge-idea', {
+      baseIdea: data.idea,
+      mergedIdea,
+      ideaVotes: data.ideaVotes
+    });
   } catch (error) {
     yield put(ideaActions.mergeIdeasFailure(error));
   }

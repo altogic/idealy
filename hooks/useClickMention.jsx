@@ -47,5 +47,5 @@ export default function useClickMention(id) {
     };
   }, [feedBackDetailModal]);
 
-  return { userCardStyle, userCardInfo };
+  return { userCardStyle, userCardInfo, setUserCardInfo, setUserCardStyle };
 }

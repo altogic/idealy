@@ -16,7 +16,29 @@ export default function ReplyCard({ reply, setShowReplies }) {
   const [editReply, setEditReply] = useState();
   const canEdit = useIdeaActionValidation(reply, 'reply');
   const dispatch = useDispatch();
-  const { userCardStyle, userCardInfo } = useClickMention('reply');
+  const { userCardStyle, userCardInfo, setUserCardInfo, setUserCardStyle } =
+    useClickMention('reply');
+
+  const handleShowUserCard = (e) => {
+    e.stopPropagation();
+    const userCards = document.querySelectorAll('.idea-user-card');
+    const top = e.target.offsetTop - 80;
+    const left = e.target.offsetLeft + 20;
+    userCards.forEach((userCard) => {
+      // eslint-disable-next-line no-param-reassign
+      userCard.style.display = 'none';
+    });
+    setUserCardStyle({
+      top,
+      left,
+      display: 'flex'
+    });
+    setUserCardInfo({
+      profilePicture: reply?.user?.profilePicture,
+      name: reply?.user?.name || reply?.name,
+      email: reply?.user?.email
+    });
+  };
   return editReply ? (
     <ReplyForm reply={reply} setIsReplying={setEditReply} />
   ) : (
@@ -30,16 +52,20 @@ export default function ReplyCard({ reply, setShowReplies }) {
           email={userCardInfo?.email}
           style={userCardStyle}
         />
-        <Avatar
-          src={reply?.user?.profilePicture}
-          alt={reply?.user?.name || reply.name}
-          size="w-7 h-7"
-          fontSize="text-sm"
-        />
+        <button className="w-8 h-8" type="button" onClick={handleShowUserCard}>
+          <Avatar
+            src={reply?.user?.profilePicture}
+            alt={reply?.user?.name || reply.name}
+            size="w-7 h-7"
+            fontSize="text-sm"
+          />
+        </button>
         <div className="w-full space-y-3">
-          <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
-            {reply?.user?.name || reply.name}
-          </h6>
+          <button type="button" onClick={handleShowUserCard}>
+            <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
+              {reply?.user?.name || reply.name}
+            </h6>
+          </button>
           <div className="prose prose-p:my-0 prose-p:text-slate-500 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
             <SanitizeHtml id="reply" html={reply?.content} />
           </div>
