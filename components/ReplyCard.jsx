@@ -4,14 +4,16 @@ import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import useClickMention from '@/hooks/useClickMention';
+import cn from 'classnames';
 import Avatar from './Avatar';
 import InfoModal from './InfoModal';
 import { Danger, Pen, Trash } from './icons';
 import ReplyForm from './ReplyForm';
 import SanitizeHtml from './SanitizeHtml';
 import UserCard from './UserCard';
+import Divider from './Divider';
 
-export default function ReplyCard({ reply, setShowReplies }) {
+export default function ReplyCard({ reply, setShowReplies, dashboard }) {
   const [isDelete, setIsDelete] = useState(false);
   const [editReply, setEditReply] = useState();
   const canEdit = useIdeaActionValidation(reply, 'reply');
@@ -42,7 +44,12 @@ export default function ReplyCard({ reply, setShowReplies }) {
   return editReply ? (
     <ReplyForm reply={reply} setIsReplying={setEditReply} />
   ) : (
-    <div className="group bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 rounded">
+    <div
+      id={reply._id}
+      className={cn(
+        'group mt-2 rounded',
+        !dashboard && 'bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 p-8 '
+      )}>
       <div className="flex gap-5">
         {/* Name First Letter Icon */}
         <UserCard
@@ -119,6 +126,7 @@ export default function ReplyCard({ reply, setShowReplies }) {
         confirmColor="red"
         canCancel
       />
+      {dashboard && <Divider className="my-8" />}
     </div>
   );
 }

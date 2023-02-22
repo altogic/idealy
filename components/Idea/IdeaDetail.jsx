@@ -61,6 +61,17 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
   }, [feedBackDetailModal]);
 
   useEffect(() => {
+    const commentId = router.query.comment;
+
+    if (commentId) {
+      const comment = document.getElementById(commentId);
+      if (comment) {
+        comment.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [feedBackDetailModal, router.query.comment]);
+
+  useEffect(() => {
     if (
       idea &&
       !idea?.mergedIdeasDetail &&
@@ -86,8 +97,9 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
     <Drawer
       open={feedBackDetailModal}
       onClose={() => onClose()}
-      title={idea?.title}
       className="z-50"
+      position="right"
+      size="lg"
       sidebar={
         user &&
         !idea?.isMerged &&
@@ -96,7 +108,7 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
       <div className="flex gap-6 relative">
         <VoteIdea voted={voted} voteCount={idea?.voteCount} ideaId={idea?._id} />
         <div className="flex-1 relative">
-          <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all mb-8">
+          <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold break-all mb-8">
             {idea?.title}
           </h2>
           {(idea?.isPrivate ||

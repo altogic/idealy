@@ -37,7 +37,7 @@ export default function GuestForm({ register, errors, vertical }) {
     <>
       <div className={`flex gap-4 ${vertical ? 'flex-col' : 'max-h-[46px]'} my-4 relative`}>
         {!vertical && (
-          <span className="inline-block text-slate-600 dark:text-aa-100 purple:text-pt-100 text-base tracking-sm whitespace-nowrap m-auto">
+          <span className="inline-block text-slate-600 dark:text-aa-200 purple:text-pt-200 text-base tracking-sm whitespace-nowrap m-auto">
             Your details
           </span>
         )}

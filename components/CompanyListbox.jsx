@@ -27,7 +27,7 @@ export default function CompanyListbox({
   };
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-4">
-      <span className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-sm font-medium tracking-sm">
+      <span className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm font-medium tracking-sm">
         {title}
       </span>
       <BaseListBox value={value} onChange={onChange} label={label} options={options} size="xl" />

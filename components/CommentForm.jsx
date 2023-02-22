@@ -95,7 +95,7 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
           ideaId,
           text: comment,
           user: user?._id,
-          guestName: data.guestName || guestName,
+          ...(!user && guestValidation && { guestName: data.guestName || guestName }),
           ...(!user && !data.guestEmail && { ip: userIp }),
           onSuccess: () => {
             if (data.guestEmail) {

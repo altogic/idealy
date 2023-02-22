@@ -1,30 +1,30 @@
+import useClickMention from '@/hooks/useClickMention';
 import useIdeaActionValidation from '@/hooks/useIdeaActionValidation';
-import { commentActions } from '@/redux/comments/commentsSlice';
+import { toggleDeleteCommentModal } from '@/redux/general/generalSlice';
 import { repliesActions } from '@/redux/replies/repliesSlice';
 import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import useClickMention from '@/hooks/useClickMention';
+import cn from 'classnames';
 import Avatar from './Avatar';
 import CommentForm from './CommentForm';
 import CommentSkeleton from './CommentSkeleton';
 import Divider from './Divider';
-import { Danger, Pen, Trash } from './icons';
-import InfoModal from './InfoModal';
+import { Pen, Trash } from './icons';
+import CommentDeleteModal from './Idea/CommentDeleteModal';
 import ReplyCard from './ReplyCard';
 import ReplyForm from './ReplyForm';
 import SanitizeHtml from './SanitizeHtml';
 import UserCard from './UserCard';
 
-export default function CommentCard({ comment }) {
+export default function CommentCard({ comment, dashboard }) {
   const [isReplying, setIsReplying] = useState(false);
   const [editComment, setEditComment] = useState();
   const [showReplies, setShowReplies] = useState(false);
-  const [isDelete, setIsDelete] = useState(false);
 
   const [page, setPage] = useState();
   const dispatch = useDispatch();
-  const idea = useSelector((state) => state.idea.selectedIdea);
+
   const replies = useSelector((state) => state.replies.replies);
   const countInfo = useSelector((state) => state.replies.countInfo);
   const loading = useSelector((state) => state.replies.isLoading);
@@ -59,7 +59,12 @@ export default function CommentCard({ comment }) {
   }, [page]);
 
   return (
-    <div className="bg-gray-50 group dark:bg-aa-800 purple:bg-pt-900 p-8 mt-2 rounded">
+    <div
+      id={comment._id}
+      className={cn(
+        'group mt-2 rounded',
+        !dashboard && 'bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 p-8 '
+      )}>
       {editComment ? (
         <CommentForm
           ideaId={comment?.ideaId}
@@ -154,7 +159,7 @@ export default function CommentCard({ comment }) {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setIsDelete(true)}
+                    onClick={() => dispatch(toggleDeleteCommentModal())}
                     className="w-8 h-8 flex items-center justify-center rounded-full text-slate-500 hover:text-red-600 dark:text-aa-200 purple:text-pt-200 hover:bg-red-100 dark:hover:bg-gray-700 dark:hover:text-red-400 purple:hover:bg-gray-700 purple:hover:text-red-400">
                     <Trash />
                   </button>
@@ -165,11 +170,16 @@ export default function CommentCard({ comment }) {
               <>
                 <Divider className="my-8" />
                 {loading && page === 1 ? (
-                  <CommentSkeleton />
+                  <CommentSkeleton dashboard={dashboard} />
                 ) : (
                   <div className="space-y-6">
                     {replies[comment?._id]?.map((reply) => (
-                      <ReplyCard reply={reply} key={reply?._id} setShowReplies={setShowReplies} />
+                      <ReplyCard
+                        reply={reply}
+                        key={reply?._id}
+                        setShowReplies={setShowReplies}
+                        dashboard={dashboard}
+                      />
                     ))}
                   </div>
                 )}
@@ -200,21 +210,8 @@ export default function CommentCard({ comment }) {
           </div>
         </div>
       )}
-      <InfoModal
-        show={isDelete}
-        onClose={() => setIsDelete(!isDelete)}
-        cancelOnClick={() => setIsDelete(!isDelete)}
-        onConfirm={() => {
-          dispatch(commentActions.deleteComment({ commentId: comment._id, ideaId: idea._id }));
-          setIsDelete(!isDelete);
-        }}
-        icon={<Danger className="w-6 h-6 text-red-600" />}
-        title="Delete Comment"
-        description="Are you sure you want to delete this comment? This action cannot be undone."
-        confirmText="Delete Comment"
-        confirmColor="red"
-        canCancel
-      />
+      <CommentDeleteModal commentId={comment?._id} onClose={() => {}} />
+      {dashboard && <Divider className="my-8" />}
     </div>
   );
 }

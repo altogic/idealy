@@ -5,7 +5,7 @@ export default function SectionTitle({ big, sectionTitle, sectionDescription }) 
     <div>
       <h2
         className={cn(
-          'text-slate-800 dark:text-aa-100 purple:text-pt-100',
+          'text-slate-800 dark:text-aa-200 purple:text-pt-200',
           big ? 'mb-2 text-3xl font-semibold tracking-md' : 'mb-1 text-lg font-medium tracking-sm'
         )}>
         {sectionTitle}

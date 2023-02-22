@@ -80,7 +80,7 @@ export default function GuestFormModal({
 
   return (
     <Modal show={open} onClose={() => onClose()}>
-      <h1 className="mb-8 text-lg md:text-xl lg:text-2xl font-bold leading-none tracking-tight text-gray-900 dark:text-aa-100 purple:text-pt-100 text-center">
+      <h1 className="mb-8 text-lg md:text-xl lg:text-2xl font-bold leading-none tracking-tight text-gray-900 dark:text-aa-200 purple:text-pt-200 text-center">
         {title}
       </h1>
 

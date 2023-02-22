@@ -57,7 +57,7 @@ export default function CompanyDeleteModal({
         </span>
       </div>
       <div className="mb-5 space-y-2">
-        <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-lg font-medium tracking-sm">
+        <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">
           {title}
         </h2>
         <p className="text-slate-500 dark:text-aa-300 purple:text-pt-300 text-sm tracking-sm">

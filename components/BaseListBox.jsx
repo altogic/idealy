@@ -3,6 +3,7 @@ import { Listbox, Transition } from '@headlessui/react';
 import cn from 'classnames';
 import { CheckIcon } from '@heroicons/react/outline';
 import { ChevronDown } from './icons';
+import Avatar from './Avatar';
 
 export default function BaseListBox({
   value,
@@ -15,6 +16,7 @@ export default function BaseListBox({
   valueField,
   hidden,
   size = 'md',
+  type = 'default',
   ...props
 }) {
   return (
@@ -22,32 +24,62 @@ export default function BaseListBox({
       <div className="relative">
         <Listbox.Button
           className={cn(
-            'relative flex items-center justify-between gap-2 w-full bg-white dark:bg-aa-800 purple:bg-pt-800 py-3.5 px-[14px] border border-slate-300 dark:border-aa-600 purple:border-pt-800 rounded-lg text-left cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm',
+            'relative flex items-center bg-white dark:bg-aa-700 purple:bg-pt-700 justify-between gap-2 w-full border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm',
+            size === 'xs' && '',
             size === 'sm' && 'h-11 items-center',
             size === 'md' && 'min-w-[auto] md:min-w-[160px]',
             size === 'lg' && 'min-w-[auto] md:min-w-[195px]',
-            size === 'xl' && 'min-w-[auto] md:min-w-[220px]'
+            size === 'xl' && 'min-w-[auto] md:min-w-[250px]',
+            size === 'xxl' && 'min-w-[auto] md:min-w-[300px]',
+            (type === 'default' || type === 'status' || type === 'user') &&
+              ' dark:bg-aa-800 purple:bg-pt-800  py-3.5 px-[14px]',
+            type === 'icon' && 'text-slate-700 p-3  '
           )}>
-          <div className="flex items-center gap-2">
-            {icon && <span>{icon}</span>}
-            <div className="text-gray-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm truncate flex gap-2">
-              <span className={cn(``, hidden === 'mobile' && 'hidden md:inline-block')}>
-                {' '}
-                {label}
-              </span>
-              {multiple && (
-                <span className="inline-flex items-center justify-center w-5 h-5 bg-indigo-700 dark:bg-aa-600 purple:bg-pt-600 text-white dark:text-aa-200 rounded-full">
-                  {value?.length || 0}
+          {type !== 'icon' && (
+            <>
+              {label || icon ? (
+                <div className="flex items-center gap-2">
+                  {icon && icon}
+                  {type === 'status' && !multiple && (
+                    <svg className="h-2.5 w-2.5" fill={value.color} viewBox="0 0 8 8">
+                      <circle cx={4} cy={4} r={3} />
+                    </svg>
+                  )}
+                  {type === 'user' && !multiple && (
+                    <Avatar
+                      src={value.profilePicture}
+                      alt={value.name}
+                      size="w-6 h-6"
+                      fontSize="text-sm"
+                    />
+                  )}
+                  <div className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm truncate flex gap-2">
+                    <span className={cn(``, hidden === 'mobile' && 'hidden md:inline-block')}>
+                      {' '}
+                      {label}
+                    </span>
+                    {multiple && (
+                      <span className="inline-flex items-center justify-center w-5 h-5 bg-indigo-700 dark:bg-aa-600 purple:bg-pt-600 text-white dark:text-aa-200 rounded-full">
+                        {value?.length || 0}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <span className="text-gray-500 dark:text-aa-200 purple:text-pt-200 truncate">
+                  Please select
                 </span>
               )}
-            </div>
-          </div>
-          <span className="flex items-center">
-            <ChevronDown
-              className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200"
-              aria-hidden="true"
-            />
-          </span>
+              <span className="flex items-center">
+                <span className="sr-only">Open options</span>
+                <ChevronDown
+                  className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200"
+                  aria-hidden="true"
+                />
+              </span>
+            </>
+          )}
+          {type === 'icon' && icon}
         </Listbox.Button>
         <Transition
           as={Fragment}
@@ -60,14 +92,16 @@ export default function BaseListBox({
               size === 'sm' && 'w-[120px]',
               size === 'md' && 'w-[160px]',
               size === 'lg' && 'max-w-[195px] max-h-60  w-full',
-              size === 'xl' && 'w-[220px]',
-              size === 'full' && 'w-full'
+              size === 'xl' && 'w-[250px]',
+              size === 'xxl' && 'w-[300px]',
+              size === 'full' && 'w-full',
+              type === 'icon' && 'w-[195px]'
             )}>
             {options?.map((item) => (
               <Listbox.Option
-                key={item.id || item._id || item[valueField] || item}
+                key={item.id || item._id || item[valueField] || item[field] || item}
                 className={({ active }) =>
-                  `relative flex items-center justify-between select-none py-2 px-3.5 transition cursor-pointer hover:text-slate-900 dark:hover:text-aa-100 purple:hover:text-pt-100 ${
+                  `relative flex items-center justify-between select-none py-2 px-3.5 transition cursor-pointer hover:text-slate-900 dark:hover:text-aa-200 purple:hover:text-pt-200 ${
                     active
                       ? 'bg-slate-100 dark:bg-aa-700 purple:bg-pt-700'
                       : 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
@@ -76,14 +110,29 @@ export default function BaseListBox({
                 value={valueField ? item[valueField] : item}>
                 {({ selected }) => (
                   <>
-                    <span
-                      className={`block truncate ${
-                        selected
-                          ? 'text-slate-900 dark:text-aa-100 purple:text-pt-100'
-                          : 'font-normal'
-                      }`}>
-                      {item?.[field] || item}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      {type === 'status' && (
+                        <svg className="h-2.5 w-2.5" fill={item.color} viewBox="0 0 8 8">
+                          <circle cx={4} cy={4} r={3} />
+                        </svg>
+                      )}
+                      {type === 'user' && (
+                        <Avatar
+                          src={item.profilePicture}
+                          alt={item.name}
+                          size="w-6 h-6"
+                          fontSize="text-sm"
+                        />
+                      )}
+                      <span
+                        className={`block truncate ${
+                          selected
+                            ? 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
+                            : 'font-normal'
+                        }`}>
+                        {item?.[field] || item}
+                      </span>
+                    </div>
                     {selected && (
                       <CheckIcon
                         className="w-5 h-5 text-indigo-700 dark:text-aa-200 purple:text-pt-200"

@@ -1,8 +1,8 @@
 import dynamic from 'next/dynamic';
+import 'quill-mention';
 import { useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import { formats, modules } from './EditorToolbar';
-import 'quill-mention';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 const EditorToolbar = dynamic(() => import('./EditorToolbar'), { ssr: false });

@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import IdeaActionButton from './IdeaActionButton';
 
-export default function IdeaActions() {
+export default function IdeaActions({ dashboard }) {
   const idea = useSelector((state) => state.idea.selectedIdea);
   const dispatch = useDispatch();
   const updateIdea = useUpdateIdea(idea);
@@ -18,24 +18,24 @@ export default function IdeaActions() {
   const ideaActionButtons = [
     {
       type: 'Pin',
-      onClick: () => updateIdea({ isPinned: !idea.isPinned }),
+      onClick: () => updateIdea({ isPinned: !idea?.isPinned }),
       Icon: Thumbtack,
       color: 'green',
-      control: idea.isPinned
+      control: idea?.isPinned
     },
     {
       type: 'Archive',
-      onClick: () => updateIdea({ isArchived: !idea.isArchived }),
+      onClick: () => updateIdea({ isArchived: !idea?.isArchived }),
       Icon: Archive,
       color: 'yellow',
-      control: idea.isArchived
+      control: idea?.isArchived
     },
     {
       type: 'Bug',
-      onClick: () => updateIdea({ isBug: !idea.isBug }),
+      onClick: () => updateIdea({ isBug: !idea?.isBug }),
       Icon: Bug,
       color: 'rose',
-      control: idea.isBug
+      control: idea?.isBug
     },
     {
       type: 'Merge',
@@ -58,7 +58,7 @@ export default function IdeaActions() {
   ];
 
   return (
-    <div className="bg-slate-50 dark:bg-aa-800 purple:bg-pt-900 p-4">
+    <div className={!dashboard && 'bg-slate-50 dark:bg-aa-800 purple:bg-pt-900 p-4'}>
       <p className="text-slate-900 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">
         Actions
       </p>

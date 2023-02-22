@@ -101,7 +101,7 @@ export default function RequestAccess() {
                 ) : (
                   !user && (
                     <>
-                      <span className="text-slate-800 dark:text-aa-100 purple:text-pt-100 tracking-sm">
+                      <span className="text-slate-800 dark:text-aa-200 purple:text-pt-200 tracking-sm">
                         {' '}
                         Already have an account?{' '}
                       </span>

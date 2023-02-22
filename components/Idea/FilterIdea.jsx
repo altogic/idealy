@@ -88,6 +88,7 @@ export default function FilterIdea({
           multiple
           size="lg"
           hidden="mobile"
+          type="status"
         />
       </div>
     </div>

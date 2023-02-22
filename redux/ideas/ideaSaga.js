@@ -205,6 +205,18 @@ function* getMergedIdeasSaga({ payload: filter }) {
     yield put(ideaActions.getMergedIdeasFailure(error));
   }
 }
+function* searchIdeasSaga({ payload: searchText }) {
+  try {
+    const company = yield select((state) => state.company.company);
+    const { data, errors } = yield call(ideaService.searchSimilarIdeas, searchText, company._id);
+    if (errors) {
+      throw errors;
+    }
+    yield put(ideaActions.searchIdeasSuccess(data));
+  } catch (error) {
+    yield put(ideaActions.searchIdeasFailure(error));
+  }
+}
 
 export default function* ideaSaga() {
   yield takeEvery(ideaActions.getIdeasByCompany.type, getIdeasByCompanySaga);
@@ -221,4 +233,5 @@ export default function* ideaSaga() {
   yield takeEvery(ideaActions.approveAllIdeas.type, approveAllIdeasSaga);
   yield takeEvery(ideaActions.mergeIdeas.type, mergeIdeasSaga);
   yield takeEvery(ideaActions.getMergedIdeas.type, getMergedIdeasSaga);
+  yield takeEvery(ideaActions.searchIdeas.type, searchIdeasSaga);
 }

@@ -21,7 +21,7 @@ import Divider from '../Divider';
 import Drawer from '../Drawer';
 import GuestForm from '../GuestForm';
 import GuestFormModal from '../GuestFormModal';
-import { Photo, Plus } from '../icons';
+import { Photo } from '../icons';
 import Input from '../Input';
 import SimilarIdeas from '../SimilarIdeas';
 import Suggestion from '../Suggestion';
@@ -255,118 +255,111 @@ export default function SubmitIdea({ idea }) {
   }, [error, setError]);
 
   return (
-    <>
-      <Button
-        type="button"
-        text="Submit Idea"
-        icon={<Plus className="w-5 h-5" />}
-        variant="indigo"
-        size="sm"
-        mobileFullWidth="mobileFullWidth"
-        onClick={() => dispatch(toggleFeedBackSubmitModal())}
-      />
+    <Drawer
+      open={feedBackSubmitModal}
+      onClose={() => handleClose()}
+      className="z-[100]"
+      position="right"
+      size="lg">
+      <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold break-all">
+        Tell us your idea
+      </h2>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {user && company?.role && company?.role !== 'Guest' && (
+          <div className="my-8">
+            <AutoComplete
+              suggestions={companyMembers}
+              onSearch={handleOnSearch}
+              loading={searchLoading}
+              formatResult={formatResult}
+              onSuggestionClick={setMember}
+              activeSuggestion={member}
+              setOpenGuestForm={setOpenGuestForm}
+              openGuestForm={openGuestForm}
+            />
+          </div>
+        )}
+        <div className={user && company?.role ? 'mb-8' : 'my-8'}>
+          <Input
+            type="text"
+            name="title"
+            id="title"
+            label="Title"
+            register={register('title')}
+            error={errors.title}
+            placeholder="Feedback Title"
+            onKeyUp={(e) => {
+              if (!idea) {
+                setInpTitle(e.target.value);
+              }
+            }}
+          />
+          {!!similarIdeas?.length && <SimilarIdeas ideas={similarIdeas} title="Similar Ideas" />}
+        </div>
+        <div className="mb-8 relative">
+          <Editor content={content} setContent={setContent} errors={errors.content}>
+            {images.length < 5 && (
+              <button type="button" onClick={imageHandler}>
+                <Photo className="w-6 h-6 text-slate-500 dark:text-aa-200 purple:text-pt-200 hover:text-[#06c] dark:hover:text-[#06c] purple:hover:text-[#06c]" />
+              </button>
+            )}
+          </Editor>
 
-      <Drawer open={feedBackSubmitModal} onClose={() => handleClose()} className="z-[100]">
-        <h2 className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-xl font-semibold break-all">
-          Tell us your idea
-        </h2>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {user && company?.role && company?.role !== 'Guest' && (
-            <div className="my-8">
-              <AutoComplete
-                suggestions={companyMembers}
-                onSearch={handleOnSearch}
-                loading={searchLoading}
-                formatResult={formatResult}
-                onSuggestionClick={setMember}
-                activeSuggestion={member}
-                setOpenGuestForm={setOpenGuestForm}
-                openGuestForm={openGuestForm}
+          {errors?.content?.message && (
+            <span className="inline-block text-sm text-red-600">{errors.content.message}</span>
+          )}
+        </div>
+        {images?.length > 0 && (
+          <ImageList images={images} onRemove={removeImage} removable loading={loading} />
+        )}
+        <div className="mt-8">
+          <span className="inline-block text-slate-600 dark:text-aa-300 purple:text-pt-300 mb-4 text-base tracking-sm">
+            Choose up to 3 Topics for this Idea (optional)
+          </span>
+          <div className="flex flex-wrap items-center gap-4">
+            {company?.topics.map((topic) => (
+              <TopicButton
+                key={topic._id}
+                badgeName={topic.name}
+                onClick={() => {
+                  if (topics.some((t) => t === topic.name)) {
+                    setTopics((prevTopics) => prevTopics.filter((t) => t !== topic.name));
+                  } else if (topics.length < 3) {
+                    setTopics((prevTopics) => [...prevTopics, topic.name]);
+                  }
+                }}
+                selected={topics.some((t) => t === topic.name)}
               />
-            </div>
-          )}
-          <div className={user && company?.role ? 'mb-8' : 'my-8'}>
-            <Input
-              type="text"
-              name="title"
-              id="title"
-              label="Title"
-              register={register('title')}
-              error={errors.title}
-              placeholder="Feedback Title"
-              onKeyUp={(e) => {
-                if (!idea) {
-                  setInpTitle(e.target.value);
-                }
-              }}
-            />
-            {!!similarIdeas?.length && <SimilarIdeas ideas={similarIdeas} title="Similar Ideas" />}
-          </div>
-          <div className="mb-8 relative">
-            <Editor content={content} setContent={setContent} errors={errors.content}>
-              {images.length < 5 && (
-                <button type="button" onClick={imageHandler}>
-                  <Photo className="w-6 h-6 text-slate-500 dark:text-aa-200 purple:text-pt-200 hover:text-[#06c] dark:hover:text-[#06c] purple:hover:text-[#06c]" />
-                </button>
-              )}
-            </Editor>
-
-            {errors?.content?.message && (
-              <span className="inline-block text-sm text-red-600">{errors.content.message}</span>
+            ))}
+            {errors?.topics?.message && (
+              <span className="inline-block text-sm text-red-600">{errors.topics.message}</span>
             )}
           </div>
-          {images?.length > 0 && (
-            <ImageList images={images} onRemove={removeImage} removable loading={loading} />
+        </div>
+        <Divider className="my-8" />
+        <div>
+          {((idea?.guestName && idea?.guestEmail) || guestValidation) && (
+            <GuestForm register={register} errors={errors} />
           )}
-          <div className="mt-8">
-            <span className="inline-block text-slate-600 dark:text-aa-300 purple:text-pt-300 mb-4 text-base tracking-sm">
-              Choose up to 3 Topics for this Idea (optional)
-            </span>
-            <div className="flex flex-wrap items-center gap-4">
-              {company?.topics.map((topic) => (
-                <TopicButton
-                  key={topic._id}
-                  badgeName={topic.name}
-                  onClick={() => {
-                    if (topics.some((t) => t === topic.name)) {
-                      setTopics((prevTopics) => prevTopics.filter((t) => t !== topic.name));
-                    } else if (topics.length < 3) {
-                      setTopics((prevTopics) => [...prevTopics, topic.name]);
-                    }
-                  }}
-                  selected={topics.some((t) => t === topic.name)}
-                />
-              ))}
-              {errors?.topics?.message && (
-                <span className="inline-block text-sm text-red-600">{errors.topics.message}</span>
-              )}
-            </div>
-          </div>
-          <Divider className="my-8" />
-          <div>
-            {((idea?.guestName && idea?.guestEmail) || guestValidation) && (
-              <GuestForm register={register} errors={errors} />
-            )}
-          </div>
-          <div className="flex justify-end gap-4 mt-4">
-            {idea && <Button type="button" text="Cancel" variant="blank" onClick={handleClose} />}
-            <Button
-              type="submit"
-              className="flex items-center justify-center bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white py-3 px-4 text-sm font-medium tracking-sm border border-transparent rounded-lg hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600 focus:outline-none"
-              text={`${idea ? 'Update' : 'Submit'} Idea`}
-              loading={ideaLoading}
-            />
-          </div>
-        </form>
-        <GuestFormModal
-          title="Add a new user"
-          open={openGuestForm}
-          onClose={() => setOpenGuestForm(false)}
-          onSubmit={createNewUser}
-          error={companyError}
-          saveLocal={false}
-        />
-      </Drawer>
-    </>
+        </div>
+        <div className="flex justify-end gap-4 mt-4">
+          {idea && <Button type="button" text="Cancel" variant="blank" onClick={handleClose} />}
+          <Button
+            type="submit"
+            className="flex items-center justify-center bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white py-3 px-4 text-sm font-medium tracking-sm border border-transparent rounded-lg hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600 focus:outline-none"
+            text={`${idea ? 'Update' : 'Submit'} Idea`}
+            loading={ideaLoading}
+          />
+        </div>
+      </form>
+      <GuestFormModal
+        title="Add a new user"
+        open={openGuestForm}
+        onClose={() => setOpenGuestForm(false)}
+        onSubmit={createNewUser}
+        error={companyError}
+        saveLocal={false}
+      />
+    </Drawer>
   );
 }

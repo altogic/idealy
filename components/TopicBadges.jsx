@@ -4,7 +4,7 @@ export default function TopicBadges({ badgeName, selected }) {
       className={`inline-flex items-center bg-gray-200 dark:bg-aa-600 purple:bg-pt-800 px-1.5 text-xs font-medium border-2 border-gray-200 dark:border-transparent purple:border-transparent rounded-full ${
         selected
           ? 'text-indigo-700 dark:text-indigo-400 purple:text-indigo-100 border-indigo-500 dark:border-indigo-400 purple:border-indigo-100'
-          : 'text-gray-700 dark:text-aa-100 purple:text-pt-100'
+          : 'text-gray-700 dark:text-aa-200 purple:text-pt-200'
       }`}>
       <svg
         className={`w-3 h-3 mr-1 ${

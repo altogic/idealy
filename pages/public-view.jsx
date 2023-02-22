@@ -1,20 +1,23 @@
+import Button from '@/components/Button';
 import Divider from '@/components/Divider';
 import EmptyState from '@/components/EmptyState';
 import Errors from '@/components/Errors';
-import { Danger } from '@/components/icons';
+import { Plus } from '@/components/icons';
+import DeleteIdeaModal from '@/components/Idea/DeleteIdeaModal';
 import FilterIdea from '@/components/Idea/FilterIdea';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
 import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfiniteScroll from '@/components/InfiniteScroll';
-import InfoModal from '@/components/InfoModal';
 import Layout from '@/components/Layout';
 import PublicViewCard from '@/components/PublicViewCard';
 import useGuestValidation from '@/hooks/useGuestValidation';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
+import useRouteIdea from '@/hooks/useRouteIdea';
 import { authActions } from '@/redux/auth/authSlice';
-import { toggleDeleteFeedBackModal, toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
+import { toggleFeedBackDetailModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { IDEA_SORT_TYPES } from 'constants';
+import _ from 'lodash';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
@@ -24,7 +27,6 @@ export default function PublicView({ userIp }) {
   const [page, setPage] = useState(1);
   const [filterTopics, setFilterTopics] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const [routerQuery, setRouterQuery] = useState();
   const [sortType, setSortType] = useState();
   const [error, setError] = useState();
 
@@ -39,11 +41,11 @@ export default function PublicView({ userIp }) {
   const selectedIdea = useSelector((state) => state.idea.selectedIdea);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
-  const deleteFeedBackModal = useSelector((state) => state.general.deleteFeedBackModal);
+
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const user = useSelector((state) => state.auth.user);
   const voteGuestAuth = useGuestValidation('voteIdea');
-
+  const routeIdea = useRouteIdea();
   const getTopicsFilter = (filterTopics) => {
     if (filterTopics?.length) {
       const topicsFilter = [];
@@ -83,20 +85,9 @@ export default function PublicView({ userIp }) {
   };
 
   const handleClickIdea = (idea) => {
-    router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          feedback: idea._id
-        }
-      },
-      undefined,
-      { scroll: false }
-    );
+    routeIdea(idea._id);
     dispatch(ideaActions.setSelectedIdea(idea));
     dispatch(toggleFeedBackDetailModal());
-    setRouterQuery(router.query);
   };
 
   const getIdeasByCompany = useCallback(() => {
@@ -133,12 +124,6 @@ export default function PublicView({ userIp }) {
     dispatch(ideaActions.setSelectedIdea(null));
   }
 
-  const handleDelete = () => {
-    dispatch(toggleDeleteFeedBackModal());
-    dispatch(ideaActions.deleteIdea({ id: selectedIdea._id }));
-    handleCloseIdea();
-  };
-
   const handleVoted = (ideaId) => {
     if (user) {
       return ideaVotes.find((v) => v.ideaId === ideaId && v.userId === user._id);
@@ -171,7 +156,7 @@ export default function PublicView({ userIp }) {
   }, [router, ideas]);
 
   useEffect(() => {
-    if (!feedBackDetailModal) {
+    if (!feedBackDetailModal && !(page === 1 && !_.isEmpty(ideas))) {
       getIdeasByCompany();
     }
   }, [page, getIdeasByCompany]);
@@ -210,6 +195,13 @@ export default function PublicView({ userIp }) {
     }
   }, [userIp]);
 
+  useEffect(
+    () => () => {
+      dispatch(ideaActions.setSelectedIdea(null));
+    },
+    []
+  );
+
   return (
     <>
       <Head>
@@ -230,7 +222,18 @@ export default function PublicView({ userIp }) {
                     </h1>
 
                     {isSubmitIdeaVisible && (
-                      <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />
+                      <>
+                        <Button
+                          type="button"
+                          text="Submit Idea"
+                          icon={<Plus className="w-5 h-5" />}
+                          variant="indigo"
+                          size="sm"
+                          mobileFullWidth="mobileFullWidth"
+                          onClick={() => dispatch(toggleFeedBackSubmitModal())}
+                        />
+                        <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />
+                      </>
                     )}
                   </div>
                   <div className="flex items-start justify-between mb-9">
@@ -319,22 +322,10 @@ export default function PublicView({ userIp }) {
             <IdeaDetail
               idea={selectedIdea}
               company={company}
-              query={routerQuery}
               voted={handleVoted(selectedIdea?._id)}
               onClose={() => handleCloseIdea()}
             />
-            <InfoModal
-              show={deleteFeedBackModal}
-              onClose={() => dispatch(toggleDeleteFeedBackModal())}
-              cancelOnClick={() => dispatch(toggleDeleteFeedBackModal())}
-              onConfirm={handleDelete}
-              icon={<Danger className="w-7 h-7 text-red-600" />}
-              title="Delete Idea"
-              description="Are you sure you want to delete this idea? This action cannot be undone."
-              confirmText="Delete Idea"
-              confirmColor="red"
-              canCancel
-            />
+            <DeleteIdeaModal onClose={() => handleCloseIdea()} />
           </>
         )}
       </Layout>

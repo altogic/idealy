@@ -668,6 +668,17 @@ export const companySlice = createSlice({
       if (!state.accessRequests.some((ar) => ar._id === action.payload._id)) {
         state.accessRequests = [action.payload, ...state.accessRequests];
       }
+    },
+    getCompanyUsers(state) {
+      state.isLoading = true;
+    },
+    getCompanyUsersSuccess(state, action) {
+      state.isLoading = false;
+      state.companyUsers = action.payload;
+    },
+    getCompanyUsersFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   },
 

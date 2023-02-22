@@ -39,6 +39,8 @@ export default function FourthWizard() {
           options={statuses}
           field="name"
           label={status?.name}
+          type="status"
+          size="full"
         />
         <div className="bg-white py-8 px-6 border border-slate-200 rounded-lg">
           <h2 className="text-slate-800 mb-2 text-base font-semibold tracking-sm">{idea}</h2>
