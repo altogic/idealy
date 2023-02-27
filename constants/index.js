@@ -38,6 +38,7 @@ export const COMPANY_TABS = [
   { id: 6, name: 'Topics', roles: ['Owner', 'Admin'] },
   { id: 7, name: 'Status', roles: ['Owner', 'Admin'] },
   { id: 8, name: 'Categories', roles: ['Owner', 'Admin'] },
+  { id: 8, name: 'User Segments', roles: ['Owner', 'Admin'] },
   { id: 9, name: 'Roadmaps', roles: ['Owner', 'Admin'] },
   { id: 10, name: 'Privacy', roles: ['Owner', 'Admin'] },
   { id: 11, name: 'White Labeling', roles: ['Owner', 'Admin'] },
@@ -49,8 +50,8 @@ export const IDEA_SORT_TYPES = [
   { name: 'Trending', url: 'trending', query: 'trendingScore:desc' },
   { name: 'Top', url: 'top', query: 'voteCount:desc' },
   { name: 'Newest', url: 'newest', query: 'createdAt:desc' },
-  { name: 'Status Changed', url: 'status_changed', query: 'statusUpdatedAt:desc' }
-  // { name: 'Priority', url: 'priority', query: 'priorityScore:desc' }
+  { name: 'Status Changed', url: 'status_changed', query: 'statusUpdatedAt:desc' },
+  { name: 'Priority', url: 'priority', query: 'priorityScore:desc' }
 ];
 
 export const SESSION_COOKIE_OPTIONS = {
@@ -127,4 +128,8 @@ export const THEMES = [
     value: 'theme-purple',
     image: './purple.png'
   }
+];
+export const DATA_RANGE = [
+  { id: 1, name: 'Posts' },
+  { id: 2, name: 'Votes' }
 ];

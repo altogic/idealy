@@ -26,6 +26,7 @@ import _ from 'lodash';
 import RequestAccess from '@/layouts/settings/RequestAccess';
 import Indicator from '@/components/Indicator';
 import { companyActions } from '@/redux/company/companySlice';
+import UserSegments from '@/layouts/settings/UserSegments';
 
 export default function Settings() {
   const [loading, setLoading] = useState(true);
@@ -105,7 +106,7 @@ export default function Settings() {
                         cn(
                           'px-4 py-3 text-sm font-medium tracking-sm border-2 rounded-md text-left focus:outline-none',
                           selected
-                            ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-100 purple:text-pt-100 border-indigo-700 dark:border-aa-600 purple:border-pt-800'
+                            ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-200 purple:text-pt-200 border-indigo-700 dark:border-aa-600 purple:border-pt-800'
                             : 'text-slate-500 dark:text-aa-200 purple:text-pt-200 border-transparent'
                         )
                       }
@@ -130,7 +131,7 @@ export default function Settings() {
                             cn(
                               'relative px-4 py-3 text-sm font-medium tracking-sm border-2 rounded-md text-left focus:outline-none flex items-center',
                               selected
-                                ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-100 purple:text-pt-100 border-indigo-700 dark:border-aa-600 purple:border-pt-800'
+                                ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-200 purple:text-pt-200 border-indigo-700 dark:border-aa-600 purple:border-pt-800'
                                 : 'text-slate-500 dark:text-aa-200 purple:text-pt-200 border-transparent'
                             )
                           }
@@ -192,6 +193,9 @@ export default function Settings() {
                       {/* Categories */}
                       <Tab.Panel>
                         <Categories />
+                      </Tab.Panel>
+                      <Tab.Panel>
+                        <UserSegments />
                       </Tab.Panel>
                       {/* Roadmaps */}
                       <Tab.Panel>

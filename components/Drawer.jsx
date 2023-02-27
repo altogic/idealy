@@ -1,8 +1,9 @@
 import { Close } from '@/components/icons';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import cn from 'classnames';
 
-export default function Drawer({ open, onClose, children, sidebar, className }) {
+export default function Drawer({ open, onClose, children, sidebar, position, size, className }) {
   return (
     <Dialog
       as="div"
@@ -24,20 +25,28 @@ export default function Drawer({ open, onClose, children, sidebar, className }) 
 
       <div className="fixed inset-0 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+          <div
+            className={`pointer-events-none fixed inset-y-0 flex max-w-full ${
+              position === 'right' ? 'right-0 pl-10' : 'left-0 pr-10'
+            }`}>
             <Transition
               show={open}
               appear
               as={Fragment}
               enter="transform transition ease-in-out duration-500 sm:duration-700"
-              enterFrom="translate-x-full"
-              enterTo="translate-x-0"
+              enterFrom={`${position === 'right' ? 'translate-x-full' : '-translate-x-full'}`}
+              enterTo={`${position === 'right' ? 'translate-x-0' : '-translate-x-0'}`}
               leave="transform transition ease-in-out duration-500 sm:duration-700"
-              leaveFrom="translate-x-0"
-              leaveTo="translate-x-full">
-              <Dialog.Panel className="pointer-events-auto max-w-screen-lg w-screen flex bg-white">
+              leaveFrom={`${position === 'right' ? 'translate-x-0' : '-translate-x-0'}`}
+              leaveTo={`${position === 'right' ? 'translate-x-full' : '-translate-x-full'}`}>
+              <Dialog.Panel
+                className={cn(
+                  'pointer-events-auto w-screen flex bg-white',
+                  size === 'md' && 'max-w-xs',
+                  size === 'lg' && 'max-w-screen-lg'
+                )}>
                 {sidebar}
-                <div className="drawer-body relative flex w-full h-full flex-col overflow-y-scroll bg-white dark:bg-aa-900 purple:bg-pt-1000 p-10 drop-shadow-sm">
+                <div className="drawer-body p-10 relative flex w-full h-full flex-col overflow-y-scroll bg-white dark:bg-aa-900 purple:bg-pt-1000  drop-shadow-sm">
                   {/* Close Button Submit Feedback Modal */}
                   <div className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                     <button

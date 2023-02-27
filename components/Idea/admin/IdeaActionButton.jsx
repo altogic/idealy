@@ -12,7 +12,7 @@ export default function IdeaActionButton({ type, color, control, Icon, onClick }
         `purple:hover:bg-gray-700 purple:hover:text-${color}-400`,
         control
           ? `text-${color}-500 dark:text-${color}-400 purple:text-${color}-400`
-          : 'text-gray-700 dark:text-aa-100 purple:text-pt-100'
+          : 'text-gray-700 dark:text-aa-200 purple:text-pt-200'
       )}
       onClick={onClick}
       title={type}>

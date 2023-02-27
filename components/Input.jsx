@@ -10,6 +10,7 @@ export default function Input({
   postfix,
   type,
   disabled,
+  labelBackground,
   ...props
 }) {
   return (
@@ -18,7 +19,7 @@ export default function Input({
         <label
           htmlFor={id}
           className={cn(
-            'inline-block text-slate-700 dark:text-aa-100 purple:text-pt-100 mb-1.5 text-sm font-medium',
+            'inline-block text-slate-700 dark:text-aa-200 purple:text-pt-200 mb-1.5 text-sm font-medium',
             error && 'text-red-600'
           )}>
           {label}
@@ -35,7 +36,7 @@ export default function Input({
               icon ? 'pl-[42px] pr-3.5' : 'px-3.5',
               postfix && 'rounded-r-none',
               disabled
-                ? 'bg-gray-100 dark:bg-aa-50 purple:bg-pt-50 bg-opacity-90 dark:bg-opacity-20 purple:bg-opacity-20 dark:text-aa-100 purple:text-aa-100 cursor-not-allowed'
+                ? 'bg-gray-100 dark:bg-aa-300 purple:bg-pt-300 bg-opacity-90 dark:bg-opacity-20 purple:bg-opacity-20 dark:text-aa-200 purple:text-aa-200 cursor-not-allowed'
                 : '',
               error && postfix ? 'border-r-gray-300' : ''
             )}
@@ -58,8 +59,9 @@ export default function Input({
             <label
               htmlFor={id}
               className={cn(
-                'inline-block text-slate-700 ml-1.5 text-sm font-medium  dark:text-aa-100 purple:text-pt-100',
-                error && 'text-red-600'
+                'inline-block text-slate-700 ml-1.5 text-sm font-medium  dark:text-aa-200 purple:text-pt-200',
+                error && 'text-red-600',
+                labelBackground && 'bg-gray-200 dark:bg-aa-600 purple:bg-pt-600 rounded-full px-3'
               )}>
               {label}
             </label>

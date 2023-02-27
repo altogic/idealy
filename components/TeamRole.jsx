@@ -138,7 +138,7 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
           )}
           <div className={cn(email ? 'space-y-1' : '')}>
             <h6
-              className="max-w-[188px] text-slate-700 dark:text-aa-100 purple:text-pt-100 text-base font-medium tracking-sm truncate"
+              className="max-w-[188px] text-slate-700 dark:text-aa-200 purple:text-pt-200 text-base font-medium tracking-sm truncate"
               title={name}>
               {name}
             </h6>
@@ -156,7 +156,6 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
                 text="Resend Invitation"
                 size="xs"
                 height="8"
-                className="p-0 text-slate-400 dark:text-aa-300 purple:text-pt-300 text-sm tracking-sm hover:text-indigo-500 dark:hover:text-aa-100 purple:hover:text-pt-100"
                 onClick={() => {
                   isSent.current = true;
                   dispatch(

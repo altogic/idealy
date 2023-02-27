@@ -16,6 +16,14 @@ export default function CreateModal({
   onClose,
   ...props
 }) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    createOnClick(data[id]);
+    onClose();
+  };
   return (
     <Modal open={show} onClose={onClose} {...props}>
       <div className="absolute top-8 right-8">
@@ -31,28 +39,33 @@ export default function CreateModal({
         </span>
       </div>
       <div className="mb-5 space-y-2">
-        <h2 className="text-slate-800 text-lg font-medium tracking-sm">{title}</h2>
-        <p className="text-slate-500 text-sm tracking-sm">{description}</p>
+        <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">
+          {title}
+        </h2>
+        <p className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
+          {description}
+        </p>
       </div>
-      <form action="" className="mb-8 space-y-5">
-        <Input type="text" label={label} name={id} id={id} placeholder={placeholder} />
+      <form onSubmit={handleSubmit}>
+        <div className="mb-8 space-y-5">
+          <Input type="text" label={label} name={id} id={id} placeholder={placeholder} />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            className="inline-flex items-center justify-center bg-white text-gray-700 dark:text-aa-200 purple:text-pt-200 py-2.5 px-4 text-sm font-medium tracking-sm border border-gray-300 rounded-md transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+            onClick={cancelOnClick}
+            {...props}>
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="inline-flex items-center justify-center bg-indigo-600 dark:text-aa-200 purple:text-pt-200 text-white py-2.5 px-4 text-sm font-medium tracking-sm border border-transparent rounded-md transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            {...props}>
+            Create
+          </button>
+        </div>
       </form>
-      <div className="grid grid-cols-2 gap-3">
-        <button
-          type="button"
-          className="inline-flex items-center justify-center bg-white text-gray-700 py-2.5 px-4 text-sm font-medium tracking-sm border border-gray-300 rounded-md transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-          onClick={cancelOnClick}
-          {...props}>
-          Cancel
-        </button>
-        <button
-          type="button"
-          className="inline-flex items-center justify-center bg-indigo-600 text-white py-2.5 px-4 text-sm font-medium tracking-sm border border-transparent rounded-md transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          onClick={createOnClick}
-          {...props}>
-          Create
-        </button>
-      </div>
     </Modal>
   );
 }

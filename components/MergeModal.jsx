@@ -1,10 +1,10 @@
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import Modal from '@/components/Modal';
+import useRouteIdea from '@/hooks/useRouteIdea';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import ideaService from '@/services/idea';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncSelect from 'react-select/async';
@@ -13,11 +13,10 @@ import { Merge } from './icons';
 
 export default function MergeModal({ openMergeModal, setOpenMergeModal }) {
   const dispatch = useDispatch();
-  const router = useRouter();
   const loading = useSelector((state) => state.idea.isLoading);
   const company = useSelector((state) => state.company.company);
   const idea = useSelector((state) => state.idea.selectedIdea);
-
+  const routeIdea = useRouteIdea();
   const schema = yup.object().shape({
     baseIdea: yup.string().required('Base idea is required'),
     consent: yup.boolean().oneOf([true], 'You must agree to merge ideas')
@@ -46,17 +45,7 @@ export default function MergeModal({ openMergeModal, setOpenMergeModal }) {
         onSuccess: () => {
           setOpenMergeModal(false);
           reset();
-          router.push(
-            {
-              pathname: router.pathname,
-              query: {
-                ...router.query,
-                feedback: data.baseIdea
-              }
-            },
-            undefined,
-            { scroll: false }
-          );
+          routeIdea(data.baseIdea);
         }
       })
     );

@@ -19,7 +19,7 @@ export default function StatusBadge({ name, color, className }) {
         setBgColor('#56508E');
       }
     }
-  }, [company]);
+  }, [company, color]);
 
   return (
     <div

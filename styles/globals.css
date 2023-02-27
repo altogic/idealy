@@ -51,12 +51,15 @@
     scrollbar-width: none; /* Firefox */
   }
 }
-.ql-editor {
+.editor .ql-editor {
   min-height: 200px !important;
   max-height: 300px;
-  overflow: hidden;
-  overflow-y: scroll;
-  overflow-x: scroll;
+  overflow: auto;
+}
+.dashboard-editor .ql-editor {
+  min-height: 100px !important;
+  max-height: 150px;
+  overflow: auto;
 }
 .ql-snow {
   border: none !important;
@@ -69,9 +72,6 @@
 }
 .ql-toolbar.ql-snow .ql-formats {
   margin-right: 0 !important;
-}
-.ql-editor {
-  overflow: hidden !important;
 }
 
 .ql-snow .ql-stroke {
@@ -152,7 +152,7 @@
   @apply border-slate-300 dark:border-aa-600 purple:border-pt-800 !important;
 }
 .ql-editor .mention {
-  @apply text-slate-500 bg-transparent dark:text-aa-100 purple:text-pt-100;
+  @apply text-slate-500 bg-transparent dark:text-aa-200 purple:text-pt-200;
 }
 html:has(:not(:is(.modal, .drawer))) {
   overflow: auto !important;
@@ -196,4 +196,42 @@ html:has(:is(.modal, .drawer)) {
 }
 .mention-email {
   @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 text-xs font-medium tracking-sm truncate;
+}
+.react-datepicker__header {
+  @apply bg-slate-50 dark:bg-aa-800 purple:bg-pt-800 !important;
+  @apply border-slate-300 dark:border-aa-600 purple:border-pt-800 !important;
+}
+.react-datepicker__day-name,
+.react-datepicker__current-month {
+  @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 !important;
+}
+.react-datepicker__navigation {
+  top: 4% !important;
+}
+
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__day--selected,
+.react-datepicker__day--in-range {
+  @apply bg-indigo-600 dark:bg-aa-900 purple:bg-pt-800 !important;
+}
+.react-datepicker__day--keyboard-selected {
+  @apply text-slate-100 dark:text-aa-200 purple:text-pt-200 !important;
+}
+.react-datepicker__day--in-selecting-range {
+  @apply bg-indigo-600 dark:bg-aa-800 purple:bg-pt-700 !important;
+}
+.react-datepicker__day:hover,
+.react-datepicker__day--selected:hover,
+.react-datepicker__day--in-range:hover {
+  @apply bg-indigo-700 dark:bg-aa-900 purple:bg-pt-900 text-slate-100 dark:text-aa-200 purple:text-pt-200 !important;
+}
+.react-datepicker__close-icon::after {
+  @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 !important;
+  @apply bg-indigo-100 dark:bg-aa-900 purple:bg-pt-900 !important;
+}
+.react-datepicker__children-container {
+  @apply w-full grid grid-cols-2 gap-2 p-4 !important;
+}
+.react-datepicker {
+  width: 484px !important;
 }

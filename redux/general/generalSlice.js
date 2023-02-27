@@ -5,7 +5,8 @@ const initialState = {
   feedBackDetailModal: false,
   feedBackSubmitModal: false,
   commentFormModal: false,
-  deleteFeedBackModal: false
+  deleteFeedBackModal: false,
+  deleteCommentModal: false
 };
 
 export const generalSlice = createSlice({
@@ -23,6 +24,9 @@ export const generalSlice = createSlice({
     },
     toggleDeleteFeedBackModal: (state) => {
       state.deleteFeedBackModal = !state.deleteFeedBackModal;
+    },
+    toggleDeleteCommentModal: (state) => {
+      state.deleteCommentModal = !state.deleteCommentModal;
     }
   },
   extraReducers: (builder) => {
@@ -36,6 +40,7 @@ export const {
   toggleFeedBackDetailModal,
   toggleFeedBackSubmitModal,
   toggleCommentFormModal,
-  toggleDeleteFeedBackModal
+  toggleDeleteFeedBackModal,
+  toggleDeleteCommentModal
 } = generalSlice.actions;
 export default generalSlice.reducer;

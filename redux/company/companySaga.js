@@ -6,6 +6,7 @@ import ToastMessage from '@/utils/toast';
 import { SUBDOMAIN_REGEX } from 'constants';
 import _ from 'lodash';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { PRIORITY_VALUES } from '@/constants/index';
 import { authActions } from '../auth/authSlice';
 import { ideaActions } from '../ideas/ideaSlice';
 import { companyActions } from './companySlice';
@@ -53,7 +54,7 @@ function* removeTopic({ payload: topic }) {
 function* setIdeaStatus({ payload }) {
   yield put(companyActions.setIdeaStatusSuccess(payload));
 }
-function* createCompanySaga({ payload: { userId, onSuccess, userIp } }) {
+function* createCompanySaga({ payload: { userId, onSuccess } }) {
   try {
     const topics = yield select((state) => state.topic.topics);
     const statuses = yield select((state) => state.topic.statuses);
@@ -83,9 +84,10 @@ function* createCompanySaga({ payload: { userId, onSuccess, userIp } }) {
         content: yield select((state) => state.company.ideaDescription),
         status: data.company.statuses.find((st) => st.name === status.name)._id,
         author: sessionUser._id,
-        companySubdomain: data.company.subdomain,
         company: data.company._id,
-        ip: userIp
+        isApproved: !data.company?.privacy?.ideaApproval,
+        costFactor: PRIORITY_VALUES[data.company?.priorityType][0],
+        benefitFactor: PRIORITY_VALUES[data.company?.priorityType][0]
       });
     }
 
@@ -560,6 +562,17 @@ function* rejectCompanyAccessRequestSaga({ payload: { body, message } }) {
     yield put(companyActions.rejectCompanyAccessRequestFailed(error));
   }
 }
+function* getCompanyUsersSaga({ payload: companyId }) {
+  try {
+    const { data, error } = yield call(companyService.getCompanyUsers, companyId);
+    if (error) {
+      throw error;
+    }
+    yield put(companyActions.getCompanyUsersSuccess(data));
+  } catch (error) {
+    yield put(companyActions.getCompanyUsersFailed(error));
+  }
+}
 export default function* companySaga() {
   yield all([
     takeEvery(companyActions.setCompanyWillBeCreated.type, setCreatedCompanySaga),
@@ -597,6 +610,7 @@ export default function* companySaga() {
     takeEvery(companyActions.getAccessRequest, getAccessRequestSaga),
     takeEvery(companyActions.getAccessRequestsByCompany, getAccessRequestsByCompanySaga),
     takeEvery(companyActions.approveCompanyAccessRequest, approveCompanyAccessRequestSaga),
-    takeEvery(companyActions.rejectCompanyAccessRequest, rejectCompanyAccessRequestSaga)
+    takeEvery(companyActions.rejectCompanyAccessRequest, rejectCompanyAccessRequestSaga),
+    takeEvery(companyActions.getCompanyUsers, getCompanyUsersSaga)
   ]);
 }

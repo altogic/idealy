@@ -1,10 +1,14 @@
 import React from 'react';
+import cn from 'classnames';
 
-export default function CommentSkeleton() {
+export default function CommentSkeleton({ dashboard }) {
   return (
     <div
       role="status"
-      className="w-full mt-2 space-y-4 divide-y divide-gray-300 dark:divide-aa-300 purple:divide-pt-300 animate-pulse bg-gray-50 dark:bg-aa-800 purple:bg-pt-900">
+      className={cn(
+        'w-full mt-2 space-y-4 divide-y divide-gray-300 dark:divide-aa-300 purple:divide-pt-300 animate-pulse',
+        !dashboard && 'bg-gray-50 dark:bg-aa-800 purple:bg-pt-900'
+      )}>
       <div className="flex justify-between items-center px-4 py-8">
         <div className="flex items-center gap-6">
           <div className="w-10 h-10 bg-gray-300 dark:bg-aa-300 purple:bg-pt-300 rounded-full" />

@@ -169,7 +169,7 @@ export default function InviteTeam() {
                       register={register('email')}
                       error={errors.email}
                       icon={
-                        <Email className="w-5 h-5 text-gray-500 dark:text-aa-100 purple:text-pt-100" />
+                        <Email className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200" />
                       }
                     />
                   </div>
@@ -178,7 +178,7 @@ export default function InviteTeam() {
                     <RoleListBox roleSelected={roleSelected} setRoleSelected={setRoleSelected} />
                   </div>
                 </div>
-                <div className="flex items-center min-h-[60px] bg-slate-100 dark:bg-aa-600 purple:bg-pt-800 text-slate-500 dark:text-aa-100 purple:text-pt-100 my-8 py-2 px-4 text-sm tracking-sm rounded-lg">
+                <div className="flex items-center min-h-[60px] bg-slate-100 dark:bg-aa-600 purple:bg-pt-800 text-slate-500 dark:text-aa-200 purple:text-pt-200 my-8 py-2 px-4 text-sm tracking-sm rounded-lg">
                   {setRoleDescription(roleSelected)}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -222,8 +222,8 @@ export default function InviteTeam() {
       ) : (
         <div>
           <div className="flex items-center justify-between pl-4 pr-[7rem] pb-4 mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
-            <span className="text-slate-800 dark:text-aa-100 purple:text-pt-100">Admins</span>
-            <span className="hidden lg:inline-block text-slate-800 dark:text-aa-100 purple:text-pt-100">
+            <span className="text-slate-800 dark:text-aa-200 purple:text-pt-200">Admins</span>
+            <span className="hidden lg:inline-block text-slate-800 dark:text-aa-200 purple:text-pt-200">
               Role
             </span>
           </div>
