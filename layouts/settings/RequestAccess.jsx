@@ -34,7 +34,7 @@ export default function RequestAccess() {
                   />
 
                   <h6
-                    className="max-w-[188px] text-slate-700 dark:text-aa-100 purple:text-pt-100 text-base font-medium tracking-sm truncate"
+                    className="max-w-[188px] text-slate-700 dark:text-aa-200 purple:text-pt-200 text-base font-medium tracking-sm truncate"
                     title={request?.user.name}>
                     {request?.user.name}
                   </h6>

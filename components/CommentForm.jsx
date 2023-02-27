@@ -14,7 +14,13 @@ import GuestForm from './GuestForm';
 
 const Editor = dynamic(() => import('./Editor'), { ssr: false });
 
-export default function CommentForm({ ideaId, editedComment, setEditComment, setIsFetched }) {
+export default function CommentForm({
+  ideaId,
+  editedComment,
+  setEditComment,
+  setIsFetched,
+  dashboard
+}) {
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.comments.createCommentLoading);
   const updateCommentLoading = useSelector((state) => state.comments.updateCommentLoading);
@@ -95,7 +101,7 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
           ideaId,
           text: comment,
           user: user?._id,
-          guestName: data.guestName || guestName,
+          ...(!user && guestValidation && { guestName: data.guestName || guestName }),
           ...(!user && !data.guestEmail && { ip: userIp }),
           onSuccess: () => {
             if (data.guestEmail) {
@@ -112,7 +118,7 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
           }
         })
       );
-      setIsFetched(true);
+      if (setIsFetched) setIsFetched(false);
       setComment('');
     }
   };
@@ -167,6 +173,7 @@ export default function CommentForm({ ideaId, editedComment, setEditComment, set
               setContent={setComment}
               errors={errors.text}
               placeholder="Type a comment"
+              dashboard={dashboard}
             />
           </div>
         )}

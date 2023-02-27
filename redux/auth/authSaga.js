@@ -287,6 +287,24 @@ function* updateUserProfileSaga({ payload }) {
   }
 }
 
+function* saveFilter({ payload }) {
+  try {
+    const user = yield select((state) => state.auth.user);
+    const { data, errors } = yield call(AuthService.saveFilter, payload);
+    if (errors) {
+      throw errors;
+    }
+    yield put(authActions.saveFilterSuccess(data));
+
+    yield call(AuthService.setUser, {
+      ...user,
+      savedFilter: data
+    });
+  } catch (error) {
+    yield put(authActions.saveFilterFailure(error));
+  }
+}
+
 function* authStateChangeSaga({ payload: { user, session } }) {
   yield call(AuthService.authStateChange, user, session);
 }
@@ -313,6 +331,7 @@ export default function* rootSaga() {
     takeEvery(authActions.getUserCompanies.type, getUserCompaniesSaga),
     takeEvery(authActions.updateUserProfile.type, updateUserProfileSaga),
     takeEvery(authActions.authStateChange.type, authStateChangeSaga),
-    takeEvery(authActions.disableAllNotifications.type, disableAllNotificationsSaga)
+    takeEvery(authActions.disableAllNotifications.type, disableAllNotificationsSaga),
+    takeEvery(authActions.saveFilter.type, saveFilter)
   ]);
 }

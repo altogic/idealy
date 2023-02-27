@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fileActions } from '@/redux/file/fileSlice';
-import Image from '@/components/Image';
-import { ideaActions } from '@/redux/ideas/ideaSlice';
 import Button from '@/components/Button';
+import Image from '@/components/Image';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
-import IdeaAdminTab from './IdeaAdminTab';
-import IdeaSwitch from './IdeaSwitch';
+import { fileActions } from '@/redux/file/fileSlice';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import IdeaSwitch from './admin/IdeaSwitch';
 
 export default function IdeaVisibility() {
   const dispatch = useDispatch();
@@ -47,7 +46,7 @@ export default function IdeaVisibility() {
     }
   }, [idea]);
   return (
-    <IdeaAdminTab title="Visibility">
+    <div>
       <IdeaSwitch
         checked={isPrivate}
         onChange={() => {
@@ -86,6 +85,6 @@ export default function IdeaVisibility() {
           />
         </div>
       )}
-    </IdeaAdminTab>
+    </div>
   );
 }

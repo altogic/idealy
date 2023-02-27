@@ -38,6 +38,7 @@ const ideaService = {
       .filter(`company == '${companyId}'`)
       .updateFields([{ field: 'isApproved', updateType: 'set', value: true }]),
   mergeIdeas: (baseIdea, mergedIdea) => endpoint.post('/idea/merge', { baseIdea, mergedIdea }),
-  getMergedIdeas: (filter) => endpoint.get('/idea/merge', { filter })
+  getMergedIdeas: (filter) => endpoint.get('/idea/merge', { filter }),
+  getIdea: (id) => endpoint.get(`/ideas/${id}`)
 };
 export default ideaService;

@@ -151,7 +151,7 @@ export default function Statuses() {
         <Divider />
         <div>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-8">
-            <span className="text-slate-800 dark:text-aa-100 purple:text-pt-100 text-sm">
+            <span className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm">
               Which Status is your &quot;<strong>Completed</strong>&quot; Status?{' '}
             </span>
             <BaseListBox
@@ -161,6 +161,7 @@ export default function Statuses() {
               options={statuses}
               field="name"
               size="lg"
+              type="status"
             />
           </div>
         </div>

@@ -87,7 +87,8 @@ const AuthService = {
   },
   updateUserProfile(user) {
     return db.model('users').object(user._id).update(user);
-  }
+  },
+  saveFilter: (filter) => db.model('users.savedFilters').append(filter, filter._parent)
 };
 
 export default AuthService;

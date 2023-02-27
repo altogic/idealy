@@ -96,7 +96,7 @@ export default function Authentication() {
             </div>
           </div>
           <div className="py-6">
-            <div className="bg-slate-100 dark:bg-aa-600 purple:bg-pt-800 text-slate-500 dark:text-aa-100 purple:text-pt-100 py-6 px-8 text-sm tracking-sm rounded-lg">
+            <div className="bg-slate-100 dark:bg-aa-600 purple:bg-pt-800 text-slate-500 dark:text-aa-200 purple:text-pt-200 py-6 px-8 text-sm tracking-sm rounded-lg">
               {setAuthenticationDescription(authenticationSelected)}
             </div>
           </div>

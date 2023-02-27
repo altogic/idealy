@@ -1,30 +1,21 @@
+import useRouteIdea from '@/hooks/useRouteIdea';
 import { toggleFeedBackDetailModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import IdeaInfo from './Idea/IdeaInfo';
 import SanitizeHtml from './SanitizeHtml';
 
 export default function SimilarIdeaCard({ idea }) {
   const dispatch = useDispatch();
-  const router = useRouter();
+
   const feedBackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
+  const routeIdea = useRouteIdea();
   return (
     <button
       type="button"
       className="w-full px-2 py-6 lg:p-6 rounded-lg transition hover:bg-slate-50 dark:hover:bg-aa-800 purple:hover:bg-pt-900"
       onClick={() => {
-        router.push(
-          {
-            pathname: router.pathname,
-            query: {
-              ...router.query,
-              feedback: idea._id
-            }
-          },
-          undefined,
-          { scroll: false }
-        );
+        routeIdea(idea._id);
         dispatch(ideaActions.setSelectedIdea(idea));
         if (feedBackSubmitModal) {
           dispatch(toggleFeedBackSubmitModal());

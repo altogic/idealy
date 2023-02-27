@@ -61,7 +61,7 @@ export default function IdeaStatuses() {
                           className={`font-medium whitespace-nowrap  ${
                             checked || selectedStatus?.name === status.name
                               ? 'text-slate-400 dark:text-aa-400 purple:text-pt-400'
-                              : 'text-slate-900 dark:text-aa-100 purple:text-pt-100'
+                              : 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
                           }`}>
                           {status.name}
                         </RadioGroup.Label>
@@ -76,7 +76,7 @@ export default function IdeaStatuses() {
                       )}
                     </div>
                     {(checked || selectedStatus?.name === status.name) && !loading && (
-                      <div className="flex-shrink-0 text-slate-900 dark:text-aa-100 purple:text-pt-100">
+                      <div className="flex-shrink-0 text-slate-900 dark:text-aa-200 purple:text-pt-200">
                         <CircleCheck className="h-5 w-5" />
                       </div>
                     )}

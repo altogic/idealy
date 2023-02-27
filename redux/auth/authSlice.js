@@ -257,6 +257,17 @@ export const authSlice = createSlice({
     },
     setGuestInfo(state, action) {
       state.guestInfo = action.payload;
+    },
+    saveFilter(state) {
+      state.isLoading = true;
+    },
+    saveFilterSuccess(state, action) {
+      state.isLoading = false;
+      state.user.savedFilters.push(action.payload);
+    },
+    saveFilterFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   },
   extraReducers: (builder) => {

@@ -15,7 +15,7 @@ export default function Toggle({
         <Switch.Label
           as="span"
           className={cn(
-            `text-slate-800 dark:text-aa-100 purple:text-pt-100 text-base tracking-sm`,
+            `text-slate-800 dark:text-aa-200 purple:text-pt-200 text-base tracking-sm`,
             description ? 'mb-1' : null
           )}
           passive>

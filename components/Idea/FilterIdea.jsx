@@ -56,7 +56,6 @@ export default function FilterIdea({
         field="name"
         options={IDEA_SORT_TYPES}
         size="lg"
-        mobileSize="auto"
         hidden="mobile"
       />
 
@@ -88,6 +87,7 @@ export default function FilterIdea({
           multiple
           size="lg"
           hidden="mobile"
+          type="status"
         />
       </div>
     </div>

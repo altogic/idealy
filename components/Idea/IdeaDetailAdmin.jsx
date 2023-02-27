@@ -2,9 +2,9 @@ import { useSelector } from 'react-redux';
 import Divider from '../Divider';
 import IdeaActions from './admin/IdeaActions';
 import IdeaApproval from './admin/IdeaApproval';
-import IdeaPriority from './admin/IdeaPriority';
+import IdeaPriority from './admin/IdeaPriorityTab';
 import IdeaStatuses from './admin/IdeaStatuses';
-import IdeaVisibility from './admin/IdeaVisibility';
+import IdeaVisibility from './admin/IdeaVisibilityTab';
 
 export default function IdeaDetailAdmin() {
   const idea = useSelector((state) => state.idea.selectedIdea);

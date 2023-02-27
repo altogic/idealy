@@ -1,89 +1,97 @@
-import { useState } from 'react';
+import {
+  toggleDeleteFeedBackModal,
+  toggleFeedBackDetailModal,
+  toggleFeedBackSubmitModal
+} from '@/redux/general/generalSlice';
+import { DateTime } from 'luxon';
+import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
+import Avatar from './Avatar';
 import ButtonBadge from './ButtonBadge';
-import InfoModal from './InfoModal';
-import { Pen, Trash, Reply, Spam, Danger } from './icons';
+import { Pen, Reply, Spam, Trash } from './icons';
+import IdeaBadges from './Idea/IdeaBadges';
+import SanitizeHtml from './SanitizeHtml';
 
-export default function FeedbackCardDetail({
-  avatar,
-  name,
-  date,
-  firstButton,
-  secondButton,
-  thirdButton,
-  fourthButton,
-  fifthButton
-}) {
-  const [isDelete, setIsDelete] = useState(false);
-
+export default function FeedbackCardDetail({ setEditedIdea }) {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const idea = useSelector((state) => state.idea.selectedIdea);
+  const ideaActionButtons = [
+    {
+      name: 'Edit',
+      icon: <Pen className="w-3 h-3 text-gray-500 dark:text-aa-200 purple:text-pt-200" />,
+      onClick: () => {
+        setEditedIdea(idea);
+        dispatch(toggleFeedBackSubmitModal());
+      }
+    },
+    {
+      name: 'Add Comment',
+      icon: <Reply className="w-3 h-3 text-gray-500 dark:text-aa-200 purple:text-pt-200" />,
+      onClick: () => {
+        router.push({
+          pathname: router.pathname,
+          query: { ...router.query, commentType: 'new' }
+        });
+        dispatch(toggleFeedBackDetailModal());
+      }
+    },
+    {
+      name: 'Spam',
+      icon: <Spam className="w-3 h-3 text-gray-500 dark:text-aa-200 purple:text-pt-200" />,
+      onClick: () => {}
+    },
+    {
+      name: 'Delete',
+      icon: <Trash className="w-3 h-3 text-gray-500 dark:text-aa-200 purple:text-pt-200" />,
+      onClick: () => dispatch(toggleDeleteFeedBackModal())
+    }
+  ];
   return (
-    <>
-      <div className="group">
-        <div className="flex items-center gap-2 mb-2">
-          <img className="w-6 h-6 rounded-full" src={avatar} alt={name} />
-          <span className="text-slate-800 text-base tracking-sm">{name}</span>
-        </div>
-        <div className="prose prose-p:text-slate-500 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-6">
-          <p>
-            Urna, mi pharetra, lobortis felis ut sed nulla. Non ut fermentum proin cursus cursus.
-            Sapien, ridiculus suspendisse porttitor sem laoreet neque amet mi. Phasellus enim arcu
-            quisque rhoncus a sodales volutpat. In vitae volutpat nibh eget sed dolor molestie est.
-            Amet id mattis eu mauris arcu ac viverra feugiat. Et varius semper nunc habitant turpis
-            ac eget. Tortor egestas a adipiscing neque quisque velit cras.
-          </p>
-          <p>
-            Urna, mi pharetra, lobortis felis ut sed nulla. Non ut fermentum proin cursus cursus.
-            Sapien, ridiculus suspendisse porttitor sem laoreet neque amet mi. Phasellus enim arcu
-            quisque rhoncus a sodales volutpat. In vitae volutpat nibh eget sed dolor molestie est.
-            Amet id mattis eu mauris arcu ac viverra feugiat. Et varius semper nunc habitant turpis
-            ac eget. Tortor egestas a adipiscing neque quisque velit cras.
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="inline-block text-slate-400 py-1 text-xs tracking-sm">{date}</span>
-          {/* opacity-0 group-hover:opacity-100 */}
-          <div className="flex items-center gap-3 transition opacity-0 group-hover:opacity-100">
-            {/* Edit Button */}
-            <ButtonBadge icon={<Pen className="w-3 h-3 text-gray-500" />} name={firstButton} />
-            <svg className="h-1.5 w-1.5 text-slate-400" fill="currentColor" viewBox="0 0 8 8">
-              <circle cx={4} cy={4} r={3} />
-            </svg>
-            {/* Reply Button */}
-            <ButtonBadge icon={<Reply className="w-3 h-3 text-gray-500" />} name={secondButton} />
-            <svg className="h-1.5 w-1.5 text-slate-400" fill="currentColor" viewBox="0 0 8 8">
-              <circle cx={4} cy={4} r={3} />
-            </svg>
-            {/* Spam Button */}
-            <ButtonBadge icon={<Spam className="w-3 h-3 text-gray-500" />} name={thirdButton} />
-            <svg className="h-1.5 w-1.5 text-slate-400" fill="currentColor" viewBox="0 0 8 8">
-              <circle cx={4} cy={4} r={3} />
-            </svg>
-            {/* Archive Button */}
-            <ButtonBadge icon={<Spam className="w-3 h-3 text-gray-500" />} name={fourthButton} />
-            <svg className="h-1.5 w-1.5 text-slate-400" fill="currentColor" viewBox="0 0 8 8">
-              <circle cx={4} cy={4} r={3} />
-            </svg>
-            {/* Delete Button */}
-            <ButtonBadge
-              icon={<Trash className="w-3 h-3 text-gray-500" />}
-              name={fifthButton}
-              onClick={() => setIsDelete(!isDelete)}
-            />
-          </div>
+    <div className="group">
+      {(idea?.isPrivate ||
+        idea?.isBug ||
+        idea?.isArchived ||
+        idea?.isPinned ||
+        idea?.isMerged ||
+        !idea?.isApproved) && <IdeaBadges idea={idea} />}
+      <div className="flex items-center gap-2 my-4">
+        <Avatar
+          src={idea?.author?.profilePicture || idea?.guestAvatar}
+          alt={idea?.author ? idea?.author.name : idea?.guestName ? idea?.guestName : idea?.name}
+          size="w-6 h-6"
+          fontSize="text-xs"
+        />
+        <span className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-base tracking-sm">
+          {idea?.author ? idea?.author.name : idea?.guestName ? idea?.guestName : idea?.name}
+        </span>
+      </div>
+
+      <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-200 purple:prose-p:text-pt-200 prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-4">
+        <SanitizeHtml id="dashboard-idea-detail" html={idea?.content} />
+      </div>
+      <div className="flex items-center gap-3">
+        <span className="inline-block text-slate-400 py-1 text-xs tracking-sm whitespace-nowrap">
+          {DateTime.fromISO(idea?.createdAt).toRelative({ locale: 'en' })}
+        </span>
+        {/* opacity-0 group-hover:opacity-100 */}
+        <div className="flex items-center gap-3 transition opacity-0 group-hover:opacity-100">
+          {ideaActionButtons.map((action, index) => (
+            <div key={action.name} className="flex items-center justify-center">
+              <ButtonBadge
+                icon={action.icon}
+                name={action.name}
+                onClick={() => action.onClick(idea?._id)}
+              />
+              {index < ideaActionButtons.length - 1 && (
+                <svg className="h-1.5 w-1.5 text-slate-400" fill="currentColor" viewBox="0 0 8 8">
+                  <circle cx={4} cy={4} r={3} />
+                </svg>
+              )}
+            </div>
+          ))}
         </div>
       </div>
-      {/* Delete Modal */}
-      <InfoModal
-        show={isDelete}
-        onClose={() => setIsDelete(!isDelete)}
-        cancelOnClick={() => setIsDelete(!isDelete)}
-        onConfirm={() => setIsDelete(!isDelete)}
-        icon={<Danger className="w-6 h-6 text-red-600" />}
-        title="Delete post"
-        description="Are you sure you want to delete this post? This action cannot be undone."
-        confirmText="Delete Feedback"
-        confirmColor="red"
-        canCancel
-      />
-    </>
+    </div>
   );
 }

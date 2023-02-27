@@ -71,7 +71,7 @@ export default function Notification() {
               cn(
                 'px-4 py-3 text-sm font-medium tracking-sm border-2 rounded-md text-left focus:outline-none w-1/2 hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-600 hover:border-indigo-400 dark:hover:border-aa-500 purple:hover:border-pt-500',
                 selected
-                  ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-100 purple:text-pt-100 border-indigo-700 dark:border-aa-600 purple:border-pt-800'
+                  ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-200 purple:text-pt-200 border-indigo-700 dark:border-aa-600 purple:border-pt-800'
                   : 'text-slate-500 dark:text-aa-200 purple:text-pt-200 border-transparent'
               )
             }
@@ -85,7 +85,7 @@ export default function Notification() {
               cn(
                 'px-4 py-3 text-sm font-medium tracking-sm border-2 rounded-md text-left focus:outline-none w-1/2 hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-600 hover:border-indigo-400 dark:hover:border-aa-500 purple:hover:border-pt-500',
                 selected
-                  ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-100 purple:text-pt-100 border-indigo-700 dark:border-aa-600 purple:border-pt-800'
+                  ? 'bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-700 dark:text-aa-200 purple:text-pt-200 border-indigo-700 dark:border-aa-600 purple:border-pt-800'
                   : 'text-slate-500 dark:text-aa-200 purple:text-pt-200 border-transparent'
               )
             }

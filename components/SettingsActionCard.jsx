@@ -187,7 +187,7 @@ export default function SettingsActionCard({
                 name="name"
                 error={errors.name}
                 register={register('name')}
-                className="bg-transparent w-full text-slate-700 dark:text-aa-100 purple:text-pt-100 text-sm lg:text-base tracking-sm border-0 focus:outline-none focus:ring-0"
+                className="bg-transparent p-0 w-full text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm lg:text-base tracking-sm border-0 focus:outline-none focus:ring-0"
                 onBlur={(e) => {
                   handleEdit(e.target.value, 'name', !roadMapDescription);
                 }}
@@ -204,7 +204,7 @@ export default function SettingsActionCard({
                   name="name"
                   error={errors.description}
                   register={register('description')}
-                  className="bg-transparent w-full text-slate-700 dark:text-aa-100 purple:text-pt-100 tracking-sm border-0 focus:outline-none focus:ring-0 mt-2"
+                  className="bg-transparent p-0 w-full text-slate-700 dark:text-aa-200 purple:text-pt-200 tracking-sm border-0 focus:outline-none focus:ring-0 mt-2"
                   onBlur={(e) => {
                     handleEdit(e.target.value, 'description', false);
                   }}
@@ -219,7 +219,7 @@ export default function SettingsActionCard({
           ) : (
             <div className="flex flex-col">
               <h6
-                className="max-w-[200px] lg:max-w-[500px] text-slate-700 dark:text-aa-100 purple:text-pt-100 text-sm lg:text-base tracking-sm truncate"
+                className="max-w-[200px] lg:max-w-[500px] text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm lg:text-base tracking-sm truncate"
                 title={name}>
                 {name}
               </h6>
