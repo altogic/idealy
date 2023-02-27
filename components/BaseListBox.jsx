@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import cn from 'classnames';
 import { CheckIcon } from '@heroicons/react/outline';
@@ -15,12 +15,14 @@ export default function BaseListBox({
   multiple,
   valueField,
   hidden,
+  labelIcon,
   size = 'md',
   type = 'default',
   ...props
 }) {
+  const [_value] = useState(value);
   return (
-    <Listbox value={value} onChange={onChange} multiple={multiple} {...props}>
+    <Listbox value={_value} onChange={onChange} multiple={multiple} {...props}>
       <div className="relative">
         <Listbox.Button
           className={cn(
@@ -37,18 +39,19 @@ export default function BaseListBox({
           )}>
           {type !== 'icon' && (
             <>
-              {label || icon ? (
+              {label || labelIcon ? (
                 <div className="flex items-center gap-2">
                   {icon && icon}
+                  {labelIcon && labelIcon}
                   {type === 'status' && !multiple && (
-                    <svg className="h-2.5 w-2.5" fill={value.color} viewBox="0 0 8 8">
+                    <svg className="h-2.5 w-2.5" fill={_value?.color} viewBox="0 0 8 8">
                       <circle cx={4} cy={4} r={3} />
                     </svg>
                   )}
                   {type === 'user' && !multiple && (
                     <Avatar
-                      src={value.profilePicture}
-                      alt={value.name}
+                      src={_value?.profilePicture}
+                      alt={_value?.name}
                       size="w-6 h-6"
                       fontSize="text-sm"
                     />
@@ -60,7 +63,7 @@ export default function BaseListBox({
                     </span>
                     {multiple && (
                       <span className="inline-flex items-center justify-center w-5 h-5 bg-indigo-700 dark:bg-aa-600 purple:bg-pt-600 text-white dark:text-aa-200 rounded-full">
-                        {value?.length || 0}
+                        {_value?.length || 0}
                       </span>
                     )}
                   </div>

@@ -141,6 +141,15 @@ export default function PublicView({ userIp }) {
     if (ideaDetail) {
       dispatch(ideaActions.setSelectedIdea(ideaDetail));
       dispatch(toggleFeedBackDetailModal());
+    } else {
+      dispatch(
+        ideaActions.getIdeaById({
+          id: feedbackId,
+          onSuccess: () => {
+            dispatch(toggleFeedBackDetailModal());
+          }
+        })
+      );
     }
   };
 

@@ -344,6 +344,17 @@ export const ideaSlice = createSlice({
     searchIdeasFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    getIdeaById(state) {
+      state.isLoading = true;
+    },
+    getIdeaByIdSuccess(state, action) {
+      state.isLoading = false;
+      state.selectedIdea = action.payload;
+    },
+    getIdeaByIdFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   },
 

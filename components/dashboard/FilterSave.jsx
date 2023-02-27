@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable react/no-unstable-nested-components */
 import BaseListBox from '@/components/BaseListBox';
 import CreateModal from '@/components/CreateModal';
 import { Check, FilterHamburger, ThreeStar } from '@/components/icons';
@@ -7,7 +9,6 @@ import { authActions } from '@/redux/auth/authSlice';
 import { companyActions } from '@/redux/company/companySlice';
 import { Tab } from '@headlessui/react';
 import cn from 'classnames';
-import { IDEA_SORT_TYPES } from 'constants';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -17,40 +18,12 @@ import Button from '../Button';
 import Divider from '../Divider';
 import FilterCheckboxes from '../FilterCheckboxes';
 
-const userSegments = [
-  {
-    name: 'Everyone (Default)'
-  },
-  {
-    name: 'Segment One'
-  },
-  {
-    name: 'Segment Two'
-  },
-  {
-    name: 'Segment Three'
-  },
-  {
-    name: 'Segment Four'
-  },
-  {
-    name: 'Segment Five'
-  },
-  {
-    name: 'Segment Six'
-  },
-  {
-    name: 'Segment Seven'
-  }
-];
-
 export default function FilterSave({ className, filters }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const [isFilters, setIsFilters] = useState();
+  const [selectedSegment, setSelectedSegment] = useState();
   const [isCreateNewTopic, setIsCreateNewTopic] = useState(false);
-  const [isUserSegment, setIsUserSegment] = useState(userSegments[0]);
   const [topics, setTopics] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -60,32 +33,6 @@ export default function FilterSave({ className, filters }) {
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [dataRange, setDataRange] = useState(DATA_RANGE[0]?.name);
   const [modalInfo, setModalInfo] = useState({});
-  const onChange = (dates) => {
-    if (dates[0] === null) {
-      delete router.query.startDate;
-      delete router.query.endDate;
-      router.push({
-        pathname: router.pathname,
-        query: {
-          ...router.query
-        }
-      });
-    }
-    const [start, end] = dates;
-    setStartDate(start);
-    setEndDate(end);
-    if (start && end) {
-      router.push({
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          dataRange,
-          startDate: start.toISOString(),
-          endDate: end.toISOString()
-        }
-      });
-    }
-  };
 
   const handleFilterTopicChange = (e, topic) => {
     if (e.target.checked) {
@@ -196,6 +143,16 @@ export default function FilterSave({ className, filters }) {
       }
     });
   };
+  const handleSelectSegment = (segment) => {
+    setSelectedSegment(segment);
+    router.push({
+      pathname: router.pathname,
+      query: {
+        ...router.query,
+        segment: segment.name
+      }
+    });
+  };
   const openModal = (name, id, field) => {
     setIsCreateNewTopic(!isCreateNewTopic);
     setModalInfo({
@@ -207,9 +164,34 @@ export default function FilterSave({ className, filters }) {
       createOnClick: (name) => addCompanySubList(name, field)
     });
   };
-  useEffect(() => {
-    setIsFilters(IDEA_SORT_TYPES[0]);
-  }, []);
+  const onChange = (dates) => {
+    if (dates[0] === null) {
+      delete router.query.startDate;
+      delete router.query.endDate;
+      router.push({
+        pathname: router.pathname,
+        query: {
+          ...router.query
+        }
+      });
+    }
+    const [start, end] = dates;
+    setStartDate(start);
+    setEndDate(end);
+    if (start && end) {
+      router.push({
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          dataRange,
+          startDate: start.toISOString(),
+          endDate: end.toISOString()
+        }
+      });
+    }
+    // close date picker
+  };
+
   useEffect(() => {
     if (topics.length) {
       router.push({
@@ -256,7 +238,7 @@ export default function FilterSave({ className, filters }) {
     if (!categories.length && router.query.category) {
       setCategories(router.query.category.split(','));
     }
-    if (router.query.startDate) {
+    if (router.query.nullDate) {
       setStartDate(new Date(router.query.startDate));
     }
     if (router.query.endDate) {
@@ -283,7 +265,6 @@ export default function FilterSave({ className, filters }) {
             field="name"
             options={filters}
             size="xl"
-            mobileSize="auto"
             hidden="mobile"
           />
         </div>
@@ -291,14 +272,13 @@ export default function FilterSave({ className, filters }) {
       <div className="space-y-1.5">
         <Label label="User Segment" />
         <BaseListBox
-          value={isFilters}
+          value={selectedSegment}
           icon={<Check className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
-          label={isUserSegment.name}
-          onChange={setIsUserSegment}
+          label={selectedSegment?.name}
+          onChange={handleSelectSegment}
           field="name"
-          options={userSegments}
+          options={company?.userSegments}
           size="xl"
-          mobileSize="auto"
           hidden="mobile"
         />
       </div>
@@ -340,12 +320,88 @@ export default function FilterSave({ className, filters }) {
                 startDate={startDate}
                 endDate={endDate}
                 selectsRange
+                monthsShown={2}
                 isClearable
                 placeholderText="Select a date range"
                 dayClassName={() => 'text-slate-500 dark:text-aa-200 purple:text-pt-200'}
                 calendarClassName="bg-white dark:bg-aa-700 purple:bg-pt-700 text-slate-500 dark:text-aa-200 purple:text-pt-200"
-                className="bg-white dark:bg-aa-700 purple:bg-pt-700 text-slate-500 dark:text-aa-200 purple:text-pt-200  w-full border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-pointer px-[14px] py-3.5 placeholder:text-slate-500 dark:placeholder:text-aa-200 purple:placeholder:text-pt-200"
-              />
+                className="bg-white dark:bg-aa-700 purple:bg-pt-700 text-slate-500 dark:text-aa-200 purple:text-pt-200  w-full border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-pointer px-[14px] py-3.5 placeholder:text-slate-500 dark:placeholder:text-aa-200 purple:placeholder:text-pt-200">
+                <Button
+                  variant="indigo"
+                  size="xs"
+                  text="This week"
+                  onClick={() => {
+                    const start = new Date();
+                    const end = new Date();
+                    start.setDate(start.getDate() - start.getDay());
+                    end.setDate(end.getDate() - end.getDay() + 6);
+
+                    onChange([start, end]);
+                  }}
+                />
+                <Button
+                  variant="indigo"
+                  size="xs"
+                  text="This month"
+                  onClick={() => {
+                    const start = new Date();
+                    const end = new Date();
+                    start.setDate(1);
+                    end.setMonth(end.getMonth() + 1);
+                    end.setDate(0);
+
+                    onChange([start, end]);
+                  }}
+                />
+                <Button
+                  variant="indigo"
+                  size="xs"
+                  text="This year"
+                  onClick={() => {
+                    const start = new Date();
+                    const end = new Date();
+                    start.setMonth(0);
+                    start.setDate(1);
+                    end.setMonth(11);
+                    end.setDate(31);
+
+                    onChange([start, end]);
+                  }}
+                />
+                <Button
+                  variant="indigo"
+                  size="xs"
+                  text="Last 7 days"
+                  onClick={() => {
+                    const start = new Date();
+                    const end = new Date();
+                    start.setDate(start.getDate() - 7);
+
+                    onChange([start, end]);
+                  }}
+                />
+                <Button
+                  variant="indigo"
+                  size="xs"
+                  text="Last 30 days"
+                  onClick={() => {
+                    const start = new Date();
+                    const end = new Date();
+                    start.setDate(start.getDate() - 30);
+
+                    onChange([start, end]);
+                  }}
+                />
+
+                <Button
+                  variant="indigo"
+                  size="xs"
+                  text="All time"
+                  onClick={() => {
+                    onChange([null, null]);
+                  }}
+                />
+              </DatePicker>
             </Tab.Panel>
             <Tab.Panel>
               <DatePicker
@@ -354,12 +410,88 @@ export default function FilterSave({ className, filters }) {
                 startDate={startDate}
                 endDate={endDate}
                 selectsRange
+                monthsShown={2}
                 isClearable
                 placeholderText="Select a date range"
                 dayClassName={() => 'text-slate-500 dark:text-aa-200 purple:text-pt-200'}
                 calendarClassName="bg-white dark:bg-aa-700 purple:bg-pt-700 text-slate-500 dark:text-aa-200 purple:text-pt-200"
-                className="bg-white dark:bg-aa-700 purple:bg-pt-700 text-slate-500 dark:text-aa-200 purple:text-pt-200  w-full border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-pointer px-[14px] py-3.5 placeholder:text-slate-500 dark:placeholder:text-aa-200 purple:placeholder:text-pt-200"
-              />
+                className="bg-white dark:bg-aa-700 purple:bg-pt-700 text-slate-500 dark:text-aa-200 purple:text-pt-200  w-full border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-pointer px-[14px] py-3.5 placeholder:text-slate-500 dark:placeholder:text-aa-200 purple:placeholder:text-pt-200">
+                <Button
+                  variant="indigo"
+                  size="xs"
+                  text="This week"
+                  onClick={() => {
+                    const start = new Date();
+                    const end = new Date();
+                    start.setDate(start.getDate() - start.getDay());
+                    end.setDate(end.getDate() - end.getDay() + 6);
+
+                    onChange([start, end]);
+                  }}
+                />
+                <Button
+                  variant="indigo"
+                  size="xs"
+                  text="This month"
+                  onClick={() => {
+                    const start = new Date();
+                    const end = new Date();
+                    start.setDate(1);
+                    end.setMonth(end.getMonth() + 1);
+                    end.setDate(0);
+
+                    onChange([start, end]);
+                  }}
+                />
+                <Button
+                  variant="indigo"
+                  size="xs"
+                  text="This year"
+                  onClick={() => {
+                    const start = new Date();
+                    const end = new Date();
+                    start.setMonth(0);
+                    start.setDate(1);
+                    end.setMonth(11);
+                    end.setDate(31);
+
+                    onChange([start, end]);
+                  }}
+                />
+                <Button
+                  variant="indigo"
+                  size="xs"
+                  text="Last 7 days"
+                  onClick={() => {
+                    const start = new Date();
+                    const end = new Date();
+                    start.setDate(start.getDate() - 7);
+
+                    onChange([start, end]);
+                  }}
+                />
+                <Button
+                  variant="indigo"
+                  size="xs"
+                  text="Last 30 days"
+                  onClick={() => {
+                    const start = new Date();
+                    const end = new Date();
+                    start.setDate(start.getDate() - 30);
+
+                    onChange([start, end]);
+                  }}
+                />
+
+                <Button
+                  variant="indigo"
+                  size="xs"
+                  text="All time"
+                  onClick={() => {
+                    onChange([null, null]);
+                  }}
+                />
+              </DatePicker>
             </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>

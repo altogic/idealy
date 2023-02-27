@@ -217,6 +217,18 @@ function* searchIdeasSaga({ payload: searchText }) {
     yield put(ideaActions.searchIdeasFailure(error));
   }
 }
+function* getIdeaByIdSaga({ payload: { id, onSuccess } }) {
+  try {
+    const { data, errors } = yield call(ideaService.getIdea, id);
+    if (errors) {
+      throw errors;
+    }
+    yield put(ideaActions.getIdeaByIdSuccess(data));
+    onSuccess();
+  } catch (error) {
+    yield put(ideaActions.getIdeaByIdFailure(error));
+  }
+}
 
 export default function* ideaSaga() {
   yield takeEvery(ideaActions.getIdeasByCompany.type, getIdeasByCompanySaga);
@@ -234,4 +246,5 @@ export default function* ideaSaga() {
   yield takeEvery(ideaActions.mergeIdeas.type, mergeIdeasSaga);
   yield takeEvery(ideaActions.getMergedIdeas.type, getMergedIdeasSaga);
   yield takeEvery(ideaActions.searchIdeas.type, searchIdeasSaga);
+  yield takeEvery(ideaActions.getIdeaById.type, getIdeaByIdSaga);
 }

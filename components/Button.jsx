@@ -27,8 +27,8 @@ export default function Button({
       className={cn(
         `text-${size}`,
         `inline-flex items-center justify-center gap-2 tracking-sm border rounded-md transition ease-linear duration-200 focus:outline-none`,
-        size === 'sm' ? 'p-2' : '',
-        size === 'xs' ? 'p-3' : '',
+        size === 'sm' ? 'p-3' : '',
+        size === 'xs' ? 'p-2' : '',
         size === 'base' && variant !== 'text' ? 'px-4 py-2.5' : '',
         fontSize ? `text-${fontSize}` : null,
         height ? `h-${height}` : '',

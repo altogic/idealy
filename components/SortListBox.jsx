@@ -6,7 +6,7 @@ import BaseListBox from './BaseListBox';
 
 export default function SortListBox({ size, type = 'default' }) {
   const router = useRouter();
-  const [sortSelected, setSortSelected] = useState();
+  const [sortSelected, setSortSelected] = useState(IDEA_SORT_TYPES?.[0]);
   const handleSortChange = (value) => {
     router.push({
       pathname: router.pathname,
@@ -37,7 +37,6 @@ export default function SortListBox({ size, type = 'default' }) {
       field="name"
       options={IDEA_SORT_TYPES}
       size={size}
-      mobileSize="auto"
       hidden="mobile"
     />
   );

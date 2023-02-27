@@ -38,6 +38,7 @@ export const COMPANY_TABS = [
   { id: 6, name: 'Topics', roles: ['Owner', 'Admin'] },
   { id: 7, name: 'Status', roles: ['Owner', 'Admin'] },
   { id: 8, name: 'Categories', roles: ['Owner', 'Admin'] },
+  { id: 8, name: 'User Segments', roles: ['Owner', 'Admin'] },
   { id: 9, name: 'Roadmaps', roles: ['Owner', 'Admin'] },
   { id: 10, name: 'Privacy', roles: ['Owner', 'Admin'] },
   { id: 11, name: 'White Labeling', roles: ['Owner', 'Admin'] },

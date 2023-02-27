@@ -31,7 +31,7 @@ export default function FilterCheckboxes({
         <Label label={label} />
         <Button variant="text" text="Reset" onClick={handleReset} />
       </div>
-      <div className="space-y-3 h-64 overflow-auto">
+      <div className="space-y-3 h-64 overflow-auto  px-2">
         {options?.map((item) => (
           <div className="relative flex items-center" key={item?._id}>
             <div key={item?._id} className="flex items-center">

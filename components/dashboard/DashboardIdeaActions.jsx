@@ -1,25 +1,60 @@
 import Label from '@/components/Label';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
+import ideaService from '@/services/idea';
 import ToastMessage from '@/utils/toast';
 import copy from 'copy-to-clipboard';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import AsyncSelect from 'react-select/async';
 import BaseListBox from '../BaseListBox';
 import { Copy } from '../icons';
 import IdeaActions from '../Idea/admin/IdeaActions';
 import IdeaPriority from '../Idea/IdeaPriority';
 import IdeaVisibility from '../Idea/IdeaVisibility';
+import TopicSelection from '../Idea/TopicSelection';
 import Input from '../Input';
 
+const memberSelectStyles = {
+  control: (provided) => ({
+    ...provided,
+    width: '100%',
+    border: 'none',
+    '&:hover': {
+      borderColor: '#e4e4e4'
+    }
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected ? '#e4e4e4' : 'white',
+    color: 'black',
+    '&:hover': {
+      backgroundColor: '#e4e4e4'
+    }
+  }),
+  menu: (provided) => ({
+    ...provided,
+    zIndex: 9999
+  }),
+  input: (provided) => ({
+    ...provided,
+    color: 'black',
+    width: '100%',
+    height: '100%'
+  })
+};
+
 export default function DashboardIdeaActions() {
+  const company = useSelector((state) => state.company.company);
+
+  const idea = useSelector((state) => state.idea.selectedIdea);
   const [status, setStatus] = useState();
   const [category, setCategory] = useState();
-  const [owner, setOwner] = useState();
+
   const [roadMap, setRoadMap] = useState();
   const [copyText, setCopyText] = useState('');
-  const company = useSelector((state) => state.company.company);
-  const companyUsers = useSelector((state) => state.company.companyUsers);
-  const idea = useSelector((state) => state.idea.selectedIdea);
+  const [topics, setTopics] = useState();
+  const [segments, setSegments] = useState();
+
   const updateIdea = useUpdateIdea(idea);
 
   const handleCopyText = (e) => {
@@ -35,11 +70,9 @@ export default function DashboardIdeaActions() {
     if (idea) {
       setStatus(idea?.status);
       setCategory(idea?.category);
-      setOwner({
-        name: idea?.author?.name || idea?.guestName || idea?.name,
-        profilePicture: idea?.author?.profilePicture || idea?.guestAvatar
-      });
       setRoadMap(idea?.roadmap);
+      setTopics(idea?.topics);
+      setSegments(idea?.userSegment);
     }
   }, [idea]);
   useEffect(() => {
@@ -47,6 +80,31 @@ export default function DashboardIdeaActions() {
       setCopyText(`${company.subdomain}.idealy.io/public-view?feedback=${idea._id}`);
     }
   }, [idea]);
+
+  const updateIdeaTopics = (topics) => {
+    updateIdea({
+      topics
+    });
+  };
+  const filterMembers = async (inputValue) => {
+    const { data, errors } = await ideaService.searchCompanyMembers(company._id, inputValue);
+    if (errors) {
+      return [];
+    }
+    const response = [...data.members, ...data.users];
+
+    return response.map((member) => ({
+      value: {
+        _id: member._id,
+        name: member.name,
+        profilePicture: member.profilePicture,
+        email: member.email,
+        isRegistered: !!member.provider
+      },
+      label: member.name
+    }));
+  };
+
   return (
     <div className="h-[calc(100vh-181px)] p-6 overflow-y-auto">
       <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 mb-4 text-base font-semibold tracking-sm">
@@ -85,7 +143,6 @@ export default function DashboardIdeaActions() {
             field="name"
             options={company?.statuses}
             size="xxl"
-            mobileSize="auto"
             hidden="mobile"
             type="status"
           />
@@ -102,17 +159,36 @@ export default function DashboardIdeaActions() {
             field="name"
             options={company?.categories}
             size="xxl"
-            mobileSize="auto"
+            hidden="mobile"
+          />
+        </div>
+        <div>
+          <Label label="User Segments" />
+          <BaseListBox
+            value={segments}
+            label={segments?.name}
+            onChange={(value) => {
+              setSegments(value);
+              updateIdea({ userSegments: value._id });
+            }}
+            field="name"
+            options={company?.userSegments}
+            size="xxl"
             hidden="mobile"
           />
         </div>
         <div>
           <Label label="Owner" />
-          <BaseListBox
-            value={owner}
-            label={owner?.name}
-            onChange={(value) => {
-              setOwner(value);
+
+          <AsyncSelect
+            className="relative flex items-center bg-white dark:bg-aa-700 purple:bg-pt-700 justify-between gap-2 w-full border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm min-w-[auto] md:min-w-[300px] py-1"
+            cacheOptions
+            defaultOptions
+            defaultValue={idea?.author?.name || idea?.guestName || idea?.name}
+            loadOptions={filterMembers}
+            placeholder="Search for an member"
+            isClearable
+            onChange={({ value }) => {
               if (value.isRegistered) {
                 updateIdea({ author: value._id });
               } else {
@@ -123,14 +199,15 @@ export default function DashboardIdeaActions() {
                 });
               }
             }}
-            field="name"
-            options={companyUsers}
-            size="xxl"
-            mobileSize="auto"
-            hidden="mobile"
-            type="user"
+            styles={memberSelectStyles}
           />
         </div>
+        {!!topics?.length && (
+          <div>
+            <Label label="Topics" />
+            <TopicSelection topics={topics} setTopics={setTopics} update={updateIdeaTopics} />
+          </div>
+        )}
         <div>
           <Label label="Roadmap" />
           <BaseListBox
@@ -143,7 +220,6 @@ export default function DashboardIdeaActions() {
             field="name"
             options={company?.roadmaps}
             size="xxl"
-            mobileSize="auto"
             hidden="mobile"
           />
         </div>
@@ -155,6 +231,7 @@ export default function DashboardIdeaActions() {
           <Label label="Visibility" />
           <IdeaVisibility />
         </div>
+
         <IdeaActions dashboard />
       </div>
     </div>

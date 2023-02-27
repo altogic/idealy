@@ -58,7 +58,7 @@ export default function IdeaActions({ dashboard }) {
   ];
 
   return (
-    <div className={!dashboard && 'bg-slate-50 dark:bg-aa-800 purple:bg-pt-900 p-4'}>
+    <div className={!dashboard ? 'bg-slate-50 dark:bg-aa-800 purple:bg-pt-900 p-4' : ''}>
       <p className="text-slate-900 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">
         Actions
       </p>

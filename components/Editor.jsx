@@ -2,13 +2,13 @@ import dynamic from 'next/dynamic';
 import 'quill-mention';
 import { useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
+import cn from 'classnames';
 import { formats, modules } from './EditorToolbar';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 const EditorToolbar = dynamic(() => import('./EditorToolbar'), { ssr: false });
-// Quill editor component
 
-export default function Editor({ content, setContent, errors, children, ...props }) {
+export default function Editor({ content, setContent, errors, children, dashboard, ...props }) {
   const [isEditorFocus, setIsEditorFocus] = useState();
 
   return (
@@ -19,9 +19,13 @@ export default function Editor({ content, setContent, errors, children, ...props
         onChange={setContent}
         modules={modules}
         formats={formats}
-        className={` border border-gray-300 dark:border-aa-600 purple:border-pt-600 focus:border-blue-300 ${
-          errors?.message ? 'border-red-300 focus:border-red-300' : ''
-        } ${isEditorFocus ? 'border-2 border-indigo-500' : ''} rounded-md`}
+        className={cn(
+          !dashboard
+            ? 'editor border border-gray-300 dark:border-aa-600 purple:border-pt-600 focus:border-blue-300'
+            : 'dashboard-editor',
+          !dashboard && errors?.message ? 'border-red-300 focus:border-red-300' : '',
+          !dashboard && isEditorFocus ? 'border-2 border-indigo-500' : ''
+        )}
         onFocus={() => setIsEditorFocus(true)}
         onBlur={() => setIsEditorFocus(false)}
         {...props}

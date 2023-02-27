@@ -27,13 +27,15 @@ export default function AdminDashboard() {
   const company = useSelector((state) => state.company.company);
   const countInfo = useSelector((state) => state.idea.countInfo);
   const sessionUser = useSelector((state) => state.auth.user);
+  const comments = useSelector((state) => state.comments.comments);
   const [isFilterSlide, setIsFilterSlide] = useState(false);
   const idea = useSelector((state) => state.idea.selectedIdea);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const [editedIdea, setEditedIdea] = useState(null);
   const [selectedComment, setSelectedComment] = useState(null);
   const [user, setUser] = useState();
-  const { sort, topicsFilter, statusFilter, categoryFilter, dateFilter } = useFilterIdea();
+  const { sort, topicsFilter, statusFilter, categoryFilter, dateFilter, segmentFilter } =
+    useFilterIdea();
 
   function handleCloseIdea() {
     const ideaId = router.query.feedback;
@@ -54,13 +56,22 @@ export default function AdminDashboard() {
           statusFilter ? `${statusFilter} && ` : ''
         } ${categoryFilter ? `${categoryFilter} && ` : ''} ${
           dateFilter ? `${dateFilter} && ` : ''
-        }`,
+        }${segmentFilter ? `${segmentFilter} && ` : ''}`,
         sort
       };
 
       dispatch(ideaActions.getIdeasByCompany(req));
     }
-  }, [company, router.query.page, sort, topicsFilter, statusFilter, categoryFilter, dateFilter]);
+  }, [
+    company,
+    router.query.page,
+    sort,
+    topicsFilter,
+    statusFilter,
+    categoryFilter,
+    dateFilter,
+    segmentFilter
+  ]);
 
   const handlePageChange = () => {
     router.push({
@@ -84,7 +95,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const ideaId = router.query.feedback;
     if (router.isReady && ideaId) {
-      if (idea?.commentCount) {
+      if (idea?.commentCount && _.isEmpty(comments)) {
         dispatch(commentActions.getComments({ ideaId, page: 1 }));
       }
       const scrollIdea = document.getElementById(ideaId);

@@ -26,6 +26,7 @@ import _ from 'lodash';
 import RequestAccess from '@/layouts/settings/RequestAccess';
 import Indicator from '@/components/Indicator';
 import { companyActions } from '@/redux/company/companySlice';
+import UserSegments from '@/layouts/settings/UserSegments';
 
 export default function Settings() {
   const [loading, setLoading] = useState(true);
@@ -192,6 +193,9 @@ export default function Settings() {
                       {/* Categories */}
                       <Tab.Panel>
                         <Categories />
+                      </Tab.Panel>
+                      <Tab.Panel>
+                        <UserSegments />
                       </Tab.Panel>
                       {/* Roadmaps */}
                       <Tab.Panel>

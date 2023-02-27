@@ -3,7 +3,7 @@ import { Filter, Pen, Search, Trash } from '@/components/icons';
 import Input from '@/components/Input';
 import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import { Router, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import SortListBox from '../SortListBox';
@@ -63,7 +63,7 @@ export default function IdeaFilter({ isFilterSlide, setIsFilterSlide }) {
         type="button"
         size="xs"
         onClick={() => {
-          Router.push({
+          router.push({
             pathname: router.pathname,
             query: { page: router.query.page, feedback: router.query.feedback }
           });

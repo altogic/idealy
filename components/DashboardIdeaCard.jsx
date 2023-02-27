@@ -32,6 +32,7 @@ export default function DashboardIdeaCard({ idea, selected, id }) {
         className="max-w-3xl text-slate-500 dark:text-aa-300 purple:text-pt-300 mb-6 text-sm tracking-sm text-left line-clamp-3"
         html={idea?.content}
       />
+
       <div className="flex items-center justify-between gap-2">
         <div className="inline-flex items-center gap-3">
           <span className="inline-flex items-center gap-1.5 text-slate-500 text-sm tracking-sm">
@@ -58,27 +59,23 @@ export default function DashboardIdeaCard({ idea, selected, id }) {
             {idea?.commentCount}
           </span>
         </div>
-        <div className="inline-flex items-center gap-3">
-          {idea?.status && (
-            <StatusBadge
-              className="whitespace-nowrap"
-              name={idea?.status?.name}
-              color={idea?.status?.color}
-            />
-          )}
-          {idea?.status && idea?.topics?.length > 0 && (
-            <svg className="h-2 w-2 text-slate-500" fill="currentColor" viewBox="0 0 8 8">
-              <circle cx={4} cy={4} r={3} />
-            </svg>
-          )}
-          {idea?.topics?.length > 0 && (
-            <div className="flex flex-wrap items-center gap-3">
-              {idea?.topics.map((topic) => (
-                <TopicBadges key={topic} badgeName={topic} />
-              ))}
-            </div>
-          )}
-        </div>
+
+        {idea?.status && (
+          <StatusBadge
+            className="whitespace-nowrap"
+            name={idea?.status?.name}
+            color={idea?.status?.color}
+          />
+        )}
+      </div>
+      <div className="mt-4">
+        {idea?.topics?.length > 0 && (
+          <div className="flex items-center justify-end gap-3">
+            {idea?.topics.map((topic) => (
+              <TopicBadges key={topic} badgeName={topic} />
+            ))}
+          </div>
+        )}
       </div>
     </button>
   );

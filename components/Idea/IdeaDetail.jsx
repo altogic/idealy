@@ -46,6 +46,7 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
 
   useEffect(() => {
     const ideaId = router.query.feedback;
+
     if (router.isReady && !!idea?.commentCount && !isFetched && ideaId) {
       setIsFetched(true);
       dispatch(commentActions.getComments({ ideaId, page: 1 }));
@@ -59,17 +60,6 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
       isMergeFetched.current = false;
     }
   }, [feedBackDetailModal]);
-
-  useEffect(() => {
-    const commentId = router.query.comment;
-
-    if (commentId) {
-      const comment = document.getElementById(commentId);
-      if (comment) {
-        comment.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  }, [feedBackDetailModal, router.query.comment]);
 
   useEffect(() => {
     if (

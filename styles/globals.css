@@ -51,12 +51,15 @@
     scrollbar-width: none; /* Firefox */
   }
 }
-.ql-editor {
+.editor .ql-editor {
   min-height: 200px !important;
   max-height: 300px;
-  overflow: hidden;
-  overflow-y: scroll;
-  overflow-x: scroll;
+  overflow: auto;
+}
+.dashboard-editor .ql-editor {
+  min-height: 100px !important;
+  max-height: 150px;
+  overflow: auto;
 }
 .ql-snow {
   border: none !important;
@@ -69,9 +72,6 @@
 }
 .ql-toolbar.ql-snow .ql-formats {
   margin-right: 0 !important;
-}
-.ql-editor {
-  overflow: hidden !important;
 }
 
 .ql-snow .ql-stroke {
@@ -228,4 +228,10 @@ html:has(:is(.modal, .drawer)) {
 .react-datepicker__close-icon::after {
   @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 !important;
   @apply bg-indigo-100 dark:bg-aa-900 purple:bg-pt-900 !important;
+}
+.react-datepicker__children-container {
+  @apply w-full grid grid-cols-2 gap-2 p-4 !important;
+}
+.react-datepicker {
+  width: 484px !important;
 }
