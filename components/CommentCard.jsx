@@ -60,7 +60,7 @@ export default function CommentCard({ comment, dashboard }) {
 
   return (
     <div
-      id={comment._id}
+      id={comment?._id}
       className={cn(
         'group mt-2 rounded',
         !dashboard && 'bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 p-8 '
