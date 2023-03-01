@@ -51,14 +51,24 @@
     scrollbar-width: none; /* Firefox */
   }
 }
+.dashboard-editor,
+.editor-focus {
+  flex: 1;
+}
 .editor .ql-editor {
   min-height: 200px !important;
   max-height: 300px;
   overflow: auto;
 }
+.editor-focus .ql-editor {
+  min-height: 150px !important;
+  max-height: 200px;
+  overflow: auto;
+  flex: 1;
+}
 .dashboard-editor .ql-editor {
-  min-height: 100px !important;
-  max-height: 150px;
+  min-height: 50px !important;
+  max-height: 75px;
   overflow: auto;
 }
 .ql-snow {
@@ -68,6 +78,12 @@
   position: absolute;
   bottom: 0;
   right: 2px;
+  z-index: 40;
+}
+.ql-toolbar.ql-snow.dashboard-toolbar {
+  position: absolute;
+  bottom: 0;
+  left: 50px;
   z-index: 40;
 }
 .ql-toolbar.ql-snow .ql-formats {

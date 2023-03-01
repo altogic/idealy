@@ -1,4 +1,3 @@
-import DashboardIdeaDetail from '@/components/dashboard/DashboardIdeaDetail';
 import FilterSave from '@/components/dashboard/FilterSave';
 import IdeaFilter from '@/components/dashboard/IdeaFilter';
 import DashboardIdeaCard from '@/components/DashboardIdeaCard';
@@ -14,11 +13,15 @@ import { commentActions } from '@/redux/comments/commentsSlice';
 import { companyActions } from '@/redux/company/companySlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import _ from 'lodash';
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+const DashboardIdeaDetail = dynamic(() => import('@/components/dashboard/DashboardIdeaDetail'), {
+  ssr: false
+});
 export default function AdminDashboard() {
   // List Box States
   const router = useRouter();
@@ -27,15 +30,21 @@ export default function AdminDashboard() {
   const company = useSelector((state) => state.company.company);
   const countInfo = useSelector((state) => state.idea.countInfo);
   const sessionUser = useSelector((state) => state.auth.user);
-  const comments = useSelector((state) => state.comments.comments);
   const [isFilterSlide, setIsFilterSlide] = useState(false);
   const idea = useSelector((state) => state.idea.selectedIdea);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const [editedIdea, setEditedIdea] = useState(null);
   const [selectedComment, setSelectedComment] = useState(null);
   const [user, setUser] = useState();
-  const { sort, topicsFilter, statusFilter, categoryFilter, dateFilter, segmentFilter } =
-    useFilterIdea();
+  const {
+    sort,
+    topicsFilter,
+    statusFilter,
+    categoryFilter,
+    dateFilter,
+    segmentFilter,
+    searchFilter
+  } = useFilterIdea();
 
   function handleCloseIdea() {
     const ideaId = router.query.feedback;
@@ -56,7 +65,9 @@ export default function AdminDashboard() {
           statusFilter ? `${statusFilter} && ` : ''
         } ${categoryFilter ? `${categoryFilter} && ` : ''} ${
           dateFilter ? `${dateFilter} && ` : ''
-        }${segmentFilter ? `${segmentFilter} && ` : ''}`,
+        }${segmentFilter ? `${segmentFilter} && ` : ''}${
+          searchFilter ? `${searchFilter} && ` : ''
+        } `,
         sort
       };
 
@@ -70,7 +81,8 @@ export default function AdminDashboard() {
     statusFilter,
     categoryFilter,
     dateFilter,
-    segmentFilter
+    segmentFilter,
+    searchFilter
   ]);
 
   const handlePageChange = () => {
@@ -94,23 +106,15 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const ideaId = router.query.feedback;
-    if (router.isReady && ideaId) {
-      if (idea?.commentCount && _.isEmpty(comments)) {
-        dispatch(commentActions.getComments({ ideaId, page: 1 }));
-      }
+    if (router.isReady && ideaId && _.isEmpty(idea)) {
       const scrollIdea = document.getElementById(ideaId);
       if (scrollIdea) {
         scrollIdea.scrollIntoView({ behavior: 'smooth', block: 'center' });
         dispatch(ideaActions.setSelectedIdea(ideas.find((idea) => idea._id === ideaId)));
+        dispatch(commentActions.getComments({ ideaId, page: 1 }));
       }
     }
-  }, [router.query.feedback, idea]);
-
-  useEffect(() => {
-    if (ideas && _.isEmpty(idea)) {
-      dispatch(ideaActions.setSelectedIdea(ideas[0]));
-    }
-  }, [ideas]);
+  }, [router.query.feedback, ideas]);
 
   useEffect(() => {
     if (company) {
@@ -141,7 +145,7 @@ export default function AdminDashboard() {
         <meta name="description" content="Altogic Canny Alternative Admin Dashboard" />
       </Head>
       <Layout>
-        <div className="grid grid-cols-[500px,1fr] 4xl:grid-cols-[300px,499px,1fr] h-[calc(100vh-88px)] -mx-4">
+        <div className="grid grid-cols-[500px,1fr] 2xl:grid-cols-[300px,499px,1fr] h-[calc(100vh-88px)] -mx-4">
           <FilterSave
             className="hidden 2xl:block h-[calc(100vh-88px)] bg-slate-50 dark:bg-aa-900 purple:bg-pt-1000 px-6 py-8 space-y-8 border-r border-slate-200 dark:border-aa-600 purple:border-pt-800 overflow-y-auto shadow-lg"
             filters={user?.savedFilters}

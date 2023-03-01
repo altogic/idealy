@@ -1,8 +1,12 @@
 import { Switch } from '@headlessui/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function IdeaSwitch({ checked, onChange, text }) {
-  const [_checked] = useState(checked);
+  const [_checked, setChecked] = useState();
+
+  useEffect(() => {
+    setChecked(checked);
+  }, [checked]);
 
   return (
     <div className="flex justify-between gap-4 py-3">

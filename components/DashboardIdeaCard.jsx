@@ -1,11 +1,12 @@
+import useRouteIdea from '@/hooks/useRouteIdea';
+import { commentActions } from '@/redux/comments/commentsSlice';
+import cn from 'classnames';
 import { useDispatch } from 'react-redux';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import cn from 'classnames';
-import useRouteIdea from '@/hooks/useRouteIdea';
 import { Comment } from './icons';
+import SanitizeHtml from './SanitizeHtml';
 import StatusBadge from './StatusBadge';
 import TopicBadges from './TopicBadges';
-import SanitizeHtml from './SanitizeHtml';
 
 export default function DashboardIdeaCard({ idea, selected, id }) {
   const dispatch = useDispatch();
@@ -18,11 +19,12 @@ export default function DashboardIdeaCard({ idea, selected, id }) {
       className={cn(
         'px-8 py-6 text-left  border-transparent transition hover:shadow-md',
         selected
-          ? 'border-2 border-indigo-700 dark:border-aa-100 purple:border-pt-100'
+          ? 'border-2 border-indigo-700 dark:border-aa-100 purple:border-pt-100 bg-indigo-50 dark:bg-aa-800 purple:bg-pt-900'
           : 'hover:bg-slate-50 dark:hover:bg-aa-800 purple:hover:bg-pt-900'
       )}
       onClick={() => {
         dispatch(ideaActions.setSelectedIdea(idea));
+        dispatch(commentActions.getComments({ ideaId: idea?._id, page: 1 }));
         routeIdea(idea?._id);
       }}>
       <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 mb-2 text-base font-medium tracking-sm max-w-[420px] lg:truncate">

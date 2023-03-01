@@ -1,20 +1,16 @@
-/* eslint-disable react/jsx-no-bind */
-/* eslint-disable react/no-unstable-nested-components */
 import BaseListBox from '@/components/BaseListBox';
 import CreateModal from '@/components/CreateModal';
-import { Check, FilterHamburger, ThreeStar } from '@/components/icons';
+import { FilterHamburger, ThreeStar } from '@/components/icons';
 import Label from '@/components/Label';
 import { DATA_RANGE } from '@/constants/index';
 import { authActions } from '@/redux/auth/authSlice';
-import { companyActions } from '@/redux/company/companySlice';
 import { Tab } from '@headlessui/react';
 import cn from 'classnames';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '../Button';
+import DatePicker from '../DatePicker';
 import Divider from '../Divider';
 import FilterCheckboxes from '../FilterCheckboxes';
 
@@ -22,77 +18,29 @@ export default function FilterSave({ className, filters }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const [selectedSegment, setSelectedSegment] = useState();
   const [isCreateNewTopic, setIsCreateNewTopic] = useState(false);
+  const [userSegments, setUserSegments] = useState([]);
   const [topics, setTopics] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [categories, setCategories] = useState([]);
   const company = useSelector((state) => state.company.company);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [date, setDate] = useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: 'selection'
+    }
+  ]);
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [dataRange, setDataRange] = useState(DATA_RANGE[0]?.name);
   const [modalInfo, setModalInfo] = useState({});
 
-  const handleFilterTopicChange = (e, topic) => {
-    if (e.target.checked) {
-      setTopics([...topics, topic.name]);
-    } else {
-      const newTopics = topics.filter((item) => item !== topic.name);
-      if (newTopics.length === 0) {
-        delete router.query.topics;
-        router.push({
-          pathname: router.pathname,
-          query: {
-            ...router.query
-          }
-        });
-      }
-
-      setTopics(newTopics);
-    }
-  };
-
-  const handleFilterStatusChange = (e, status) => {
-    if (e.target.checked) {
-      setStatuses([...statuses, status.name]);
-    } else {
-      const newStatuses = statuses.filter((item) => item !== status.name);
-      if (newStatuses.length === 0) {
-        delete router.query.status;
-        router.push({
-          pathname: router.pathname,
-          query: {
-            ...router.query
-          }
-        });
-      }
-      setStatuses(newStatuses);
-    }
-  };
-  const handleFilterCategoryChange = (e, category) => {
-    if (e.target.checked) {
-      setCategories([...categories, category.name]);
-    } else {
-      const newCategories = categories.filter((item) => item !== category.name);
-      if (newCategories.length === 0) {
-        delete router.query.category;
-        router.push({
-          pathname: router.pathname,
-          query: {
-            ...router.query
-          }
-        });
-      }
-      setCategories(newCategories);
-    }
-  };
   const saveFilter = (name) => {
     const req = {
       _parent: user._id,
       name,
-      startDate,
-      endDate,
+      startDate: date[0].startDate,
+      endDate: date[0].endDate,
       dataRange,
       sortType: router.query.sort,
       topics: company.topics
@@ -107,24 +55,14 @@ export default function FilterSave({ className, filters }) {
     };
     dispatch(authActions.saveFilter(req));
   };
-  const addCompanySubList = (name, fieldName) => {
-    dispatch(
-      companyActions.addItemToCompanySubLists({
-        fieldName,
-        value: {
-          name,
-          color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-          order: company[fieldName].length + 1
-        }
-      })
-    );
-  };
+
   const handleFilterSelect = (value) => {
     setSelectedFilter(value);
     router.push({
       pathname: router.pathname,
       query: {
         ...router.query,
+        filter: value._id,
         dataRange: value.dataRange,
         startDate: value.startDate,
         endDate: value.endDate,
@@ -143,27 +81,7 @@ export default function FilterSave({ className, filters }) {
       }
     });
   };
-  const handleSelectSegment = (segment) => {
-    setSelectedSegment(segment);
-    router.push({
-      pathname: router.pathname,
-      query: {
-        ...router.query,
-        segment: segment.name
-      }
-    });
-  };
-  const openModal = (name, id, field) => {
-    setIsCreateNewTopic(!isCreateNewTopic);
-    setModalInfo({
-      title: `Create new ${name}`,
-      description: `Enter a name for your new ${name}`,
-      label: name,
-      id,
-      placeholder: `e.g. New ${name}`,
-      createOnClick: (name) => addCompanySubList(name, field)
-    });
-  };
+
   const onChange = (dates) => {
     if (dates[0] === null) {
       delete router.query.startDate;
@@ -175,21 +93,19 @@ export default function FilterSave({ className, filters }) {
         }
       });
     }
-    const [start, end] = dates;
-    setStartDate(start);
-    setEndDate(end);
-    if (start && end) {
+    const { startDate, endDate } = dates[0];
+    setDate([{ startDate, endDate, key: 'selection' }]);
+    if (startDate && endDate) {
       router.push({
         pathname: router.pathname,
         query: {
           ...router.query,
           dataRange,
-          startDate: start.toISOString(),
-          endDate: end.toISOString()
+          startDate: new Date(startDate).toISOString(),
+          endDate: new Date(endDate).toISOString()
         }
       });
     }
-    // close date picker
   };
 
   useEffect(() => {
@@ -217,6 +133,18 @@ export default function FilterSave({ className, filters }) {
   }, [statuses]);
 
   useEffect(() => {
+    if (userSegments.length) {
+      router.push({
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          segment: userSegments.join(',')
+        }
+      });
+    }
+  }, [userSegments]);
+
+  useEffect(() => {
     if (categories.length) {
       router.push({
         pathname: router.pathname,
@@ -229,24 +157,21 @@ export default function FilterSave({ className, filters }) {
   }, [categories]);
 
   useEffect(() => {
-    if (!topics.length && router.query.topics) {
-      setTopics(router.query.topics.split(','));
-    }
-    if (!statuses.length && router.query.status) {
-      setStatuses(router.query.status.split(','));
-    }
-    if (!categories.length && router.query.category) {
-      setCategories(router.query.category.split(','));
-    }
-    if (router.query.nullDate) {
-      setStartDate(new Date(router.query.startDate));
-    }
-    if (router.query.endDate) {
-      setEndDate(new Date(router.query.endDate));
-    }
-    if (router.query.dataRange) {
-      setDataRange(router.query.dataRange);
-    }
+    setUserSegments(router.query.segment ? router.query.segment.split(',') : []);
+    setTopics(router.query.topics ? router.query.topics.split(',') : []);
+    setStatuses(router.query.status ? router.query.status.split(',') : []);
+    setCategories(router.query.category ? router.query.category.split(',') : []);
+    setDate([
+      {
+        startDate: router.query.startDate ? new Date(router.query.startDate) : null,
+        endDate: router.query.endDate ? new Date(router.query.endDate) : null,
+        key: 'selection'
+      }
+    ]);
+    setDataRange(router.query.dataRange ? router.query.dataRange : DATA_RANGE[0]?.name);
+    setSelectedFilter(
+      router.query.filter ? filters.find((filter) => filter._id === router.query.filter) : null
+    );
   }, [router]);
 
   return (
@@ -269,19 +194,7 @@ export default function FilterSave({ className, filters }) {
           />
         </div>
       )}
-      <div className="space-y-1.5">
-        <Label label="User Segment" />
-        <BaseListBox
-          value={selectedSegment}
-          icon={<Check className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
-          label={selectedSegment?.name}
-          onChange={handleSelectSegment}
-          field="name"
-          options={company?.userSegments}
-          size="xl"
-          hidden="mobile"
-        />
-      </div>
+
       <div className="space-y-1.5">
         <Label label="Data Range" />
         <Tab.Group
@@ -296,7 +209,7 @@ export default function FilterSave({ className, filters }) {
               }
             });
           }}>
-          <Tab.List className="lg:flex gap-1 fixed lg:static w-full lg:w-auto transform pb-3">
+          <Tab.List className="lg:flex gap-1 lg:static w-full lg:w-auto transform pb-3">
             {DATA_RANGE.map((item) => (
               <Tab
                 key={item.id}
@@ -313,218 +226,44 @@ export default function FilterSave({ className, filters }) {
             ))}
           </Tab.List>
           <Tab.Panels>
-            <Tab.Panel>
-              <DatePicker
-                selected={startDate}
-                onChange={onChange}
-                startDate={startDate}
-                endDate={endDate}
-                selectsRange
-                monthsShown={2}
-                isClearable
-                placeholderText="Select a date range"
-                dayClassName={() => 'text-slate-500 dark:text-aa-200 purple:text-pt-200'}
-                calendarClassName="bg-white dark:bg-aa-700 purple:bg-pt-700 text-slate-500 dark:text-aa-200 purple:text-pt-200"
-                className="bg-white dark:bg-aa-700 purple:bg-pt-700 text-slate-500 dark:text-aa-200 purple:text-pt-200  w-full border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-pointer px-[14px] py-3.5 placeholder:text-slate-500 dark:placeholder:text-aa-200 purple:placeholder:text-pt-200">
-                <Button
-                  variant="indigo"
-                  size="xs"
-                  text="This week"
-                  onClick={() => {
-                    const start = new Date();
-                    const end = new Date();
-                    start.setDate(start.getDate() - start.getDay());
-                    end.setDate(end.getDate() - end.getDay() + 6);
-
-                    onChange([start, end]);
-                  }}
-                />
-                <Button
-                  variant="indigo"
-                  size="xs"
-                  text="This month"
-                  onClick={() => {
-                    const start = new Date();
-                    const end = new Date();
-                    start.setDate(1);
-                    end.setMonth(end.getMonth() + 1);
-                    end.setDate(0);
-
-                    onChange([start, end]);
-                  }}
-                />
-                <Button
-                  variant="indigo"
-                  size="xs"
-                  text="This year"
-                  onClick={() => {
-                    const start = new Date();
-                    const end = new Date();
-                    start.setMonth(0);
-                    start.setDate(1);
-                    end.setMonth(11);
-                    end.setDate(31);
-
-                    onChange([start, end]);
-                  }}
-                />
-                <Button
-                  variant="indigo"
-                  size="xs"
-                  text="Last 7 days"
-                  onClick={() => {
-                    const start = new Date();
-                    const end = new Date();
-                    start.setDate(start.getDate() - 7);
-
-                    onChange([start, end]);
-                  }}
-                />
-                <Button
-                  variant="indigo"
-                  size="xs"
-                  text="Last 30 days"
-                  onClick={() => {
-                    const start = new Date();
-                    const end = new Date();
-                    start.setDate(start.getDate() - 30);
-
-                    onChange([start, end]);
-                  }}
-                />
-
-                <Button
-                  variant="indigo"
-                  size="xs"
-                  text="All time"
-                  onClick={() => {
-                    onChange([null, null]);
-                  }}
-                />
-              </DatePicker>
+            <Tab.Panel className="h-[50px]">
+              <DatePicker onChange={onChange} value={date} />
             </Tab.Panel>
-            <Tab.Panel>
-              <DatePicker
-                selected={startDate}
-                onChange={onChange}
-                startDate={startDate}
-                endDate={endDate}
-                selectsRange
-                monthsShown={2}
-                isClearable
-                placeholderText="Select a date range"
-                dayClassName={() => 'text-slate-500 dark:text-aa-200 purple:text-pt-200'}
-                calendarClassName="bg-white dark:bg-aa-700 purple:bg-pt-700 text-slate-500 dark:text-aa-200 purple:text-pt-200"
-                className="bg-white dark:bg-aa-700 purple:bg-pt-700 text-slate-500 dark:text-aa-200 purple:text-pt-200  w-full border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-pointer px-[14px] py-3.5 placeholder:text-slate-500 dark:placeholder:text-aa-200 purple:placeholder:text-pt-200">
-                <Button
-                  variant="indigo"
-                  size="xs"
-                  text="This week"
-                  onClick={() => {
-                    const start = new Date();
-                    const end = new Date();
-                    start.setDate(start.getDate() - start.getDay());
-                    end.setDate(end.getDate() - end.getDay() + 6);
-
-                    onChange([start, end]);
-                  }}
-                />
-                <Button
-                  variant="indigo"
-                  size="xs"
-                  text="This month"
-                  onClick={() => {
-                    const start = new Date();
-                    const end = new Date();
-                    start.setDate(1);
-                    end.setMonth(end.getMonth() + 1);
-                    end.setDate(0);
-
-                    onChange([start, end]);
-                  }}
-                />
-                <Button
-                  variant="indigo"
-                  size="xs"
-                  text="This year"
-                  onClick={() => {
-                    const start = new Date();
-                    const end = new Date();
-                    start.setMonth(0);
-                    start.setDate(1);
-                    end.setMonth(11);
-                    end.setDate(31);
-
-                    onChange([start, end]);
-                  }}
-                />
-                <Button
-                  variant="indigo"
-                  size="xs"
-                  text="Last 7 days"
-                  onClick={() => {
-                    const start = new Date();
-                    const end = new Date();
-                    start.setDate(start.getDate() - 7);
-
-                    onChange([start, end]);
-                  }}
-                />
-                <Button
-                  variant="indigo"
-                  size="xs"
-                  text="Last 30 days"
-                  onClick={() => {
-                    const start = new Date();
-                    const end = new Date();
-                    start.setDate(start.getDate() - 30);
-
-                    onChange([start, end]);
-                  }}
-                />
-
-                <Button
-                  variant="indigo"
-                  size="xs"
-                  text="All time"
-                  onClick={() => {
-                    onChange([null, null]);
-                  }}
-                />
-              </DatePicker>
-            </Tab.Panel>
+            <Tab.Panel />
           </Tab.Panels>
         </Tab.Group>
       </div>
 
-      <Divider />
+      <FilterCheckboxes
+        options={company?.userSegments}
+        onChange={setUserSegments}
+        label="User Segments"
+        name="userSegments"
+        selectedItems={userSegments}
+      />
+
       <FilterCheckboxes
         options={company?.topics}
-        onChange={handleFilterTopicChange}
+        onChange={setTopics}
         label="Topics"
-        openModal={() => openModal('Topic', 'topicName', 'topics')}
         name="topics"
         selectedItems={topics}
-        setItems={setTopics}
       />
+
       <FilterCheckboxes
         options={company?.statuses}
-        onChange={handleFilterStatusChange}
+        onChange={setStatuses}
         label="Statuses"
-        openModal={() => openModal('Status', 'statusName', 'statuses')}
         name="status"
         selectedItems={statuses}
-        setItems={setStatuses}
       />
 
       <FilterCheckboxes
         options={company?.categories}
-        onChange={handleFilterCategoryChange}
+        onChange={setCategories}
         label="Categories"
-        openModal={() => openModal('Category', 'categoryName', 'categories')}
         name="category"
         selectedItems={categories}
-        setItems={setCategories}
       />
 
       <Divider />

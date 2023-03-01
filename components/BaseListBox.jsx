@@ -1,9 +1,9 @@
-import React, { Fragment, useState } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
+import { CheckIcon, XIcon } from '@heroicons/react/outline';
 import cn from 'classnames';
-import { CheckIcon } from '@heroicons/react/outline';
-import { ChevronDown } from './icons';
+import { Fragment, useEffect, useState } from 'react';
 import Avatar from './Avatar';
+import { ChevronDown } from './icons';
 
 export default function BaseListBox({
   value,
@@ -18,9 +18,15 @@ export default function BaseListBox({
   labelIcon,
   size = 'md',
   type = 'default',
+  onReset,
   ...props
 }) {
-  const [_value] = useState(value);
+  const [_value, setValue] = useState();
+
+  useEffect(() => {
+    setValue(value);
+  }, [value]);
+
   return (
     <Listbox value={_value} onChange={onChange} multiple={multiple} {...props}>
       <div className="relative">
@@ -61,9 +67,9 @@ export default function BaseListBox({
                       {' '}
                       {label}
                     </span>
-                    {multiple && (
+                    {multiple && !!_value?.length && (
                       <span className="inline-flex items-center justify-center w-5 h-5 bg-indigo-700 dark:bg-aa-600 purple:bg-pt-600 text-white dark:text-aa-200 rounded-full">
-                        {_value?.length || 0}
+                        {_value?.length}
                       </span>
                     )}
                   </div>
@@ -73,8 +79,13 @@ export default function BaseListBox({
                   Please select
                 </span>
               )}
-              <span className="flex items-center">
-                <span className="sr-only">Open options</span>
+
+              <span className="flex items-center gap-2">
+                {multiple && !!value?.length && (
+                  <button type="button" onClick={onReset}>
+                    <XIcon className="w-5 h-5 text-gray-400 dark:text-aa-200 purple:text-pt-200" />
+                  </button>
+                )}
                 <ChevronDown
                   className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200"
                   aria-hidden="true"
@@ -91,7 +102,7 @@ export default function BaseListBox({
           leaveTo="opacity-0">
           <Listbox.Options
             className={cn(
-              'absolute mt-1  overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50',
+              'absolute mt-1 max-h-64 overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50 border border-slate-300 dark:border-aa-400 purple:border-pt-400',
               size === 'sm' && 'w-[120px]',
               size === 'md' && 'w-[160px]',
               size === 'lg' && 'max-w-[195px] max-h-60  w-full',

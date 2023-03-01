@@ -2,7 +2,6 @@ import Button from '@/components/Button';
 import { Filter, Pen, Search, Trash } from '@/components/icons';
 import Input from '@/components/Input';
 import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
-import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -17,8 +16,17 @@ export default function IdeaFilter({ isFilterSlide, setIsFilterSlide }) {
     let timer;
     if (searchText) {
       timer = setTimeout(() => {
-        dispatch(ideaActions.searchIdeas(searchText));
+        router.push({
+          pathname: router.pathname,
+          query: { ...router.query, search: searchText }
+        });
       }, 500);
+    } else {
+      delete router.query.search;
+      router.push({
+        pathname: router.pathname,
+        query: { ...router.query }
+      });
     }
 
     return () => {

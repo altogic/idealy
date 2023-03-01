@@ -1,22 +1,19 @@
 import { useRouter } from 'next/router';
-import Button from './Button';
-import Checkbox from './Checkbox';
-import { Plus } from './icons';
-import Label from './Label';
-import StatusBadge from './StatusBadge';
+import BaseListBox from './BaseListBox';
+import { FilterHamburger } from './icons';
 
 export default function FilterCheckboxes({
   options,
   label,
   onChange,
-  openModal,
+
   name,
-  selectedItems,
-  setItems
+
+  selectedItems
 }) {
   const router = useRouter();
   const handleReset = () => {
-    setItems([]);
+    onChange([]);
     delete router.query[name];
     router.push({
       pathname: router.pathname,
@@ -27,36 +24,26 @@ export default function FilterCheckboxes({
   };
   return (
     <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <Label label={label} />
-        <Button variant="text" text="Reset" onClick={handleReset} />
-      </div>
-      <div className="space-y-3 h-64 overflow-auto  px-2">
-        {options?.map((item) => (
-          <div className="relative flex items-center" key={item?._id}>
-            <div key={item?._id} className="flex items-center">
-              <Checkbox
-                label={name !== 'status' ? item?.name : null}
-                checked={selectedItems.includes(item.name)}
-                name={name}
-                onChange={(e) => onChange(e, item)}
-                labelBackground
-              />
-              {name === 'status' && (
-                <div className="ml-2">
-                  <StatusBadge name={item.name} color={item.color} className="whitespace-nowrap" />
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-      <Button
-        variant="text"
-        text={`Add ${label}`}
-        icon={<Plus className="w-4 h-4 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
-        onClick={openModal}
-      />
+      {!!options?.length && (
+        <div className="space-y-3">
+          <BaseListBox
+            value={selectedItems}
+            onChange={onChange}
+            field="name"
+            options={options}
+            icon={
+              <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+            }
+            label={label}
+            valueField="name"
+            multiple
+            size="xl"
+            hidden="mobile"
+            type={label !== 'Topic' ? 'status' : 'default'}
+            onReset={handleReset}
+          />
+        </div>
+      )}
     </div>
   );
 }

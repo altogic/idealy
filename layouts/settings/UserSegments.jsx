@@ -91,6 +91,7 @@ export default function UserSegments() {
                 text="Add User Segment"
                 variant="indigo"
                 height="44"
+                size="sm"
               />
             </div>
           </form>
