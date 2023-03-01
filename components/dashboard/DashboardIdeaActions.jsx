@@ -4,15 +4,18 @@ import ideaService from '@/services/idea';
 import ToastMessage from '@/utils/toast';
 import copy from 'copy-to-clipboard';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import AsyncSelect from 'react-select/async';
+import { companyActions } from '@/redux/company/companySlice';
 import BaseListBox from '../BaseListBox';
-import { Copy } from '../icons';
+import { Copy, ThreeStar } from '../icons';
 import IdeaActions from '../Idea/admin/IdeaActions';
 import IdeaPriority from '../Idea/IdeaPriority';
 import IdeaVisibility from '../Idea/IdeaVisibility';
 import TopicSelection from '../Idea/TopicSelection';
 import Input from '../Input';
+import CreateModal from '../CreateModal';
+import IdeaActionItem from './IdeaActionItem';
 
 const memberSelectStyles = {
   control: (provided) => ({
@@ -44,17 +47,18 @@ const memberSelectStyles = {
 };
 
 export default function DashboardIdeaActions() {
-  const company = useSelector((state) => state.company.company);
+  const dispatch = useDispatch();
 
+  const company = useSelector((state) => state.company.company);
   const idea = useSelector((state) => state.idea.selectedIdea);
   const [status, setStatus] = useState();
   const [category, setCategory] = useState();
-
   const [roadMap, setRoadMap] = useState();
   const [copyText, setCopyText] = useState('');
   const [topics, setTopics] = useState();
   const [segments, setSegments] = useState();
-
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [modalInfo, setModalInfo] = useState({});
   const updateIdea = useUpdateIdea(idea);
 
   const handleCopyText = (e) => {
@@ -104,13 +108,35 @@ export default function DashboardIdeaActions() {
       label: member.name
     }));
   };
-
+  const addCompanySubList = (name, fieldName) => {
+    dispatch(
+      companyActions.addItemToCompanySubLists({
+        fieldName,
+        value: {
+          name,
+          color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+          order: company[fieldName].length + 1
+        }
+      })
+    );
+  };
+  const openModal = (name, id, field) => {
+    setOpenCreateModal(!openCreateModal);
+    setModalInfo({
+      title: `Create new ${name}`,
+      description: `Enter a name for your new ${name}`,
+      label: name,
+      id,
+      placeholder: `e.g. New ${name}`,
+      createOnClick: (name) => addCompanySubList(name, field)
+    });
+  };
   return (
-    <div className="h-[calc(100vh-181px)] p-6 overflow-y-auto">
+    <div className="h-[calc(100vh-181px)] p-6">
       <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 mb-4 text-base font-semibold tracking-sm">
         Feedback Details
       </h2>
-      <div className="space-y-4">
+      <div className="space-y-8 max-h-[90%] overflow-y-auto">
         <div>
           <Label label="Public Link" />
           <div className="flex h-10">
@@ -131,8 +157,10 @@ export default function DashboardIdeaActions() {
             </button>
           </div>
         </div>
-        <div>
-          <Label label="Status" />
+        <IdeaActionItem
+          label="Statuses"
+          name="status"
+          openModal={() => openModal('Status', 'statusName', 'statuses')}>
           <BaseListBox
             value={status}
             label={status?.name}
@@ -146,9 +174,11 @@ export default function DashboardIdeaActions() {
             hidden="mobile"
             type="status"
           />
-        </div>
-        <div>
-          <Label label="Category" />
+        </IdeaActionItem>
+        <IdeaActionItem
+          label="Categories"
+          name="category"
+          openModal={() => openModal('Category', 'categoryName', 'categories')}>
           <BaseListBox
             value={category}
             label={category?.name}
@@ -160,10 +190,13 @@ export default function DashboardIdeaActions() {
             options={company?.categories}
             size="xxl"
             hidden="mobile"
+            type="status"
           />
-        </div>
-        <div>
-          <Label label="User Segments" />
+        </IdeaActionItem>
+        <IdeaActionItem
+          label="User Segments"
+          name="user segments"
+          openModal={() => openModal('User Segment', 'userSegmentName', 'userSegments')}>
           <BaseListBox
             value={segments}
             label={segments?.name}
@@ -172,14 +205,13 @@ export default function DashboardIdeaActions() {
               updateIdea({ userSegments: value._id });
             }}
             field="name"
+            type="status"
             options={company?.userSegments}
             size="xxl"
             hidden="mobile"
           />
-        </div>
-        <div>
-          <Label label="Owner" />
-
+        </IdeaActionItem>
+        <IdeaActionItem label="Owner" name="owner">
           <AsyncSelect
             className="relative flex items-center bg-white dark:bg-aa-700 purple:bg-pt-700 justify-between gap-2 w-full border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm min-w-[auto] md:min-w-[300px] py-1"
             cacheOptions
@@ -201,15 +233,19 @@ export default function DashboardIdeaActions() {
             }}
             styles={memberSelectStyles}
           />
-        </div>
-        {!!topics?.length && (
-          <div>
-            <Label label="Topics" />
+        </IdeaActionItem>
+        <IdeaActionItem
+          label="Topics"
+          name="topic"
+          openModal={() => openModal('Topic', 'topicName', 'topics')}>
+          {!!topics?.length && (
             <TopicSelection topics={topics} setTopics={setTopics} update={updateIdeaTopics} />
-          </div>
-        )}
-        <div>
-          <Label label="Roadmap" />
+          )}
+        </IdeaActionItem>
+        <IdeaActionItem
+          label="Roadmaps"
+          name="roadmap"
+          openModal={() => openModal('Roadmap', 'roadmapName', 'roadmaps')}>
           <BaseListBox
             value={roadMap}
             label={roadMap?.name}
@@ -222,18 +258,27 @@ export default function DashboardIdeaActions() {
             size="xxl"
             hidden="mobile"
           />
-        </div>
-        <div>
-          <Label label="Priority" />
+        </IdeaActionItem>
+        <IdeaActionItem label="Priority" name="priority">
           <IdeaPriority />
-        </div>
-        <div>
-          <Label label="Visibility" />
+        </IdeaActionItem>
+        <IdeaActionItem label="Visibility" name="visibility">
           <IdeaVisibility />
-        </div>
-
-        <IdeaActions dashboard />
+        </IdeaActionItem>
       </div>
+      <IdeaActions dashboard />
+      <CreateModal
+        show={openCreateModal}
+        onClose={() => setOpenCreateModal(!openCreateModal)}
+        cancelOnClick={() => setOpenCreateModal(!openCreateModal)}
+        createOnClick={modalInfo.createOnClick}
+        icon={<ThreeStar className="w-6 h-6 text-green-600" />}
+        title={modalInfo.title}
+        description={modalInfo.description}
+        label={modalInfo.label}
+        id={modalInfo.id}
+        placeholder={modalInfo.placeholder}
+      />
     </div>
   );
 }

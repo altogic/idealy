@@ -34,7 +34,6 @@ export default function CompanyPriority() {
       <BaseListBox
         value={prioritySelected}
         onChange={(selected) => {
-          console.log(selected);
           setPrioritySelected(selected);
           updateCompanyPriority('priorityType', selected);
         }}

@@ -5,9 +5,9 @@ export default function TopicSelection({ topics, setTopics, update, errors }) {
   const { company } = useSelector((state) => state.company);
 
   return (
-    <div className="mt-8">
-      <span className="inline-block text-slate-600 dark:text-aa-300 purple:text-pt-300 mb-4 text-base tracking-sm">
-        Choose up to 3 Topics for this Idea (optional)
+    <div>
+      <span className="inline-block text-slate-600 dark:text-aa-300 purple:text-pt-300 mb-4 text-sm tracking-sm">
+        Choose up to 3 Topics for this Idea
       </span>
       <div className="flex flex-wrap items-center gap-4">
         {company?.topics?.map((topic) => (

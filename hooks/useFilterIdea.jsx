@@ -9,6 +9,7 @@ export default function useFilterIdea() {
   const [categoryFilter, setCategoryFilter] = useState('');
   const [dateFilter, setDateFilter] = useState();
   const [segmentFilter, setSegmentFilter] = useState();
+  const [searchFilter, setSearchFilter] = useState();
   const router = useRouter();
 
   const getTopicsFilter = (filterTopics) => {
@@ -43,7 +44,8 @@ export default function useFilterIdea() {
     return '';
   };
   useEffect(() => {
-    const { sort, topics, status, category, startDate, endDate, dataRange, segment } = router.query;
+    const { sort, topics, status, category, startDate, endDate, dataRange, segment, search } =
+      router.query;
     if (sort) {
       const sortType = IDEA_SORT_TYPES.find((s) => s.url === sort);
       setSortType(sortType?.query);
@@ -80,7 +82,20 @@ export default function useFilterIdea() {
     } else {
       setSegmentFilter('');
     }
-  }, [router.query]);
+    if (search) {
+      setSearchFilter(`INCLUDES(this.title, '${search}')`);
+    } else {
+      setSearchFilter('');
+    }
+  }, [router.asPath]);
 
-  return { sort: sortType, topicsFilter, statusFilter, categoryFilter, dateFilter, segmentFilter };
+  return {
+    sort: sortType,
+    topicsFilter,
+    statusFilter,
+    categoryFilter,
+    dateFilter,
+    segmentFilter,
+    searchFilter
+  };
 }

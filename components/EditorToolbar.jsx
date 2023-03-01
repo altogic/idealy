@@ -87,9 +87,9 @@ export const modules = {
 export const formats = ['bold', 'italic', 'underline', 'strike', 'link', 'mention'];
 
 // Quill Toolbar component
-export default function EditorToolbar({ children }) {
+export default function EditorToolbar({ children, className }) {
   return (
-    <div id="toolbar">
+    <div id="toolbar" className={`ql-toolbar ql-snow ${className}`}>
       <span className="ql-formats">
         <button type="button" className="ql-bold" />
         <button type="button" className="ql-italic" />
