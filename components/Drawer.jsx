@@ -27,7 +27,7 @@ export default function Drawer({ open, onClose, children, sidebar, position, siz
         <div className="absolute inset-0 overflow-hidden">
           <div
             className={`pointer-events-none fixed inset-y-0 flex max-w-full ${
-              position === 'right' ? 'right-0 pl-10' : 'left-0 pr-10'
+              position === 'right' ? 'right-0 lg:pl-10' : 'left-0 lg:pr-10'
             }`}>
             <Transition
               show={open}
@@ -46,12 +46,12 @@ export default function Drawer({ open, onClose, children, sidebar, position, siz
                   size === 'lg' && 'max-w-screen-lg'
                 )}>
                 {sidebar}
-                <div className="drawer-body p-10 relative flex w-full h-full flex-col overflow-y-scroll bg-white dark:bg-aa-900 purple:bg-pt-1000  drop-shadow-sm">
+                <div className="drawer-body p-4 lg:p-10 relative flex w-full h-full flex-col overflow-y-scroll bg-white dark:bg-aa-900 purple:bg-pt-1000  drop-shadow-sm">
                   {/* Close Button Submit Feedback Modal */}
-                  <div className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <div className="lg:absolute lg:top-4 lg:right-4 flex items-center justify-end w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                     <button
                       type="button"
-                      className="inline-flex items-center justify-center w-full h-full text-slate-500 rounded-md transition"
+                      className="inline-flex items-center justify-center w-8 h-8 text-slate-500 rounded-md transition"
                       onClick={onClose}>
                       <span className="sr-only">Close panel</span>
                       <Close className="w-6 h-6 text-slate-500 dark:text-aa-300 purple:text-pt-300" />

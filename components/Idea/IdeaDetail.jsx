@@ -161,17 +161,17 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
           <div className="flex items-center justify-between gap-4 mb-8">
             {/* Feedback Detail Topic Badges */}
             {!!idea?.topics.length && (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
                   Topics
                 </span>
                 <svg
-                  className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
+                  className="hidden sm:block h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
                   fill="currentColor"
                   viewBox="0 0 8 8">
                   <circle cx={4} cy={4} r={3} />
                 </svg>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   {idea?.topics.map((topic) => (
                     <TopicBadges key={topic} badgeName={topic} />
                   ))}
