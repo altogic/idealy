@@ -18,6 +18,7 @@ export default function BaseListBox({
   labelIcon,
   size = 'md',
   type = 'default',
+  align,
   onReset,
   ...props
 }) {
@@ -40,7 +41,7 @@ export default function BaseListBox({
             size === 'xl' && 'min-w-[auto] md:min-w-[250px]',
             size === 'xxl' && 'min-w-[auto] md:min-w-[300px]',
             (type === 'default' || type === 'status' || type === 'user') &&
-              ' dark:bg-aa-800 purple:bg-pt-800  py-3.5 px-[14px]',
+              ' dark:bg-aa-800 purple:bg-pt-800  py-3.5 px-2 md:px-[14px]',
             type === 'icon' && 'text-slate-700 p-3  '
           )}>
           {type !== 'icon' && (
@@ -105,11 +106,13 @@ export default function BaseListBox({
               'absolute mt-1 max-h-64 overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50 border border-slate-300 dark:border-aa-400 purple:border-pt-400',
               size === 'sm' && 'w-[120px]',
               size === 'md' && 'w-[160px]',
-              size === 'lg' && 'max-w-[195px] max-h-60  w-full',
+              size === 'lg' && 'max-w-[195px] max-h-60',
               size === 'xl' && 'w-[250px]',
               size === 'xxl' && 'w-[300px]',
               size === 'full' && 'w-full',
-              type === 'icon' && 'w-[195px]'
+              type === 'icon' && 'w-[195px]',
+              align === 'right' && 'right-0',
+              align === 'left' && 'left-0'
             )}>
             {options?.map((item) => (
               <Listbox.Option
