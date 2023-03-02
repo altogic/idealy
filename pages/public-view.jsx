@@ -245,7 +245,7 @@ export default function PublicView({ userIp }) {
                       </>
                     )}
                   </div>
-                  <div className="flex items-start justify-between mb-9">
+                  <div className="flex items-start justify-center md:justify-between mb-9">
                     <FilterIdea
                       sortType={sortType}
                       setSortType={setSortType}
