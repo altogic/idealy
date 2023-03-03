@@ -243,8 +243,8 @@ export const DATE_RANGES = [
   {
     label: 'All Time',
     range: () => ({
-      startDate: null,
-      endDate: null
+      startDate: new Date(0),
+      endDate: new Date()
     }),
     isSelected(dateRange) {
       return (

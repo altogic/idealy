@@ -60,7 +60,7 @@ export default function AdminDashboard() {
         companyId: company?._id,
         limit: _.isEmpty(ideas) && router.query.page ? 10 * router.query.page : 10,
         page: _.isEmpty(ideas) ? 1 : router.query.page,
-        filter: `${topicsFilter ? `${topicsFilter} && ` : ''} ${
+        filter: `this.isMerged == false && ${topicsFilter ? `${topicsFilter} && ` : ''} ${
           statusFilter ? `${statusFilter} && ` : ''
         } ${categoryFilter ? `${categoryFilter} && ` : ''} ${
           dateFilter ? `${dateFilter} && ` : ''
@@ -153,11 +153,7 @@ export default function AdminDashboard() {
           <div className="border-r border-slate-200 dark:border-aa-600 purple:border-pt-800">
             <IdeaFilter isFilterSlide={isFilterSlide} setIsFilterSlide={setIsFilterSlide} />
             <div className="overflow-y-auto h-[calc(100vh-188px)]">
-              <InfiniteScroll
-                items={ideas}
-                countInfo={countInfo}
-                endOfList={handlePageChange}
-                className="h-[calc(100vh-181px)] overflow-auto">
+              <InfiniteScroll items={ideas} countInfo={countInfo} endOfList={handlePageChange}>
                 {ideas.length ? (
                   ideas.map((i, index) => (
                     <>

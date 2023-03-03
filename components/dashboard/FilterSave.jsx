@@ -229,7 +229,7 @@ export default function FilterSave({ className, filters }) {
           });
         }}
         label="User Segments"
-        name="segment"
+        name="userSegments"
         selectedItems={userSegments}
       />
 

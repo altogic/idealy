@@ -23,10 +23,19 @@ export default function BaseListBox({
   ...props
 }) {
   const [_value, setValue] = useState();
-
+  const [_options, setOptions] = useState([]);
   useEffect(() => {
     setValue(value);
   }, [value]);
+
+  useEffect(() => {
+    if (options?.[0].order) {
+      const temp = [...options];
+      setOptions(temp.sort((a, b) => a.order - b.order));
+    } else {
+      setOptions(options);
+    }
+  }, [options]);
 
   return (
     <Listbox value={_value} onChange={onChange} multiple={multiple} {...props}>
@@ -119,7 +128,7 @@ export default function BaseListBox({
               align === 'right' && 'right-0',
               align === 'left' && 'left-0'
             )}>
-            {options?.map((item) => (
+            {_options?.map((item) => (
               <Listbox.Option
                 key={item.id || item._id || item[valueField] || item[field] || item}
                 className={({ active }) =>

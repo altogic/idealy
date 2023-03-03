@@ -145,7 +145,6 @@ export default function PublicView({ userIp }) {
   }, [page, getIdeasByCompany]);
 
   const isSubmitIdeaVisible = useRegisteredUserValidation('submitIdeas');
-
   useEffect(() => {
     if (company) {
       if ((!company.privacy.isPublic || company.privacy.userApproval) && !company.role) {
