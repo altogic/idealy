@@ -90,7 +90,7 @@ export default function Layout({ children }) {
               <a
                 target="_blank"
                 rel="noopener noreferrer"
-                className="fixed bottom-8 right-8 p-4 text-base">
+                className="fixed bottom-0 left-2 p-4 text-base">
                 <div className="inline-flex items-center text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full border bg-indigo-100 text-indigo-500 dark:bg-aa-600 purple:bg-pt-800 dark:text-aa-400 purple:text-pt-400 border-transparent">
                   Powered by Idealy
                 </div>

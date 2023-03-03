@@ -27,7 +27,8 @@ export default function TopicSelection({ topics, setTopics, update, errors }) {
                 update(newTopics);
               }
             }}
-            selected={topics.some((t) => t === topic.name)}
+            selected={topics?.some((t) => t === topic.name)}
+            disabled={topics?.length === 3 && !topics.some((t) => t === topic.name)}
           />
         ))}
         {errors?.topics?.message && (

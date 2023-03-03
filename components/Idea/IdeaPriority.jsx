@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 export default function IdeaPriority() {
   const idea = useSelector((state) => state.idea.selectedIdea);
   const company = useSelector((state) => state.company.company);
-  const [priortyValues, setPriorityValues] = useState();
+  const [priorityValues, setPriorityValues] = useState();
   const [benefitFactor, setBenefitFactor] = useState(idea?.benefitFactor);
   const [costFactor, setCostFactor] = useState(idea?.costFactor);
 
@@ -15,6 +15,13 @@ export default function IdeaPriority() {
   useEffect(() => {
     setPriorityValues(PRIORITY_VALUES[company?.priorityType]);
   }, [PRIORITY_VALUES]);
+
+  useEffect(() => {
+    if (idea) {
+      setBenefitFactor(idea?.benefitFactor);
+      setCostFactor(idea?.costFactor);
+    }
+  }, [idea]);
 
   return (
     <div className="grid grid-cols-2 gap-2">
@@ -25,13 +32,13 @@ export default function IdeaPriority() {
         <div className="mt-2">
           <BaseListBox
             value={benefitFactor}
-            options={priortyValues}
+            options={priorityValues}
             label={benefitFactor}
             size="sm"
             onChange={(selected) => {
               setBenefitFactor(selected);
-              const benefitIndex = priortyValues.indexOf(selected);
-              const costIndex = priortyValues.indexOf(
+              const benefitIndex = priorityValues.indexOf(selected);
+              const costIndex = priorityValues.indexOf(
                 company?.priorityType === 'fibonacci' ? Number(costFactor) : costFactor
               );
               // TODO: get weight from company settings
@@ -52,16 +59,16 @@ export default function IdeaPriority() {
         </span>
         <div className="mt-2">
           <BaseListBox
-            value={setCostFactor}
-            options={priortyValues}
+            value={costFactor}
+            options={priorityValues}
             label={costFactor}
             size="sm"
             onChange={(selected) => {
               setCostFactor(selected);
-              const benefitIndex = priortyValues.indexOf(
+              const benefitIndex = priorityValues.indexOf(
                 company?.priorityType === 'fibonacci' ? Number(benefitFactor) : benefitFactor
               );
-              const costIndex = priortyValues.indexOf(selected);
+              const costIndex = priorityValues.indexOf(selected);
               updateIdea({
                 costFactor: selected,
                 priorityScore:

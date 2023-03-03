@@ -10,6 +10,7 @@ import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfiniteScroll from '@/components/InfiniteScroll';
 import Layout from '@/components/Layout';
 import PublicViewCard from '@/components/PublicViewCard';
+import useFilterIdea from '@/hooks/useFilterIdea';
 import useGuestValidation from '@/hooks/useGuestValidation';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import useRouteIdea from '@/hooks/useRouteIdea';
@@ -17,7 +18,6 @@ import { authActions } from '@/redux/auth/authSlice';
 import { toggleFeedBackDetailModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { IDEA_SORT_TYPES } from 'constants';
-import _ from 'lodash';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
@@ -46,60 +46,23 @@ export default function PublicView({ userIp }) {
   const user = useSelector((state) => state.auth.user);
   const voteGuestAuth = useGuestValidation('voteIdea');
   const routeIdea = useRouteIdea();
-  const getTopicsFilter = (filterTopics) => {
-    if (filterTopics?.length) {
-      const topicsFilter = [];
-      filterTopics.forEach((topic) => {
-        topicsFilter.push(`IN(this.topics,'${topic}')`);
-      });
-      return `(${topicsFilter.join(' || ')})`;
-    }
-    return '';
-  };
-  const getStatusFilter = (filterStatus) => {
-    if (filterStatus?.length) {
-      const statusFilter = [];
-      filterStatus.forEach((status) => {
-        statusFilter.push(`this.status.name == '${status}'`);
-      });
-      return `(${statusFilter.join(' || ')})`;
-    }
-    return '';
-  };
-  const handleFilter = (filterTopics, filterStatus) => {
-    if (filterTopics?.length || filterStatus?.length) {
-      const topicsFilter = getTopicsFilter(filterTopics);
-      const statusFilter = getStatusFilter(filterStatus);
-      return `${topicsFilter} ${topicsFilter && statusFilter ? '&&' : ''}  ${statusFilter} &&`;
-    }
-    return '';
-  };
-  const handleSort = (sort) => {
-    if (sort) {
-      const sortType = IDEA_SORT_TYPES.find((s) => s.url === sort);
-      setSortType(sortType);
-      return sortType?.query;
-    }
-    setSortType(IDEA_SORT_TYPES[2]);
-    return IDEA_SORT_TYPES[2].query;
-  };
 
   const handleClickIdea = (idea) => {
     routeIdea(idea._id);
     dispatch(ideaActions.setSelectedIdea(idea));
     dispatch(toggleFeedBackDetailModal());
   };
+  const { sort, topicsFilter, statusFilter } = useFilterIdea();
 
   const getIdeasByCompany = useCallback(() => {
     if (router.isReady && company?._id) {
       const req = {
         companyId: company?._id,
         limit: 10,
-        filter: `this.isArchived == false && this.isPrivate == false && this.isCompleted == false && this.isMerged == false && ${handleFilter(
-          router.query.topics?.split(','),
-          router.query.status?.split(',')
-        )}`,
-        sort: handleSort(router.query.sort),
+        filter: `this.isArchived == false && this.isPrivate == false && this.isCompleted == false && this.isMerged == false && ${
+          topicsFilter ? `${topicsFilter} && ` : ''
+        } ${statusFilter ? `${statusFilter} && ` : ''}`,
+        sort,
         page
       };
       if (!user || !company?.role || company?.role === 'Guest') {
@@ -107,12 +70,41 @@ export default function PublicView({ userIp }) {
       }
       dispatch(ideaActions.getIdeasByCompany(req));
     }
-  }, [page, router.query.sort, router.query.status, router.query.topics, company]);
+  }, [page, sort, topicsFilter, statusFilter, company]);
+
+  const showFeedbackDetail = (feedbackId) => {
+    const ideaDetail = ideas.find((i) => i._id === feedbackId);
+    if (ideaDetail) {
+      dispatch(ideaActions.setSelectedIdea(ideaDetail));
+      dispatch(toggleFeedBackDetailModal());
+    } else {
+      dispatch(
+        ideaActions.getIdeaById({
+          id: feedbackId,
+          onSuccess: () => {
+            if (!feedBackDetailModal) dispatch(toggleFeedBackDetailModal());
+          }
+        })
+      );
+    }
+  };
 
   function handleCloseIdea() {
-    dispatch(toggleFeedBackDetailModal());
+    const mergedIdeaId = localStorage.getItem('mergedIdea')?.slice(1, -1);
+    let check = false;
+    if (selectedIdea._id === mergedIdeaId) {
+      localStorage.removeItem('mergedIdea');
+      check = true;
+    }
     const temp = router.query;
-    delete temp?.feedback;
+    if (mergedIdeaId && !check) {
+      temp.feedback = mergedIdeaId;
+      showFeedbackDetail(mergedIdeaId);
+    } else {
+      delete temp?.feedback;
+      dispatch(ideaActions.setSelectedIdea(null));
+      dispatch(toggleFeedBackDetailModal());
+    }
     router.push(
       {
         pathname: router.pathname,
@@ -121,7 +113,6 @@ export default function PublicView({ userIp }) {
       undefined,
       { scroll: false }
     );
-    dispatch(ideaActions.setSelectedIdea(null));
   }
 
   const handleVoted = (ideaId) => {
@@ -136,23 +127,6 @@ export default function PublicView({ userIp }) {
     return ideaVotes.find((v) => v.ideaId === ideaId && v.ip === userIp && !v.userId);
   };
 
-  const showFeedbackDetail = (feedbackId) => {
-    const ideaDetail = ideas.find((i) => i._id === feedbackId);
-    if (ideaDetail) {
-      dispatch(ideaActions.setSelectedIdea(ideaDetail));
-      dispatch(toggleFeedBackDetailModal());
-    } else {
-      dispatch(
-        ideaActions.getIdeaById({
-          id: feedbackId,
-          onSuccess: () => {
-            dispatch(toggleFeedBackDetailModal());
-          }
-        })
-      );
-    }
-  };
-
   useEffect(() => {
     if (router) {
       const { topics, status, sort, feedback } = router.query;
@@ -165,7 +139,7 @@ export default function PublicView({ userIp }) {
   }, [router, ideas]);
 
   useEffect(() => {
-    if (!feedBackDetailModal && !(page === 1 && !_.isEmpty(ideas))) {
+    if (!feedBackDetailModal) {
       getIdeasByCompany();
     }
   }, [page, getIdeasByCompany]);
@@ -245,7 +219,7 @@ export default function PublicView({ userIp }) {
                       </>
                     )}
                   </div>
-                  <div className="flex items-start justify-between mb-9">
+                  <div className="flex items-start justify-center md:justify-between mb-9">
                     <FilterIdea
                       sortType={sortType}
                       setSortType={setSortType}

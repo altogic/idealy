@@ -87,7 +87,7 @@ export default function useFilterIdea() {
     } else {
       setSearchFilter('');
     }
-  }, [router.asPath]);
+  }, [router]);
 
   return {
     sort: sortType,

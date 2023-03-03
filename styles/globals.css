@@ -213,41 +213,100 @@ html:has(:is(.modal, .drawer)) {
 .mention-email {
   @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 text-xs font-medium tracking-sm truncate;
 }
-.react-datepicker__header {
-  @apply bg-slate-50 dark:bg-aa-800 purple:bg-pt-800 !important;
-  @apply border-slate-300 dark:border-aa-600 purple:border-pt-800 !important;
+
+.rdrDefinedRangesWrapper {
+  width: 100% !important;
 }
-.react-datepicker__day-name,
-.react-datepicker__current-month {
+.rdrStaticRanges {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+.rdrStaticRangeLabel {
+  @apply text-inherit text-sm font-medium tracking-sm !important;
+  text-align: center !important;
+}
+.rdrInputRanges {
+  display: none;
+}
+.rdrDateRangeWrapper,
+.rdrStaticRange,
+.rdrDateDisplayWrapper {
+  @apply bg-white dark:bg-aa-900 purple:bg-pt-1000 !important;
+}
+.rdrStaticRange,
+.rdrDay {
+  @apply border border-slate-300 dark:border-aa-600 purple:border-pt-800 !important;
   @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 !important;
 }
-.react-datepicker__navigation {
-  top: 4% !important;
+.rdrDayDisabled {
+  @apply bg-inherit !important;
+}
+.rdrInRange {
+  @apply bg-indigo-500 dark:bg-aa-600 purple:bg-pt-600 !important;
 }
 
-.react-datepicker__day--keyboard-selected,
-.react-datepicker__day--selected,
-.react-datepicker__day--in-range {
-  @apply bg-indigo-600 dark:bg-aa-900 purple:bg-pt-800 !important;
+.rdrDayDisabled .rdrInRange {
+  @apply bg-gray-200 dark:bg-aa-300 purple:bg-pt-300 bg-opacity-90 dark:bg-opacity-20 purple:bg-opacity-20  !important;
 }
-.react-datepicker__day--keyboard-selected {
-  @apply text-slate-100 dark:text-aa-200 purple:text-pt-200 !important;
+.rdrDayToday .rdrDayNumber span:after {
+  @apply bg-indigo-500 dark:bg-aa-200 purple:bg-pt-200 !important;
 }
-.react-datepicker__day--in-selecting-range {
-  @apply bg-indigo-600 dark:bg-aa-800 purple:bg-pt-700 !important;
+.rdrDayHovered,
+.rdrDayStartEdge,
+.rdrDayEndEdge,
+.rdrDaySelected {
+  @apply border-indigo-500 dark:border-aa-200 purple:border-pt-200 !important;
 }
-.react-datepicker__day:hover,
-.react-datepicker__day--selected:hover,
-.react-datepicker__day--in-range:hover {
-  @apply bg-indigo-700 dark:bg-aa-900 purple:bg-pt-900 text-slate-100 dark:text-aa-200 purple:text-pt-200 !important;
+.rdrDayNumber span {
+  @apply text-slate-500 dark:text-aa-200 purple:text-aa-200 !important;
 }
-.react-datepicker__close-icon::after {
+.rdrStartEdge,
+.rdrEndEdge {
+  @apply bg-indigo-500 dark:bg-aa-600 purple:bg-pt-600 !important;
+}
+.rdrDateInput {
+  @apply bg-white dark:bg-aa-900 purple:bg-pt-1000 !important;
+  @apply border border-gray-300 dark:border-aa-400 purple:border-pt-400 !important;
+}
+.rdrDateInput input {
+  @apply placeholder:text-slate-500 dark:placeholder-aa-200 purple:placeholder-pt-200 !important;
+}
+.rdrDateDisplayItemActive input,
+.rdrMonthPicker select,
+.rdrYearPicker select,
+.rdrMonthName,
+.rdrWeekDay {
+  @apply text-slate-500 dark:text-aa-200 purple:text-aa-200 !important;
+}
+
+.rdrNextPrevButton,
+.rdrNextButton {
+  @apply bg-slate-100 dark:bg-aa-600 purple:bg-pt-600 !important;
+}
+
+.rdrNextButton i {
+  @apply border-l-slate-300 dark:border-l-aa-300 purple:border-l-pt-300 !important;
+}
+.rdrPprevButton i {
+  @apply border-r-slate-300 dark:border-r-aa-300 purple:border-r-pt-300 !important;
+}
+.rdrNextPrevButton.rdrNextButton:hover,
+.rdrNextPrevButton.rdrPprevButton:hover {
+  @apply bg-slate-200 dark:bg-aa-500 purple:bg-pt-500 !important;
+}
+.rdrStaticRange:hover .rdrStaticRangeLabel,
+.rdrStaticRange:focus .rdrStaticRangeLabel {
+  @apply bg-slate-100 dark:bg-aa-600 purple:bg-pt-600 !important;
+}
+.rdrDefinedRangesWrapper {
+  @apply border-none !important;
+}
+.rdrInRange + .rdrDayNumber span {
+  @apply text-slate-100 !important;
+}
+.rdrDayDisabled .rdrInRange + .rdrDayNumber span {
   @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 !important;
-  @apply bg-indigo-100 dark:bg-aa-900 purple:bg-pt-900 !important;
 }
-.react-datepicker__children-container {
-  @apply w-full grid grid-cols-2 gap-2 p-4 !important;
-}
-.react-datepicker {
-  width: 484px !important;
+.rdrDayPassive .rdrInRange + .rdrDayNumber span {
+  @apply text-slate-500  !important;
 }

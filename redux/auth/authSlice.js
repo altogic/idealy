@@ -205,6 +205,9 @@ export const authSlice = createSlice({
     updateSavedFilters(state) {
       state.isLoading = true;
     },
+    updateSavedFilterName(state) {
+      state.isLoading = true;
+    },
     updateSavedFiltersSuccess(state, action) {
       state.isLoading = false;
       state.user.savedFilters = state.user.savedFilters.map((savedFilter) => {

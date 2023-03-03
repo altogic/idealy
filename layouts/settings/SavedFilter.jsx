@@ -43,7 +43,7 @@ export default function SavedFilter() {
                     })
                   )
                 }
-                editAction={authActions.updateSavedFilters}
+                editAction={authActions.updateSavedFilterName}
               />
             ))}
           </div>

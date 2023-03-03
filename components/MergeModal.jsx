@@ -4,6 +4,7 @@ import Modal from '@/components/Modal';
 import useRouteIdea from '@/hooks/useRouteIdea';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import ideaService from '@/services/idea';
+import localStorageUtil from '@/utils/localStorageUtil';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -43,6 +44,7 @@ export default function MergeModal({ openMergeModal, setOpenMergeModal }) {
         ...data,
         mergedIdea: idea._id,
         onSuccess: () => {
+          localStorageUtil.set('mergedIdea', idea._id);
           setOpenMergeModal(false);
           reset();
           routeIdea(data.baseIdea);

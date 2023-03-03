@@ -40,6 +40,7 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
   const canComment = useRegisteredUserValidation('commentIdea');
   const canEdit = useIdeaActionValidation(idea, 'submitIdeas');
 
+  const [isMobileAdmin, setIsMobileAdmin] = useState(false);
   const [isFetched, setIsFetched] = useState(false);
   const updateIdea = useUpdateIdea(idea);
   const { userCardStyle, userCardInfo } = useClickMention('idea-detail');
@@ -93,8 +94,28 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
       sidebar={
         user &&
         !idea?.isMerged &&
-        (company?.role === 'Owner' || company?.role === 'Admin') && <IdeaDetailAdmin />
+        (company?.role === 'Owner' || company?.role === 'Admin') && (
+          <IdeaDetailAdmin adminOpen={isMobileAdmin} setAdminOpen={setIsMobileAdmin} />
+        )
       }>
+      <button
+        type="button"
+        onClick={() => setIsMobileAdmin(!isMobileAdmin)}
+        className="absolute top-4 left-4 inline-flex lg:hidden items-center justify-center w-8 h-8 text-slate-500 rounded-md transition">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-6 h-6 text-slate-500 dark:text-aa-300 purple:text-pt-300">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+          />
+        </svg>
+      </button>
       <div className="flex gap-6 relative">
         <VoteIdea voted={voted} voteCount={idea?.voteCount} ideaId={idea?._id} />
         <div className="flex-1 relative">
@@ -115,7 +136,7 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
             <SanitizeHtml id="idea-detail" html={idea?.content} />
           </div>
 
-          <div className="relative flex items-center gap-2 mb-8">
+          <div className="relative flex flex-wrap items-center gap-2 mb-8">
             {/* User */}
             <IdeaInfo idea={idea} detail />
             {canEdit && !idea?.isMerged && (
@@ -161,17 +182,17 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
           <div className="flex items-center justify-between gap-4 mb-8">
             {/* Feedback Detail Topic Badges */}
             {!!idea?.topics.length && (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
                   Topics
                 </span>
                 <svg
-                  className="h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
+                  className="hidden sm:block h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
                   fill="currentColor"
                   viewBox="0 0 8 8">
                   <circle cx={4} cy={4} r={3} />
                 </svg>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   {idea?.topics.map((topic) => (
                     <TopicBadges key={topic} badgeName={topic} />
                   ))}

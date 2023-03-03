@@ -29,8 +29,10 @@ export default function CommentCard({ comment, dashboard }) {
   const countInfo = useSelector((state) => state.replies.countInfo);
   const loading = useSelector((state) => state.replies.isLoading);
   const canEdit = useIdeaActionValidation(comment, 'commentIdea');
-  const { userCardStyle, userCardInfo, setUserCardInfo, setUserCardStyle } =
-    useClickMention('comment');
+  const { userCardStyle, userCardInfo, setUserCardInfo, setUserCardStyle } = useClickMention(
+    'comment',
+    dashboard
+  );
 
   const handleShowUserCard = (e) => {
     e.stopPropagation();
@@ -63,7 +65,7 @@ export default function CommentCard({ comment, dashboard }) {
       id={comment?._id}
       className={cn(
         'group mt-2 rounded',
-        !dashboard && 'bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 p-8 '
+        !dashboard && 'bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 p-4 sm:p-8 '
       )}>
       {editComment ? (
         <CommentForm
@@ -210,7 +212,10 @@ export default function CommentCard({ comment, dashboard }) {
           </div>
         </div>
       )}
-      <CommentDeleteModal commentId={comment?._id} onClose={() => {}} />
+      <CommentDeleteModal
+        commentId={comment?._id}
+        onClose={() => dispatch(toggleDeleteCommentModal())}
+      />
       {dashboard && <Divider className="my-8" />}
     </div>
   );

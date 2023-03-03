@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/prefer-default-export
 import { Archive, Bug, CircleCheck, Eye, Merge, Thumbtack } from '@/components/icons';
+import { compareDates } from '../utils';
 
 export const BREAKPOINT = {
   TABLET_SIZE: 1024,
@@ -51,7 +52,7 @@ export const IDEA_SORT_TYPES = [
   { name: 'Top', url: 'top', query: 'voteCount:desc' },
   { name: 'Newest', url: 'newest', query: 'createdAt:desc' },
   { name: 'Status Changed', url: 'status_changed', query: 'statusUpdatedAt:desc' },
-  { name: 'Priority', url: 'priority', query: 'priorityScore:desc' }
+  { name: 'Priority', url: 'priority', query: 'priorityScore:desc', isAdmin: true }
 ];
 
 export const SESSION_COOKIE_OPTIONS = {
@@ -132,4 +133,124 @@ export const THEMES = [
 export const DATA_RANGE = [
   { id: 1, name: 'Posts' },
   { id: 2, name: 'Votes' }
+];
+
+export const DATE_RANGES = [
+  {
+    label: 'Today',
+    range: () => ({
+      startDate: new Date(),
+      endDate: new Date()
+    }),
+    isSelected(dateRange) {
+      return (
+        compareDates(dateRange.startDate, this.range().startDate) &&
+        compareDates(dateRange.endDate, this.range().endDate)
+      );
+    }
+  },
+  {
+    label: 'Yesterday',
+    range: () => ({
+      startDate: new Date(new Date().setDate(new Date().getDate() - 1)),
+      endDate: new Date(new Date().setDate(new Date().getDate() - 1))
+    }),
+    isSelected(dateRange) {
+      return (
+        compareDates(dateRange.startDate, this.range().startDate) &&
+        compareDates(dateRange.endDate, this.range().endDate)
+      );
+    }
+  },
+  {
+    label: 'This Week',
+    range: () => ({
+      startDate: new Date(new Date().setDate(new Date().getDate() - new Date().getDay())),
+      endDate: new Date()
+    }),
+    isSelected(dateRange) {
+      return (
+        compareDates(dateRange.startDate, this.range().startDate) &&
+        compareDates(dateRange.endDate, this.range().endDate)
+      );
+    }
+  },
+  {
+    label: 'Last Week',
+    range: () => ({
+      startDate: new Date(new Date().setDate(new Date().getDate() - new Date().getDay() - 7)),
+      endDate: new Date(new Date().setDate(new Date().getDate() - new Date().getDay() - 1))
+    }),
+    isSelected(dateRange) {
+      return (
+        compareDates(dateRange.startDate, this.range().startDate) &&
+        compareDates(dateRange.endDate, this.range().endDate)
+      );
+    }
+  },
+  {
+    label: 'This Month',
+    range: () => ({
+      startDate: new Date(new Date().setDate(1)),
+      endDate: new Date()
+    }),
+    isSelected(dateRange) {
+      return (
+        compareDates(dateRange.startDate, this.range().startDate) &&
+        compareDates(dateRange.endDate, this.range().endDate)
+      );
+    }
+  },
+  {
+    label: 'Last Month',
+    range: () => ({
+      startDate: new Date(new Date().setMonth(new Date().getMonth() - 1, 1)),
+      endDate: new Date(new Date().setDate(0))
+    }),
+    isSelected(dateRange) {
+      return (
+        compareDates(dateRange.startDate, this.range().startDate) &&
+        compareDates(dateRange.endDate, this.range().endDate)
+      );
+    }
+  },
+  {
+    label: 'This Year',
+    range: () => ({
+      startDate: new Date(new Date().setMonth(0, 1)),
+      endDate: new Date()
+    }),
+    isSelected(dateRange) {
+      return (
+        compareDates(dateRange.startDate, this.range().startDate) &&
+        compareDates(dateRange.endDate, this.range().endDate)
+      );
+    }
+  },
+  {
+    label: 'Last Year',
+    range: () => ({
+      startDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1, 0, 1)),
+      endDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1, 11, 31))
+    }),
+    isSelected(dateRange) {
+      return (
+        compareDates(dateRange.startDate, this.range().startDate) &&
+        compareDates(dateRange.endDate, this.range().endDate)
+      );
+    }
+  },
+  {
+    label: 'All Time',
+    range: () => ({
+      startDate: null,
+      endDate: null
+    }),
+    isSelected(dateRange) {
+      return (
+        compareDates(dateRange.startDate, this.range().startDate) &&
+        compareDates(dateRange.endDate, this.range().endDate)
+      );
+    }
+  }
 ];

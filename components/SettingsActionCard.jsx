@@ -131,7 +131,7 @@ export default function SettingsActionCard({
             <div>
               <button
                 type="button"
-                className="inline-flex items-center justify-center w-7 h-7 bg-slate-50 border border-slate-300 rounded-lg transition ease-linear duration-200 hover:bg-slate-200"
+                className="inline-flex items-center justify-center w-7 h-7 bg-slate-50 border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-lg transition ease-linear duration-200 hover:bg-slate-200"
                 onClick={(e) => {
                   e.stopPropagation();
                   setActiveIndex(activeIndex === index ? -1 : index);

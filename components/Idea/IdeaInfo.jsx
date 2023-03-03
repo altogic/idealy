@@ -22,7 +22,7 @@ export default function IdeaInfo({ idea, detail }) {
     };
   }, [feedBackDetailModal]);
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex flex-wrap items-center sm:items-center gap-4">
       <button
         className="flex items-center gap-4"
         type="button"

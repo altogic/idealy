@@ -1,4 +1,3 @@
-import Divider from '@/components/Divider';
 import { Archive, Bug, Merge, Pen, Thumbtack, Trash } from '@/components/icons';
 import MergeModal from '@/components/MergeModal';
 
@@ -58,13 +57,17 @@ export default function IdeaActions({ dashboard }) {
   ];
 
   return (
-    <div className={!dashboard ? 'bg-slate-50 dark:bg-aa-800 purple:bg-pt-900 p-4' : ''}>
+    <div
+      className={` border-t border-slate-200 dark:border-aa-600 purple:border-pt-800 ${
+        !dashboard
+          ? 'bg-slate-50 dark:bg-aa-800 purple:bg-pt-900 p-4'
+          : 'absolute bottom-2 z-20 w-full bg-white dark:bg-aa-900 purple:bg-pt-900 p-2 shadow-md'
+      }`}>
       {!dashboard && (
         <p className="text-slate-900 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">
           Actions
         </p>
       )}
-      <Divider className="my-2" />
       <div className="flex w-full flex-row space-x-2 justify-center">
         {ideaActionButtons.map((action) => (
           <IdeaActionButton

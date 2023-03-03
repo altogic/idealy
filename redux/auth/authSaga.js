@@ -4,6 +4,7 @@ import { randomInt } from '@/utils/index';
 import { COLORS } from 'constants';
 import companyService from '@/services/company';
 import { realtime } from '@/utils/altogic';
+import ToastMessage from '@/utils/toast';
 import { authActions } from './authSlice';
 import { companyActions } from '../company/companySlice';
 
@@ -221,6 +222,20 @@ function* disableAllNotificationsSaga({ payload: { id, value } }) {
     yield put(authActions.disableAllNotificationsFailure(e));
   }
 }
+function* updateSavedFilterNameSaga({ payload }) {
+  try {
+    console.log(payload);
+    const { data, errors } = yield call(AuthService.updateSavedFilterName, payload);
+    if (errors) throw errors;
+    if (data) {
+      yield put(authActions.updateSavedFiltersSuccess(data));
+      const { user } = yield call(AuthService.getUserFromDb);
+      yield call(AuthService.setUser, user);
+    }
+  } catch (e) {
+    yield put(authActions.updateSavedFiltersFailure(e));
+  }
+}
 function* updateSavedFilterSaga({ payload }) {
   try {
     const { data, errors } = yield call(AuthService.updateSavedFilters, payload);
@@ -229,6 +244,7 @@ function* updateSavedFilterSaga({ payload }) {
       yield put(authActions.updateSavedFiltersSuccess(data));
       const { user } = yield call(AuthService.getUserFromDb);
       yield call(AuthService.setUser, user);
+      ToastMessage.success('Filter updated successfully ');
     }
   } catch (e) {
     yield put(authActions.updateSavedFiltersFailure(e));
@@ -332,6 +348,7 @@ export default function* rootSaga() {
     takeEvery(authActions.updateUserProfile.type, updateUserProfileSaga),
     takeEvery(authActions.authStateChange.type, authStateChangeSaga),
     takeEvery(authActions.disableAllNotifications.type, disableAllNotificationsSaga),
-    takeEvery(authActions.saveFilter.type, saveFilter)
+    takeEvery(authActions.saveFilter.type, saveFilter),
+    takeEvery(authActions.updateSavedFilterName, updateSavedFilterNameSaga)
   ]);
 }

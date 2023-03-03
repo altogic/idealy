@@ -185,15 +185,17 @@ export const ideaSlice = createSlice({
     },
     updateIdeaRealtime(state, action) {
       state.ideas = state.ideas.map((idea) => {
-        if (idea._id === action.payload._id) {
-          return action.payload;
+        if (idea._id === action.payload.data._id) {
+          return action.payload.data;
         }
         return idea;
       });
-      state.ideas = state.ideas.filter(
-        (idea) => !(idea.isArchived || idea.isPrivate || idea.isCompleted)
-      );
-      state.selectedIdea = action.payload;
+      if (!action.payload.isAdminView) {
+        state.ideas = state.ideas.filter(
+          (idea) => idea.isArchived || idea.isPrivate || idea.isCompleted
+        );
+      }
+      state.selectedIdea = action.payload.data;
     },
     deleteIdeaStatus(state) {
       state.isLoading = true;

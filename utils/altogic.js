@@ -4,4 +4,9 @@ const altogic = createClient(
   process.env.NEXT_PUBLIC_ALTOGIC_ENV_URL,
   process.env.NEXT_PUBLIC_ALTOGIC_CLIENT_KEY
 );
-export const { db, auth, storage, endpoint, queue, realtime } = altogic;
+const realtimeClient = createClient(
+  process.env.NEXT_PUBLIC_ALTOGIC_ENV_URL,
+  process.env.NEXT_PUBLIC_REALTIME_CLIENT_KEY
+);
+export const { db, auth, storage, endpoint, queue } = altogic;
+export const { realtime } = realtimeClient;

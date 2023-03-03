@@ -34,7 +34,7 @@ export default function SimilarIdeaCard({ idea }) {
         <div className="w-full">
           <div className="flex items-center gap-2 mb-1">
             <h3
-              className="max-w-[700px] text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left truncate"
+              className="max-w-[700px] text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left lg:truncate"
               title={idea?.title}>
               {idea?.title}
             </h3>

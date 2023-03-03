@@ -47,19 +47,19 @@ export default function FilterIdea({
   };
 
   return (
-    <div className="flex items-center gap-4 justify-between md:w-full">
+    <div className="flex items-center gap-3 md:gap-4 justify-between md:w-full">
       <BaseListBox
         value={sortType}
         icon={<UpDown className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
         label={sortType?.name}
         onChange={handleSortChange}
         field="name"
-        options={IDEA_SORT_TYPES}
+        options={IDEA_SORT_TYPES.filter((s) => !s.isAdmin)}
         size="lg"
         hidden="mobile"
       />
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 md:gap-4">
         <BaseListBox
           value={filterTopics}
           onChange={handleFilterTopicsChange}
@@ -72,7 +72,13 @@ export default function FilterIdea({
           valueField="name"
           multiple
           size="lg"
+          align="right"
           hidden="mobile"
+          onReset={() => {
+            setFilterTopics([]);
+            delete router.query.topics;
+            router.push(router);
+          }}
         />
         <BaseListBox
           value={filterStatus}
@@ -86,8 +92,14 @@ export default function FilterIdea({
           valueField="name"
           multiple
           size="lg"
+          align="right"
           hidden="mobile"
           type="status"
+          onReset={() => {
+            setFilterStatus([]);
+            delete router.query.status;
+            router.push(router);
+          }}
         />
       </div>
     </div>
