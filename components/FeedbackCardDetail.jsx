@@ -1,60 +1,21 @@
-import {
-  toggleDeleteFeedBackModal,
-  toggleFeedBackDetailModal,
-  toggleFeedBackSubmitModal
-} from '@/redux/general/generalSlice';
 import { DateTime } from 'luxon';
-import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Avatar from './Avatar';
-import ButtonBadge from './ButtonBadge';
-import { Pen, Reply, Spam, Trash } from './icons';
 import IdeaBadges from './Idea/IdeaBadges';
 import SanitizeHtml from './SanitizeHtml';
 
-export default function FeedbackCardDetail({ setEditedIdea }) {
-  const router = useRouter();
-  const dispatch = useDispatch();
+export default function FeedbackCardDetail() {
   const idea = useSelector((state) => state.idea.selectedIdea);
-  const ideaActionButtons = [
-    {
-      name: 'Edit',
-      icon: <Pen className="w-3 h-3 text-gray-500 dark:text-aa-200 purple:text-pt-200" />,
-      onClick: () => {
-        setEditedIdea(idea);
-        dispatch(toggleFeedBackSubmitModal());
-      }
-    },
-    {
-      name: 'Add Comment',
-      icon: <Reply className="w-3 h-3 text-gray-500 dark:text-aa-200 purple:text-pt-200" />,
-      onClick: () => {
-        router.push({
-          pathname: router.pathname,
-          query: { ...router.query, commentType: 'new' }
-        });
-        dispatch(toggleFeedBackDetailModal());
-      }
-    },
-    {
-      name: 'Spam',
-      icon: <Spam className="w-3 h-3 text-gray-500 dark:text-aa-200 purple:text-pt-200" />,
-      onClick: () => {}
-    },
-    {
-      name: 'Delete',
-      icon: <Trash className="w-3 h-3 text-gray-500 dark:text-aa-200 purple:text-pt-200" />,
-      onClick: () => dispatch(toggleDeleteFeedBackModal())
-    }
-  ];
+
   return (
-    <div className="group">
-      {(idea?.isPrivate ||
-        idea?.isBug ||
-        idea?.isArchived ||
-        idea?.isPinned ||
-        idea?.isMerged ||
-        !idea?.isApproved) && <IdeaBadges idea={idea} />}
+    <div>
+      {idea &&
+        (idea?.isPrivate ||
+          idea?.isBug ||
+          idea?.isArchived ||
+          idea?.isPinned ||
+          idea?.isMerged ||
+          !idea?.isApproved) && <IdeaBadges idea={idea} />}
       <div className="flex items-center gap-2 my-4">
         <Avatar
           src={idea?.author?.profilePicture || idea?.guestAvatar}
@@ -74,23 +35,6 @@ export default function FeedbackCardDetail({ setEditedIdea }) {
         <span className="inline-block text-slate-400 py-1 text-xs tracking-sm whitespace-nowrap">
           {DateTime.fromISO(idea?.createdAt).toRelative({ locale: 'en' })}
         </span>
-        {/* opacity-0 group-hover:opacity-100 */}
-        <div className="flex items-center gap-3 transition opacity-0 group-hover:opacity-100">
-          {ideaActionButtons.map((action, index) => (
-            <div key={action.name} className="flex items-center justify-center">
-              <ButtonBadge
-                icon={action.icon}
-                name={action.name}
-                onClick={() => action.onClick(idea?._id)}
-              />
-              {index < ideaActionButtons.length - 1 && (
-                <svg className="h-1.5 w-1.5 text-slate-400" fill="currentColor" viewBox="0 0 8 8">
-                  <circle cx={4} cy={4} r={3} />
-                </svg>
-              )}
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );

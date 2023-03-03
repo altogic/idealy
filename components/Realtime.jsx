@@ -10,7 +10,7 @@ import localStorageUtil from '@/utils/localStorageUtil';
 import { COMPANY_TABS } from 'constants';
 import _ from 'lodash';
 import { useRouter } from 'next/router';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateUrl } from '../utils';
 import { Email } from './icons';
@@ -164,7 +164,12 @@ export default function Realtime() {
     }
   }
   function updateIdeaHandler({ message }) {
-    dispatch(ideaActions.updateIdeaRealtime(message));
+    dispatch(
+      ideaActions.updateIdeaRealtime({
+        data: message,
+        isAdminView: router.asPath.includes('dashboard')
+      })
+    );
   }
   function deleteIdeaHandler({ message }) {
     const idea = new URLSearchParams(document.location.search).get('feedback');

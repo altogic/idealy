@@ -210,7 +210,10 @@ export default function CommentCard({ comment, dashboard }) {
           </div>
         </div>
       )}
-      <CommentDeleteModal commentId={comment?._id} onClose={() => {}} />
+      <CommentDeleteModal
+        commentId={comment?._id}
+        onClose={() => dispatch(toggleDeleteCommentModal())}
+      />
       {dashboard && <Divider className="my-8" />}
     </div>
   );

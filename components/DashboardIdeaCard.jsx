@@ -3,7 +3,7 @@ import { commentActions } from '@/redux/comments/commentsSlice';
 import cn from 'classnames';
 import { useDispatch } from 'react-redux';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import { Comment } from './icons';
+import { Comment, ThreeStar } from './icons';
 import SanitizeHtml from './SanitizeHtml';
 import StatusBadge from './StatusBadge';
 import TopicBadges from './TopicBadges';
@@ -17,7 +17,7 @@ export default function DashboardIdeaCard({ idea, selected, id }) {
       id={id}
       type="button"
       className={cn(
-        'px-8 py-6 text-left  border-transparent transition hover:shadow-md',
+        'w-full px-8 py-6 text-left  border-transparent transition',
         selected
           ? 'border-2 border-indigo-700 dark:border-aa-100 purple:border-pt-100 bg-indigo-50 dark:bg-aa-800 purple:bg-pt-900'
           : 'hover:bg-slate-50 dark:hover:bg-aa-800 purple:hover:bg-pt-900'
@@ -31,15 +31,15 @@ export default function DashboardIdeaCard({ idea, selected, id }) {
         {idea?.title}
       </h6>
       <SanitizeHtml
-        className="max-w-3xl text-slate-500 dark:text-aa-300 purple:text-pt-300 mb-6 text-sm tracking-sm text-left line-clamp-3"
+        className="max-w-3xl text-slate-500 dark:text-aa-200 purple:text-pt-200  mb-6 text-sm tracking-sm text-left line-clamp-3"
         html={idea?.content}
       />
 
       <div className="flex items-center justify-between gap-2">
         <div className="inline-flex items-center gap-3">
-          <span className="inline-flex items-center gap-1.5 text-slate-500 text-sm tracking-sm">
+          <span className="inline-flex items-center gap-1.5   text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
             <svg
-              className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200"
+              className="w-5 h-5 "
               viewBox="0 0 20 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg">
@@ -51,14 +51,28 @@ export default function DashboardIdeaCard({ idea, selected, id }) {
                 strokeLinejoin="round"
               />
             </svg>
+
             {idea?.voteCount}
           </span>
-          <svg className="h-1.5 w-1.5 text-slate-500" fill="currentColor" viewBox="0 0 8 8">
+          <svg
+            className="h-1.5 w-1.5   text-slate-500 dark:text-aa-200 purple:text-pt-200"
+            fill="currentColor"
+            viewBox="0 0 8 8">
             <circle cx={4} cy={4} r={3} />
           </svg>
-          <span className="inline-flex items-center gap-1.5 text-slate-500 text-sm tracking-sm">
-            <Comment className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+          <span className="inline-flex items-center gap-1.5   text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
+            <Comment className="w-5 h-5 " />
             {idea?.commentCount}
+          </span>
+          <svg
+            className="h-1.5 w-1.5   text-slate-500 dark:text-aa-200 purple:text-pt-200"
+            fill="currentColor"
+            viewBox="0 0 8 8">
+            <circle cx={4} cy={4} r={3} />
+          </svg>
+          <span className="inline-flex items-center gap-1.5   text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
+            <ThreeStar className="w-5 h-5 " />
+            {idea?.priorityScore}
           </span>
         </div>
 

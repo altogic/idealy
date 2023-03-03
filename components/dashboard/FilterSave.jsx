@@ -18,7 +18,7 @@ export default function FilterSave({ className, filters }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const [isCreateNewTopic, setIsCreateNewTopic] = useState(false);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
   const [userSegments, setUserSegments] = useState([]);
   const [topics, setTopics] = useState([]);
   const [statuses, setStatuses] = useState([]);
@@ -33,7 +33,6 @@ export default function FilterSave({ className, filters }) {
   ]);
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [dataRange, setDataRange] = useState(DATA_RANGE[0]?.name);
-  const [modalInfo, setModalInfo] = useState({});
 
   const saveFilter = (name) => {
     const req = {
@@ -42,7 +41,9 @@ export default function FilterSave({ className, filters }) {
       startDate: date[0].startDate,
       endDate: date[0].endDate,
       dataRange,
-      sortType: router.query.sort,
+      userSegments: company.userSegments
+        .filter((topic) => topics.includes(topic.name))
+        .map((topic) => topic._id),
       topics: company.topics
         .filter((topic) => topics.includes(topic.name))
         .map((topic) => topic._id),
@@ -58,23 +59,28 @@ export default function FilterSave({ className, filters }) {
 
   const handleFilterSelect = (value) => {
     setSelectedFilter(value);
+
     router.push({
       pathname: router.pathname,
       query: {
         ...router.query,
         filter: value._id,
-        dataRange: value.dataRange,
-        startDate: value.startDate,
-        endDate: value.endDate,
-        categories: value.categories
+        dataRange: value?.dataRange,
+        startDate: value?.startDate,
+        endDate: value?.endDate,
+        userSegments: value?.userSegments
+          .map((id) => company.userSegments.find((item) => item._id === id))
+          .map((item) => item.name)
+          .join(','),
+        category: value?.categories
           .map((id) => company.categories.find((item) => item._id === id))
           .map((item) => item.name)
           .join(','),
-        topics: value.topics
+        topics: value?.topics
           .map((id) => company.topics.find((item) => item._id === id))
           .map((item) => item.name)
           .join(','),
-        statuses: value.statuses
+        status: value?.statuses
           .map((id) => company.statuses.find((item) => item._id === id))
           .map((item) => item.name)
           .join(',')
@@ -107,71 +113,45 @@ export default function FilterSave({ className, filters }) {
       });
     }
   };
-
+  const updateSavedFilter = () => {
+    const req = {
+      _id: selectedFilter._id,
+      startDate: date[0].startDate,
+      endDate: date[0].endDate,
+      dataRange,
+      userSegments: company.userSegments
+        .filter((topic) => userSegments.includes(topic.name))
+        .map((topic) => topic._id),
+      topics: company.topics
+        .filter((topic) => topics.includes(topic.name))
+        .map((topic) => topic._id),
+      statuses: company.statuses
+        .filter((status) => statuses.includes(status.name))
+        .map((status) => status._id),
+      categories: company.categories
+        .filter((category) => categories.includes(category.name))
+        .map((category) => category._id)
+    };
+    dispatch(authActions.updateSavedFilters(req));
+  };
   useEffect(() => {
-    if (topics.length) {
-      router.push({
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          topics: topics.join(',')
-        }
-      });
-    }
-  }, [topics]);
+    const { topics, status, category, startDate, endDate, dataRange, userSegments, filter } =
+      router.query;
 
-  useEffect(() => {
-    if (statuses.length) {
-      router.push({
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          status: statuses.join(',')
-        }
-      });
-    }
-  }, [statuses]);
-
-  useEffect(() => {
-    if (userSegments.length) {
-      router.push({
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          segment: userSegments.join(',')
-        }
-      });
-    }
-  }, [userSegments]);
-
-  useEffect(() => {
-    if (categories.length) {
-      router.push({
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          category: categories.join(',')
-        }
-      });
-    }
-  }, [categories]);
-
-  useEffect(() => {
-    setUserSegments(router.query.segment ? router.query.segment.split(',') : []);
-    setTopics(router.query.topics ? router.query.topics.split(',') : []);
-    setStatuses(router.query.status ? router.query.status.split(',') : []);
-    setCategories(router.query.category ? router.query.category.split(',') : []);
+    setUserSegments(userSegments ? userSegments?.split(',') : []);
+    setTopics(topics ? topics?.split(',') : []);
+    setStatuses(status ? status?.split(',') : []);
+    setCategories(category ? category?.split(',') : []);
     setDate([
       {
-        startDate: router.query.startDate ? new Date(router.query.startDate) : null,
-        endDate: router.query.endDate ? new Date(router.query.endDate) : null,
+        startDate: startDate ? new Date(startDate) : null,
+        endDate: endDate ? new Date(endDate) : null,
         key: 'selection'
       }
     ]);
-    setDataRange(router.query.dataRange ? router.query.dataRange : DATA_RANGE[0]?.name);
-    setSelectedFilter(
-      router.query.filter ? filters.find((filter) => filter._id === router.query.filter) : null
-    );
+    setDataRange(dataRange || DATA_RANGE[0]?.name);
+
+    setSelectedFilter(filter ? filters?.find((f) => f._id === filter) : null);
   }, [router]);
 
   return (
@@ -183,10 +163,10 @@ export default function FilterSave({ className, filters }) {
           <BaseListBox
             value={selectedFilter}
             label={selectedFilter?.name}
+            onChange={handleFilterSelect}
             icon={
               <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
             }
-            onChange={handleFilterSelect}
             field="name"
             options={filters}
             size="xl"
@@ -229,22 +209,42 @@ export default function FilterSave({ className, filters }) {
             <Tab.Panel className="h-[50px]">
               <DatePicker onChange={onChange} value={date} />
             </Tab.Panel>
-            <Tab.Panel />
+            <Tab.Panel>
+              <DatePicker onChange={onChange} value={date} />
+            </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>
       </div>
 
       <FilterCheckboxes
         options={company?.userSegments}
-        onChange={setUserSegments}
+        onChange={(value) => {
+          setUserSegments(value);
+          router.push({
+            pathname: router.pathname,
+            query: {
+              ...router.query,
+              userSegments: value.join(',')
+            }
+          });
+        }}
         label="User Segments"
-        name="userSegments"
+        name="segment"
         selectedItems={userSegments}
       />
 
       <FilterCheckboxes
         options={company?.topics}
-        onChange={setTopics}
+        onChange={(value) => {
+          setTopics(value);
+          router.push({
+            pathname: router.pathname,
+            query: {
+              ...router.query,
+              topics: value.join(',')
+            }
+          });
+        }}
         label="Topics"
         name="topics"
         selectedItems={topics}
@@ -252,7 +252,16 @@ export default function FilterSave({ className, filters }) {
 
       <FilterCheckboxes
         options={company?.statuses}
-        onChange={setStatuses}
+        onChange={(value) => {
+          setStatuses(value);
+          router.push({
+            pathname: router.pathname,
+            query: {
+              ...router.query,
+              status: value.join(',')
+            }
+          });
+        }}
         label="Statuses"
         name="status"
         selectedItems={statuses}
@@ -260,40 +269,60 @@ export default function FilterSave({ className, filters }) {
 
       <FilterCheckboxes
         options={company?.categories}
-        onChange={setCategories}
+        onChange={(value) => {
+          setCategories(value);
+          router.push({
+            pathname: router.pathname,
+            query: {
+              ...router.query,
+              category: value.join(',')
+            }
+          });
+        }}
         label="Categories"
         name="category"
         selectedItems={categories}
       />
-
       <Divider />
+      {(topics.length > 0 ||
+        userSegments.length > 0 ||
+        statuses.length > 0 ||
+        categories.length > 0) && (
+        <Button
+          variant="blank"
+          fullWidth
+          text="Clear All Filters"
+          onClick={() => {
+            router.push({
+              pathname: router.pathname,
+              query: { page: router.query.page, feedback: router.query.feedback }
+            });
+          }}
+        />
+      )}
       <Button
         variant="blank"
         text="Save Filter"
         fullWidth
         onClick={() => {
-          setIsCreateNewTopic(!isCreateNewTopic);
-          setModalInfo({
-            title: 'Filter Save',
-            description: 'Please enter a name for this filter.',
-            label: 'Filter name',
-            id: 'filterName',
-            placeholder: 'e.g. New Filter',
-            createOnClick: (name) => saveFilter(name)
-          });
+          setOpenCreateModal(!openCreateModal);
         }}
       />
+      {selectedFilter && (
+        <Button variant="blank" text="Edit Filter" fullWidth onClick={updateSavedFilter} />
+      )}
+
       <CreateModal
-        show={isCreateNewTopic}
-        onClose={() => setIsCreateNewTopic(!isCreateNewTopic)}
-        cancelOnClick={() => setIsCreateNewTopic(!isCreateNewTopic)}
-        createOnClick={modalInfo.createOnClick}
+        show={openCreateModal}
+        onClose={() => setOpenCreateModal(false)}
+        cancelOnClick={() => setOpenCreateModal(false)}
+        createOnClick={(name) => saveFilter(name)}
         icon={<ThreeStar className="w-6 h-6 text-green-600" />}
-        title={modalInfo.title}
-        description={modalInfo.description}
-        label={modalInfo.label}
-        id={modalInfo.id}
-        placeholder={modalInfo.placeholder}
+        title="Filter Save"
+        description="Please enter a name for this filter."
+        label="Filter name"
+        id="filterName"
+        placeholder="e.g. New Filter"
       />
     </div>
   );

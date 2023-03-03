@@ -33,7 +33,7 @@ export default function BaseListBox({
       <div className="relative">
         <Listbox.Button
           className={cn(
-            'relative flex items-center bg-white dark:bg-aa-700 purple:bg-pt-700 justify-between gap-2 w-full border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm',
+            'relative flex items-center bg-white dark:bg-aa-700 purple:bg-pt-700 justify-between gap-2 w-full border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-lg text-left cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm',
             size === 'xs' && '',
             size === 'sm' && 'h-11 items-center',
             size === 'md' && 'min-w-[auto] md:min-w-[160px]',
@@ -83,7 +83,12 @@ export default function BaseListBox({
 
               <span className="flex items-center gap-2">
                 {multiple && !!value?.length && (
-                  <button type="button" onClick={onReset}>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onReset();
+                    }}>
                     <XIcon className="w-5 h-5 text-gray-400 dark:text-aa-200 purple:text-pt-200" />
                   </button>
                 )}
@@ -103,7 +108,7 @@ export default function BaseListBox({
           leaveTo="opacity-0">
           <Listbox.Options
             className={cn(
-              'absolute mt-1 max-h-64 overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50 border border-slate-300 dark:border-aa-400 purple:border-pt-400',
+              'absolute mt-1 max-h-64 overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50 border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800',
               size === 'sm' && 'w-[120px]',
               size === 'md' && 'w-[160px]',
               size === 'lg' && 'max-w-[195px] max-h-60',

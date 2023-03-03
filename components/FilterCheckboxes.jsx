@@ -39,7 +39,7 @@ export default function FilterCheckboxes({
             multiple
             size="xl"
             hidden="mobile"
-            type={label !== 'Topic' ? 'status' : 'default'}
+            type={label !== 'Topics' ? 'status' : 'default'}
             onReset={handleReset}
           />
         </div>

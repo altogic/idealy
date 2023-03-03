@@ -77,6 +77,7 @@ export default function CommentForm({
         commentActions.updateComment({
           _id: editedComment._id,
           text: comment,
+          user: user?._id,
           guestName: user?.name || data.guestName,
           guestEmail: user?.email || data.guestEmail,
           onSuccess: () => {

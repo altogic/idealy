@@ -19,7 +19,7 @@ import 'react-quill/dist/quill.snow.css';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 const EditorToolbar = dynamic(() => import('../EditorToolbar'), { ssr: false });
 
-export default function DashboardIdeaDetail({ setEditedIdea }) {
+export default function DashboardIdeaDetail() {
   const dispatch = useDispatch();
   const [isEditorFocus, setIsEditorFocus] = useState();
   const [content, setContent] = useState('');
@@ -33,7 +33,7 @@ export default function DashboardIdeaDetail({ setEditedIdea }) {
     <div className="grid 2xl:grid-cols-[1fr,348px]">
       <div className="relative border-r border-slate-200 dark:border-aa-600 purple:border-pt-800 h-[calc(100vh-242px)]">
         <div className={cn('p-10 overflow-y-auto', isEditorFocus ? 'max-h-[84%]' : 'max-h-[97%]')}>
-          <FeedbackCardDetail setEditedIdea={setEditedIdea} />
+          <FeedbackCardDetail />
           <div className="my-10">
             <div className="flex items-center justify-between gap-6">
               <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200">Comments</h6>
@@ -67,7 +67,7 @@ export default function DashboardIdeaDetail({ setEditedIdea }) {
           </InfiniteScroll>
         </div>
         {idea && (
-          <div className="absolute -bottom-14 z-50 w-full bg-white dark:bg-aa-800 purple:bg-pt-800 border-t border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-t-lg shadow-lg p-2 mt-2">
+          <div className="absolute -bottom-14 z-50 w-full bg-white dark:bg-aa-800 purple:bg-pt-800 border-t border-b border-slate-200 dark:border-aa-600 purple:border-pt-800 shadow-lg p-2 mt-2">
             <div className="relative flex ">
               <Avatar src={user?.profilePicture} alt={user?.name} className=" self-center" />
               <ReactQuill

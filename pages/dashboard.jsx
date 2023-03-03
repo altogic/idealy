@@ -3,7 +3,6 @@ import IdeaFilter from '@/components/dashboard/IdeaFilter';
 import DashboardIdeaCard from '@/components/DashboardIdeaCard';
 import Drawer from '@/components/Drawer';
 import EmptyState from '@/components/EmptyState';
-import CommentDeleteModal from '@/components/Idea/CommentDeleteModal';
 import DeleteIdeaModal from '@/components/Idea/DeleteIdeaModal';
 import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfiniteScroll from '@/components/InfiniteScroll';
@@ -18,6 +17,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Divider from '@/components/Divider';
 
 const DashboardIdeaDetail = dynamic(() => import('@/components/dashboard/DashboardIdeaDetail'), {
   ssr: false
@@ -33,8 +33,7 @@ export default function AdminDashboard() {
   const [isFilterSlide, setIsFilterSlide] = useState(false);
   const idea = useSelector((state) => state.idea.selectedIdea);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
-  const [editedIdea, setEditedIdea] = useState(null);
-  const [selectedComment, setSelectedComment] = useState(null);
+
   const [user, setUser] = useState();
   const {
     sort,
@@ -131,12 +130,13 @@ export default function AdminDashboard() {
     }
   }, [router, ideas]);
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
       dispatch(ideaActions.setSelectedIdea(null));
-    },
-    []
-  );
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
 
   return (
     <>
@@ -152,17 +152,23 @@ export default function AdminDashboard() {
           />
           <div className="border-r border-slate-200 dark:border-aa-600 purple:border-pt-800">
             <IdeaFilter isFilterSlide={isFilterSlide} setIsFilterSlide={setIsFilterSlide} />
-            <SubmitIdea open={feedbackSubmitModal} idea={editedIdea} />
-            <div className="h-[calc(100vh-181px)] overflow-auto flex justify-center">
-              <InfiniteScroll items={ideas} countInfo={countInfo} endOfList={handlePageChange}>
+            <div className="overflow-y-auto h-[calc(100vh-188px)]">
+              <InfiniteScroll
+                items={ideas}
+                countInfo={countInfo}
+                endOfList={handlePageChange}
+                className="h-[calc(100vh-181px)] overflow-auto">
                 {ideas.length ? (
-                  ideas.map((i) => (
-                    <DashboardIdeaCard
-                      key={i._id}
-                      id={i._id}
-                      idea={i}
-                      selected={i._id === idea?._id}
-                    />
+                  ideas.map((i, index) => (
+                    <>
+                      <DashboardIdeaCard
+                        key={i._id}
+                        id={i._id}
+                        idea={i}
+                        selected={i._id === idea?._id}
+                      />
+                      {ideas.length - 1 !== index && <Divider />}
+                    </>
                   ))
                 ) : (
                   <div className="m-auto my-8">
@@ -175,16 +181,14 @@ export default function AdminDashboard() {
               </InfiniteScroll>
             </div>
           </div>
+
           <div>
             <div className="p-[33px] border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
               <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md">
                 {idea?.title}
               </h2>
             </div>
-            <DashboardIdeaDetail
-              setEditedIdea={setEditedIdea}
-              setSelectedComment={setSelectedComment}
-            />
+            <DashboardIdeaDetail />
           </div>
         </div>
       </Layout>
@@ -202,7 +206,7 @@ export default function AdminDashboard() {
         <FilterSave className="relative mt-6 flex-1 space-y-8" filters={user?.savedFilters} />
       </Drawer>
       <DeleteIdeaModal onClose={() => handleCloseIdea()} />
-      <CommentDeleteModal commentId={selectedComment} onClose={() => {}} />
+      <SubmitIdea open={feedbackSubmitModal} />
     </>
   );
 }

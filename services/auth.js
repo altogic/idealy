@@ -64,12 +64,17 @@ const AuthService = {
     return db.model('users.notifications').object(id).update(req);
   },
 
-  updateSavedFilters({ id, value, fieldName }) {
+  updateSavedFilterName({ id, value, fieldName }) {
     return db
       .model('users.savedFilters')
       .object(id)
       .updateFields([{ field: fieldName, updateType: 'set', value }]);
   },
+
+  updateSavedFilters(req) {
+    return db.model('users.savedFilters').object(req._id).update(req);
+  },
+
   updateUserCanCreateCompany(userId, value) {
     return db
       .model('users')

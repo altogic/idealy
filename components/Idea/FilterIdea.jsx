@@ -54,7 +54,7 @@ export default function FilterIdea({
         label={sortType?.name}
         onChange={handleSortChange}
         field="name"
-        options={IDEA_SORT_TYPES}
+        options={IDEA_SORT_TYPES.filter((s) => !s.isAdmin)}
         size="lg"
         hidden="mobile"
       />
@@ -74,6 +74,11 @@ export default function FilterIdea({
           size="lg"
           align="right"
           hidden="mobile"
+          onReset={() => {
+            setFilterTopics([]);
+            delete router.query.topics;
+            router.push(router);
+          }}
         />
         <BaseListBox
           value={filterStatus}
@@ -90,6 +95,11 @@ export default function FilterIdea({
           align="right"
           hidden="mobile"
           type="status"
+          onReset={() => {
+            setFilterStatus([]);
+            delete router.query.status;
+            router.push(router);
+          }}
         />
       </div>
     </div>

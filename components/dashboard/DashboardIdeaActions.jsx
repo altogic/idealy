@@ -132,11 +132,11 @@ export default function DashboardIdeaActions() {
     });
   };
   return (
-    <div className="h-[calc(100vh-181px)] p-6">
-      <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 mb-4 text-base font-semibold tracking-sm">
+    <div className="h-[calc(100vh-181px)] relative">
+      <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 mb-4 text-base font-semibold tracking-sm pt-6 px-6">
         Feedback Details
       </h2>
-      <div className="space-y-8 max-h-[90%] overflow-y-auto">
+      <div className="space-y-8 max-h-[85%] px-6 overflow-y-auto">
         <div>
           <Label label="Public Link" />
           <div className="flex h-10">
@@ -202,7 +202,7 @@ export default function DashboardIdeaActions() {
             label={segments?.name}
             onChange={(value) => {
               setSegments(value);
-              updateIdea({ userSegments: value._id });
+              updateIdea({ userSegment: value._id });
             }}
             field="name"
             type="status"
@@ -238,9 +238,7 @@ export default function DashboardIdeaActions() {
           label="Topics"
           name="topic"
           openModal={() => openModal('Topic', 'topicName', 'topics')}>
-          {!!topics?.length && (
-            <TopicSelection topics={topics} setTopics={setTopics} update={updateIdeaTopics} />
-          )}
+          <TopicSelection topics={topics} setTopics={setTopics} update={updateIdeaTopics} />
         </IdeaActionItem>
         <IdeaActionItem
           label="Roadmaps"
@@ -251,7 +249,7 @@ export default function DashboardIdeaActions() {
             label={roadMap?.name}
             onChange={(value) => {
               setRoadMap(value);
-              updateIdea({ roadMap: value._id });
+              updateIdea({ roadmap: value._id });
             }}
             field="name"
             options={company?.roadmaps}
@@ -269,15 +267,14 @@ export default function DashboardIdeaActions() {
       <IdeaActions dashboard />
       <CreateModal
         show={openCreateModal}
-        onClose={() => setOpenCreateModal(!openCreateModal)}
-        cancelOnClick={() => setOpenCreateModal(!openCreateModal)}
+        onClose={() => setOpenCreateModal(false)}
+        cancelOnClick={() => setOpenCreateModal(false)}
         createOnClick={modalInfo.createOnClick}
         icon={<ThreeStar className="w-6 h-6 text-green-600" />}
         title={modalInfo.title}
         description={modalInfo.description}
         label={modalInfo.label}
         id={modalInfo.id}
-        placeholder={modalInfo.placeholder}
       />
     </div>
   );
