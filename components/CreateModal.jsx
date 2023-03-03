@@ -21,7 +21,6 @@ export default function CreateModal({
     const form = e.target;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
-    console.log(onClose);
     onClose();
     createOnClick(data[id]);
   };
