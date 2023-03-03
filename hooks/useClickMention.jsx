@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-export default function useClickMention(id) {
+export default function useClickMention(id, dashboard) {
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
+  const idea = useSelector((state) => state.idea.selectedIdea);
   const [userCardStyle, setUserCardStyle] = useState({ top: 0, left: 0 });
   const [userCardInfo, setUserCardInfo] = useState({});
 
   function handleClickMention(e) {
+    console.log(e.target.getBoundingClientRect());
     e.stopPropagation();
     const top = e.target.offsetTop - 80;
     const left = e.target.offsetLeft + 20;
@@ -29,13 +31,15 @@ export default function useClickMention(id) {
     setUserCardStyle({ display: 'none' });
   }
   useEffect(() => {
-    if (feedBackDetailModal) {
+    if (feedBackDetailModal || dashboard) {
       const mentions = document.querySelectorAll('.mention');
       mentions.forEach((mention) => {
         mention.addEventListener('click', handleClickMention);
       });
-      const ideaDetail = document.querySelector('.drawer-body');
-      ideaDetail.addEventListener('click', hideUserCard);
+      if (!dashboard) {
+        const ideaDetail = document.querySelector('.drawer-body');
+        ideaDetail.addEventListener('click', hideUserCard);
+      }
     }
 
     return () => {
@@ -45,7 +49,7 @@ export default function useClickMention(id) {
         mention.removeEventListener('click', handleClickMention);
       });
     };
-  }, [feedBackDetailModal]);
+  }, [feedBackDetailModal, dashboard, idea]);
 
   return { userCardStyle, userCardInfo, setUserCardInfo, setUserCardStyle };
 }

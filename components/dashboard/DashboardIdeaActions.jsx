@@ -51,12 +51,12 @@ export default function DashboardIdeaActions() {
 
   const company = useSelector((state) => state.company.company);
   const idea = useSelector((state) => state.idea.selectedIdea);
-  const [status, setStatus] = useState();
-  const [category, setCategory] = useState();
-  const [roadMap, setRoadMap] = useState();
+  const [status, setStatus] = useState(idea?.status);
+  const [category, setCategory] = useState(idea?.category);
+  const [roadMap, setRoadMap] = useState(idea?.roadmap);
   const [copyText, setCopyText] = useState('');
-  const [topics, setTopics] = useState();
-  const [segments, setSegments] = useState();
+  const [topics, setTopics] = useState(idea?.topics);
+  const [segments, setSegments] = useState(idea?.userSegment);
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
   const updateIdea = useUpdateIdea(idea);
@@ -77,10 +77,6 @@ export default function DashboardIdeaActions() {
       setRoadMap(idea?.roadmap);
       setTopics(idea?.topics);
       setSegments(idea?.userSegment);
-    }
-  }, [idea]);
-  useEffect(() => {
-    if (idea) {
       setCopyText(`${company.subdomain}.idealy.io/public-view?feedback=${idea._id}`);
     }
   }, [idea]);
@@ -166,7 +162,11 @@ export default function DashboardIdeaActions() {
             label={status?.name}
             onChange={(value) => {
               setStatus(value);
-              updateIdea({ status: value._id });
+              updateIdea({
+                status: value._id,
+                statusUpdatedAt: Date.now(),
+                isCompleted: value.isCompletedStatus
+              });
             }}
             field="name"
             options={company?.statuses}

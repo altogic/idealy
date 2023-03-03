@@ -7,6 +7,7 @@ import { Comment, ThreeStar } from './icons';
 import SanitizeHtml from './SanitizeHtml';
 import StatusBadge from './StatusBadge';
 import TopicBadges from './TopicBadges';
+import IdeaBadges from './Idea/IdeaBadges';
 
 export default function DashboardIdeaCard({ idea, selected, id }) {
   const dispatch = useDispatch();
@@ -27,7 +28,14 @@ export default function DashboardIdeaCard({ idea, selected, id }) {
         dispatch(commentActions.getComments({ ideaId: idea?._id, page: 1 }));
         routeIdea(idea?._id);
       }}>
-      <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 mb-2 text-base font-medium tracking-sm max-w-[420px] lg:truncate">
+      {idea &&
+        (idea?.isPrivate ||
+          idea?.isBug ||
+          idea?.isArchived ||
+          idea?.isPinned ||
+          idea?.isMerged ||
+          !idea?.isApproved) && <IdeaBadges idea={idea} />}
+      <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 mb-2 text-base font-medium tracking-sm max-w-[420px] lg:truncate mt-4">
         {idea?.title}
       </h6>
       <SanitizeHtml

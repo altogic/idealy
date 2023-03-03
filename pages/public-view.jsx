@@ -72,10 +72,39 @@ export default function PublicView({ userIp }) {
     }
   }, [page, sort, topicsFilter, statusFilter, company]);
 
+  const showFeedbackDetail = (feedbackId) => {
+    const ideaDetail = ideas.find((i) => i._id === feedbackId);
+    if (ideaDetail) {
+      dispatch(ideaActions.setSelectedIdea(ideaDetail));
+      dispatch(toggleFeedBackDetailModal());
+    } else {
+      dispatch(
+        ideaActions.getIdeaById({
+          id: feedbackId,
+          onSuccess: () => {
+            if (!feedBackDetailModal) dispatch(toggleFeedBackDetailModal());
+          }
+        })
+      );
+    }
+  };
+
   function handleCloseIdea() {
-    dispatch(toggleFeedBackDetailModal());
+    const mergedIdeaId = localStorage.getItem('mergedIdea')?.slice(1, -1);
+    let check = false;
+    if (selectedIdea._id === mergedIdeaId) {
+      localStorage.removeItem('mergedIdea');
+      check = true;
+    }
     const temp = router.query;
-    delete temp?.feedback;
+    if (mergedIdeaId && !check) {
+      temp.feedback = mergedIdeaId;
+      showFeedbackDetail(mergedIdeaId);
+    } else {
+      delete temp?.feedback;
+      dispatch(ideaActions.setSelectedIdea(null));
+      dispatch(toggleFeedBackDetailModal());
+    }
     router.push(
       {
         pathname: router.pathname,
@@ -84,7 +113,6 @@ export default function PublicView({ userIp }) {
       undefined,
       { scroll: false }
     );
-    dispatch(ideaActions.setSelectedIdea(null));
   }
 
   const handleVoted = (ideaId) => {
@@ -97,23 +125,6 @@ export default function PublicView({ userIp }) {
       );
     }
     return ideaVotes.find((v) => v.ideaId === ideaId && v.ip === userIp && !v.userId);
-  };
-
-  const showFeedbackDetail = (feedbackId) => {
-    const ideaDetail = ideas.find((i) => i._id === feedbackId);
-    if (ideaDetail) {
-      dispatch(ideaActions.setSelectedIdea(ideaDetail));
-      dispatch(toggleFeedBackDetailModal());
-    } else {
-      dispatch(
-        ideaActions.getIdeaById({
-          id: feedbackId,
-          onSuccess: () => {
-            dispatch(toggleFeedBackDetailModal());
-          }
-        })
-      );
-    }
   };
 
   useEffect(() => {

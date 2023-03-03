@@ -18,7 +18,6 @@ export default function IdeaPriority() {
 
   useEffect(() => {
     if (idea) {
-      console.log('idea', idea?.benefitFactor, idea?.costFactor);
       setBenefitFactor(idea?.benefitFactor);
       setCostFactor(idea?.costFactor);
     }
