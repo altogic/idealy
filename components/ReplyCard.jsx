@@ -48,7 +48,7 @@ export default function ReplyCard({ reply, setShowReplies, dashboard }) {
       id={reply._id}
       className={cn(
         'group mt-2 rounded',
-        !dashboard && 'bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 p-8 '
+        !dashboard && 'bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 sm:p-8 '
       )}>
       <div className="flex gap-5">
         {/* Name First Letter Icon */}

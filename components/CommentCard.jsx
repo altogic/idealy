@@ -63,7 +63,7 @@ export default function CommentCard({ comment, dashboard }) {
       id={comment?._id}
       className={cn(
         'group mt-2 rounded',
-        !dashboard && 'bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 p-8 '
+        !dashboard && 'bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 p-4 sm:p-8 '
       )}>
       {editComment ? (
         <CommentForm

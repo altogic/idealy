@@ -115,7 +115,7 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
             <SanitizeHtml id="idea-detail" html={idea?.content} />
           </div>
 
-          <div className="relative flex items-center gap-2 mb-8">
+          <div className="relative flex flex-wrap items-center gap-2 mb-8">
             {/* User */}
             <IdeaInfo idea={idea} detail />
             {canEdit && !idea?.isMerged && (
