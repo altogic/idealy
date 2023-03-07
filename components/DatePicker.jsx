@@ -3,8 +3,8 @@ import { CalendarIcon } from '@heroicons/react/outline';
 import { DateRange, DefinedRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css';
-import { ChevronDown } from './icons';
 import { DATE_RANGES } from '../constants';
+import { ChevronDown } from './icons';
 
 export default function DatePicker({ onChange, value }) {
   const renderStaticRangeLabel = ({ label, isSelected }) => (

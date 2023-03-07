@@ -213,7 +213,7 @@ export default function Realtime() {
     dispatch(ideaActions.deleteComment(message.ideaId));
   }
   function addReplyHandler({ message }) {
-    if (ideaDetailModal.current) {
+    if (ideaDetailModal.current || router.asPath.includes('dashboard')) {
       dispatch(repliesActions.createReplySuccess(message));
       dispatch(commentActions.addedReply(message.commentId));
     }

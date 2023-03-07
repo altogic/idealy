@@ -59,6 +59,9 @@ export default function CommentCard({ comment, dashboard }) {
       dispatch(repliesActions.getReplies({ commentId: comment?._id, page }));
     }
   }, [page]);
+  useEffect(() => {
+    console.log('showReplies', showReplies);
+  }, [showReplies]);
 
   return (
     <div

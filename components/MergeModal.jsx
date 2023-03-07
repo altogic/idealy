@@ -8,8 +8,8 @@ import localStorageUtil from '@/utils/localStorageUtil';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import AsyncSelect from 'react-select/async';
 import * as yup from 'yup';
+import AsyncListbox from './AsyncListbox';
 import { Merge } from './icons';
 
 export default function MergeModal({ openMergeModal, setOpenMergeModal }) {
@@ -36,7 +36,9 @@ export default function MergeModal({ openMergeModal, setOpenMergeModal }) {
     if (errors) {
       return [];
     }
-    return data.map((idea) => ({ value: idea._id, label: idea.title }));
+    return data
+      .filter((sm) => sm._id !== idea._id)
+      .map((idea) => ({ value: idea._id, label: idea.title }));
   };
   const handleMerge = (data) => {
     dispatch(
@@ -70,14 +72,10 @@ export default function MergeModal({ openMergeModal, setOpenMergeModal }) {
         </div>
 
         <form onSubmit={handleSubmit(handleMerge)}>
-          <AsyncSelect
-            cacheOptions
+          <AsyncListbox
             loadOptions={filterIdeas}
-            defaultOptions
             placeholder="Search for an idea"
             className="w-full"
-            isLoading={loading}
-            isClearable
             onChange={(idea) => {
               if (idea) {
                 setValue('baseIdea', idea.value);
@@ -86,6 +84,7 @@ export default function MergeModal({ openMergeModal, setOpenMergeModal }) {
               }
             }}
           />
+
           {errors?.baseIdea && (
             <span className="inline-block text-sm text-red-600 dark:text-red-500 purple:text-red-500 mt-2">
               {errors.baseIdea.message}

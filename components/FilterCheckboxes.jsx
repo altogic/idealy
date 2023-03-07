@@ -1,16 +1,11 @@
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import BaseListBox from './BaseListBox';
 import { FilterHamburger } from './icons';
+import StatusBadge from './StatusBadge';
+import TopicBadges from './TopicBadges';
 
-export default function FilterCheckboxes({
-  options,
-  label,
-  onChange,
-
-  name,
-
-  selectedItems
-}) {
+export default function FilterCheckboxes({ options, label, onChange, name, selectedItems }) {
   const router = useRouter();
   const handleReset = () => {
     onChange([]);
@@ -22,8 +17,16 @@ export default function FilterCheckboxes({
       }
     });
   };
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  useEffect(() => {
+    if (selectedItems?.length > 0) {
+      const selectedOptions = options.filter((option) => selectedItems.includes(option.name));
+      setSelectedOptions(selectedOptions);
+    }
+  }, [selectedItems]);
+
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 px-2">
       {!!options?.length && (
         <div className="space-y-3">
           <BaseListBox
@@ -42,6 +45,17 @@ export default function FilterCheckboxes({
             type={label !== 'Topics' ? 'status' : 'default'}
             onReset={handleReset}
           />
+        </div>
+      )}
+      {selectedItems?.length > 0 && (
+        <div className="flex flex-wrap gap-4">
+          {selectedOptions.map((item) =>
+            label !== 'Topics' ? (
+              <StatusBadge name={item.name} key={item._id} color={item.color} />
+            ) : (
+              <TopicBadges key={item._id} badgeName={item.name} />
+            )
+          )}
         </div>
       )}
     </div>

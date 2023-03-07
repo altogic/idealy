@@ -59,14 +59,19 @@ export default function PublicView({ userIp }) {
       const req = {
         companyId: company?._id,
         limit: 10,
-        filter: `this.isArchived == false && this.isPrivate == false && this.isCompleted == false && this.isMerged == false && ${
-          topicsFilter ? `${topicsFilter} && ` : ''
-        } ${statusFilter ? `${statusFilter} && ` : ''}`,
+        filter: [
+          topicsFilter,
+          statusFilter,
+          'this.isArchived == false && this.isPrivate == false && this.isCompleted == false',
+          `this.isMerged == false && this.company == '${company._id}'`
+        ]
+          .filter(Boolean)
+          .join(' && '),
         sort,
         page
       };
       if (!user || !company?.role || company?.role === 'Guest') {
-        req.filter += ` this.isApproved == true &&`;
+        req.filter += `&& this.isApproved == true`;
       }
       dispatch(ideaActions.getIdeasByCompany(req));
     }

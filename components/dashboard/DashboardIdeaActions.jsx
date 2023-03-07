@@ -1,50 +1,21 @@
 import Label from '@/components/Label';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
+import { companyActions } from '@/redux/company/companySlice';
 import ideaService from '@/services/idea';
 import ToastMessage from '@/utils/toast';
 import copy from 'copy-to-clipboard';
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import AsyncSelect from 'react-select/async';
-import { companyActions } from '@/redux/company/companySlice';
+import { useDispatch, useSelector } from 'react-redux';
+import AsyncListbox from '../AsyncListbox';
 import BaseListBox from '../BaseListBox';
+import CreateModal from '../CreateModal';
 import { Copy, ThreeStar } from '../icons';
 import IdeaActions from '../Idea/admin/IdeaActions';
 import IdeaPriority from '../Idea/IdeaPriority';
 import IdeaVisibility from '../Idea/IdeaVisibility';
 import TopicSelection from '../Idea/TopicSelection';
 import Input from '../Input';
-import CreateModal from '../CreateModal';
 import IdeaActionItem from './IdeaActionItem';
-
-const memberSelectStyles = {
-  control: (provided) => ({
-    ...provided,
-    width: '100%',
-    border: 'none',
-    '&:hover': {
-      borderColor: '#e4e4e4'
-    }
-  }),
-  option: (provided, state) => ({
-    ...provided,
-    backgroundColor: state.isSelected ? '#e4e4e4' : 'white',
-    color: 'black',
-    '&:hover': {
-      backgroundColor: '#e4e4e4'
-    }
-  }),
-  menu: (provided) => ({
-    ...provided,
-    zIndex: 9999
-  }),
-  input: (provided) => ({
-    ...provided,
-    color: 'black',
-    width: '100%',
-    height: '100%'
-  })
-};
 
 export default function DashboardIdeaActions() {
   const dispatch = useDispatch();
@@ -127,6 +98,7 @@ export default function DashboardIdeaActions() {
       createOnClick: (name) => addCompanySubList(name, field)
     });
   };
+
   return (
     <div className="h-[calc(100vh-181px)] relative">
       <div className="overflow-y-auto h-[calc(100%-49px)]">
@@ -144,14 +116,16 @@ export default function DashboardIdeaActions() {
                 value={copyText}
                 onChange={handleCopyText}
                 disabled
+                postfix={
+                  <button
+                    type="button"
+                    onClick={copyToClipboard}
+                    className="inline-flex h-full items-center gap-2  text-slate-700 text-sm font-medium tracking-sm ">
+                    <Copy className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                    <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200">Copy</span>
+                  </button>
+                }
               />
-              <button
-                type="button"
-                onClick={copyToClipboard}
-                className="inline-flex h-full items-center gap-2  text-slate-700 px-2 py-[21px] text-sm font-medium tracking-sm border border-l-0 border-gray-300 dark:border-aa-600 purple:border-pt-800 rounded-r-md">
-                <Copy className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-                <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200">Copy</span>
-              </button>
             </div>
           </div>
           <IdeaActionItem
@@ -213,14 +187,9 @@ export default function DashboardIdeaActions() {
             />
           </IdeaActionItem>
           <IdeaActionItem label="Owner" name="owner">
-            <AsyncSelect
-              className="relative flex items-center bg-white dark:bg-aa-700 purple:bg-pt-700 justify-between gap-2 w-full border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm min-w-[auto] md:min-w-[300px] py-1"
-              cacheOptions
-              defaultOptions
-              defaultValue={idea?.author?.name || idea?.guestName || idea?.name}
+            <AsyncListbox
               loadOptions={filterMembers}
               placeholder="Search for an member"
-              isClearable
               onChange={({ value }) => {
                 if (value.isRegistered) {
                   updateIdea({ author: value._id });
@@ -232,7 +201,6 @@ export default function DashboardIdeaActions() {
                   });
                 }
               }}
-              styles={memberSelectStyles}
             />
           </IdeaActionItem>
           <IdeaActionItem

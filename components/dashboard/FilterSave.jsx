@@ -1,10 +1,11 @@
 import BaseListBox from '@/components/BaseListBox';
 import CreateModal from '@/components/CreateModal';
-import { FilterHamburger, ThreeStar } from '@/components/icons';
+import { Bug, FilterHamburger, ThreeStar, Thumbtack, XCircle } from '@/components/icons';
 import Label from '@/components/Label';
 import { DATA_RANGE } from '@/constants/index';
 import { authActions } from '@/redux/auth/authSlice';
 import { Tab } from '@headlessui/react';
+import { LockClosedIcon } from '@heroicons/react/outline';
 import cn from 'classnames';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -13,6 +14,7 @@ import Button from '../Button';
 import DatePicker from '../DatePicker';
 import Divider from '../Divider';
 import FilterCheckboxes from '../FilterCheckboxes';
+import IdeaPropertyButton from '../IdeaPropertyButton';
 
 export default function FilterSave({ className, filters }) {
   const router = useRouter();
@@ -157,9 +159,8 @@ export default function FilterSave({ className, filters }) {
   return (
     <div className={className}>
       {filters?.length > 0 && (
-        <div className="space-y-1.5">
+        <div className="space-y-1.5 px-2">
           <Label label="Filters" />
-
           <BaseListBox
             value={selectedFilter}
             label={selectedFilter?.name}
@@ -174,8 +175,7 @@ export default function FilterSave({ className, filters }) {
           />
         </div>
       )}
-
-      <div className="space-y-1.5">
+      <div className="space-y-1.5 px-2">
         <Label label="Data Range" />
         <Tab.Group
           onChange={(index) => {
@@ -283,31 +283,69 @@ export default function FilterSave({ className, filters }) {
         name="category"
         selectedItems={categories}
       />
-      <Divider />
+      <div className="space-y-1.5 ">
+        <Label label="Properties" className="px-2" />
+        <div className="space-y-2 ">
+          <IdeaPropertyButton
+            text="Archive"
+            active={router.query.archive === 'true'}
+            icon={
+              <Thumbtack className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+            }
+            name="archive"
+          />
+          <IdeaPropertyButton
+            text="Private"
+            active={router.query.private === 'true'}
+            icon={
+              <LockClosedIcon className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+            }
+            name="private"
+          />
+          <IdeaPropertyButton
+            text="Bug"
+            active={router.query.bug === 'true'}
+            icon={<Bug className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
+            name="bug"
+          />
+
+          <IdeaPropertyButton
+            text="No Status"
+            active={router.query.noStatus === 'true'}
+            icon={
+              <XCircle className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+            }
+            name="noStatus"
+          />
+        </div>
+      </div>
       {(topics.length > 0 ||
         userSegments.length > 0 ||
         statuses.length > 0 ||
         categories.length > 0) && (
-        <Button
-          variant="blank"
-          fullWidth
-          text="Clear All Filters"
-          onClick={() => {
-            router.push({
-              pathname: router.pathname,
-              query: { page: router.query.page, feedback: router.query.feedback }
-            });
-          }}
-        />
+        <>
+          <Divider />
+          <Button
+            variant="blank"
+            fullWidth
+            text="Clear All Filters"
+            onClick={() => {
+              router.push({
+                pathname: router.pathname,
+                query: { page: router.query.page, feedback: router.query.feedback }
+              });
+            }}
+          />
+          <Button
+            variant="blank"
+            text="Save Filter"
+            fullWidth
+            onClick={() => {
+              setOpenCreateModal(!openCreateModal);
+            }}
+          />
+        </>
       )}
-      <Button
-        variant="blank"
-        text="Save Filter"
-        fullWidth
-        onClick={() => {
-          setOpenCreateModal(!openCreateModal);
-        }}
-      />
       {selectedFilter && (
         <Button variant="blank" text="Edit Filter" fullWidth onClick={updateSavedFilter} />
       )}

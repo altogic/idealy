@@ -117,7 +117,6 @@ export default function ReplyCard({ reply, setShowReplies, dashboard }) {
             })
           );
           setIsDelete(!isDelete);
-          setShowReplies(false);
         }}
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title="Delete Reply"
