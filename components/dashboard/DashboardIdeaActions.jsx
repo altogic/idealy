@@ -11,11 +11,12 @@ import BaseListBox from '../BaseListBox';
 import CreateModal from '../CreateModal';
 import { Copy, ThreeStar } from '../icons';
 import IdeaActions from '../Idea/admin/IdeaActions';
-import IdeaPriority from '../Idea/IdeaPriority';
 import IdeaVisibility from '../Idea/IdeaVisibility';
 import TopicSelection from '../Idea/TopicSelection';
+import IdeaApproval from '../IdeaApproval';
 import Input from '../Input';
 import IdeaActionItem from './IdeaActionItem';
+import IdeaPriority from '../Idea/IdeaPriority';
 
 export default function DashboardIdeaActions() {
   const dispatch = useDispatch();
@@ -100,7 +101,7 @@ export default function DashboardIdeaActions() {
   };
 
   return (
-    <div className="h-[calc(100vh-181px)] relative">
+    <div className="h-[calc(100vh-181px)] relative bg-slate-50 dark:bg-aa-900 purple:bg-pt-1000 border-l border-slate-200 dark:border-aa-600 purple:border-pt-800 shadow-xs">
       <div className="overflow-y-auto h-[calc(100%-49px)]">
         <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 mb-4 text-base font-semibold tracking-sm pt-6 px-6">
           Feedback Details
@@ -128,6 +129,11 @@ export default function DashboardIdeaActions() {
               />
             </div>
           </div>
+          {!idea?.isApproved  && (
+            <IdeaActionItem label="Approval" name="approval">
+              <IdeaApproval />
+            </IdeaActionItem>
+          )}
           <IdeaActionItem
             label="Statuses"
             name="status"
@@ -190,7 +196,19 @@ export default function DashboardIdeaActions() {
             <AsyncListbox
               loadOptions={filterMembers}
               placeholder="Search for an member"
-              onChange={({ value }) => {
+              defaultValue={{
+                value: {
+                  _id: idea?.author?._id,
+                  name: idea?.author?.name,
+                  profilePicture: idea?.author?.profilePicture,
+                  email: idea?.author?.email,
+                  isRegistered: !!idea?.author?.provider
+                },
+                label: idea?.author?.name || idea?.guestName || idea?.name
+              }}
+              onChange={(res) => {
+                if (!res) return;
+                const { value } = res;
                 if (value.isRegistered) {
                   updateIdea({ author: value._id });
                 } else {

@@ -101,6 +101,7 @@ export default function SubmitIdea({ idea }) {
   const handleClose = () => {
     resetForm();
     dispatch(toggleFeedBackSubmitModal());
+    dispatch(ideaActions.setEditedIdea(null));
   };
   const sendMentionNotification = useSendMentionNotification('idea');
   const submitOnSuccess = (guestEmail, guestName, submittedIdea) => {
@@ -115,6 +116,7 @@ export default function SubmitIdea({ idea }) {
     });
     handleClose();
     dispatch(fileActions.clearFileLinks());
+    dispatch(ideaActions.setEditedIdea(null));
   };
   const onSubmit = (data) => {
     const guestName = generateRandomName();
@@ -306,7 +308,7 @@ export default function SubmitIdea({ idea }) {
         </div>
         <div className="mb-8 relative">
           <Editor content={content} setContent={setContent} errors={errors.content}>
-            {images.length < 5 && (
+            {images?.length < 5 && (
               <button type="button" onClick={imageHandler}>
                 <Photo className="w-6 h-6 text-slate-500 dark:text-aa-200 purple:text-pt-200 hover:text-[#06c] dark:hover:text-[#06c] purple:hover:text-[#06c]" />
               </button>

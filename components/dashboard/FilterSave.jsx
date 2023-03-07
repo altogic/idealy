@@ -1,11 +1,18 @@
 import BaseListBox from '@/components/BaseListBox';
 import CreateModal from '@/components/CreateModal';
-import { Bug, FilterHamburger, ThreeStar, Thumbtack, XCircle } from '@/components/icons';
+import {
+  Bug,
+  CircleCheck,
+  Eye,
+  FilterHamburger,
+  ThreeStar,
+  Thumbtack,
+  XCircle
+} from '@/components/icons';
 import Label from '@/components/Label';
 import { DATA_RANGE } from '@/constants/index';
 import { authActions } from '@/redux/auth/authSlice';
 import { Tab } from '@headlessui/react';
-import { LockClosedIcon } from '@heroicons/react/outline';
 import cn from 'classnames';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -297,11 +304,18 @@ export default function FilterSave({ className, filters }) {
           <IdeaPropertyButton
             text="Private"
             active={router.query.private === 'true'}
-            icon={
-              <LockClosedIcon className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-            }
+            icon={<Eye className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
             name="private"
           />
+          <IdeaPropertyButton
+            text="Need Approval"
+            active={router.query.approved === 'true'}
+            icon={
+              <CircleCheck className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+            }
+            name="approved"
+          />
+
           <IdeaPropertyButton
             text="Bug"
             active={router.query.bug === 'true'}
@@ -322,7 +336,11 @@ export default function FilterSave({ className, filters }) {
       {(topics.length > 0 ||
         userSegments.length > 0 ||
         statuses.length > 0 ||
-        categories.length > 0) && (
+        categories.length > 0 ||
+        router.query.archive === 'true' ||
+        router.query.bug === 'true' ||
+        router.query.private === 'true' ||
+        router.query.noStatus === 'true') && (
         <>
           <Divider />
           <Button

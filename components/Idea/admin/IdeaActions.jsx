@@ -1,11 +1,11 @@
 import { Archive, Bug, Merge, Pen, Thumbtack, Trash } from '@/components/icons';
 import MergeModal from '@/components/MergeModal';
-
 import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { toggleDeleteFeedBackModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
+import Router from 'next/router';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import IdeaActionButton from './IdeaActionButton';
 
 export default function IdeaActions({ dashboard }) {
@@ -52,7 +52,10 @@ export default function IdeaActions({ dashboard }) {
       type: 'Edit',
       Icon: Pen,
       color: 'blue',
-      onClick: () => dispatch(toggleFeedBackSubmitModal())
+      onClick: () => {
+        if (Router.asPath.includes('dashboard')) dispatch(ideaActions.setEditedIdea(idea));
+        dispatch(toggleFeedBackSubmitModal());
+      }
     }
   ];
 
