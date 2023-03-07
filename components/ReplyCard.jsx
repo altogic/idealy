@@ -13,7 +13,7 @@ import SanitizeHtml from './SanitizeHtml';
 import UserCard from './UserCard';
 import Divider from './Divider';
 
-export default function ReplyCard({ reply, setShowReplies, dashboard }) {
+export default function ReplyCard({ reply, dashboard }) {
   const [isDelete, setIsDelete] = useState(false);
   const [editReply, setEditReply] = useState();
   const canEdit = useIdeaActionValidation(reply, 'reply');

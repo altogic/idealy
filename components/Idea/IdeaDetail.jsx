@@ -63,15 +63,6 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
   }, [feedBackDetailModal]);
 
   useEffect(() => {
-    console.log(
-      'idea',
-      idea && !idea?.mergedIdeasDetail && idea?.mergedIdeas.length > 0 && !isMergeFetched.current,
-      {
-        ' !idea?.mergedIdeasDetail': !idea?.mergedIdeasDetail,
-        'idea?.mergedIdeas.length > 0': idea?.mergedIdeas.length > 0,
-        '!isMergeFetched.current': !isMergeFetched.current
-      }
-    );
     if (
       idea &&
       !idea?.mergedIdeasDetail &&

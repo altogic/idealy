@@ -59,9 +59,6 @@ export default function CommentCard({ comment, dashboard }) {
       dispatch(repliesActions.getReplies({ commentId: comment?._id, page }));
     }
   }, [page]);
-  useEffect(() => {
-    console.log('showReplies', showReplies);
-  }, [showReplies]);
 
   return (
     <div
@@ -179,12 +176,7 @@ export default function CommentCard({ comment, dashboard }) {
                 ) : (
                   <div className="space-y-6">
                     {replies[comment?._id]?.map((reply) => (
-                      <ReplyCard
-                        reply={reply}
-                        key={reply?._id}
-                        setShowReplies={setShowReplies}
-                        dashboard={dashboard}
-                      />
+                      <ReplyCard reply={reply} key={reply?._id} dashboard={dashboard} />
                     ))}
                   </div>
                 )}
