@@ -31,7 +31,9 @@ export default function AdminDashboard() {
   const countInfo = useSelector((state) => state.idea.countInfo);
   const sessionUser = useSelector((state) => state.auth.user);
   const [isFilterSlide, setIsFilterSlide] = useState(false);
+
   const idea = useSelector((state) => state.idea.selectedIdea);
+  const editedIdea = useSelector((state) => state.idea.editedIdea);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
 
   const [user, setUser] = useState();
@@ -46,7 +48,8 @@ export default function AdminDashboard() {
     archiveFilter,
     privateFilter,
     bugFilter,
-    noStatusFilter
+    noStatusFilter,
+    approvedFilter
   } = useFilterIdea();
 
   function handleCloseIdea() {
@@ -74,6 +77,7 @@ export default function AdminDashboard() {
           privateFilter,
           bugFilter,
           noStatusFilter,
+          approvedFilter,
           `this.isMerged== false && this.company == '${company._id}'`
         ]
           .filter(Boolean)
@@ -96,7 +100,8 @@ export default function AdminDashboard() {
     archiveFilter,
     privateFilter,
     bugFilter,
-    noStatusFilter
+    noStatusFilter,
+    approvedFilter
   ]);
 
   const handlePageChange = () => {
@@ -217,7 +222,7 @@ export default function AdminDashboard() {
         <FilterSave className="relative mt-6 flex-1 space-y-8" filters={user?.savedFilters} />
       </Drawer>
       <DeleteIdeaModal onClose={() => handleCloseIdea()} />
-      <SubmitIdea open={feedbackSubmitModal} />
+      <SubmitIdea open={feedbackSubmitModal} idea={editedIdea} />
     </>
   );
 }

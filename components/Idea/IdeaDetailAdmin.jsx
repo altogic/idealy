@@ -2,11 +2,11 @@ import { useSelector } from 'react-redux';
 import cn from 'classnames';
 import Divider from '../Divider';
 import IdeaActions from './admin/IdeaActions';
-import IdeaApproval from './admin/IdeaApproval';
-import IdeaPriority from './admin/IdeaPriorityTab';
+import IdeaPriorityTab from './admin/IdeaPriorityTab';
 import IdeaStatuses from './admin/IdeaStatuses';
-import IdeaVisibility from './admin/IdeaVisibilityTab';
+import IdeaVisibilityTab from './admin/IdeaVisibilityTab';
 import { Close } from '../icons';
+import IdeaApprovalTab from './admin/IdeaApprovalTab';
 
 export default function IdeaDetailAdmin({ adminOpen, setAdminOpen }) {
   const idea = useSelector((state) => state.idea.selectedIdea);
@@ -33,13 +33,13 @@ export default function IdeaDetailAdmin({ adminOpen, setAdminOpen }) {
         <div className="flex flex-col flex-1 bg-slate-50 dark:bg-aa-800 purple:bg-pt-900 p-4 overflow-y-auto">
           <IdeaStatuses />
           <Divider className="my-4" />
-          <IdeaPriority />
+          <IdeaPriorityTab />
           <Divider className="my-4" />
-          <IdeaVisibility />
+          <IdeaVisibilityTab />
           {!idea?.isApproved && (
             <>
               <Divider className="my-4" />
-              <IdeaApproval />
+              <IdeaApprovalTab />
             </>
           )}
         </div>

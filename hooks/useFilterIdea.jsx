@@ -14,6 +14,7 @@ export default function useFilterIdea() {
   const [privateFilter, setPrivateFilter] = useState();
   const [bugFilter, setBugFilter] = useState();
   const [noStatusFilter, setNoStatusFilter] = useState();
+  const [approvedFilter, setApprovedFilter] = useState();
   const router = useRouter();
 
   const getTopicsFilter = (filterTopics) => {
@@ -111,6 +112,12 @@ export default function useFilterIdea() {
     } else {
       setNoStatusFilter('');
     }
+    if (router.query.approved) {
+      console.log('approved');
+      setApprovedFilter(`this.isApproved == false`);
+    } else {
+      setApprovedFilter('');
+    }
   }, [router]);
 
   return {
@@ -124,6 +131,7 @@ export default function useFilterIdea() {
     archiveFilter,
     privateFilter,
     bugFilter,
-    noStatusFilter
+    noStatusFilter,
+    approvedFilter
   };
 }

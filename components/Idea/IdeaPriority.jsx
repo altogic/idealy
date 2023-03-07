@@ -46,7 +46,7 @@ export default function IdeaPriority() {
                 benefitFactor: selected,
                 priorityScore:
                   0.4 * PRIORITY_VALUES.default[benefitIndex] +
-                  0.8 * idea.voteCount +
+                  0.8 * idea.voteCount -
                   0.2 * PRIORITY_VALUES.default[costIndex]
               });
             }}
@@ -73,7 +73,7 @@ export default function IdeaPriority() {
                 costFactor: selected,
                 priorityScore:
                   0.4 * PRIORITY_VALUES.default[benefitIndex] +
-                  0.4 * idea.voteCount +
+                  0.4 * idea.voteCount -
                   0.2 * PRIORITY_VALUES.default[costIndex]
               });
             }}

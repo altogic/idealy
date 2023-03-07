@@ -50,12 +50,19 @@ const memberSelectStyles = {
   })
 };
 
-export default function AsyncListbox({ loadOptions, onChange, placeholder, ...rest }) {
+export default function AsyncListbox({
+  loadOptions,
+  onChange,
+  placeholder,
+  defaultValue,
+  ...rest
+}) {
   return (
     <AsyncSelect
       className="relative flex items-center bg-white dark:bg-aa-700 purple:bg-pt-700 justify-between gap-2 w-full border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm min-w-[auto] md:min-w-[300px] py-1"
       cacheOptions
       defaultOptions
+      value={defaultValue}
       loadOptions={loadOptions}
       placeholder={placeholder}
       isClearable

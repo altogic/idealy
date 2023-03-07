@@ -16,7 +16,6 @@ import EmptyState from '../EmptyState';
 import InfiniteScroll from '../InfiniteScroll';
 import DashboardIdeaActions from './DashboardIdeaActions';
 import UserCard from '../UserCard';
-import 'react-quill/dist/quill.snow.css';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 const EditorToolbar = dynamic(() => import('../EditorToolbar'), { ssr: false });

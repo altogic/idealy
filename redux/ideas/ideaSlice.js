@@ -10,7 +10,8 @@ const initialState = {
   selectedIdea: null,
   ideaVotes: [],
   similarIdeas: [],
-  searchedCompanyMembers: []
+  searchedCompanyMembers: [],
+  editedIdea: null
 };
 
 export const ideaSlice = createSlice({
@@ -357,6 +358,9 @@ export const ideaSlice = createSlice({
     getIdeaByIdFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    setEditedIdea(state, action) {
+      state.editedIdea = action.payload;
     }
   },
 
