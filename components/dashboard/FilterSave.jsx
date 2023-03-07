@@ -365,7 +365,7 @@ export default function FilterSave({ className, filters }) {
         </>
       )}
       {selectedFilter && (
-        <Button variant="blank" text="Edit Filter" fullWidth onClick={updateSavedFilter} />
+        <Button variant="blank" text="Update Filter" fullWidth onClick={updateSavedFilter} />
       )}
 
       <CreateModal
