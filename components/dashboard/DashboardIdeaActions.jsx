@@ -129,7 +129,7 @@ export default function DashboardIdeaActions() {
               />
             </div>
           </div>
-          {!idea?.isApproved  && (
+          {!idea?.isApproved && (
             <IdeaActionItem label="Approval" name="approval">
               <IdeaApproval />
             </IdeaActionItem>
@@ -244,10 +244,10 @@ export default function DashboardIdeaActions() {
               hidden="mobile"
             />
           </IdeaActionItem>
-          <IdeaActionItem label="Priority" name="priority">
+          <IdeaActionItem name="priority">
             <IdeaPriority />
           </IdeaActionItem>
-          <IdeaActionItem label="Visibility" name="visibility">
+          <IdeaActionItem name="visibility">
             <IdeaVisibility />
           </IdeaActionItem>
         </div>
