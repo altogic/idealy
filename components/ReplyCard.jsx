@@ -13,7 +13,7 @@ import SanitizeHtml from './SanitizeHtml';
 import UserCard from './UserCard';
 import Divider from './Divider';
 
-export default function ReplyCard({ reply, setShowReplies, dashboard }) {
+export default function ReplyCard({ reply, dashboard }) {
   const [isDelete, setIsDelete] = useState(false);
   const [editReply, setEditReply] = useState();
   const canEdit = useIdeaActionValidation(reply, 'reply');
@@ -117,7 +117,6 @@ export default function ReplyCard({ reply, setShowReplies, dashboard }) {
             })
           );
           setIsDelete(!isDelete);
-          setShowReplies(false);
         }}
         icon={<Danger className="w-6 h-6 text-red-600" />}
         title="Delete Reply"

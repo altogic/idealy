@@ -10,6 +10,10 @@ export default function useFilterIdea() {
   const [dateFilter, setDateFilter] = useState();
   const [segmentFilter, setSegmentFilter] = useState();
   const [searchFilter, setSearchFilter] = useState();
+  const [archiveFilter, setArchiveFilter] = useState();
+  const [privateFilter, setPrivateFilter] = useState();
+  const [bugFilter, setBugFilter] = useState();
+  const [noStatusFilter, setNoStatusFilter] = useState();
   const router = useRouter();
 
   const getTopicsFilter = (filterTopics) => {
@@ -87,6 +91,26 @@ export default function useFilterIdea() {
     } else {
       setSearchFilter('');
     }
+    if (router.query.archive) {
+      setArchiveFilter(`this.isArchived == true`);
+    } else {
+      setArchiveFilter('');
+    }
+    if (router.query.private) {
+      setPrivateFilter(`this.isPrivate == true`);
+    } else {
+      setPrivateFilter('');
+    }
+    if (router.query.bug) {
+      setBugFilter(`this.isBug == true`);
+    } else {
+      setBugFilter('');
+    }
+    if (router.query.noStatus) {
+      setNoStatusFilter(`!EXISTS(this.status)`);
+    } else {
+      setNoStatusFilter('');
+    }
   }, [router]);
 
   return {
@@ -96,6 +120,10 @@ export default function useFilterIdea() {
     categoryFilter,
     dateFilter,
     segmentFilter,
-    searchFilter
+    searchFilter,
+    archiveFilter,
+    privateFilter,
+    bugFilter,
+    noStatusFilter
   };
 }

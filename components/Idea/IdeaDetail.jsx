@@ -181,7 +181,7 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
 
           <div className="flex items-center justify-between gap-4 mb-8">
             {/* Feedback Detail Topic Badges */}
-            {!!idea?.topics.length && (
+            {!!idea?.topics?.length && (
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
                   Topics

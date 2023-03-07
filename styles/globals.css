@@ -216,6 +216,7 @@ html:has(:is(.modal, .drawer)) {
 
 .rdrDefinedRangesWrapper {
   width: 100% !important;
+  @apply border-none !important;
 }
 .rdrStaticRanges {
   display: grid !important;
@@ -297,9 +298,6 @@ html:has(:is(.modal, .drawer)) {
 .rdrStaticRange:hover .rdrStaticRangeLabel,
 .rdrStaticRange:focus .rdrStaticRangeLabel {
   @apply bg-slate-100 dark:bg-aa-600 purple:bg-pt-600 !important;
-}
-.rdrDefinedRangesWrapper {
-  @apply border-none !important;
 }
 .rdrInRange + .rdrDayNumber span {
   @apply text-slate-100 !important;

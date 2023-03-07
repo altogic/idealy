@@ -1,50 +1,21 @@
 import Label from '@/components/Label';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
+import { companyActions } from '@/redux/company/companySlice';
 import ideaService from '@/services/idea';
 import ToastMessage from '@/utils/toast';
 import copy from 'copy-to-clipboard';
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import AsyncSelect from 'react-select/async';
-import { companyActions } from '@/redux/company/companySlice';
+import { useDispatch, useSelector } from 'react-redux';
+import AsyncListbox from '../AsyncListbox';
 import BaseListBox from '../BaseListBox';
+import CreateModal from '../CreateModal';
 import { Copy, ThreeStar } from '../icons';
 import IdeaActions from '../Idea/admin/IdeaActions';
 import IdeaPriority from '../Idea/IdeaPriority';
 import IdeaVisibility from '../Idea/IdeaVisibility';
 import TopicSelection from '../Idea/TopicSelection';
 import Input from '../Input';
-import CreateModal from '../CreateModal';
 import IdeaActionItem from './IdeaActionItem';
-
-const memberSelectStyles = {
-  control: (provided) => ({
-    ...provided,
-    width: '100%',
-    border: 'none',
-    '&:hover': {
-      borderColor: '#e4e4e4'
-    }
-  }),
-  option: (provided, state) => ({
-    ...provided,
-    backgroundColor: state.isSelected ? '#e4e4e4' : 'white',
-    color: 'black',
-    '&:hover': {
-      backgroundColor: '#e4e4e4'
-    }
-  }),
-  menu: (provided) => ({
-    ...provided,
-    zIndex: 9999
-  }),
-  input: (provided) => ({
-    ...provided,
-    color: 'black',
-    width: '100%',
-    height: '100%'
-  })
-};
 
 export default function DashboardIdeaActions() {
   const dispatch = useDispatch();
@@ -127,142 +98,141 @@ export default function DashboardIdeaActions() {
       createOnClick: (name) => addCompanySubList(name, field)
     });
   };
+
   return (
     <div className="h-[calc(100vh-181px)] relative">
-      <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 mb-4 text-base font-semibold tracking-sm pt-6 px-6">
-        Feedback Details
-      </h2>
-      <div className="space-y-8 max-h-[85%] px-6 overflow-y-auto">
-        <div>
-          <Label label="Public Link" />
-          <div className="flex h-10">
-            <Input
-              type="text"
-              name="publicLink"
-              id="publicLink"
-              value={copyText}
-              onChange={handleCopyText}
-              disabled
-            />
-            <button
-              type="button"
-              onClick={copyToClipboard}
-              className="inline-flex h-full items-center gap-2  text-slate-700 px-2 py-[21px] text-sm font-medium tracking-sm border border-l-0 border-gray-300 dark:border-aa-600 purple:border-pt-800 rounded-r-md">
-              <Copy className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-              <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200">Copy</span>
-            </button>
+      <div className="overflow-y-auto h-[calc(100%-49px)]">
+        <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 mb-4 text-base font-semibold tracking-sm pt-6 px-6">
+          Feedback Details
+        </h2>
+        <div className="space-y-8 px-6 ">
+          <div>
+            <Label label="Public Link" />
+            <div className="flex h-10">
+              <Input
+                type="text"
+                name="publicLink"
+                id="publicLink"
+                value={copyText}
+                onChange={handleCopyText}
+                disabled
+                postfix={
+                  <button
+                    type="button"
+                    onClick={copyToClipboard}
+                    className="inline-flex h-full items-center gap-2  text-slate-700 text-sm font-medium tracking-sm ">
+                    <Copy className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                    <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200">Copy</span>
+                  </button>
+                }
+              />
+            </div>
           </div>
-        </div>
-        <IdeaActionItem
-          label="Statuses"
-          name="status"
-          openModal={() => openModal('Status', 'statusName', 'statuses')}>
-          <BaseListBox
-            value={status}
-            label={status?.name}
-            onChange={(value) => {
-              setStatus(value);
-              updateIdea({
-                status: value._id,
-                statusUpdatedAt: Date.now(),
-                isCompleted: value.isCompletedStatus
-              });
-            }}
-            field="name"
-            options={company?.statuses}
-            size="xxl"
-            hidden="mobile"
-            type="status"
-          />
-        </IdeaActionItem>
-        <IdeaActionItem
-          label="Categories"
-          name="category"
-          openModal={() => openModal('Category', 'categoryName', 'categories')}>
-          <BaseListBox
-            value={category}
-            label={category?.name}
-            onChange={(value) => {
-              setCategory(value);
-              updateIdea({ category: value._id });
-            }}
-            field="name"
-            options={company?.categories}
-            size="xxl"
-            hidden="mobile"
-            type="status"
-          />
-        </IdeaActionItem>
-        <IdeaActionItem
-          label="User Segments"
-          name="user segments"
-          openModal={() => openModal('User Segment', 'userSegmentName', 'userSegments')}>
-          <BaseListBox
-            value={segments}
-            label={segments?.name}
-            onChange={(value) => {
-              setSegments(value);
-              updateIdea({ userSegment: value._id });
-            }}
-            field="name"
-            type="status"
-            options={company?.userSegments}
-            size="xxl"
-            hidden="mobile"
-          />
-        </IdeaActionItem>
-        <IdeaActionItem label="Owner" name="owner">
-          <AsyncSelect
-            className="relative flex items-center bg-white dark:bg-aa-700 purple:bg-pt-700 justify-between gap-2 w-full border border-slate-300 dark:border-aa-400 purple:border-pt-400 rounded-lg text-left cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm min-w-[auto] md:min-w-[300px] py-1"
-            cacheOptions
-            defaultOptions
-            defaultValue={idea?.author?.name || idea?.guestName || idea?.name}
-            loadOptions={filterMembers}
-            placeholder="Search for an member"
-            isClearable
-            onChange={({ value }) => {
-              if (value.isRegistered) {
-                updateIdea({ author: value._id });
-              } else {
+          <IdeaActionItem
+            label="Statuses"
+            name="status"
+            openModal={() => openModal('Status', 'statusName', 'statuses')}>
+            <BaseListBox
+              value={status}
+              label={status?.name}
+              onChange={(value) => {
+                setStatus(value);
                 updateIdea({
-                  guestName: value.name,
-                  guestAvatar: value.profilePicture,
-                  guestEmail: value.email
+                  status: value._id,
+                  statusUpdatedAt: Date.now(),
+                  isCompleted: value.isCompletedStatus
                 });
-              }
-            }}
-            styles={memberSelectStyles}
-          />
-        </IdeaActionItem>
-        <IdeaActionItem
-          label="Topics"
-          name="topic"
-          openModal={() => openModal('Topic', 'topicName', 'topics')}>
-          <TopicSelection topics={topics} setTopics={setTopics} update={updateIdeaTopics} />
-        </IdeaActionItem>
-        <IdeaActionItem
-          label="Roadmaps"
-          name="roadmap"
-          openModal={() => openModal('Roadmap', 'roadmapName', 'roadmaps')}>
-          <BaseListBox
-            value={roadMap}
-            label={roadMap?.name}
-            onChange={(value) => {
-              setRoadMap(value);
-              updateIdea({ roadmap: value._id });
-            }}
-            field="name"
-            options={company?.roadmaps}
-            size="xxl"
-            hidden="mobile"
-          />
-        </IdeaActionItem>
-        <IdeaActionItem label="Priority" name="priority">
-          <IdeaPriority />
-        </IdeaActionItem>
-        <IdeaActionItem label="Visibility" name="visibility">
-          <IdeaVisibility />
-        </IdeaActionItem>
+              }}
+              field="name"
+              options={company?.statuses}
+              size="xxl"
+              hidden="mobile"
+              type="status"
+            />
+          </IdeaActionItem>
+          <IdeaActionItem
+            label="Categories"
+            name="category"
+            openModal={() => openModal('Category', 'categoryName', 'categories')}>
+            <BaseListBox
+              value={category}
+              label={category?.name}
+              onChange={(value) => {
+                setCategory(value);
+                updateIdea({ category: value._id });
+              }}
+              field="name"
+              options={company?.categories}
+              size="xxl"
+              hidden="mobile"
+              type="status"
+            />
+          </IdeaActionItem>
+          <IdeaActionItem
+            label="User Segments"
+            name="user segments"
+            openModal={() => openModal('User Segment', 'userSegmentName', 'userSegments')}>
+            <BaseListBox
+              value={segments}
+              label={segments?.name}
+              onChange={(value) => {
+                setSegments(value);
+                updateIdea({ userSegment: value._id });
+              }}
+              field="name"
+              type="status"
+              options={company?.userSegments}
+              size="xxl"
+              hidden="mobile"
+            />
+          </IdeaActionItem>
+          <IdeaActionItem label="Owner" name="owner">
+            <AsyncListbox
+              loadOptions={filterMembers}
+              placeholder="Search for an member"
+              onChange={({ value }) => {
+                if (value.isRegistered) {
+                  updateIdea({ author: value._id });
+                } else {
+                  updateIdea({
+                    guestName: value.name,
+                    guestAvatar: value.profilePicture,
+                    guestEmail: value.email
+                  });
+                }
+              }}
+            />
+          </IdeaActionItem>
+          <IdeaActionItem
+            label="Topics"
+            name="topic"
+            openModal={() => openModal('Topic', 'topicName', 'topics')}>
+            <TopicSelection topics={topics} setTopics={setTopics} update={updateIdeaTopics} />
+          </IdeaActionItem>
+          <IdeaActionItem
+            label="Roadmaps"
+            name="roadmap"
+            openModal={() => openModal('Roadmap', 'roadmapName', 'roadmaps')}>
+            <BaseListBox
+              value={roadMap}
+              label={roadMap?.name}
+              onChange={(value) => {
+                setRoadMap(value);
+                updateIdea({ roadmap: value._id });
+              }}
+              field="name"
+              options={company?.roadmaps}
+              size="xxl"
+              hidden="mobile"
+            />
+          </IdeaActionItem>
+          <IdeaActionItem label="Priority" name="priority">
+            <IdeaPriority />
+          </IdeaActionItem>
+          <IdeaActionItem label="Visibility" name="visibility">
+            <IdeaVisibility />
+          </IdeaActionItem>
+        </div>
       </div>
       <IdeaActions dashboard />
       <CreateModal

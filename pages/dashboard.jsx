@@ -42,7 +42,11 @@ export default function AdminDashboard() {
     categoryFilter,
     dateFilter,
     segmentFilter,
-    searchFilter
+    searchFilter,
+    archiveFilter,
+    privateFilter,
+    bugFilter,
+    noStatusFilter
   } = useFilterIdea();
 
   function handleCloseIdea() {
@@ -57,16 +61,23 @@ export default function AdminDashboard() {
   const getIdeasByCompany = useCallback(() => {
     if (router.isReady && company?._id) {
       const req = {
-        companyId: company?._id,
         limit: _.isEmpty(ideas) && router.query.page ? 10 * router.query.page : 10,
         page: _.isEmpty(ideas) ? 1 : router.query.page,
-        filter: `${topicsFilter ? `${topicsFilter} && ` : ''} ${
-          statusFilter ? `${statusFilter} && ` : ''
-        } ${categoryFilter ? `${categoryFilter} && ` : ''} ${
-          dateFilter ? `${dateFilter} && ` : ''
-        }${segmentFilter ? `${segmentFilter} && ` : ''}${
-          searchFilter ? `${searchFilter} && ` : ''
-        } `,
+        filter: [
+          topicsFilter,
+          statusFilter,
+          categoryFilter,
+          dateFilter,
+          segmentFilter,
+          searchFilter,
+          archiveFilter,
+          privateFilter,
+          bugFilter,
+          noStatusFilter,
+          `this.isMerged== false && this.company == '${company._id}'`
+        ]
+          .filter(Boolean)
+          .join(' && '),
         sort
       };
 
@@ -81,7 +92,11 @@ export default function AdminDashboard() {
     categoryFilter,
     dateFilter,
     segmentFilter,
-    searchFilter
+    searchFilter,
+    archiveFilter,
+    privateFilter,
+    bugFilter,
+    noStatusFilter
   ]);
 
   const handlePageChange = () => {
@@ -153,11 +168,7 @@ export default function AdminDashboard() {
           <div className="border-r border-slate-200 dark:border-aa-600 purple:border-pt-800">
             <IdeaFilter isFilterSlide={isFilterSlide} setIsFilterSlide={setIsFilterSlide} />
             <div className="overflow-y-auto h-[calc(100vh-188px)]">
-              <InfiniteScroll
-                items={ideas}
-                countInfo={countInfo}
-                endOfList={handlePageChange}
-                className="h-[calc(100vh-181px)] overflow-auto">
+              <InfiniteScroll items={ideas} countInfo={countInfo} endOfList={handlePageChange}>
                 {ideas.length ? (
                   ideas.map((i, index) => (
                     <>
@@ -184,7 +195,7 @@ export default function AdminDashboard() {
 
           <div>
             <div className="p-[33px] border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
-              <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md">
+              <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md truncate w-[65ch] ">
                 {idea?.title}
               </h2>
             </div>

@@ -8,7 +8,6 @@ export default function useClickMention(id, dashboard) {
   const [userCardInfo, setUserCardInfo] = useState({});
 
   function handleClickMention(e) {
-    console.log(e.target.getBoundingClientRect());
     e.stopPropagation();
     const top = e.target.offsetTop - 80;
     const left = e.target.offsetLeft + 20;

@@ -50,6 +50,7 @@ export default function SubmitIdea({ idea }) {
   const [content, setContent] = useState('');
   const [inpTitle, setInpTitle] = useState();
   const [member, setMember] = useState();
+  const [topicsOptions, setTopicsOptions] = useState([]);
   const dispatch = useDispatch();
   const updateIdea = useUpdateIdea(idea);
   const saveGuestInformation = useSaveGuestInformation();
@@ -254,6 +255,13 @@ export default function SubmitIdea({ idea }) {
     }
   }, [error, setError]);
 
+  useEffect(() => {
+    if (company) {
+      const _topics = [...company.topics];
+      setTopicsOptions(_topics.sort((a, b) => a.order - b.order));
+    }
+  }, [company]);
+
   return (
     <Drawer
       open={feedBackSubmitModal}
@@ -317,7 +325,7 @@ export default function SubmitIdea({ idea }) {
             Choose up to 3 Topics for this Idea (optional)
           </span>
           <div className="flex flex-wrap items-center gap-4">
-            {company?.topics.map((topic) => (
+            {topicsOptions.map((topic) => (
               <TopicButton
                 key={topic._id}
                 badgeName={topic.name}

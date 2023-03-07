@@ -192,7 +192,7 @@ export const ideaSlice = createSlice({
       });
       if (!action.payload.isAdminView) {
         state.ideas = state.ideas.filter(
-          (idea) => idea.isArchived || idea.isPrivate || idea.isCompleted
+          (idea) => !(idea.isArchived || idea.isPrivate || idea.isCompleted)
         );
       }
       state.selectedIdea = action.payload.data;

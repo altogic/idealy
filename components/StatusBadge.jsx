@@ -24,7 +24,9 @@ export default function StatusBadge({ name, color, className }) {
   return (
     <div
       style={{ backgroundColor: bgColor, color }}
-      className={`${className} inline-flex items-center text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full border border-transparent`}>
+      className={`${
+        className || ''
+      } inline-flex items-center text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full border border-transparent`}>
       <svg className="-ml-1 mr-1.5 h-2 w-2" fill={color} viewBox="0 0 8 8">
         <circle cx={4} cy={4} r={3} />
       </svg>

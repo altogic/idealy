@@ -49,7 +49,7 @@ export default function Input({
           {postfix && (
             <span
               className={cn(
-                'inline-flex items-center bg-slate-100 text-slate-500 px-3 text-base border border-l-0 border-slate-200 rounded-r-md',
+                'inline-flex items-center bg-slate-50 dark:bg-aa-600 purple:bg-pt-600 text-slate-500 px-3 text-base border border-l-0 border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-r-md',
                 error && 'text-red-900 border-red-600 focus:ring-red-600'
               )}>
               {postfix}

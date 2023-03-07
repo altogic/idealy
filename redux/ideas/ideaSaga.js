@@ -3,14 +3,13 @@ import { realtime } from '@/utils/altogic';
 import { call, put, takeEvery, select } from 'redux-saga/effects';
 import { ideaActions } from './ideaSlice';
 
-function* getIdeasByCompanySaga({ payload: { companyId, limit, page, sort, filter } }) {
+function* getIdeasByCompanySaga({ payload: { limit, page, sort, filter } }) {
   try {
     const { data: ideas, errors } = yield call(ideaService.getIdeasByCompany, {
-      companyId,
       limit,
       page,
       sort,
-      filter: `${filter || ''} this.company == '${companyId}'`
+      filter: `${filter || ''}`
     });
     if (errors) {
       throw new Error(errors);

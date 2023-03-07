@@ -15,6 +15,7 @@ export default function IdeaStatuses() {
   const idea = useSelector((state) => state.idea.selectedIdea);
   const loading = useSelector((state) => state.idea.isLoading);
   const changedIndex = useRef(null);
+  const [statuses, setStatuses] = useState([]);
 
   const updateIdea = useUpdateIdea(idea);
   useEffect(() => {
@@ -36,14 +37,19 @@ export default function IdeaStatuses() {
       setSelectedStatus(null);
     }
   };
-
+  useEffect(() => {
+    if (company) {
+      const _statuses = [...company.statuses];
+      setStatuses(_statuses.sort((a, b) => a.order - b.order));
+    }
+  }, [company]);
   return (
     <IdeaAdminTab title="Statuses">
       <div className="flex flex-col gap-4">
         <RadioGroup value={selectedStatus} onChange={handleStatusChange} disabled={loading}>
           <RadioGroup.Label className="sr-only">Server size</RadioGroup.Label>
           <div>
-            {company?.statuses?.map((status, index) => (
+            {statuses?.map((status, index) => (
               <RadioGroup.Option
                 key={status._id}
                 value={status}
