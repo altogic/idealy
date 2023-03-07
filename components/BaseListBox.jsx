@@ -29,7 +29,7 @@ export default function BaseListBox({
   }, [value]);
 
   useEffect(() => {
-    if (options?.[0].order) {
+    if (options?.[0]?.order) {
       const temp = [...options];
       setOptions(temp.sort((a, b) => a.order - b.order));
     } else {
