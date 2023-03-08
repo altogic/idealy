@@ -52,7 +52,7 @@ export default function PublicView({ userIp }) {
     dispatch(ideaActions.setSelectedIdea(idea));
     dispatch(toggleFeedBackDetailModal());
   };
-  const { sort, topicsFilter, statusFilter } = useFilterIdea();
+  const { sort, filter } = useFilterIdea();
 
   const getIdeasByCompany = useCallback(() => {
     if (router.isReady && company?._id) {
@@ -60,8 +60,7 @@ export default function PublicView({ userIp }) {
         companyId: company?._id,
         limit: 10,
         filter: [
-          topicsFilter,
-          statusFilter,
+          filter,
           'this.isArchived == false && this.isPrivate == false && this.isCompleted == false',
           `this.isMerged == false && this.company == '${company._id}'`
         ]
@@ -75,7 +74,7 @@ export default function PublicView({ userIp }) {
       }
       dispatch(ideaActions.getIdeasByCompany(req));
     }
-  }, [page, sort, topicsFilter, statusFilter, company]);
+  }, [page, sort, filter, company]);
 
   const showFeedbackDetail = (feedbackId) => {
     const ideaDetail = ideas.find((i) => i._id === feedbackId);

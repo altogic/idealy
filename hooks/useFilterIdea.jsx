@@ -1,8 +1,10 @@
 import { IDEA_SORT_TYPES } from 'constants';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 export default function useFilterIdea() {
+  const company = useSelector((state) => state.company.company);
   const [sortType, setSortType] = useState();
   const [topicsFilter, setTopicsFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -113,7 +115,6 @@ export default function useFilterIdea() {
       setNoStatusFilter('');
     }
     if (router.query.approved) {
-      console.log('approved');
       setApprovedFilter(`this.isApproved == false`);
     } else {
       setApprovedFilter('');
@@ -122,16 +123,21 @@ export default function useFilterIdea() {
 
   return {
     sort: sortType,
-    topicsFilter,
-    statusFilter,
-    categoryFilter,
-    dateFilter,
-    segmentFilter,
-    searchFilter,
-    archiveFilter,
-    privateFilter,
-    bugFilter,
-    noStatusFilter,
-    approvedFilter
+    filter: [
+      topicsFilter,
+      statusFilter,
+      categoryFilter,
+      dateFilter,
+      segmentFilter,
+      searchFilter,
+      archiveFilter,
+      privateFilter,
+      bugFilter,
+      noStatusFilter,
+      approvedFilter,
+      `this.isMerged== false && this.company == '${company?._id}'`
+    ]
+      .filter(Boolean)
+      .join(' && ')
   };
 }
