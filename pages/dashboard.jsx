@@ -18,7 +18,7 @@ import _ from 'lodash';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const DashboardIdeaDetail = dynamic(() => import('@/components/dashboard/DashboardIdeaDetail'), {
@@ -49,17 +49,23 @@ export default function AdminDashboard() {
     router.push(router, undefined, { shallow: true });
     dispatch(ideaActions.setSelectedIdea(newSelectedIdea));
   }
-  function getIdeasByCompany(page, limit) {
-    dispatch(
-      ideaActions.getIdeasByCompany({
-        limit,
-        page,
-        company: company?._id,
-        sort,
-        filter
-      })
-    );
-  }
+
+  const getIdeasByCompany = useCallback(
+    (page, limit) => {
+      if (company) {
+        dispatch(
+          ideaActions.getIdeasByCompany({
+            limit,
+            page,
+            company: company?._id,
+            sort,
+            filter
+          })
+        );
+      }
+    },
+    [company, sort, filter]
+  );
 
   const handlePageChange = () => {
     router.push({
@@ -76,13 +82,13 @@ export default function AdminDashboard() {
 
   useUpdateEffect(() => {
     const limit = _.isEmpty(ideas) && router.query.page ? 10 * router.query.page : 10;
-    const page = _.isEmpty(ideas) ? 1 : router.query.page;
-    getIdeasByCompany(page, limit);
+    const { page } = router.query;
+    if (page > 1) getIdeasByCompany(page, limit);
   }, [router.query.page]);
 
   useUpdateEffect(() => {
-    getIdeasByCompany(1, 10 * router.query.page);
-  }, [sort, filter]);
+    getIdeasByCompany(1, 10 * (router.query.page ? router.query.page : 1));
+  }, [getIdeasByCompany]);
 
   useEffect(() => {
     const ideaId = router.query.feedback;
