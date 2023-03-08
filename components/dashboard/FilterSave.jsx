@@ -43,6 +43,38 @@ export default function FilterSave({ className, filters }) {
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [dataRange, setDataRange] = useState(DATA_RANGE[0]?.name);
 
+  //  const handleFilterRequest = (value, isUpdate = false) => {
+  //    console.log('value', isUpdate ? [...userSegments] : [...company.userSegments]);
+  //    return {
+  //      dataRange: value?.dataRange,
+  //      startDate: value?.startDate,
+  //      endDate: value?.endDate,
+  //      userSegments: value?.userSegments
+  //        .map((id) =>
+  //          (isUpdate ? [...userSegments] : [...company.userSegments]).find(
+  //            (item) => item._id === id
+  //          )
+  //        )
+  //        .map((item) => item?.name || item)
+  //        .join(','),
+  //      category: value?.categories
+  //        .map((id) =>
+  //          (isUpdate ? [...categories] : [...company.categories]).find((item) => item._id === id)
+  //        )
+  //        .map((item) => item?.name || item)
+  //        .join(','),
+  //      topics: value?.topics
+  //        .map((id) => (isUpdate ? [...topics] : [company.topics]).find((item) => item._id === id))
+  //        .map((item) => item?.name || item)
+  //        .join(','),
+  //      status: value?.statuses
+  //        .map((id) =>
+  //          (isUpdate ? [...statuses] : [company.statuses]).find((item) => item._id === id)
+  //        )
+  //        .map((item) => item?.name || item)
+  //        .join(',')
+  //    };
+  //  };
   const saveFilter = (name) => {
     const req = {
       _parent: user._id,
@@ -61,14 +93,18 @@ export default function FilterSave({ className, filters }) {
         .map((status) => status._id),
       categories: company.categories
         .filter((category) => categories.includes(category.name))
-        .map((category) => category._id)
+        .map((category) => category._id),
+      isArchive: router.query.archive === 'true',
+      isPin: router.query.pin === 'true',
+      isPrivate: router.query.private === 'true',
+      isNoStatus: router.query.noStatus === 'true',
+      isApproval: router.query.approval === 'true'
     };
     dispatch(authActions.saveFilter(req));
   };
 
   const handleFilterSelect = (value) => {
     setSelectedFilter(value);
-
     router.push({
       pathname: router.pathname,
       query: {
@@ -92,7 +128,12 @@ export default function FilterSave({ className, filters }) {
         status: value?.statuses
           .map((id) => company.statuses.find((item) => item._id === id))
           .map((item) => item.name)
-          .join(',')
+          .join(','),
+        archive: value?.isArchive,
+        pin: value?.isPin,
+        private: value?.isPrivate,
+        noStatus: value?.isNoStatus,
+        approval: value?.isApproval
       }
     });
   };
@@ -139,7 +180,12 @@ export default function FilterSave({ className, filters }) {
         .map((status) => status._id),
       categories: company.categories
         .filter((category) => categories.includes(category.name))
-        .map((category) => category._id)
+        .map((category) => category._id),
+      isArchive: router.query.archive === 'true',
+      isPin: router.query.pin === 'true',
+      isPrivate: router.query.private === 'true',
+      isNoStatus: router.query.noStatus === 'true',
+      isApproval: router.query.approval === 'true'
     };
     dispatch(authActions.updateSavedFilters(req));
   };

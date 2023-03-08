@@ -1,17 +1,16 @@
 import cn from 'classnames';
 import { useRouter } from 'next/router';
+import { CircleCheck } from './icons';
 
-export default function IdeaPropertyButton({ icon, text, name, className }) {
+export default function IdeaPropertyButton({ icon, text, name, active, className }) {
   const router = useRouter();
   return (
     <div className="hover:bg-slate-200 dark:hover:bg-aa-700 purple:hover:bg-pt-800 rounded-lg">
       <button
         type="button"
-        className={cn('px-2 flex flex-col py-3 w-full rounded-lg', className, {
-          'bg-slate-200 dark:bg-aa-700 purple:bg-pt-800': router.query[name] === 'true'
-        })}
+        className={cn('px-2 flex justify-between py-3 w-full rounded-lg', className)}
         onClick={() => {
-          if (router.query[name] === 'true') {
+          if (active) {
             delete router.query[name];
             router.push({
               pathname: router.pathname,
@@ -35,6 +34,9 @@ export default function IdeaPropertyButton({ icon, text, name, className }) {
             {text}
           </span>
         </div>
+        {active && (
+          <CircleCheck className="w-5 h-5 text-green-500 dark:text-aa-200 purple:text-pt-200 self-end" />
+        )}
       </button>
     </div>
   );

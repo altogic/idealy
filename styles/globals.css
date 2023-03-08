@@ -308,3 +308,9 @@ html:has(:is(.modal, .drawer)) {
 .rdrDayPassive .rdrInRange + .rdrDayNumber span {
   @apply text-slate-500  !important;
 }
+::-webkit-scrollbar {
+  display: none;
+}
+* {
+  scrollbar-width: none;
+}

@@ -5,16 +5,20 @@ import { fileActions } from '@/redux/file/fileSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import BaseListBox from '../BaseListBox';
+import Label from '../Label';
 import IdeaSwitch from './admin/IdeaSwitch';
 
-export default function IdeaVisibility() {
+export default function IdeaVisibility({ listBoxSize }) {
   const dispatch = useDispatch();
   const idea = useSelector((state) => state.idea.selectedIdea);
+  const company = useSelector((state) => state.company.company);
   const coverImage = useSelector((state) => state.file.fileLink);
   const loading = useSelector((state) => state.file.isLoading);
   const [file, setFile] = useState();
   const [showOnRoadMap, setShowOnRoadMap] = useState();
   const [isPrivate, setIsPrivate] = useState();
+  const [roadMap, setRoadMap] = useState();
   const updateIdea = useUpdateIdea(idea);
   const handleAddCoverImage = () => {
     const input = document.createElement('input');
@@ -43,6 +47,7 @@ export default function IdeaVisibility() {
     if (idea) {
       setShowOnRoadMap(idea.showOnRoadMap);
       setIsPrivate(idea.isPrivate);
+      setRoadMap(idea.roadmap);
     }
   }, [idea]);
   return (
@@ -85,6 +90,21 @@ export default function IdeaVisibility() {
           />
         </div>
       )}
+      <div className="mt-4">
+        <Label label="Roadmaps" />{' '}
+        <BaseListBox
+          value={roadMap}
+          label={roadMap?.name}
+          onChange={(value) => {
+            setRoadMap(value);
+            updateIdea({ roadmap: value._id });
+          }}
+          field="name"
+          options={company?.roadmaps}
+          size={listBoxSize}
+          hidden="mobile"
+        />
+      </div>
     </div>
   );
 }

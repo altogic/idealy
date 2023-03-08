@@ -18,6 +18,7 @@ import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Divider from '@/components/Divider';
+import Tooltip from '@/components/Tooltip';
 
 const DashboardIdeaDetail = dynamic(() => import('@/components/dashboard/DashboardIdeaDetail'), {
   ssr: false
@@ -200,9 +201,12 @@ export default function AdminDashboard() {
 
           <div>
             <div className="p-[33px] border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
-              <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md truncate w-[65ch] ">
-                {idea?.title}
-              </h2>
+              <div className="relative group">
+                <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md truncate w-[65ch] cursor-default ">
+                  {idea?.title}
+                </h2>
+                <Tooltip content={idea?.title} />
+              </div>
             </div>
             <DashboardIdeaDetail />
           </div>

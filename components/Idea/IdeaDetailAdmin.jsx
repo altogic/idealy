@@ -1,12 +1,12 @@
-import { useSelector } from 'react-redux';
 import cn from 'classnames';
+import { useSelector } from 'react-redux';
 import Divider from '../Divider';
+import { Close } from '../icons';
 import IdeaActions from './admin/IdeaActions';
+import IdeaApprovalTab from './admin/IdeaApprovalTab';
 import IdeaPriorityTab from './admin/IdeaPriorityTab';
 import IdeaStatuses from './admin/IdeaStatuses';
 import IdeaVisibilityTab from './admin/IdeaVisibilityTab';
-import { Close } from '../icons';
-import IdeaApprovalTab from './admin/IdeaApprovalTab';
 
 export default function IdeaDetailAdmin({ adminOpen, setAdminOpen }) {
   const idea = useSelector((state) => state.idea.selectedIdea);

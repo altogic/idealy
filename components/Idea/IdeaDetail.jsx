@@ -63,12 +63,7 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
   }, [feedBackDetailModal]);
 
   useEffect(() => {
-    if (
-      idea &&
-      !idea?.mergedIdeasDetail &&
-      idea?.mergedIdeas.length > 0 &&
-      !isMergeFetched.current
-    ) {
+    if (idea && !idea?.mergedIdeasDetail && idea?.mergedIdeas.length > 0) {
       let filter = '';
       idea.mergedIdeas.forEach((i, index) => {
         if (index === idea.mergedIdeas.length - 1) {
@@ -79,8 +74,6 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
       });
 
       dispatch(ideaActions.getMergedIdeas(filter));
-
-      isMergeFetched.current = true;
     }
   }, [idea, router]);
 

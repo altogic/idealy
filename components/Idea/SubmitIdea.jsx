@@ -338,7 +338,7 @@ export default function SubmitIdea({ idea }) {
                     setTopics((prevTopics) => [...prevTopics, topic.name]);
                   }
                 }}
-                selected={topics.some((t) => t === topic.name)}
+                selected={topics?.some((t) => t === topic.name)}
               />
             ))}
             {errors?.topics?.message && (
