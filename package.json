@@ -44,7 +44,6 @@
     "react-beautiful-dnd": "^13.1.0",
     "react-color": "^2.19.3",
     "react-date-range": "^1.4.0",
-    "react-datepicker": "^4.10.0",
     "react-dom": "18.1.0",
     "react-hook-form": "^7.38.0",
     "react-intersection-observer": "^9.4.1",

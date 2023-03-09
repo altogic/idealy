@@ -20,6 +20,7 @@ export default function BaseListBox({
   type = 'default',
   align,
   onReset,
+  children,
   ...props
 }) {
   const [_value, setValue] = useState();
@@ -42,7 +43,7 @@ export default function BaseListBox({
       <div className="relative">
         <Listbox.Button
           className={cn(
-            'relative flex items-center bg-white dark:bg-aa-700 purple:bg-pt-700 justify-between gap-2 w-full border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-lg text-left cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm',
+            'relative flex items-center   gap-2 w-full rounded-lg text-left cursor-pointer focus:outline-none  sm:text-sm',
             size === 'xs' && '',
             size === 'sm' && 'h-11 items-center',
             size === 'md' && 'min-w-[auto] md:min-w-[160px]',
@@ -50,8 +51,10 @@ export default function BaseListBox({
             size === 'xl' && 'min-w-[auto] md:min-w-[250px]',
             size === 'xxl' && 'min-w-[auto] md:min-w-[300px]',
             (type === 'default' || type === 'status' || type === 'user') &&
-              ' dark:bg-aa-800 purple:bg-pt-800  py-3.5 px-2 md:px-[14px]',
-            type === 'icon' && 'text-slate-700 p-3  '
+              ' dark:bg-aa-800 purple:bg-pt-800  py-3.5 px-2 md:px-[14px] ',
+            type === 'icon' && 'text-slate-700 p-3',
+            type !== 'create' &&
+              'justify-between border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800 bg-white dark:bg-aa-700 purple:bg-pt-700 focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300'
           )}>
           {type !== 'icon' && (
             <>
@@ -72,8 +75,13 @@ export default function BaseListBox({
                       fontSize="text-sm"
                     />
                   )}
-                  <div className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm truncate flex gap-2">
-                    <span className={cn(``, hidden === 'mobile' && 'hidden md:inline-block')}>
+                  <div
+                    className={cn(
+                      'dark:text-aa-200 purple:text-pt-200 truncate flex gap-2',
+                      type === 'default' && 'text-slate-500 text-sm tracking-sm',
+                      type === 'create' && 'text-slate-800 text-3xl font-semibold'
+                    )}>
+                    <span className={cn(hidden === 'mobile' && 'hidden md:inline-block')}>
                       {' '}
                       {label}
                     </span>
@@ -117,7 +125,7 @@ export default function BaseListBox({
           leaveTo="opacity-0">
           <Listbox.Options
             className={cn(
-              'absolute mt-1 max-h-64 overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50 border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800',
+              'absolute mt-1 max-h-64 overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50 border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800',
               size === 'sm' && 'w-[120px]',
               size === 'md' && 'w-[160px]',
               size === 'lg' && 'max-w-[195px] max-h-60',
@@ -126,54 +134,62 @@ export default function BaseListBox({
               size === 'full' && 'w-full',
               type === 'icon' && 'w-[195px]',
               align === 'right' && 'right-0',
-              align === 'left' && 'left-0'
+              align === 'left' && 'left-0',
+              type === 'create' ? ' p-4 gap-2' : 'py-1'
             )}>
-            {_options?.map((item) => (
-              <Listbox.Option
-                key={item.id || item._id || item[valueField] || item[field] || item}
-                className={({ active }) =>
-                  `relative flex items-center justify-between select-none py-2 px-3.5 transition cursor-pointer hover:text-slate-900 dark:hover:text-aa-200 purple:hover:text-pt-200 ${
-                    active
-                      ? 'bg-slate-100 dark:bg-aa-700 purple:bg-pt-700'
-                      : 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
-                  }`
-                }
-                value={valueField ? item[valueField] : item}>
-                {({ selected }) => (
-                  <>
-                    <div className="flex items-center gap-2">
-                      {type === 'status' && (
-                        <svg className="h-2.5 w-2.5" fill={item.color} viewBox="0 0 8 8">
-                          <circle cx={4} cy={4} r={3} />
-                        </svg>
-                      )}
-                      {type === 'user' && (
-                        <Avatar
-                          src={item.profilePicture}
-                          alt={item.name}
-                          size="w-6 h-6"
-                          fontSize="text-sm"
+            <div
+              className={cn(
+                type === 'create' &&
+                  'max-h-[180px] mb-2 border border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-lg overflow-auto'
+              )}>
+              {_options?.map((item) => (
+                <Listbox.Option
+                  key={item.id || item._id || item[valueField] || item[field] || item}
+                  className={({ active }) =>
+                    `relative flex items-center justify-between select-none py-2 px-3.5 transition cursor-pointer hover:text-slate-900 dark:hover:text-aa-200 purple:hover:text-pt-200 ${
+                      active
+                        ? 'bg-slate-100 dark:bg-aa-700 purple:bg-pt-700'
+                        : 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
+                    }`
+                  }
+                  value={valueField ? item[valueField] : item}>
+                  {({ selected }) => (
+                    <>
+                      <div className="flex items-center gap-2">
+                        {type === 'status' && (
+                          <svg className="h-2.5 w-2.5" fill={item.color} viewBox="0 0 8 8">
+                            <circle cx={4} cy={4} r={3} />
+                          </svg>
+                        )}
+                        {type === 'user' && (
+                          <Avatar
+                            src={item.profilePicture}
+                            alt={item.name}
+                            size="w-6 h-6"
+                            fontSize="text-sm"
+                          />
+                        )}
+                        <span
+                          className={`block truncate ${
+                            selected
+                              ? 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
+                              : 'font-normal'
+                          }`}>
+                          {item?.[field] || item}
+                        </span>
+                      </div>
+                      {selected && (
+                        <CheckIcon
+                          className="w-5 h-5 text-indigo-700 dark:text-aa-200 purple:text-pt-200"
+                          aria-hidden="true"
                         />
                       )}
-                      <span
-                        className={`block truncate ${
-                          selected
-                            ? 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
-                            : 'font-normal'
-                        }`}>
-                        {item?.[field] || item}
-                      </span>
-                    </div>
-                    {selected && (
-                      <CheckIcon
-                        className="w-5 h-5 text-indigo-700 dark:text-aa-200 purple:text-pt-200"
-                        aria-hidden="true"
-                      />
-                    )}
-                  </>
-                )}
-              </Listbox.Option>
-            ))}
+                    </>
+                  )}
+                </Listbox.Option>
+              ))}
+            </div>
+            {children}
           </Listbox.Options>
         </Transition>
       </div>
