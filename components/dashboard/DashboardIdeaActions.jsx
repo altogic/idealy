@@ -19,6 +19,7 @@ import Input from '../Input';
 import StatusListbox from '../StatusListbox';
 import UserSegmentListbox from '../UserSegmentListbox';
 import IdeaActionItem from './IdeaActionItem';
+import AddANewRoadMap from '../AddANewRoadMap';
 
 const formatOptionLabel = ({ label, value }) => {
   const name = label?.split(' ');
@@ -32,7 +33,7 @@ const formatOptionLabel = ({ label, value }) => {
         />
       ) : (
         name && (
-          <div className="relative inline-flex items-center justify-center cursor-pointer overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600  purple:bg-pt-300  w-6 h-6">
+          <div className="relative inline-flex items-center justify-center cursor-pointer overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600  purple:bg-pt-300  w-4 h-4">
             <span className="font-medium text-gray-600 dark:text-gray-300 text-xs">
               {name[0]?.charAt(0).toUpperCase()}
               {name[1]?.charAt(0).toUpperCase()}
@@ -53,7 +54,7 @@ export default function DashboardIdeaActions() {
 
   const [copyText, setCopyText] = useState('');
   const [topics, setTopics] = useState(idea?.topics);
-
+  const [openRoadmapCreateModal, setOpenRoadmapCreateModal] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
   const updateIdea = useUpdateIdea(idea);
@@ -209,9 +210,7 @@ export default function DashboardIdeaActions() {
             openModal={() => openModal('Topic', 'topicName', 'topics')}>
             <TopicSelection topics={topics} setTopics={setTopics} update={updateIdeaTopics} />
           </IdeaActionItem>
-          <IdeaActionItem
-            name="roadmap"
-            openModal={() => openModal('Roadmap', 'roadmapName', 'roadmaps')}>
+          <IdeaActionItem name="roadmap" openModal={() => setOpenRoadmapCreateModal(true)}>
             <IdeaVisibility listBoxSize="xxl" />
           </IdeaActionItem>
           <IdeaActionItem name="priority">
@@ -230,6 +229,13 @@ export default function DashboardIdeaActions() {
         description={modalInfo.description}
         label={modalInfo.label}
         id={modalInfo.id}
+      />
+      <AddANewRoadMap
+        show={openRoadmapCreateModal}
+        onClose={() => setOpenRoadmapCreateModal(!openRoadmapCreateModal)}
+        cancelOnClick={() => setOpenRoadmapCreateModal(!openRoadmapCreateModal)}
+        title="Create new roadmap"
+        description="Please enter a name for this roadmap."
       />
     </div>
   );

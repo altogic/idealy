@@ -239,9 +239,16 @@ export const authSlice = createSlice({
       state.user = action.payload.user;
       state.isAuthenticated = true;
     },
-    setUserIp(state, action) {
+    getUserIp(state, action) {
       state.userIp = action.payload;
     },
+    getUserIpSuccess(state, action) {
+      state.userIp = action.payload;
+    },
+    getUserIpFailure(state, action) {
+      state.error = action.payload;
+    },
+
     disableAllNotifications(state) {
       state.isLoading = true;
     },

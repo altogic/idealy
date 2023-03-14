@@ -39,6 +39,8 @@ const ideaService = {
       .updateFields([{ field: 'isApproved', updateType: 'set', value: true }]),
   mergeIdeas: (baseIdea, mergedIdea) => endpoint.post('/idea/merge', { baseIdea, mergedIdea }),
   getMergedIdeas: (filter) => endpoint.get('/idea/merge', { filter }),
-  getIdea: (id) => endpoint.get(`/ideas/${id}`)
+  getIdea: (id) => endpoint.get(`/ideas/${id}`),
+  getIdeasByRoadmap: (roadmapId) => endpoint.get(`/idea/roadmap/${roadmapId}`),
+  updateIdeasOrder: (ideas) => endpoint.put('/idea/roadmap', ideas)
 };
 export default ideaService;

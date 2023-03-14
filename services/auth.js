@@ -93,7 +93,11 @@ const AuthService = {
   updateUserProfile(user) {
     return db.model('users').object(user._id).update(user);
   },
-  saveFilter: (filter) => db.model('users.savedFilters').append(filter, filter._parent)
+  saveFilter: (filter) => db.model('users.savedFilters').append(filter, filter._parent),
+  getUserIp: () =>
+    fetch('https://ipv4.icanhazip.com/')
+      .then((res) => res.text())
+      .then((text) => text.trim())
 };
 
 export default AuthService;

@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import GuestFormModal from '../GuestFormModal';
 
-export default function VoteIdea({ voted, voteCount, ideaId }) {
+export default function VoteIdea({ voteCount, ideaId }) {
   const dispatch = useDispatch();
   const canVote = useRegisteredUserValidation('voteIdea');
   const userIp = useSelector((state) => state.auth.userIp);
@@ -20,18 +20,16 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const error = useSelector((state) => state.idea.error);
   const [voteCountState, setVoteCountState] = useState();
-  const [votedState, setVotedState] = useState();
+  const [voted, setVoted] = useState();
   const [openGuestForm, setOpenGuestForm] = useState(false);
   const isLoading = useSelector((state) => state.idea.isLoading);
+  const ideaVotes = useSelector((state) => state.idea.ideaVotes);
+  const voteGuestAuth = useGuestValidation('voteIdea');
   const saveGuestInfo = useSaveGuestInformation();
-  useEffect(() => {
-    setVoteCountState(voteCount);
-    setVotedState(voted);
-  }, [voteCount, voted]);
 
   const downVote = () => {
     setVoteCountState((prev) => prev - 1);
-    setVotedState(false);
+    setVoted(false);
     dispatch(
       ideaActions.downVoteIdea({
         ideaId,
@@ -48,7 +46,7 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
         setOpenGuestForm(true);
       } else {
         setVoteCountState((prev) => prev + 1);
-        setVotedState(true);
+        setVoted(true);
         dispatch(
           ideaActions.voteIdea({
             ideaId,
@@ -63,7 +61,7 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
               if (voteCountState > 0) {
                 setVoteCountState((prev) => prev - 1);
               }
-              setVotedState(false);
+              setVoted(false);
             }
           })
         );
@@ -78,7 +76,7 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
     }
   };
   const handleGuestFormSubmit = (data) => {
-    setVotedState(true);
+    setVoted(true);
     setVoteCountState((prev) => prev + 1);
     setOpenGuestForm(false);
     dispatch(
@@ -90,16 +88,31 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
         userId: user?._id,
         onError: () => {
           setVoteCountState((prev) => prev - 1);
-          setVotedState(false);
+          setVoted(false);
         }
       })
     );
   };
+  const handleVoted = () => {
+    if (user) {
+      return ideaVotes.find((v) => v.ideaId === ideaId && v.userId === user._id);
+    }
+    if (voteGuestAuth) {
+      return ideaVotes.find(
+        (v) => v.ideaId === ideaId && guestInfo.email === v.guestEmail && !v.userId
+      );
+    }
+    return ideaVotes.find((v) => v.ideaId === ideaId && v.ip === userIp && !v.userId);
+  };
+  useEffect(() => {
+    setVoteCountState(voteCount);
+    setVoted(handleVoted());
+  }, [voteCount]);
 
   return (
     <div
       className={`flex flex-col items-center flex-shrink-0 bg-white dark:bg-aa-50 purple:bg-pt-50 dark:bg-opacity-10 purple:bg-opacity-10 py-1 px-3 md:px-5 border rounded-lg h-20 ${
-        votedState
+        voted
           ? 'border-2 border-indigo-500 dark:border-aa-200 purple:border-pt-200'
           : 'border-gray-400'
       }`}>
@@ -123,12 +136,12 @@ export default function VoteIdea({ voted, voteCount, ideaId }) {
         )}>
         {voteCountState}
       </span>
-      {voteCount > 0 && canVote && votedState && (
+      {voteCount > 0 && canVote && voted && (
         <button
           type="button"
           onClick={downVote}
           className="inline-flex items-center justify-center"
-          disabled={!votedState}>
+          disabled={!voted}>
           <ChevronDown className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400" />
         </button>
       )}

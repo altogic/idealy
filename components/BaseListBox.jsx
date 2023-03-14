@@ -78,8 +78,9 @@ export default function BaseListBox({
                   <div
                     className={cn(
                       'dark:text-aa-200 purple:text-pt-200 truncate flex gap-2',
-                      type === 'default' && 'text-slate-500 text-sm tracking-sm',
-                      type === 'create' && 'text-slate-800 text-3xl font-semibold'
+                      type === 'create'
+                        ? 'text-slate-800 text-3xl font-semibold'
+                        : 'text-slate-500 text-sm tracking-sm'
                     )}>
                     <span className={cn(hidden === 'mobile' && 'hidden md:inline-block')}>
                       {' '}

@@ -1,7 +1,7 @@
 import { Switch } from '@headlessui/react';
 import { useState, useEffect } from 'react';
 
-export default function IdeaSwitch({ checked, onChange, text }) {
+export default function SwitchInput({ checked, onChange, text }) {
   const [_checked, setChecked] = useState();
 
   useEffect(() => {
@@ -19,7 +19,6 @@ export default function IdeaSwitch({ checked, onChange, text }) {
         className={`${
           _checked ? 'bg-indigo-600 dark:bg-aa-500 purple:bg-pt-600' : 'bg-gray-200'
         } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-aa-500 purple:focus:ring-pt-600 focus:ring-offset-2`}>
-        <span className="sr-only">Make Private</span>
         <span
           className={`${
             _checked
