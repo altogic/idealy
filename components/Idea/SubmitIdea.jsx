@@ -230,7 +230,14 @@ export default function SubmitIdea({ idea }) {
 
   useEffect(() => {
     if (idea) {
-      setMember(idea.author);
+      setMember({
+        name: !_.isEmpty(idea?.author)
+          ? idea?.author.name
+          : idea?.guestName
+          ? idea?.guestName
+          : idea?.name,
+        profilePicture: idea?.author?.profilePicture || idea?.guestAvatar
+      });
     } else {
       setMember(user);
     }
@@ -338,7 +345,7 @@ export default function SubmitIdea({ idea }) {
                     setTopics((prevTopics) => [...prevTopics, topic.name]);
                   }
                 }}
-                selected={topics.some((t) => t === topic.name)}
+                selected={topics?.some((t) => t === topic.name)}
               />
             ))}
             {errors?.topics?.message && (

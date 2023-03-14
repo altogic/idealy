@@ -16,6 +16,7 @@ import EmptyState from '../EmptyState';
 import InfiniteScroll from '../InfiniteScroll';
 import DashboardIdeaActions from './DashboardIdeaActions';
 import UserCard from '../UserCard';
+import 'react-quill/dist/quill.snow.css';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 const EditorToolbar = dynamic(() => import('../EditorToolbar'), { ssr: false });
@@ -88,7 +89,12 @@ export default function DashboardIdeaDetail() {
                 className={cn(isEditorFocus ? 'editor-focus' : 'dashboard-editor')}
                 placeholder="Write a comment..."
                 onFocus={() => setIsEditorFocus(true)}
-                onBlur={() => setIsEditorFocus(false)}
+                onBlur={() => {
+                  const linkInput = document.querySelector('.ql-tooltip.ql-editing');
+                  if (!linkInput || linkInput.classList.contains('ql-hidden')) {
+                    setIsEditorFocus(false);
+                  }
+                }}
               />
 
               <EditorToolbar

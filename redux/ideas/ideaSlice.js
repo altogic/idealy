@@ -11,7 +11,8 @@ const initialState = {
   ideaVotes: [],
   similarIdeas: [],
   searchedCompanyMembers: [],
-  editedIdea: null
+  editedIdea: null,
+  roadmapIdeas: []
 };
 
 export const ideaSlice = createSlice({
@@ -52,6 +53,7 @@ export const ideaSlice = createSlice({
     },
     voteIdeaSuccess(state, action) {
       state.isLoading = false;
+
       state.ideaVotes = [...state.ideaVotes, action.payload];
       state.ideas = state.ideas.map((idea) => {
         if (idea._id === action.payload.ideaId) {
@@ -317,6 +319,17 @@ export const ideaSlice = createSlice({
         return idea;
       });
       state.selectedIdea = action.payload.baseIdea;
+      state.roadmapIdeas[action.payload?.baseIdea?.status?._id || 'no-status'] = state.roadmapIdeas[
+        action.payload?.baseIdea?.status?._id || 'no-status'
+      ].filter((idea) => idea._id !== action.payload.mergedIdea);
+      state.roadmapIdeas[action.payload?.baseIdea?.status?._id || 'no-status'] = state.roadmapIdeas[
+        action.payload?.baseIdea?.status?._id || 'no-status'
+      ].map((idea) => {
+        if (idea._id === action.payload._id) {
+          return action.payload.baseIdea;
+        }
+        return idea;
+      });
       state.ideaVotes = [...state.ideaVotes, ...action.payload.ideaVotes];
     },
     mergeIdeasFailure(state, action) {
@@ -361,6 +374,27 @@ export const ideaSlice = createSlice({
     },
     setEditedIdea(state, action) {
       state.editedIdea = action.payload;
+    },
+    getIdeasByRoadmap(state) {
+      state.isLoading = true;
+    },
+    getIdeasByRoadmapSuccess(state, action) {
+      state.isLoading = false;
+      state.roadmapIdeas = action.payload;
+    },
+    getIdeasByRoadmapFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    updateIdeasOrder(state) {
+      state.isLoading = true;
+    },
+    updateIdeasOrderSuccess(state) {
+      state.isLoading = false;
+    },
+    updateIdeasOrderFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   },
 

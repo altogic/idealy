@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import _ from 'lodash';
 import Avatar from '../Avatar';
 import UserCard from '../UserCard';
 
@@ -43,21 +44,41 @@ export default function IdeaInfo({ idea, detail }) {
         <div className="flex items-center gap-2">
           <Avatar
             src={idea?.author?.profilePicture || idea?.guestAvatar}
-            alt={idea?.author ? idea?.author.name : idea?.guestName ? idea?.guestName : idea?.name}
+            alt={
+              !_.isEmpty(idea?.author)
+                ? idea?.author.name
+                : idea?.guestName
+                ? idea?.guestName
+                : idea?.name
+            }
             size="w-7 h-7"
             fontSize="text-xs"
           />
           <span className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm font-medium tracking-sm">
-            {idea?.author ? idea?.author.name : idea?.guestName ? idea?.guestName : idea?.name}
+            {!_.isEmpty(idea?.author)
+              ? idea?.author.name
+              : idea?.guestName
+              ? idea?.guestName
+              : idea?.name}
           </span>
         </div>
 
         <UserCard
           id="idea-user-card"
           profilePicture={idea?.author?.profilePicture || idea?.guestAvatar}
-          name={idea?.author ? idea?.author.name : idea?.guestName ? idea?.guestName : idea?.name}
+          name={
+            !_.isEmpty(idea?.author)
+              ? idea?.author.name
+              : idea?.guestName
+              ? idea?.guestName
+              : idea?.name
+          }
           email={
-            idea?.author ? idea?.author.email : idea?.guestEmail ? idea?.guestEmail : idea?.email
+            !_.isEmpty(idea?.author)
+              ? idea?.author.email
+              : idea?.guestEmail
+              ? idea?.guestEmail
+              : idea?.email
           }
           style={userCardStyle}
         />

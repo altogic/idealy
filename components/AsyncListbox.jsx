@@ -55,6 +55,7 @@ export default function AsyncListbox({
   onChange,
   placeholder,
   defaultValue,
+  formatOptionLabel,
   ...rest
 }) {
   return (
@@ -68,6 +69,7 @@ export default function AsyncListbox({
       isClearable
       onChange={onChange}
       styles={memberSelectStyles}
+      formatOptionLabel={formatOptionLabel}
       {...rest}
     />
   );

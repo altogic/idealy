@@ -1,13 +1,16 @@
 import FilterSave from '@/components/dashboard/FilterSave';
 import IdeaFilter from '@/components/dashboard/IdeaFilter';
 import DashboardIdeaCard from '@/components/DashboardIdeaCard';
+import Divider from '@/components/Divider';
 import Drawer from '@/components/Drawer';
 import EmptyState from '@/components/EmptyState';
 import DeleteIdeaModal from '@/components/Idea/DeleteIdeaModal';
 import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfiniteScroll from '@/components/InfiniteScroll';
 import Layout from '@/components/Layout';
+import Tooltip from '@/components/Tooltip';
 import useFilterIdea from '@/hooks/useFilterIdea';
+import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import { commentActions } from '@/redux/comments/commentsSlice';
 import { companyActions } from '@/redux/company/companySlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
@@ -15,9 +18,8 @@ import _ from 'lodash';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Divider from '@/components/Divider';
 
 const DashboardIdeaDetail = dynamic(() => import('@/components/dashboard/DashboardIdeaDetail'), {
   ssr: false
@@ -37,20 +39,7 @@ export default function AdminDashboard() {
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
 
   const [user, setUser] = useState();
-  const {
-    sort,
-    topicsFilter,
-    statusFilter,
-    categoryFilter,
-    dateFilter,
-    segmentFilter,
-    searchFilter,
-    archiveFilter,
-    privateFilter,
-    bugFilter,
-    noStatusFilter,
-    approvedFilter
-  } = useFilterIdea();
+  const { sort, filter } = useFilterIdea();
 
   function handleCloseIdea() {
     const ideaId = router.query.feedback;
@@ -61,48 +50,22 @@ export default function AdminDashboard() {
     dispatch(ideaActions.setSelectedIdea(newSelectedIdea));
   }
 
-  const getIdeasByCompany = useCallback(() => {
-    if (router.isReady && company?._id) {
-      const req = {
-        limit: _.isEmpty(ideas) && router.query.page ? 10 * router.query.page : 10,
-        page: _.isEmpty(ideas) ? 1 : router.query.page,
-        filter: [
-          topicsFilter,
-          statusFilter,
-          categoryFilter,
-          dateFilter,
-          segmentFilter,
-          searchFilter,
-          archiveFilter,
-          privateFilter,
-          bugFilter,
-          noStatusFilter,
-          approvedFilter,
-          `this.isMerged== false && this.company == '${company._id}'`
-        ]
-          .filter(Boolean)
-          .join(' && '),
-        sort
-      };
-
-      dispatch(ideaActions.getIdeasByCompany(req));
-    }
-  }, [
-    company,
-    router.query.page,
-    sort,
-    topicsFilter,
-    statusFilter,
-    categoryFilter,
-    dateFilter,
-    segmentFilter,
-    searchFilter,
-    archiveFilter,
-    privateFilter,
-    bugFilter,
-    noStatusFilter,
-    approvedFilter
-  ]);
+  const getIdeasByCompany = useCallback(
+    (page, limit) => {
+      if (company) {
+        dispatch(
+          ideaActions.getIdeasByCompany({
+            limit,
+            page,
+            company: company?._id,
+            sort,
+            filter
+          })
+        );
+      }
+    },
+    [company, sort, filter]
+  );
 
   const handlePageChange = () => {
     router.push({
@@ -117,11 +80,16 @@ export default function AdminDashboard() {
     }
   }, [sessionUser]);
 
-  useEffect(() => {
-    if (!(router.query.page === 1 && !_.isEmpty(ideas))) {
-      getIdeasByCompany();
-    }
-  }, [router.query.page, getIdeasByCompany]);
+  useUpdateEffect(() => {
+    const limit = _.isEmpty(ideas) && router.query.page ? 10 * router.query.page : 10;
+    const { page } = router.query;
+    if (page > 1) getIdeasByCompany(page, limit);
+  }, [router.query.page]);
+
+  useUpdateEffect(() => {
+    const page = _.isEmpty(ideas) ? 1 : router.query.page;
+    getIdeasByCompany(1, 10 * page);
+  }, [sort, filter]);
 
   useEffect(() => {
     const ideaId = router.query.feedback;
@@ -130,7 +98,7 @@ export default function AdminDashboard() {
       if (scrollIdea) {
         scrollIdea.scrollIntoView({ behavior: 'smooth', block: 'center' });
         dispatch(ideaActions.setSelectedIdea(ideas.find((idea) => idea._id === ideaId)));
-        dispatch(commentActions.getComments({ ideaId, page: 1 }));
+        if (idea?.commentCount) dispatch(commentActions.getComments({ ideaId, page: 1 }));
       }
     }
   }, [router.query.feedback, ideas]);
@@ -200,9 +168,12 @@ export default function AdminDashboard() {
 
           <div>
             <div className="p-[33px] border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
-              <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md truncate w-[65ch] ">
-                {idea?.title}
-              </h2>
+              <div className="relative group">
+                <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md truncate w-[65ch] cursor-default ">
+                  {idea?.title}
+                </h2>
+                <Tooltip content={idea?.title} />
+              </div>
             </div>
             <DashboardIdeaDetail />
           </div>

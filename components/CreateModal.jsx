@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Button from './Button';
 import { Close } from './icons';
 import Input from './Input';
@@ -16,20 +17,27 @@ export default function CreateModal({
   onClose,
   ...props
 }) {
+  const [error, setError] = useState();
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
-    onClose();
-    createOnClick(data[id]);
+    if (data[id]) {
+      createOnClick(data[id]);
+      onClose();
+    } else {
+      setError({
+        message: `Please enter a ${label.toLowerCase()}.`
+      });
+    }
   };
   return (
     <Modal open={show} onClose={onClose} {...props}>
       <div className="absolute top-8 right-8">
         <Button
           variant="icon"
-          icon={<Close className="w-6 h-6 text-slate-500 dark:text-aa-300 purple:text-pt-300" />}
+          icon={<Close className="w-6 h-6 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
           onClick={cancelOnClick}
         />
       </div>
@@ -48,11 +56,18 @@ export default function CreateModal({
       </div>
       <form onSubmit={handleSubmit}>
         <div className="mb-8 space-y-5">
-          <Input type="text" label={label} name={id} id={id} placeholder={placeholder} />
+          <Input
+            type="text"
+            label={label}
+            name={id}
+            id={id}
+            placeholder={placeholder}
+            error={error}
+          />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <Button variant="blank" onClick={onClose} text="Cancel" {...props} />
-          <Button variant="indigo" type="submit" onClick={cancelOnClick} text="Create" {...props} />
+          <Button variant="indigo" type="submit" text="Create" {...props} />
         </div>
       </form>
     </Modal>

@@ -325,6 +325,18 @@ function* authStateChangeSaga({ payload: { user, session } }) {
   yield call(AuthService.authStateChange, user, session);
 }
 
+function* getUserIpSaga() {
+  try {
+    const { data, errors } = yield call(AuthService.getUserIp);
+    if (errors) {
+      throw errors;
+    }
+    yield put(authActions.getUserIpSuccess(data));
+  } catch (error) {
+    yield put(authActions.getUserIpFailure(error));
+  }
+}
+
 export default function* rootSaga() {
   yield all([
     takeEvery(authActions.register.type, registerSaga),
@@ -349,6 +361,7 @@ export default function* rootSaga() {
     takeEvery(authActions.authStateChange.type, authStateChangeSaga),
     takeEvery(authActions.disableAllNotifications.type, disableAllNotificationsSaga),
     takeEvery(authActions.saveFilter.type, saveFilter),
-    takeEvery(authActions.updateSavedFilterName, updateSavedFilterNameSaga)
+    takeEvery(authActions.updateSavedFilterName, updateSavedFilterNameSaga),
+    takeEvery(authActions.getUserIp.type, getUserIpSaga)
   ]);
 }

@@ -61,14 +61,18 @@ export default function FilterSave({ className, filters }) {
         .map((status) => status._id),
       categories: company.categories
         .filter((category) => categories.includes(category.name))
-        .map((category) => category._id)
+        .map((category) => category._id),
+      isArchive: router.query.archive === 'true',
+      isPin: router.query.pin === 'true',
+      isPrivate: router.query.private === 'true',
+      isNoStatus: router.query.noStatus === 'true',
+      isApproval: router.query.approval === 'true'
     };
     dispatch(authActions.saveFilter(req));
   };
 
   const handleFilterSelect = (value) => {
     setSelectedFilter(value);
-
     router.push({
       pathname: router.pathname,
       query: {
@@ -92,7 +96,12 @@ export default function FilterSave({ className, filters }) {
         status: value?.statuses
           .map((id) => company.statuses.find((item) => item._id === id))
           .map((item) => item.name)
-          .join(',')
+          .join(','),
+        archive: value?.isArchive,
+        pin: value?.isPin,
+        private: value?.isPrivate,
+        noStatus: value?.isNoStatus,
+        approval: value?.isApproval
       }
     });
   };
@@ -139,7 +148,12 @@ export default function FilterSave({ className, filters }) {
         .map((status) => status._id),
       categories: company.categories
         .filter((category) => categories.includes(category.name))
-        .map((category) => category._id)
+        .map((category) => category._id),
+      isArchive: router.query.archive === 'true',
+      isPin: router.query.pin === 'true',
+      isPrivate: router.query.private === 'true',
+      isNoStatus: router.query.noStatus === 'true',
+      isApproval: router.query.approval === 'true'
     };
     dispatch(authActions.updateSavedFilters(req));
   };

@@ -27,7 +27,7 @@ import IdeaInfo from './IdeaInfo';
 import VoteIdea from './VoteIdea';
 import SimilarIdeas from '../SimilarIdeas';
 
-export default function IdeaDetail({ idea, company, voted, onClose }) {
+export default function IdeaDetail({ idea, company, onClose }) {
   const dispatch = useDispatch();
 
   const router = useRouter();
@@ -77,10 +77,8 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
         }
         filter += `this._id == '${i.mergedIdea}' || `;
       });
-
-      dispatch(ideaActions.getMergedIdeas(filter));
-
       isMergeFetched.current = true;
+      dispatch(ideaActions.getMergedIdeas(filter));
     }
   }, [idea, router]);
 
@@ -117,7 +115,7 @@ export default function IdeaDetail({ idea, company, voted, onClose }) {
         </svg>
       </button>
       <div className="flex gap-6 relative">
-        <VoteIdea voted={voted} voteCount={idea?.voteCount} ideaId={idea?._id} />
+        <VoteIdea voteCount={idea?.voteCount} ideaId={idea?._id} />
         <div className="flex-1 relative">
           <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold break-all mb-8">
             {idea?.title}

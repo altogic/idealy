@@ -7,28 +7,54 @@ import copy from 'copy-to-clipboard';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncListbox from '../AsyncListbox';
-import BaseListBox from '../BaseListBox';
+import CategoryListbox from '../CategoryListbox';
 import CreateModal from '../CreateModal';
 import { Copy, ThreeStar } from '../icons';
 import IdeaActions from '../Idea/admin/IdeaActions';
+import IdeaPriority from '../Idea/IdeaPriority';
 import IdeaVisibility from '../Idea/IdeaVisibility';
 import TopicSelection from '../Idea/TopicSelection';
 import IdeaApproval from '../IdeaApproval';
 import Input from '../Input';
+import StatusListbox from '../StatusListbox';
+import UserSegmentListbox from '../UserSegmentListbox';
 import IdeaActionItem from './IdeaActionItem';
-import IdeaPriority from '../Idea/IdeaPriority';
+import AddANewRoadMap from '../AddANewRoadMap';
+
+const formatOptionLabel = ({ label, value }) => {
+  const name = label?.split(' ');
+  return (
+    <div className="flex items-center">
+      {value.profilePicture ? (
+        <img
+          src={value.profilePicture}
+          alt={label}
+          className="rounded-full object-contain w-11 h-11"
+        />
+      ) : (
+        name && (
+          <div className="relative inline-flex items-center justify-center cursor-pointer overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600  purple:bg-pt-300  w-4 h-4">
+            <span className="font-medium text-gray-600 dark:text-gray-300 text-xs">
+              {name[0]?.charAt(0).toUpperCase()}
+              {name[1]?.charAt(0).toUpperCase()}
+            </span>
+          </div>
+        )
+      )}
+      <span className="ml-2">{label}</span>
+    </div>
+  );
+};
 
 export default function DashboardIdeaActions() {
   const dispatch = useDispatch();
 
   const company = useSelector((state) => state.company.company);
   const idea = useSelector((state) => state.idea.selectedIdea);
-  const [status, setStatus] = useState(idea?.status);
-  const [category, setCategory] = useState(idea?.category);
-  const [roadMap, setRoadMap] = useState(idea?.roadmap);
+
   const [copyText, setCopyText] = useState('');
   const [topics, setTopics] = useState(idea?.topics);
-  const [segments, setSegments] = useState(idea?.userSegment);
+  const [openRoadmapCreateModal, setOpenRoadmapCreateModal] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
   const updateIdea = useUpdateIdea(idea);
@@ -44,11 +70,7 @@ export default function DashboardIdeaActions() {
 
   useEffect(() => {
     if (idea) {
-      setStatus(idea?.status);
-      setCategory(idea?.category);
-      setRoadMap(idea?.roadmap);
       setTopics(idea?.topics);
-      setSegments(idea?.userSegment);
       setCopyText(`${company.subdomain}.idealy.io/public-view?feedback=${idea._id}`);
     }
   }, [idea]);
@@ -102,7 +124,7 @@ export default function DashboardIdeaActions() {
 
   return (
     <div className="h-[calc(100vh-181px)] relative bg-slate-50 dark:bg-aa-900 purple:bg-pt-1000 border-l border-slate-200 dark:border-aa-600 purple:border-pt-800 shadow-xs">
-      <div className="overflow-y-auto h-[calc(100%-49px)]">
+      <div className="overflow-y-auto h-[calc(100%-49px)] pb-4">
         <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 mb-4 text-base font-semibold tracking-sm pt-6 px-6">
           Feedback Details
         </h2>
@@ -138,59 +160,19 @@ export default function DashboardIdeaActions() {
             label="Statuses"
             name="status"
             openModal={() => openModal('Status', 'statusName', 'statuses')}>
-            <BaseListBox
-              value={status}
-              label={status?.name}
-              onChange={(value) => {
-                setStatus(value);
-                updateIdea({
-                  status: value._id,
-                  statusUpdatedAt: Date.now(),
-                  isCompleted: value.isCompletedStatus
-                });
-              }}
-              field="name"
-              options={company?.statuses}
-              size="xxl"
-              hidden="mobile"
-              type="status"
-            />
+            <StatusListbox />
           </IdeaActionItem>
           <IdeaActionItem
             label="Categories"
             name="category"
             openModal={() => openModal('Category', 'categoryName', 'categories')}>
-            <BaseListBox
-              value={category}
-              label={category?.name}
-              onChange={(value) => {
-                setCategory(value);
-                updateIdea({ category: value._id });
-              }}
-              field="name"
-              options={company?.categories}
-              size="xxl"
-              hidden="mobile"
-              type="status"
-            />
+            <CategoryListbox />
           </IdeaActionItem>
           <IdeaActionItem
             label="User Segments"
             name="user segments"
             openModal={() => openModal('User Segment', 'userSegmentName', 'userSegments')}>
-            <BaseListBox
-              value={segments}
-              label={segments?.name}
-              onChange={(value) => {
-                setSegments(value);
-                updateIdea({ userSegment: value._id });
-              }}
-              field="name"
-              type="status"
-              options={company?.userSegments}
-              size="xxl"
-              hidden="mobile"
-            />
+            <UserSegmentListbox />
           </IdeaActionItem>
           <IdeaActionItem label="Owner" name="owner">
             <AsyncListbox
@@ -219,6 +201,7 @@ export default function DashboardIdeaActions() {
                   });
                 }
               }}
+              formatOptionLabel={formatOptionLabel}
             />
           </IdeaActionItem>
           <IdeaActionItem
@@ -227,28 +210,11 @@ export default function DashboardIdeaActions() {
             openModal={() => openModal('Topic', 'topicName', 'topics')}>
             <TopicSelection topics={topics} setTopics={setTopics} update={updateIdeaTopics} />
           </IdeaActionItem>
-          <IdeaActionItem
-            label="Roadmaps"
-            name="roadmap"
-            openModal={() => openModal('Roadmap', 'roadmapName', 'roadmaps')}>
-            <BaseListBox
-              value={roadMap}
-              label={roadMap?.name}
-              onChange={(value) => {
-                setRoadMap(value);
-                updateIdea({ roadmap: value._id });
-              }}
-              field="name"
-              options={company?.roadmaps}
-              size="xxl"
-              hidden="mobile"
-            />
+          <IdeaActionItem name="roadmap" openModal={() => setOpenRoadmapCreateModal(true)}>
+            <IdeaVisibility listBoxSize="xxl" />
           </IdeaActionItem>
           <IdeaActionItem name="priority">
             <IdeaPriority />
-          </IdeaActionItem>
-          <IdeaActionItem name="visibility">
-            <IdeaVisibility />
           </IdeaActionItem>
         </div>
       </div>
@@ -263,6 +229,13 @@ export default function DashboardIdeaActions() {
         description={modalInfo.description}
         label={modalInfo.label}
         id={modalInfo.id}
+      />
+      <AddANewRoadMap
+        show={openRoadmapCreateModal}
+        onClose={() => setOpenRoadmapCreateModal(!openRoadmapCreateModal)}
+        cancelOnClick={() => setOpenRoadmapCreateModal(!openRoadmapCreateModal)}
+        title="Create new roadmap"
+        description="Please enter a name for this roadmap."
       />
     </div>
   );
