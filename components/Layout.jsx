@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
+import useGuestValidation from '@/hooks/useGuestValidation';
 import { generateUrl, setCookie } from '../utils';
 import Header from './Header';
 import Realtime from './Realtime';
@@ -17,7 +19,11 @@ export default function Layout({ children }) {
   const company = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const user = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.company.getCompanyLoading);
+  const guestInfo = useSelector((state) => state.auth.guestInfo);
+  const voteGuestAuth = useGuestValidation('voteIdea');
+  const userIp = useSelector((state) => state.auth.userIp);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -45,6 +51,7 @@ export default function Layout({ children }) {
   useEffect(() => {
     const userFromCookie = JSON.parse(getCookie('user') || null);
     const session = JSON.parse(getCookie('session') || null);
+    dispatch(authActions.getUserIp());
     if (userFromCookie && session) {
       dispatch(companyActions.getUserCompanies(userFromCookie?._id));
     }
@@ -63,6 +70,19 @@ export default function Layout({ children }) {
       );
     }
   }, []);
+
+  useEffect(() => {
+    if (company && user) {
+      dispatch(
+        ideaActions.getUserVotes({
+          ...(voteGuestAuth ? { email: guestInfo.email } : { ip: userIp }),
+          email: guestInfo?.email,
+          companyId: company?._id,
+          userId: user?._id
+        })
+      );
+    }
+  }, [company, user]);
 
   return (
     <div className="bg-white dark:bg-aa-900 purple:bg-pt-1000">

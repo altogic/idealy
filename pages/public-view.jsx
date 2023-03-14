@@ -11,10 +11,8 @@ import InfiniteScroll from '@/components/InfiniteScroll';
 import Layout from '@/components/Layout';
 import PublicViewCard from '@/components/PublicViewCard';
 import useFilterIdea from '@/hooks/useFilterIdea';
-import useGuestValidation from '@/hooks/useGuestValidation';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import useRouteIdea from '@/hooks/useRouteIdea';
-import { authActions } from '@/redux/auth/authSlice';
 import { toggleFeedBackDetailModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { IDEA_SORT_TYPES } from 'constants';
@@ -23,7 +21,7 @@ import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-export default function PublicView({ userIp }) {
+export default function PublicView() {
   const [page, setPage] = useState(1);
   const [filterTopics, setFilterTopics] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
@@ -36,15 +34,13 @@ export default function PublicView({ userIp }) {
   const company = useSelector((state) => state.company.company);
   const ideas = useSelector((state) => state.idea.ideas);
   const countInfo = useSelector((state) => state.idea.countInfo);
-  const ideaVotes = useSelector((state) => state.idea.ideaVotes);
   const loading = useSelector((state) => state.idea.getIdeaLoading);
   const selectedIdea = useSelector((state) => state.idea.selectedIdea);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
 
-  const guestInfo = useSelector((state) => state.auth.guestInfo);
   const user = useSelector((state) => state.auth.user);
-  const voteGuestAuth = useGuestValidation('voteIdea');
+
   const routeIdea = useRouteIdea();
 
   const handleClickIdea = (idea) => {
@@ -119,18 +115,6 @@ export default function PublicView({ userIp }) {
     );
   }
 
-  const handleVoted = (ideaId) => {
-    if (user) {
-      return ideaVotes.find((v) => v.ideaId === ideaId && v.userId === user._id);
-    }
-    if (voteGuestAuth) {
-      return ideaVotes.find(
-        (v) => v.ideaId === ideaId && guestInfo.email === v.guestEmail && !v.userId
-      );
-    }
-    return ideaVotes.find((v) => v.ideaId === ideaId && v.ip === userIp && !v.userId);
-  };
-
   useEffect(() => {
     if (router) {
       const { topics, status, sort, feedback } = router.query;
@@ -155,14 +139,6 @@ export default function PublicView({ userIp }) {
         router.push('/request-access');
       }
 
-      dispatch(
-        ideaActions.getUserVotes({
-          ...(voteGuestAuth ? { email: guestInfo.email } : { ip: userIp }),
-          email: guestInfo?.email,
-          companyId: company?._id,
-          userId: user?._id
-        })
-      );
       if (!company?.siteNavigation?.feedback && !(company?.role && company?.role !== 'Guest')) {
         setError({
           title: 'Feedback is disabled',
@@ -174,12 +150,6 @@ export default function PublicView({ userIp }) {
       }
     }
   }, [company]);
-
-  useEffect(() => {
-    if (userIp) {
-      dispatch(authActions.setUserIp(userIp));
-    }
-  }, [userIp]);
 
   useEffect(
     () => () => {
@@ -268,11 +238,7 @@ export default function PublicView({ userIp }) {
                       {ideas.length > 0 ? (
                         ideas?.map((idea, index) => (
                           <div key={idea._id}>
-                            <PublicViewCard
-                              idea={idea}
-                              onClick={() => handleClickIdea(idea)}
-                              voted={handleVoted(idea._id)}
-                            />
+                            <PublicViewCard idea={idea} onClick={() => handleClickIdea(idea)} />
                             {ideas.length - 1 !== index && <Divider className="my-4" />}
                           </div>
                         ))
@@ -305,24 +271,11 @@ export default function PublicView({ userIp }) {
                 </>
               )}
             </div>
-            <IdeaDetail
-              idea={selectedIdea}
-              company={company}
-              voted={handleVoted(selectedIdea?._id)}
-              onClose={() => handleCloseIdea()}
-            />
+            <IdeaDetail idea={selectedIdea} company={company} onClose={() => handleCloseIdea()} />
             <DeleteIdeaModal onClose={() => handleCloseIdea()} />
           </>
         )}
       </Layout>
     </>
   );
-}
-export async function getServerSideProps() {
-  const ip = await fetch(`https://ipv4.icanhazip.com/`).then((res) => res.text());
-  return {
-    props: {
-      userIp: ip.trim()
-    }
-  };
 }

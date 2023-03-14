@@ -87,8 +87,9 @@ export default function AdminDashboard() {
   }, [router.query.page]);
 
   useUpdateEffect(() => {
-    getIdeasByCompany(1, 10 * (router.query.page ? router.query.page : 1));
-  }, [getIdeasByCompany]);
+    const page = _.isEmpty(ideas) ? 1 : router.query.page;
+    getIdeasByCompany(1, 10 * page);
+  }, [sort, filter]);
 
   useEffect(() => {
     const ideaId = router.query.feedback;

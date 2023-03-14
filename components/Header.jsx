@@ -90,7 +90,7 @@ export default function Header() {
             {(selectedCompany?.siteNavigation?.roadmap ||
               (selectedCompany?.role && selectedCompany?.role !== 'Guest')) && (
               <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
-                <Link href="/">
+                <Link href="/roadmaps">
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
                     <Roadmap className="w-6 h-6 text-indigo-50 mr-3" />
                     Roadmap

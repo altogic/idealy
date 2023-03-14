@@ -51,6 +51,7 @@ function* voteIdeaSaga({ payload }) {
     if (payload.onError) {
       payload.onError();
     }
+    console.log(error);
     yield put(ideaActions.voteIdeaFailure(error));
   }
 }
@@ -228,6 +229,34 @@ function* getIdeaByIdSaga({ payload: { id, onSuccess } }) {
     yield put(ideaActions.getIdeaByIdFailure(error));
   }
 }
+function* getIdeasByRoadmapSaga({ payload: { roadmapId, onSuccess } }) {
+  try {
+    const { data, errors } = yield call(ideaService.getIdeasByRoadmap, roadmapId);
+    if (errors) {
+      throw errors;
+    }
+    yield put(ideaActions.getIdeasByRoadmapSuccess(data));
+    if (onSuccess) onSuccess();
+  } catch (error) {
+    yield put(ideaActions.getIdeasByRoadmapFailure(error));
+  }
+}
+function* updateIdeasOrderSaga({ payload: { ideas, sourceId } }) {
+  try {
+    const { data, errors } = yield call(ideaService.updateIdeasOrder, ideas);
+    if (errors) {
+      throw errors;
+    }
+    yield put(
+      ideaActions.updateIdeasOrderSuccess({
+        ideas: data,
+        sourceId
+      })
+    );
+  } catch (error) {
+    yield put(ideaActions.updateIdeasOrderFailure(error));
+  }
+}
 
 export default function* ideaSaga() {
   yield takeEvery(ideaActions.getIdeasByCompany.type, getIdeasByCompanySaga);
@@ -246,4 +275,6 @@ export default function* ideaSaga() {
   yield takeEvery(ideaActions.getMergedIdeas.type, getMergedIdeasSaga);
   yield takeEvery(ideaActions.searchIdeas.type, searchIdeasSaga);
   yield takeEvery(ideaActions.getIdeaById.type, getIdeaByIdSaga);
+  yield takeEvery(ideaActions.getIdeasByRoadmap.type, getIdeasByRoadmapSaga);
+  yield takeEvery(ideaActions.updateIdeasOrder.type, updateIdeasOrderSaga);
 }

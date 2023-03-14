@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import BaseListBox from '../BaseListBox';
 import Label from '../Label';
-import IdeaSwitch from './admin/IdeaSwitch';
+import IdeaSwitch from '../Switch';
 
 export default function IdeaVisibility({ listBoxSize }) {
   const dispatch = useDispatch();

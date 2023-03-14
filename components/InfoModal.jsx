@@ -13,6 +13,7 @@ export default function InfoModal({
   cancelText,
   confirmColor,
   onClose,
+  loading,
   ...props
 }) {
   return (
@@ -45,6 +46,7 @@ export default function InfoModal({
         )}
         <Button
           variant={confirmColor}
+          loading={loading}
           onClick={() => {
             onConfirm();
           }}

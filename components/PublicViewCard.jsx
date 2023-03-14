@@ -6,11 +6,11 @@ import SanitizeHtml from './SanitizeHtml';
 import StatusBadge from './StatusBadge';
 import TopicBadges from './TopicBadges';
 
-export default function PublicViewCard({ idea, onClick, voted }) {
+export default function PublicViewCard({ idea, onClick }) {
   return (
     <div className="relative px-2 py-6 lg:p-6 inline-block w-full rounded-lg transition hover:bg-slate-50 dark:hover:bg-aa-800 purple:hover:bg-pt-900">
       <div className="flex items-start lg:items-center gap-6">
-        <VoteIdea voted={voted} voteCount={idea?.voteCount} ideaId={idea?._id} />
+        <VoteIdea voteCount={idea?.voteCount} ideaId={idea?._id} />
         <button type="button" onClick={onClick} className="w-full">
           <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-0 mb-2">
             {(idea?.isPrivate ||
