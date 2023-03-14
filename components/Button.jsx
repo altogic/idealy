@@ -15,6 +15,7 @@ export default function Button({
   loading,
   fontSize,
   size,
+  children,
   ...props
 }) {
   const override = css`
@@ -66,6 +67,7 @@ export default function Button({
       ) : (
         text && <span className="whitespace-nowrap">{text}</span>
       )}
+      {children}
     </button>
   );
 }

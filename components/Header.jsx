@@ -75,7 +75,7 @@ export default function Header() {
               <li
                 className={cn(
                   `flex items-center justify-center py-2 px-3 rounded-md transition`,
-                  router.pathname === '/public-view'
+                  router.pathname === '/public-view' || router.pathname === '/dashboard'
                     ? 'bg-indigo-700 dark:bg-aa-600 purple:bg-pt-900'
                     : 'hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900'
                 )}>
@@ -89,7 +89,13 @@ export default function Header() {
             )}
             {(selectedCompany?.siteNavigation?.roadmap ||
               (selectedCompany?.role && selectedCompany?.role !== 'Guest')) && (
-              <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
+              <li
+                className={cn(
+                  `flex items-center justify-center py-2 px-3 rounded-md transition`,
+                  router.pathname === '/roadmaps'
+                    ? 'bg-indigo-700 dark:bg-aa-600 purple:bg-pt-900'
+                    : 'hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900'
+                )}>
                 <Link href="/roadmaps">
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
                     <Roadmap className="w-6 h-6 text-indigo-50 mr-3" />
