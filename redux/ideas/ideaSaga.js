@@ -184,6 +184,7 @@ function* mergeIdeasSaga({ payload: { baseIdea, mergedIdea, onSuccess } }) {
         ideaVotes: data.ideaVotes
       })
     );
+
     if (onSuccess) onSuccess();
     realtime.send(company._id, 'merge-idea', {
       baseIdea: data.idea,
@@ -191,6 +192,7 @@ function* mergeIdeasSaga({ payload: { baseIdea, mergedIdea, onSuccess } }) {
       ideaVotes: data.ideaVotes
     });
   } catch (error) {
+    console.log(error);
     yield put(ideaActions.mergeIdeasFailure(error));
   }
 }

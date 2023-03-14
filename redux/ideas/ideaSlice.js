@@ -319,6 +319,17 @@ export const ideaSlice = createSlice({
         return idea;
       });
       state.selectedIdea = action.payload.baseIdea;
+      state.roadmapIdeas[action.payload?.baseIdea?.status?._id || 'no-status'] = state.roadmapIdeas[
+        action.payload?.baseIdea?.status?._id || 'no-status'
+      ].filter((idea) => idea._id !== action.payload.mergedIdea);
+      state.roadmapIdeas[action.payload?.baseIdea?.status?._id || 'no-status'] = state.roadmapIdeas[
+        action.payload?.baseIdea?.status?._id || 'no-status'
+      ].map((idea) => {
+        if (idea._id === action.payload._id) {
+          return action.payload.baseIdea;
+        }
+        return idea;
+      });
       state.ideaVotes = [...state.ideaVotes, ...action.payload.ideaVotes];
     },
     mergeIdeasFailure(state, action) {

@@ -1,25 +1,21 @@
 import AddANewRoadMap from '@/components/AddANewRoadMap';
 import BaseListBox from '@/components/BaseListBox';
-import Button from '@/components/Button';
 import { Merge, Plus } from '@/components/icons';
+import IdeaDetail from '@/components/Idea/IdeaDetail';
+import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfoModal from '@/components/InfoModal';
 import Layout from '@/components/Layout';
 import RoadmapSection from '@/components/RoadmapSection';
+import { Tooltip2, TooltipContent, TooltipTrigger } from '@/components/Tooltip2';
 import { companyActions } from '@/redux/company/companySlice';
+import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import { LockClosedIcon } from '@heroicons/react/outline';
+import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/outline';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
-import IdeaDetail from '@/components/Idea/IdeaDetail';
-import SubmitIdea from '@/components/Idea/SubmitIdea';
-import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
-
-const getListStyle = (isDraggingOver) => ({
-  background: isDraggingOver ? 'lightgrey' : ''
-});
 
 export default function RoadMapAdmin() {
   const router = useRouter();
@@ -100,9 +96,12 @@ export default function RoadMapAdmin() {
           }
         })
       );
-      // const items = reorder(state[sInd], source.index, destination.index);
-      // const temp = items.map((item, index) => ({ ...item, roadmapOrder: index + 1 }));
-      // dispatch(ideaActions.updateIdeasOrder({ ideas: temp, sourceId: sInd }));
+
+      const orderedResult = result[dInd].map((item, index) => ({
+        ...item,
+        roadmapOrder: index + 1
+      }));
+      dispatch(ideaActions.updateIdeasOrder({ ideas: orderedResult, sourceId: dInd }));
       setState((state) => ({
         ...state,
         [sInd]: result[sInd],
@@ -116,9 +115,7 @@ export default function RoadMapAdmin() {
       ideaActions.mergeIdeas({
         baseIdea: mergedIdeas.baseIdea,
         mergedIdea: mergedIdeas.mergedIdea,
-        onSuccess: () => {
-          setOpenMergeDialog(false);
-        }
+        onSuccess: () => setOpenMergeDialog(false)
       })
     );
   }
@@ -186,86 +183,87 @@ export default function RoadMapAdmin() {
         <meta name="description" content="Altogic Canny Alternative Roadmap Admin Page" />
       </Head>
       <Layout>
-        <div className="max-w-screen-xl mx-auto my-14">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                {!roadmap?.isPublic && (
-                  <LockClosedIcon className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-                )}
-                <BaseListBox
-                  value={roadmap}
-                  label={roadmap?.name}
-                  field="name"
-                  options={company?.roadmaps}
-                  size="xxl"
-                  onChange={(value) => {
-                    setRoadmap(value);
-                    router.push({
-                      pathname: '/roadmaps',
-                      query: { roadmap: value._id }
-                    });
-                  }}
-                  type="create">
-                  <button
-                    type="button"
-                    className="inline-flex items-center gap-3 text-slate-400 py-2"
-                    onClick={() => setIsCreate(!isCreate)}>
-                    <Plus className="w-4 h-4 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-                    Add a new roadmap
-                  </button>
-                </BaseListBox>
+        <div className="container ml-auto">
+          <div className="mx-auto">
+            <div className="space-y-2 my-14">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <Tooltip2>
+                    <TooltipTrigger
+                      onClick={() => {
+                        dispatch(
+                          companyActions.updateCompanySubLists({
+                            id: roadmap._id,
+                            property: 'roadmaps',
+                            fieldName: 'isPublic',
+                            value: !roadmap?.isPublic
+                          })
+                        );
+                        setRoadmap((roadmap) => ({ ...roadmap, isPublic: !roadmap?.isPublic }));
+                      }}>
+                      {!roadmap?.isPublic ? (
+                        <LockClosedIcon className="w-7 h-7 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                      ) : (
+                        <LockOpenIcon className="w-7 h-7 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                      )}
+                    </TooltipTrigger>
+
+                    <TooltipContent>
+                      {roadmap?.isPublic ? 'Make this roadmap private' : 'Make this roadmap public'}
+                    </TooltipContent>
+                  </Tooltip2>
+
+                  <BaseListBox
+                    value={roadmap}
+                    label={roadmap?.name}
+                    field="name"
+                    options={company?.roadmaps}
+                    size="xxl"
+                    onChange={(value) => {
+                      setRoadmap(value);
+                      router.push({
+                        pathname: '/roadmaps',
+                        query: { roadmap: value._id }
+                      });
+                    }}
+                    type="create">
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-3 text-slate-400 py-2"
+                      onClick={() => setIsCreate(!isCreate)}>
+                      <Plus className="w-4 h-4 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                      Add a new roadmap
+                    </button>
+                  </BaseListBox>
+                </div>
               </div>
-              <Button
-                size="sm"
-                variant="indigo"
-                text={roadmap?.isPublic ? 'Make Private' : 'Make Public'}
-                onClick={() => {
-                  dispatch(
-                    companyActions.updateCompanySubLists({
-                      id: roadmap._id,
-                      property: 'roadmaps',
-                      fieldName: 'isPublic',
-                      value: !roadmap?.isPublic
-                    })
-                  );
-                  setRoadmap((roadmap) => ({ ...roadmap, isPublic: !roadmap?.isPublic }));
-                }}
-              />
+              <p className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
+                {roadmap?.description}
+              </p>
             </div>
-            <p className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
-              {roadmap?.description}
-            </p>
           </div>
-        </div>
-        <div className="flex flex-nowrap items-start gap-8">
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="no-status" index={0} isCombineEnabled>
-              {(provided, snapshot) => (
-                <RoadmapSection
-                  ideas={state?.['no-status']}
-                  provided={provided}
-                  style={getListStyle(snapshot.isDraggingOver)}
-                />
-              )}
-            </Droppable>
-            {sortedStatuses?.map((status, index) => (
-              <Droppable
-                key={status._id}
-                droppableId={status._id}
-                index={index + 1}
-                isCombineEnabled>
-                {(provided, snapshot) => (
-                  <RoadmapSection
-                    status={status}
-                    ideas={state?.[status._id]}
-                    provided={provided}
-                    style={getListStyle(snapshot.isDraggingOver)}
-                  />
-                )}
+          <div className="flex flex-nowrap items-start gap-8 overflow-auto max-w-full">
+            <DragDropContext onDragEnd={onDragEnd}>
+              <Droppable droppableId="no-status" index={0} isCombineEnabled>
+                {(provided) => <RoadmapSection ideas={state?.['no-status']} provided={provided} />}
               </Droppable>
-            ))}
-          </DragDropContext>
+              {sortedStatuses?.map((status, index) => (
+                <Droppable
+                  key={status._id}
+                  droppableId={status._id}
+                  index={index + 1}
+                  isCombineEnabled>
+                  {(provided) => (
+                    <RoadmapSection
+                      status={status}
+                      ideas={state?.[status._id]}
+                      provided={provided}
+                    />
+                  )}
+                </Droppable>
+              ))}
+            </DragDropContext>
+          </div>
         </div>
         <IdeaDetail idea={selectedIdea} company={company} onClose={() => handleCloseIdea()} />
         <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />
