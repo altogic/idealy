@@ -34,9 +34,9 @@ export default function RoadMapCard({ idea, provided, ...rest }) {
     <button type="button" onClick={handleClickIdea}>
       <div
         className="p-4 border border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-lg mt-2 text-left"
-        ref={provided.innerRef}
-        {...provided.draggableProps}
-        {...provided.dragHandleProps}
+        ref={provided?.innerRef}
+        {...provided?.draggableProps}
+        {...provided?.dragHandleProps}
         {...rest}>
         {idea?.coverImage && (
           <img
