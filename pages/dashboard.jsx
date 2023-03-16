@@ -4,6 +4,7 @@ import DashboardIdeaCard from '@/components/DashboardIdeaCard';
 import Divider from '@/components/Divider';
 import Drawer from '@/components/Drawer';
 import EmptyState from '@/components/EmptyState';
+import Errors from '@/components/Errors';
 import DeleteIdeaModal from '@/components/Idea/DeleteIdeaModal';
 import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfiniteScroll from '@/components/InfiniteScroll';
@@ -33,7 +34,7 @@ export default function AdminDashboard() {
   const countInfo = useSelector((state) => state.idea.countInfo);
   const sessionUser = useSelector((state) => state.auth.user);
   const [isFilterSlide, setIsFilterSlide] = useState(false);
-
+  const [error, setError] = useState();
   const idea = useSelector((state) => state.idea.selectedIdea);
   const editedIdea = useSelector((state) => state.idea.editedIdea);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
@@ -106,6 +107,15 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (company) {
       dispatch(companyActions.getCompanyUsers(company._id));
+      if (!(company?.role && company?.role !== 'Guest')) {
+        setError({
+          title: 'You are not allowed to see this page',
+          message:
+            'You are not team member of this company. Please contact company administrator for detail information.'
+        });
+      } else {
+        setError(null);
+      }
     }
   }, [company]);
 
@@ -133,51 +143,55 @@ export default function AdminDashboard() {
         <meta name="description" content="Altogic Canny Alternative Admin Dashboard" />
       </Head>
       <Layout>
-        <div className="grid grid-cols-[500px,1fr] 2xl:grid-cols-[300px,499px,1fr] h-[calc(100vh-88px)] -mx-4">
-          <FilterSave
-            className="hidden 2xl:block h-[calc(100vh-88px)] bg-slate-50 dark:bg-aa-900 purple:bg-pt-1000 px-6 py-8 space-y-8 border-r border-slate-200 dark:border-aa-600 purple:border-pt-800 overflow-y-auto shadow-lg"
-            filters={user?.savedFilters}
-          />
-          <div className="border-r border-slate-200 dark:border-aa-600 purple:border-pt-800">
-            <IdeaFilter isFilterSlide={isFilterSlide} setIsFilterSlide={setIsFilterSlide} />
-            <div className="overflow-y-auto h-[calc(100vh-188px)]">
-              <InfiniteScroll items={ideas} countInfo={countInfo} endOfList={handlePageChange}>
-                {ideas.length ? (
-                  ideas.map((i, index) => (
-                    <>
-                      <DashboardIdeaCard
-                        key={i._id}
-                        id={i._id}
-                        idea={i}
-                        selected={i._id === idea?._id}
+        {error ? (
+          <Errors title={error.title} message={error.message} />
+        ) : (
+          <div className="grid grid-cols-[500px,1fr] 2xl:grid-cols-[300px,499px,1fr] h-[calc(100vh-88px)] -mx-4">
+            <FilterSave
+              className="hidden 2xl:block h-[calc(100vh-88px)] bg-slate-50 dark:bg-aa-900 purple:bg-pt-1000 px-6 py-8 space-y-8 border-r border-slate-200 dark:border-aa-600 purple:border-pt-800 overflow-y-auto shadow-lg"
+              filters={user?.savedFilters}
+            />
+            <div className="border-r border-slate-200 dark:border-aa-600 purple:border-pt-800">
+              <IdeaFilter isFilterSlide={isFilterSlide} setIsFilterSlide={setIsFilterSlide} />
+              <div className="overflow-y-auto h-[calc(100vh-188px)]">
+                <InfiniteScroll items={ideas} countInfo={countInfo} endOfList={handlePageChange}>
+                  {ideas.length ? (
+                    ideas.map((i, index) => (
+                      <>
+                        <DashboardIdeaCard
+                          key={i._id}
+                          id={i._id}
+                          idea={i}
+                          selected={i._id === idea?._id}
+                        />
+                        {ideas.length - 1 !== index && <Divider />}
+                      </>
+                    ))
+                  ) : (
+                    <div className="m-auto my-8">
+                      <EmptyState
+                        title="No Ideas Found"
+                        description="No ideas found for this company"
                       />
-                      {ideas.length - 1 !== index && <Divider />}
-                    </>
-                  ))
-                ) : (
-                  <div className="m-auto my-8">
-                    <EmptyState
-                      title="No Ideas Found"
-                      description="No ideas found for this company"
-                    />
-                  </div>
-                )}
-              </InfiniteScroll>
-            </div>
-          </div>
-
-          <div>
-            <div className="p-[33px] border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
-              <div className="relative group">
-                <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md truncate w-[65ch] cursor-default ">
-                  {idea?.title}
-                </h2>
-                <Tooltip content={idea?.title} />
+                    </div>
+                  )}
+                </InfiniteScroll>
               </div>
             </div>
-            <DashboardIdeaDetail />
+
+            <div>
+              <div className="p-[33px] border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
+                <div className="relative group">
+                  <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md truncate w-[65ch] cursor-default ">
+                    {idea?.title}
+                  </h2>
+                  <Tooltip content={idea?.title} />
+                </div>
+              </div>
+              <DashboardIdeaDetail />
+            </div>
           </div>
-        </div>
+        )}
       </Layout>
       {/* Mobile Slide Over Filter */}
       <Drawer

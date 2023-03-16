@@ -208,15 +208,14 @@ function* selectCompany({ payload }) {
 function* setCompanies({ payload }) {
   yield put(companyActions.setCompaniesSuccess(payload));
 }
-function* updateCompanySubLists({ payload: { id, fieldName, property, value, role } }) {
+function* updateCompanySubLists({ payload: { id, property, update, role } }) {
   try {
     const company = yield select((state) => state.company.company);
     const user = yield select((state) => state.auth.user);
     const { data, error } = yield call(companyService.updateCompanyProperties, {
       id,
-      fieldName,
-      value,
-      modelName: `company.${property}`
+      modelName: `company.${property}`,
+      update
     });
     if (error) {
       throw error;

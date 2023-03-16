@@ -2,24 +2,32 @@ import CategoryListbox from '@/components/CategoryListbox';
 import Label from '@/components/Label';
 import StatusListbox from '@/components/StatusListbox';
 import UserSegmentListbox from '@/components/UserSegmentListbox';
+import { useSelector } from 'react-redux';
 import IdeaAdminTab from './IdeaAdminTab';
 
 export default function IdeaStatuses() {
+  const company = useSelector((state) => state.company.company);
   return (
     <IdeaAdminTab title="Statuses">
       <div className="space-y-4">
-        <div>
-          <Label label="Status" />
-          <StatusListbox size="xl" />
-        </div>
-        <div>
-          <Label label="Category" />
-          <CategoryListbox size="xl" />
-        </div>
-        <div>
-          <Label label="User Segment" />
-          <UserSegmentListbox size="xl" />
-        </div>
+        {company?.statuses?.length > 0 && (
+          <div>
+            <Label label="Status" />
+            <StatusListbox size="xl" />
+          </div>
+        )}
+        {company?.categories?.length > 0 && (
+          <div>
+            <Label label="Category" />
+            <CategoryListbox size="xl" />
+          </div>
+        )}
+        {company?.userSegments?.length > 0 && (
+          <div>
+            <Label label="User Segment" />
+            <UserSegmentListbox size="xl" />
+          </div>
+        )}
       </div>
     </IdeaAdminTab>
   );

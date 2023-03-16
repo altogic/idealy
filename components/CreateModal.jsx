@@ -26,19 +26,24 @@ export default function CreateModal({
     if (data[id]) {
       createOnClick(data[id]);
       onClose();
+      setError(null);
     } else {
       setError({
         message: `Please enter a ${label.toLowerCase()}.`
       });
     }
   };
+  function handleClose() {
+    onClose();
+    setError(null);
+  }
   return (
-    <Modal open={show} onClose={onClose} {...props}>
+    <Modal open={show} onClose={() => handleClose()} {...props}>
       <div className="absolute top-8 right-8">
         <Button
           variant="icon"
           icon={<Close className="w-6 h-6 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
-          onClick={cancelOnClick}
+          onClick={() => handleClose()}
         />
       </div>
       <div className="mb-5">
@@ -66,7 +71,7 @@ export default function CreateModal({
           />
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <Button variant="blank" onClick={onClose} text="Cancel" {...props} />
+          <Button variant="blank" onClick={() => handleClose()} text="Cancel" {...props} />
           <Button variant="indigo" type="submit" text="Create" {...props} />
         </div>
       </form>

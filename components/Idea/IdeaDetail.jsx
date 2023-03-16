@@ -31,7 +31,7 @@ export default function IdeaDetail({ idea, company, onClose }) {
   const dispatch = useDispatch();
 
   const router = useRouter();
-  const isMergeFetched = useRef(false);
+  const isMergeFetched = useRef('');
   const user = useSelector((state) => state.auth.user);
   const comments = useSelector((state) => state.comments.comments);
   const commentCountInfo = useSelector((state) => state.comments.countInfo);
@@ -58,7 +58,7 @@ export default function IdeaDetail({ idea, company, onClose }) {
     if (!feedBackDetailModal) {
       setIsFetched(false);
       dispatch(commentActions.clearComments());
-      isMergeFetched.current = false;
+      isMergeFetched.current = null;
     }
   }, [feedBackDetailModal]);
 
@@ -67,7 +67,7 @@ export default function IdeaDetail({ idea, company, onClose }) {
       idea &&
       !idea?.mergedIdeasDetail &&
       idea?.mergedIdeas.length > 0 &&
-      !isMergeFetched.current
+      isMergeFetched.current !== idea._id
     ) {
       let filter = '';
       idea.mergedIdeas.forEach((i, index) => {
@@ -77,7 +77,7 @@ export default function IdeaDetail({ idea, company, onClose }) {
         }
         filter += `this._id == '${i.mergedIdea}' || `;
       });
-      isMergeFetched.current = true;
+      isMergeFetched.current = idea._id;
       dispatch(ideaActions.getMergedIdeas(filter));
     }
   }, [idea, router]);

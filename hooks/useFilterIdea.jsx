@@ -12,11 +12,7 @@ export default function useFilterIdea() {
   const [dateFilter, setDateFilter] = useState();
   const [segmentFilter, setSegmentFilter] = useState();
   const [searchFilter, setSearchFilter] = useState();
-  const [archiveFilter, setArchiveFilter] = useState();
-  const [privateFilter, setPrivateFilter] = useState();
-  const [bugFilter, setBugFilter] = useState();
-  const [noStatusFilter, setNoStatusFilter] = useState();
-  const [approvedFilter, setApprovedFilter] = useState();
+  const [propertyFilter, setPropertyFilter] = useState();
   const router = useRouter();
 
   const getTopicsFilter = (filterTopics) => {
@@ -94,30 +90,32 @@ export default function useFilterIdea() {
     } else {
       setSearchFilter('');
     }
-    if (router.query.archive) {
-      setArchiveFilter(`this.isArchived == true`);
+    if (
+      router.query.archive ||
+      router.query.private ||
+      router.query.bug ||
+      router.query.noStatus ||
+      router.query.approved
+    ) {
+      const propertyFilter = [];
+      if (router.query.archive) {
+        propertyFilter.push('this.isArchived == true');
+      }
+      if (router.query.private) {
+        propertyFilter.push('this.isPrivate == true');
+      }
+      if (router.query.bug) {
+        propertyFilter.push('this.isBug == true');
+      }
+      if (router.query.noStatus) {
+        propertyFilter.push('!EXISTS(this.status)');
+      }
+      if (router.query.approved) {
+        propertyFilter.push('this.isApproved == true');
+      }
+      setPropertyFilter(`(${propertyFilter.join(' || ')})`);
     } else {
-      setArchiveFilter('');
-    }
-    if (router.query.private) {
-      setPrivateFilter(`this.isPrivate == true`);
-    } else {
-      setPrivateFilter('');
-    }
-    if (router.query.bug) {
-      setBugFilter(`this.isBug == true`);
-    } else {
-      setBugFilter('');
-    }
-    if (router.query.noStatus) {
-      setNoStatusFilter(`!EXISTS(this.status)`);
-    } else {
-      setNoStatusFilter('');
-    }
-    if (router.query.approved) {
-      setApprovedFilter(`this.isApproved == false`);
-    } else {
-      setApprovedFilter('');
+      setPropertyFilter('');
     }
   }, [router]);
 
@@ -130,11 +128,7 @@ export default function useFilterIdea() {
       dateFilter,
       segmentFilter,
       searchFilter,
-      archiveFilter,
-      privateFilter,
-      bugFilter,
-      noStatusFilter,
-      approvedFilter,
+      propertyFilter,
       `this.isMerged== false && this.company == '${company?._id}'`
     ]
       .filter(Boolean)

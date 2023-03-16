@@ -7,6 +7,7 @@ import InfoModal from '@/components/InfoModal';
 import Layout from '@/components/Layout';
 import RoadmapSection from '@/components/RoadmapSection';
 import { Tooltip2, TooltipContent, TooltipTrigger } from '@/components/Tooltip2';
+import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import { companyActions } from '@/redux/company/companySlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
@@ -16,6 +17,16 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
+import Errors from '@/components/Errors';
+import EmptyState from '@/components/EmptyState';
+
+function RoadmapVisibilityIcon({ isPublic }) {
+  return isPublic ? (
+    <LockClosedIcon className="w-7 h-7 text-red-500 dark:text-red-700 purple:text-red-700" />
+  ) : (
+    <LockOpenIcon className="w-7 h-7 text-green-500 dark:text-green-700 purple:text-green-700" />
+  );
+}
 
 export default function RoadMapAdmin() {
   const router = useRouter();
@@ -27,6 +38,8 @@ export default function RoadMapAdmin() {
   const [backupState, setBackupState] = useState();
   const [openMergeDialog, setOpenMergeDialog] = useState(false);
   const [mergedIdeas, setMergedIdeas] = useState();
+  const [isGuest, setIsGuest] = useState();
+  const [error, setError] = useState();
   const selectedIdea = useSelector((state) => state.idea.selectedIdea);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
 
@@ -101,7 +114,14 @@ export default function RoadMapAdmin() {
         ...item,
         roadmapOrder: index + 1
       }));
-      dispatch(ideaActions.updateIdeasOrder({ ideas: orderedResult, sourceId: dInd }));
+      dispatch(
+        ideaActions.updateIdeasOrder({
+          ideas: orderedResult,
+          sourceId: dInd,
+          destinationId: sInd,
+          sourceIdea
+        })
+      );
       setState((state) => ({
         ...state,
         [sInd]: result[sInd],
@@ -141,24 +161,38 @@ export default function RoadMapAdmin() {
     }));
   }
   const sortedStatuses = useMemo(() => {
-    if (company) {
+    if (company && roadmap) {
       const temp = structuredClone(company?.statuses);
       const statuses = temp.sort((a, b) => a.order - b.order);
       if (statuses && (!company?.role || company?.role === 'Guest')) {
-        return statuses.filter((status) => status?.showOnRoadMap);
+        return statuses.filter((status) => roadmap.publicStatuses?.includes(status._id));
       }
       return statuses;
     }
     return [];
+  }, [company, roadmap]);
+
+  const filteredRoadmaps = useMemo(() => {
+    if (company) {
+      const temp = structuredClone(company?.roadmaps);
+      const roadmaps = temp.sort((a, b) => a.order - b.order);
+      if (roadmaps && (!company?.role || company?.role === 'Guest')) {
+        return roadmaps.filter((roadmap) => roadmap?.isPublic);
+      }
+      return roadmaps;
+    }
+    return [];
   }, [company]);
+
   useEffect(() => {
-    if (router.isReady && company && !roadmap) {
+    if (router.isReady && filteredRoadmaps) {
       const roadmapId = router.query.roadmap;
+      console.log(filteredRoadmaps);
       const roadmap =
-        company?.roadmaps.find((roadmap) => roadmap._id === roadmapId) || company?.roadmaps[0];
+        filteredRoadmaps.find((roadmap) => roadmap._id === roadmapId) || filteredRoadmaps[0];
       setRoadmap(roadmap);
     }
-  }, [company, router]);
+  }, [filteredRoadmaps, router]);
 
   useEffect(() => {
     if (roadmapIdeas) {
@@ -175,7 +209,27 @@ export default function RoadMapAdmin() {
       );
     }
   }, [roadmap]);
+  useEffect(() => {
+    if (company) {
+      setIsGuest(!company?.role || company?.role === 'Guest');
+      if (!company?.siteNavigation?.roadmap && !(company?.role && company?.role !== 'Guest')) {
+        setError({
+          title: 'Roadmaps are disabled',
+          message:
+            'Roadmaps are disabled for this company. Please contact company administrator for detail information.'
+        });
+      } else {
+        setError(null);
+      }
+    }
+  }, [company]);
 
+  useUpdateEffect(() => {
+    if (company && roadmap) {
+      const selectedRoadmap = company?.roadmaps.find((r) => r._id === roadmap._id);
+      setRoadmap(selectedRoadmap);
+    }
+  }, [company]);
   return (
     <>
       <Head>
@@ -183,111 +237,142 @@ export default function RoadMapAdmin() {
         <meta name="description" content="Altogic Canny Alternative Roadmap Admin Page" />
       </Head>
       <Layout>
-        <div className="container ml-auto">
-          <div className="mx-auto">
-            <div className="space-y-2 my-14">
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <Tooltip2>
-                    <TooltipTrigger
-                      onClick={() => {
-                        dispatch(
-                          companyActions.updateCompanySubLists({
-                            id: roadmap._id,
-                            property: 'roadmaps',
-                            fieldName: 'isPublic',
-                            value: !roadmap?.isPublic
-                          })
-                        );
-                        setRoadmap((roadmap) => ({ ...roadmap, isPublic: !roadmap?.isPublic }));
-                      }}>
-                      {!roadmap?.isPublic ? (
-                        <LockClosedIcon className="w-7 h-7 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+        <div className="container ml-auto mt-4">
+          {error ? (
+            <Errors title={error?.title} message={error?.message} />
+          ) : (
+            <>
+              <div className="mx-auto">
+                <div className="space-y-2 my-14">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      {isGuest ? (
+                        <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
                       ) : (
-                        <LockOpenIcon className="w-7 h-7 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                        <Tooltip2>
+                          <TooltipTrigger
+                            onClick={() => {
+                              dispatch(
+                                companyActions.updateCompanySubLists({
+                                  id: roadmap._id,
+                                  property: 'roadmaps',
+                                  update: { isPublic: !roadmap?.isPublic },
+                                  role: company?.role
+                                })
+                              );
+                              setRoadmap((roadmap) => ({
+                                ...roadmap,
+                                isPublic: !roadmap?.isPublic
+                              }));
+                            }}>
+                            <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
+                          </TooltipTrigger>
+
+                          <TooltipContent>
+                            {roadmap?.isPublic
+                              ? 'Make this roadmap private'
+                              : 'Make this roadmap public'}
+                          </TooltipContent>
+                        </Tooltip2>
                       )}
-                    </TooltipTrigger>
 
-                    <TooltipContent>
-                      {roadmap?.isPublic ? 'Make this roadmap private' : 'Make this roadmap public'}
-                    </TooltipContent>
-                  </Tooltip2>
-
-                  <BaseListBox
-                    value={roadmap}
-                    label={roadmap?.name}
-                    field="name"
-                    options={company?.roadmaps}
-                    size="xxl"
-                    onChange={(value) => {
-                      setRoadmap(value);
-                      router.push({
-                        pathname: '/roadmaps',
-                        query: { roadmap: value._id }
-                      });
-                    }}
-                    type="create">
-                    <button
-                      type="button"
-                      className="inline-flex items-center gap-3 text-slate-400 py-2"
-                      onClick={() => setIsCreate(!isCreate)}>
-                      <Plus className="w-4 h-4 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-                      Add a new roadmap
-                    </button>
-                  </BaseListBox>
+                      <BaseListBox
+                        value={roadmap}
+                        label={roadmap?.name}
+                        field="name"
+                        options={filteredRoadmaps}
+                        size="xxl"
+                        onChange={(value) => {
+                          setRoadmap(value);
+                          router.push({
+                            pathname: '/roadmaps',
+                            query: { roadmap: value._id }
+                          });
+                        }}
+                        type="create">
+                        <button
+                          type="button"
+                          className="inline-flex items-center gap-3 text-slate-400 py-2"
+                          onClick={() => setIsCreate(!isCreate)}>
+                          <Plus className="w-4 h-4 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                          Add a new roadmap
+                        </button>
+                      </BaseListBox>
+                    </div>
+                  </div>
+                  <p className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
+                    {roadmap?.description}
+                  </p>
                 </div>
               </div>
-              <p className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
-                {roadmap?.description}
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-nowrap items-start gap-8 overflow-auto max-w-full">
-            <DragDropContext onDragEnd={onDragEnd}>
-              <Droppable droppableId="no-status" index={0} isCombineEnabled>
-                {(provided) => <RoadmapSection ideas={state?.['no-status']} provided={provided} />}
-              </Droppable>
-              {sortedStatuses?.map((status, index) => (
-                <Droppable
-                  key={status._id}
-                  droppableId={status._id}
-                  index={index + 1}
-                  isCombineEnabled>
-                  {(provided) => (
-                    <RoadmapSection
-                      status={status}
-                      ideas={state?.[status._id]}
-                      provided={provided}
-                    />
+              <div className="flex flex-nowrap items-start gap-8 overflow-auto max-w-full">
+                <DragDropContext onDragEnd={onDragEnd}>
+                  {!isGuest && (
+                    <Droppable droppableId="no-status" index={0} isCombineEnabled>
+                      {(provided) => (
+                        <RoadmapSection
+                          ideas={state?.['no-status']}
+                          provided={provided}
+                          roadmap={roadmap}
+                        />
+                      )}
+                    </Droppable>
                   )}
-                </Droppable>
-              ))}
-            </DragDropContext>
-          </div>
+                  {sortedStatuses?.map((status, index) => (
+                    <Droppable
+                      key={status._id}
+                      droppableId={status._id}
+                      index={index + 1}
+                      isCombineEnabled>
+                      {(provided) => (
+                        <RoadmapSection
+                          status={status}
+                          ideas={state?.[status._id]}
+                          provided={provided}
+                          roadmap={roadmap}
+                          isGuest={isGuest}
+                        />
+                      )}
+                    </Droppable>
+                  ))}
+                </DragDropContext>
+              </div>
+              {!roadmap?.publicStatuses.length && (
+                <EmptyState
+                  title="Statuses are private"
+                  description="Please make it public to view ideas"
+                />
+              )}
+            </>
+          )}
         </div>
         <IdeaDetail idea={selectedIdea} company={company} onClose={() => handleCloseIdea()} />
-        <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />
-        <InfoModal
-          show={openMergeDialog}
-          title="Merge Ideas"
-          description={<span>Are you sure you want to merge this ideas?</span>}
-          cancelOnClick={() => cancelMerge()}
-          onConfirm={() => handleMerge()}
-          onClose={() => cancelMerge()}
-          icon={<Merge className="w-6 h-6 text-indigo-600" />}
-          confirmText="Accept"
-          cancelText="Decline"
-          confirmColor="indigo"
-          canCancel
-          loading={loading}
-        />
-        <AddANewRoadMap
-          show={isCreate}
-          onClose={() => setIsCreate(false)}
-          cancelOnClick={() => setIsCreate(false)}
-          title="Create new roadmap"
-          description="Please enter a name for this roadmap."
-        />
+        {!isGuest && (
+          <>
+            <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />
+            <InfoModal
+              show={openMergeDialog}
+              title="Merge Ideas"
+              description={<span>Are you sure you want to merge these ideas?</span>}
+              cancelOnClick={() => cancelMerge()}
+              onConfirm={() => handleMerge()}
+              onClose={() => cancelMerge()}
+              icon={<Merge className="w-6 h-6 text-indigo-600" />}
+              confirmText="Accept"
+              cancelText="Decline"
+              confirmColor="indigo"
+              canCancel
+              loading={loading}
+            />
+            <AddANewRoadMap
+              show={isCreate}
+              onClose={() => setIsCreate(false)}
+              cancelOnClick={() => setIsCreate(false)}
+              title="Create new roadmap"
+              description="Please enter a name for this roadmap."
+            />
+          </>
+        )}
       </Layout>
     </>
   );

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import BaseListBox from './BaseListBox';
 
 export default function CategoryListbox({ size }) {
@@ -8,6 +8,11 @@ export default function CategoryListbox({ size }) {
   const company = useSelector((state) => state.company.company);
   const updateIdea = useUpdateIdea(idea);
   const [category, setCategory] = useState();
+
+  function handleReset() {
+    updateIdea({ category: null });
+    setCategory(null);
+  }
   useEffect(() => {
     if (idea) {
       setCategory(idea?.category);
@@ -26,6 +31,7 @@ export default function CategoryListbox({ size }) {
       size={size}
       hidden="mobile"
       type="status"
+      onReset={() => handleReset()}
     />
   );
 }

@@ -9,6 +9,12 @@ export default function StatusListbox({ size }) {
   const updateIdea = useUpdateIdea(idea);
   const [status, setStatus] = useState(idea?.status);
 
+  function handleReset() {
+    updateIdea({ status: null, statusUpdatedAt: Date.now(), isCompleted: false });
+
+    setStatus(null);
+  }
+
   useEffect(() => {
     if (idea) {
       setStatus(idea?.status);
@@ -32,6 +38,7 @@ export default function StatusListbox({ size }) {
       size={size}
       hidden="mobile"
       type="status"
+      onReset={() => handleReset()}
     />
   );
 }

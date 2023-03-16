@@ -21,15 +21,6 @@ const ideaService = {
       .model('ideas')
       .object(id)
       .updateFields([{ field: 'coverImage', updateType: 'unset' }]),
-  deleteIdeaStatus: (id) =>
-    db
-      .model('ideas')
-      .object(id)
-      .updateFields([
-        { field: 'status', updateType: 'unset', value: null },
-        { field: 'statusUpdatedAt', updateType: 'set', value: new Date() },
-        { field: 'isCompleted', updateType: 'set', value: false }
-      ]),
   searchCompanyMembers: (companyId, searchText) =>
     endpoint.get('/company/member/search', { companyId, searchText }),
   approveAllIdeas: (companyId) =>

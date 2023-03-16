@@ -29,11 +29,11 @@ const formatOptionLabel = ({ label, value }) => {
         <img
           src={value.profilePicture}
           alt={label}
-          className="rounded-full object-contain w-11 h-11"
+          className="rounded-full object-contain w-6 h-6"
         />
       ) : (
         name && (
-          <div className="relative inline-flex items-center justify-center cursor-pointer overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600  purple:bg-pt-300  w-4 h-4">
+          <div className="relative inline-flex items-center justify-center cursor-pointer overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600  purple:bg-pt-300  w-6 h-6">
             <span className="font-medium text-gray-600 dark:text-gray-300 text-xs">
               {name[0]?.charAt(0).toUpperCase()}
               {name[1]?.charAt(0).toUpperCase()}
@@ -57,6 +57,7 @@ export default function DashboardIdeaActions() {
   const [openRoadmapCreateModal, setOpenRoadmapCreateModal] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
+  const [ideaOwner, setIdeaOwner] = useState();
   const updateIdea = useUpdateIdea(idea);
 
   const handleCopyText = (e) => {
@@ -72,6 +73,16 @@ export default function DashboardIdeaActions() {
     if (idea) {
       setTopics(idea?.topics);
       setCopyText(`${company.subdomain}.idealy.io/public-view?feedback=${idea._id}`);
+      setIdeaOwner({
+        value: {
+          _id: idea?.author?._id,
+          name: idea?.author?.name,
+          profilePicture: idea?.author?.profilePicture,
+          email: idea?.author?.email,
+          isRegistered: !!idea?.author?.provider
+        },
+        label: idea?.author?.name || idea?.guestName || idea?.name
+      });
     }
   }, [idea]);
 
@@ -160,37 +171,32 @@ export default function DashboardIdeaActions() {
             label="Statuses"
             name="status"
             openModal={() => openModal('Status', 'statusName', 'statuses')}>
-            <StatusListbox />
+            <StatusListbox size="xxl" />
           </IdeaActionItem>
           <IdeaActionItem
             label="Categories"
             name="category"
             openModal={() => openModal('Category', 'categoryName', 'categories')}>
-            <CategoryListbox />
+            <CategoryListbox size="xxl" />
           </IdeaActionItem>
           <IdeaActionItem
             label="User Segments"
             name="user segments"
             openModal={() => openModal('User Segment', 'userSegmentName', 'userSegments')}>
-            <UserSegmentListbox />
+            <UserSegmentListbox size="xxl" />
           </IdeaActionItem>
           <IdeaActionItem label="Owner" name="owner">
             <AsyncListbox
               loadOptions={filterMembers}
               placeholder="Search for an member"
-              defaultValue={{
-                value: {
-                  _id: idea?.author?._id,
-                  name: idea?.author?.name,
-                  profilePicture: idea?.author?.profilePicture,
-                  email: idea?.author?.email,
-                  isRegistered: !!idea?.author?.provider
-                },
-                label: idea?.author?.name || idea?.guestName || idea?.name
-              }}
+              defaultValue={ideaOwner}
               onChange={(res) => {
-                if (!res) return;
+                if (!res) {
+                  setIdeaOwner(null);
+                  return;
+                }
                 const { value } = res;
+                setIdeaOwner(res);
                 if (value.isRegistered) {
                   updateIdea({ author: value._id });
                 } else {

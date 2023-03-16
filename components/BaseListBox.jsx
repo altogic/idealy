@@ -100,7 +100,7 @@ export default function BaseListBox({
               )}
 
               <span className="flex items-center gap-2">
-                {multiple && !!value?.length && (
+                {((multiple && !!value?.length) || (!multiple && label)) && onReset && (
                   <button
                     type="button"
                     onClick={(e) => {

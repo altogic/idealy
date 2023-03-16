@@ -65,11 +65,16 @@
   max-height: 200px;
   overflow: auto;
   flex: 1;
+  padding-bottom: 2rem;
 }
 .dashboard-editor .ql-editor {
   min-height: 50px !important;
   max-height: 75px;
   overflow: auto;
+}
+.dashboard-editor,
+.editor-focus {
+  padding-bottom: 2rem;
 }
 .ql-snow {
   border: none !important;
@@ -308,12 +313,7 @@ html:has(:is(.modal, .drawer)) {
 .rdrDayPassive .rdrInRange + .rdrDayNumber span {
   @apply text-slate-500  !important;
 }
-::-webkit-scrollbar {
-  display: none;
-}
-* {
-  scrollbar-width: none;
-}
+
 @layer components {
   .tooltip {
     @apply bg-slate-50 dark:bg-aa-700 purple:bg-pt-900;

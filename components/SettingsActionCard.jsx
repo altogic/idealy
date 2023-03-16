@@ -6,17 +6,18 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch } from 'react-redux';
 import { Menu, Transition } from '@headlessui/react';
 import { SketchPicker } from 'react-color';
-import { Pen, Trash, Danger, Star } from '@/components/icons';
+import { Pen, Trash, Danger, Star, Eye, EyeSlash } from '@/components/icons';
 import Button from './Button';
 import InfoModal from './InfoModal';
 import Input from './Input';
+import { Tooltip2, TooltipTrigger, TooltipContent } from './Tooltip2';
 
 export default function SettingsActionCard({
   id,
   title,
-  roadMapDescription,
   modalTitle,
   modalDescription,
+  description,
   topics,
   colorCircle,
   deleteAction,
@@ -28,17 +29,18 @@ export default function SettingsActionCard({
   isHideUpdate,
   isColorModalOpen,
   setActiveIndex,
-  activeIndex
+  activeIndex,
+  onEdit,
+  isPublic
 }) {
   const [isDelete, setIsDelete] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [name, setName] = useState();
-  const [description, setDescription] = useState();
+
   const [colorPicker, setColorPicker] = useState();
   const dispatch = useDispatch();
   const schema = yup.object().shape({
-    name: yup.string().required('Name is required'),
-    description: yup.string().required('Description is required')
+    name: yup.string().required('Name is required')
   });
   const {
     register,
@@ -49,32 +51,24 @@ export default function SettingsActionCard({
     resolver: yupResolver(schema)
   });
 
-  const handleEdit = (value, fieldName, canCloseInput) => {
+  const handleEdit = (value, fieldName) => {
     if (value.trim() !== '') {
       dispatch(
         editAction({
           id,
           property,
-          fieldName,
-          value
+          update: { [fieldName]: value }
         })
       );
-      if (fieldName === 'name') {
-        setName(value);
-      } else {
-        setDescription(value);
-      }
+      setName(value);
     }
-    if (canCloseInput) {
-      setIsEdit(false);
-    }
+    setIsEdit(false);
   };
 
   useEffect(() => {
     if (isEdit) {
       setFocus('name');
       setValue('name', name);
-      setValue('description', description);
     }
   }, [isEdit]);
 
@@ -85,10 +79,7 @@ export default function SettingsActionCard({
     if (title) {
       setName(title);
     }
-    if (roadMapDescription) {
-      setDescription(roadMapDescription);
-    }
-  }, [title, roadMapDescription]);
+  }, [title]);
   function handleOnBodyClick(e) {
     if (e.target.id !== 'name' && e.target.id !== 'description') {
       if (setActiveIndex) {
@@ -189,45 +180,52 @@ export default function SettingsActionCard({
                 register={register('name')}
                 className="bg-transparent p-0 w-full text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm lg:text-base tracking-sm border-0 focus:outline-none focus:ring-0"
                 onBlur={(e) => {
-                  handleEdit(e.target.value, 'name', !roadMapDescription);
+                  handleEdit(e.target.value, 'name');
                 }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    handleEdit(e.target.value, 'name', true);
+                    handleEdit(e.target.value, 'name');
                   }
                 }}
               />
-              {roadMapDescription && (
-                <Input
-                  type="text"
-                  id="description"
-                  name="name"
-                  error={errors.description}
-                  register={register('description')}
-                  className="bg-transparent p-0 w-full text-slate-700 dark:text-aa-200 purple:text-pt-200 tracking-sm border-0 focus:outline-none focus:ring-0 mt-2"
-                  onBlur={(e) => {
-                    handleEdit(e.target.value, 'description', false);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleEdit(e.target.value, 'description', true);
-                    }
-                  }}
-                />
-              )}
             </form>
           ) : (
-            <div className="flex flex-col">
-              <h6
-                className="max-w-[200px] lg:max-w-[500px] text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm lg:text-base tracking-sm truncate"
-                title={name}>
-                {name}
-              </h6>
-              {roadMapDescription && (
-                <p className="text-slate-500 mt-2 text-sm tracking-sm" title={description}>
-                  {description}
-                </p>
+            <div className="flex items-center gap-4">
+              {isPublic ? (
+                <Tooltip2>
+                  <TooltipTrigger>
+                    <Eye className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm">
+                      Public Roadmap
+                    </p>
+                  </TooltipContent>
+                </Tooltip2>
+              ) : (
+                <Tooltip2>
+                  <TooltipTrigger>
+                    <EyeSlash className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm">
+                      Private Roadmap
+                    </p>
+                  </TooltipContent>
+                </Tooltip2>
               )}
+              <div>
+                <h6
+                  className="max-w-[200px] lg:max-w-[500px] text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm lg:text-base tracking-sm truncate"
+                  title={name}>
+                  {name}
+                </h6>
+                {description && (
+                  <p className="text-slate-500 mt-2 text-sm tracking-sm" title={description}>
+                    {description}
+                  </p>
+                )}
+              </div>
             </div>
           )}
         </div>
@@ -240,8 +238,12 @@ export default function SettingsActionCard({
               }
               variant="icon"
               onClick={(e) => {
+                if (!onEdit) {
+                  setIsEdit(!isEdit);
+                } else {
+                  onEdit();
+                }
                 e.stopPropagation();
-                setIsEdit(!isEdit);
               }}
             />
             <Button

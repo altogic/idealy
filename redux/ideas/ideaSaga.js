@@ -136,17 +136,6 @@ function* getUserVotesSaga({ payload: { ip, companyId, userId, email } }) {
     yield put(ideaActions.getUserVotesFailure(error));
   }
 }
-function* deleteIdeaStatusSaga({ payload: id }) {
-  try {
-    const { errors } = yield call(ideaService.deleteIdeaStatus, id);
-    if (errors) {
-      throw new Error(errors);
-    }
-    yield put(ideaActions.deleteIdeaStatusSuccess(id));
-  } catch (error) {
-    yield put(ideaActions.deleteIdeaStatusFailure(error));
-  }
-}
 
 function* searchCompanyMembersSaga({ payload: { companyId, searchText } }) {
   try {
@@ -243,8 +232,10 @@ function* getIdeasByRoadmapSaga({ payload: { roadmapId, onSuccess } }) {
     yield put(ideaActions.getIdeasByRoadmapFailure(error));
   }
 }
-function* updateIdeasOrderSaga({ payload: { ideas, sourceId } }) {
+function* updateIdeasOrderSaga({ payload: { ideas, sourceId, destinationId, sourceIdea } }) {
   try {
+    const company = yield select((state) => state.company.company);
+    const user = yield select((state) => state.auth.user);
     const { data, errors } = yield call(ideaService.updateIdeasOrder, ideas);
     if (errors) {
       throw errors;
@@ -252,9 +243,18 @@ function* updateIdeasOrderSaga({ payload: { ideas, sourceId } }) {
     yield put(
       ideaActions.updateIdeasOrderSuccess({
         ideas: data,
-        sourceId
+        sourceId,
+        destinationId,
+        sourceIdea
       })
     );
+    realtime.send(company._id, 'update-ideas-order', {
+      ideas: data,
+      sourceId,
+      destinationId,
+      sourceIdea,
+      sender: user._id
+    });
   } catch (error) {
     yield put(ideaActions.updateIdeasOrderFailure(error));
   }
@@ -270,7 +270,6 @@ export default function* ideaSaga() {
   yield takeEvery(ideaActions.searchSimilarIdeas.type, searchSimilarIdeasSaga);
   yield takeEvery(ideaActions.deleteIdeaCoverImage.type, deleteIdeaCoverImage);
   yield takeEvery(ideaActions.getUserVotes.type, getUserVotesSaga);
-  yield takeEvery(ideaActions.deleteIdeaStatus.type, deleteIdeaStatusSaga);
   yield takeEvery(ideaActions.searchCompanyMembers.type, searchCompanyMembersSaga);
   yield takeEvery(ideaActions.approveAllIdeas.type, approveAllIdeasSaga);
   yield takeEvery(ideaActions.mergeIdeas.type, mergeIdeasSaga);
