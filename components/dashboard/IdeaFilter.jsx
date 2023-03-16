@@ -2,6 +2,7 @@ import Button from '@/components/Button';
 import { Filter, Pen, Search } from '@/components/icons';
 import Input from '@/components/Input';
 import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
+import { XIcon } from '@heroicons/react/outline';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -36,17 +37,34 @@ export default function IdeaFilter({ isFilterSlide, setIsFilterSlide }) {
           onClick={() => setIsFilterSlide(!isFilterSlide)}
         />
       </div>
-      <div className="flex-1">
+      <div className="flex-1 relative">
         <Input
           type="text"
           name="search"
           id="search"
           icon={<Search className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
           placeholder="Search"
-          onKeyUp={(e) => {
+          value={searchText}
+          onChange={(e) => {
             setSearchText(e.target.value);
           }}
         />
+        {searchText && (
+          <Button
+            variant="icon"
+            icon={<XIcon className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
+            type="button"
+            size="xs"
+            className="absolute right-2 top-3"
+            onClick={() => {
+              setSearchText('');
+              router.push({
+                pathname: router.pathname,
+                query: { ...router.query, search: '' }
+              });
+            }}
+          />
+        )}
       </div>
       <SortListBox type="icon" size="xs" />
       <Button

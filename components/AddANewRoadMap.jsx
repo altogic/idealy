@@ -3,16 +3,24 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from './Button';
 import { Close, ThreeStar } from './icons';
 import Input from './Input';
 import Modal from './Modal';
 import SwitchInput from './Switch';
+import TextArea from './TextArea';
 
-export default function AddANewRoadMap({ show, cancelOnClick, title, description, ...props }) {
+export default function AddANewRoadMap({
+  show,
+  cancelOnClick,
+  editedRoadmap,
+  setEditedRoadmap,
+  ...props
+}) {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.company.isLoading);
+  const company = useSelector((state) => state.company.company);
   const [isPublic, setIsPublic] = useState(false);
   const createRoadMapSchema = new yup.ObjectSchema({
     name: yup.string().required('Roadmap name is required'),
@@ -29,15 +37,35 @@ export default function AddANewRoadMap({ show, cancelOnClick, title, description
     resolver: yupResolver(createRoadMapSchema)
   });
   const addRoadmap = (value) => {
-    dispatch(
-      companyActions.addItemToCompanySubLists({
-        fieldName: 'roadmaps',
-        value
-      })
-    );
+    if (editedRoadmap) {
+      dispatch(
+        companyActions.updateCompanySubLists({
+          id: editedRoadmap?._id,
+          property: 'roadmaps',
+          update: value,
+          role: company?.role
+        })
+      );
+    } else {
+      dispatch(
+        companyActions.addItemToCompanySubLists({
+          fieldName: 'roadmaps',
+          value
+        })
+      );
+    }
     reset();
+    setEditedRoadmap(null);
     cancelOnClick();
   };
+  useEffect(() => {
+    if (editedRoadmap) {
+      setValue('name', editedRoadmap.name);
+      setValue('description', editedRoadmap.description);
+      setValue('isPublic', editedRoadmap.isPublic);
+      setIsPublic(editedRoadmap.isPublic);
+    }
+  }, [editedRoadmap]);
 
   return (
     <Modal open={show} onClose={cancelOnClick} {...props}>
@@ -54,8 +82,8 @@ export default function AddANewRoadMap({ show, cancelOnClick, title, description
         </span>
       </div>
       <div className="mb-5 space-y-2">
-        <h2 className="text-slate-800 text-lg font-medium tracking-sm">{title}</h2>
-        <p className="text-slate-500 text-sm tracking-sm">{description}</p>
+        <h2 className="text-slate-800 text-lg font-medium tracking-sm">Create new roadmap</h2>
+        <p className="text-slate-500 text-sm tracking-sm">Please enter a name for this roadmap.</p>
       </div>
       <form onSubmit={handleSubmit(addRoadmap)}>
         <div className="mb-8 space-y-5">
@@ -68,7 +96,7 @@ export default function AddANewRoadMap({ show, cancelOnClick, title, description
             register={register('name')}
             error={errors.name}
           />
-          <Input
+          <TextArea
             type="text"
             label="Description"
             name="description"
@@ -76,6 +104,7 @@ export default function AddANewRoadMap({ show, cancelOnClick, title, description
             error={errors.description}
             register={register('description')}
             placeholder="e.g. New feedback"
+            rows={4}
           />
           <SwitchInput
             text="Make this roadmap public"

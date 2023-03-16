@@ -29,7 +29,7 @@ export default function RoadMapCard({ idea, provided, ...rest }) {
   }, [idea]);
 
   return (
-    <button type="button" onClick={handleClickIdea}>
+    <button type="button" onClick={handleClickIdea} className="w-full">
       <div
         className="p-4 border border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-lg mt-2 text-left"
         ref={provided?.innerRef}

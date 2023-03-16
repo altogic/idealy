@@ -145,7 +145,7 @@ export default function Realtime() {
     dispatch(companyActions.acceptInvitation(message));
   }
   function updateSublistHandler(data) {
-    if (data.message.sender !== user._id && company._id === data.message.companyId) {
+    if (data.message.sender !== user?._id && company._id === data.message.companyId) {
       dispatch(companyActions.updateCompanySubListsOrderRealtime(data.message));
     }
   }
@@ -256,6 +256,9 @@ export default function Realtime() {
   function mergeIdeaHandler({ message }) {
     dispatch(ideaActions.mergeIdeasSuccess(message));
   }
+  function updateIdeaOrder({ message }) {
+    if (user?._id !== message.sender) dispatch(ideaActions.updateIdeasOrderSuccess(message));
+  }
 
   useEffect(() => {
     if (user && company) {
@@ -281,7 +284,6 @@ export default function Realtime() {
       realtime.on('notification', notificationHandler);
       realtime.on('update-company', updateCompanyHandler);
       realtime.on('accept-invitation', acceptedInvitationHandler);
-      realtime.on('update-sublist', updateSublistHandler);
       realtime.on('request-access', requestAccessHandler);
       realtime.on('reject-access', rejectAccessHandler);
     }
@@ -303,6 +305,8 @@ export default function Realtime() {
       realtime.on('reject-access', rejectAccessCompanyHandler);
       realtime.on('request-access', requestAccessHandler);
       realtime.on('merge-idea', mergeIdeaHandler);
+      realtime.on('update-sublist', updateSublistHandler);
+      realtime.on('update-ideas-order', updateIdeaOrder);
     }
     return () => {
       realtime.off('delete-membership', deleteMembershipHandler);

@@ -66,11 +66,8 @@ const companyService = {
   updateCompanyMemberRole: (req) => endpoint.put('/company/member', req),
   updateCompanySubListsOrder: ({ modelName, value }) =>
     endpoint.put(`/company/${modelName}/order`, value),
-  updateCompanyProperties: ({ id, modelName, fieldName, value }) =>
-    db
-      .model(modelName)
-      .object(id)
-      .updateFields([{ field: fieldName, updateType: 'set', value }]),
+  updateCompanyProperties: ({ id, modelName, update }) =>
+    db.model(modelName).object(id).update(update),
   resendInvitation: (req) => endpoint.post('/invitation/resend', req),
   createCompanyUser: (req) => endpoint.post('/company/user', req),
   requestAccess: (req) => endpoint.post('/company/request-access', req),

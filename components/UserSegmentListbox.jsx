@@ -9,6 +9,10 @@ export default function UserSegmentListbox({ size }) {
   const [segments, setSegments] = useState(idea?.userSegment);
   const updateIdea = useUpdateIdea(idea);
 
+  function handleReset() {
+    updateIdea({ userSegment: null });
+    setSegments(null);
+  }
   useEffect(() => {
     if (idea) {
       setSegments(idea?.userSegment);
@@ -27,6 +31,7 @@ export default function UserSegmentListbox({ size }) {
       options={company?.userSegments}
       size={size}
       hidden="mobile"
+      onReset={() => handleReset()}
     />
   );
 }

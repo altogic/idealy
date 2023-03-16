@@ -20,7 +20,7 @@ export default function DashboardIdeaCard({ idea, selected, id }) {
       className={cn(
         'w-full px-8 py-6 text-left  border-transparent transition',
         selected
-          ? 'border-2 border-indigo-700 dark:border-aa-100 purple:border-pt-100 bg-indigo-50 dark:bg-aa-800 purple:bg-pt-900'
+          ? 'border border-indigo-700 dark:border-aa-100 purple:border-pt-100 bg-indigo-50 dark:bg-aa-800 purple:bg-pt-900'
           : 'hover:bg-slate-50 dark:hover:bg-aa-800 purple:hover:bg-pt-900'
       )}
       onClick={() => {
