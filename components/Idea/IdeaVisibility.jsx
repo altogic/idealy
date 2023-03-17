@@ -90,25 +90,27 @@ export default function IdeaVisibility({ listBoxSize }) {
           />
         </div>
       )}
-      <div className="mt-4">
-        <Label label="Roadmaps" />{' '}
-        <BaseListBox
-          value={roadMap}
-          label={roadMap?.name}
-          onChange={(value) => {
-            setRoadMap(value);
-            updateIdea({ roadmap: value._id });
-          }}
-          field="name"
-          options={company?.roadmaps}
-          size={listBoxSize}
-          hidden="mobile"
-          onReset={() => {
-            setRoadMap(null);
-            updateIdea({ roadmap: null });
-          }}
-        />
-      </div>
+      {!!company?.roadmaps?.length && (
+        <div className="mt-4">
+          <Label label="Roadmaps" />{' '}
+          <BaseListBox
+            value={roadMap}
+            label={roadMap?.name}
+            onChange={(value) => {
+              setRoadMap(value);
+              updateIdea({ roadmap: value._id });
+            }}
+            field="name"
+            options={company?.roadmaps}
+            size={listBoxSize}
+            hidden="mobile"
+            onReset={() => {
+              setRoadMap(null);
+              updateIdea({ roadmap: null });
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

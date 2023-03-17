@@ -220,9 +220,9 @@ function* getIdeaByIdSaga({ payload: { id, onSuccess } }) {
     yield put(ideaActions.getIdeaByIdFailure(error));
   }
 }
-function* getIdeasByRoadmapSaga({ payload: { roadmapId, onSuccess } }) {
+function* getIdeasByRoadmapSaga({ payload: { filter, onSuccess } }) {
   try {
-    const { data, errors } = yield call(ideaService.getIdeasByRoadmap, roadmapId);
+    const { data, errors } = yield call(ideaService.getIdeasByRoadmap, filter);
     if (errors) {
       throw errors;
     }

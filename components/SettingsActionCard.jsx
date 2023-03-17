@@ -191,28 +191,32 @@ export default function SettingsActionCard({
             </form>
           ) : (
             <div className="flex items-center gap-4">
-              {isPublic ? (
-                <Tooltip2>
-                  <TooltipTrigger>
-                    <Eye className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm">
-                      Public Roadmap
-                    </p>
-                  </TooltipContent>
-                </Tooltip2>
-              ) : (
-                <Tooltip2>
-                  <TooltipTrigger>
-                    <EyeSlash className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm">
-                      Private Roadmap
-                    </p>
-                  </TooltipContent>
-                </Tooltip2>
+              {onEdit && (
+                <div>
+                  {isPublic ? (
+                    <Tooltip2>
+                      <TooltipTrigger>
+                        <Eye className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm">
+                          Public Roadmap
+                        </p>
+                      </TooltipContent>
+                    </Tooltip2>
+                  ) : (
+                    <Tooltip2>
+                      <TooltipTrigger>
+                        <EyeSlash className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm">
+                          Private Roadmap
+                        </p>
+                      </TooltipContent>
+                    </Tooltip2>
+                  )}
+                </div>
               )}
               <div>
                 <h6

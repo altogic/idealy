@@ -448,11 +448,7 @@ function* getCompanyBySubdomain({ payload: { subdomain, onFail, onSuccess, userI
       throw error;
     }
     if (data) {
-      const companyRes = {
-        ...data.company,
-        ...data.role
-      };
-      yield put(companyActions.getCompanyBySubdomainSuccess(data.company ? companyRes : data));
+      yield put(companyActions.getCompanyBySubdomainSuccess(data));
       onSuccess(data.company.subdomain);
     } else {
       onFail();

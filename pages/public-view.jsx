@@ -167,7 +167,7 @@ export default function PublicView() {
       <Layout>
         {company && (
           <>
-            <div className="max-w-screen-lg mx-auto lg:my-14">
+            <div className="container max-w-screen-lg mx-auto pt-14">
               {error ? (
                 <Errors title={error?.title} message={error?.message} />
               ) : (

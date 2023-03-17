@@ -100,7 +100,7 @@ export default function Layout({ children }) {
           </Head>
           <div className="min-h-screen relative">
             <Header />
-            <main className="pt-[93px] px-4">
+            <main className="h-[calc(100vh-93px)] transform translate-y-[93px]">
               {children}
               <Realtime />
             </main>

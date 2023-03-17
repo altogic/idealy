@@ -170,6 +170,7 @@
 }
 .ql-snow .ql-tooltip {
   left: 0 !important;
+  z-index: 9999 !important;
   @apply border-slate-300 dark:border-aa-600 purple:border-pt-800 !important;
 }
 .ql-editor .mention {

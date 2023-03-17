@@ -22,9 +22,9 @@ import EmptyState from '@/components/EmptyState';
 
 function RoadmapVisibilityIcon({ isPublic }) {
   return isPublic ? (
-    <LockClosedIcon className="w-7 h-7 text-red-500 dark:text-red-700 purple:text-red-700" />
+    <LockClosedIcon className="w-7 h-7 text-red-500 dark:text-red-600 purple:text-red-600" />
   ) : (
-    <LockOpenIcon className="w-7 h-7 text-green-500 dark:text-green-700 purple:text-green-700" />
+    <LockOpenIcon className="w-7 h-7 text-green-500 dark:text-green-600 purple:text-green-600" />
   );
 }
 
@@ -160,25 +160,22 @@ export default function RoadMapAdmin() {
       [mergedIdeas.status]: backupState
     }));
   }
-  const sortedStatuses = useMemo(() => {
+  const roadmapStatuses = useMemo(() => {
     if (company && roadmap) {
       const temp = structuredClone(company?.statuses);
       const statuses = temp.sort((a, b) => a.order - b.order);
-      if (statuses && (!company?.role || company?.role === 'Guest')) {
+      if (statuses && isGuest) {
         return statuses.filter((status) => roadmap.publicStatuses?.includes(status._id));
       }
       return statuses;
     }
     return [];
-  }, [company, roadmap]);
+  }, [company, roadmap, isGuest]);
 
   const filteredRoadmaps = useMemo(() => {
     if (company) {
       const temp = structuredClone(company?.roadmaps);
       const roadmaps = temp.sort((a, b) => a.order - b.order);
-      if (roadmaps && (!company?.role || company?.role === 'Guest')) {
-        return roadmaps.filter((roadmap) => roadmap?.isPublic);
-      }
       return roadmaps;
     }
     return [];
@@ -187,7 +184,7 @@ export default function RoadMapAdmin() {
   useEffect(() => {
     if (router.isReady && filteredRoadmaps) {
       const roadmapId = router.query.roadmap;
-      console.log(filteredRoadmaps);
+
       const roadmap =
         filteredRoadmaps.find((roadmap) => roadmap._id === roadmapId) || filteredRoadmaps[0];
       setRoadmap(roadmap);
@@ -202,9 +199,20 @@ export default function RoadMapAdmin() {
 
   useEffect(() => {
     if (roadmap) {
+      console.log('roadmap', roadmap.publicStatuses);
       dispatch(
         ideaActions.getIdeasByRoadmap({
-          roadmapId: roadmap._id
+          filter: [
+            `this.roadmap._id == '${roadmap._id}'`,
+            isGuest && 'this.showOnRoadMap == true',
+            'this.isMerged== false',
+            roadmap.publicStatuses?.length &&
+              `(${roadmap.publicStatuses
+                ?.map((status) => `this.status._id == '${status}'`)
+                .join(' || ')})`
+          ]
+            .filter(Boolean)
+            .join(' && ')
         })
       );
     }
@@ -230,6 +238,7 @@ export default function RoadMapAdmin() {
       setRoadmap(selectedRoadmap);
     }
   }, [company]);
+
   return (
     <>
       <Head>
@@ -237,113 +246,117 @@ export default function RoadMapAdmin() {
         <meta name="description" content="Altogic Canny Alternative Roadmap Admin Page" />
       </Head>
       <Layout>
-        <div className="container ml-auto mt-4">
+        <div className="container ml-auto h-full">
           {error ? (
             <Errors title={error?.title} message={error?.message} />
           ) : (
-            <>
-              <div className="mx-auto">
-                <div className="space-y-2 my-14">
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      {isGuest ? (
-                        <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
-                      ) : (
-                        <Tooltip2>
-                          <TooltipTrigger
-                            onClick={() => {
-                              dispatch(
-                                companyActions.updateCompanySubLists({
-                                  id: roadmap._id,
-                                  property: 'roadmaps',
-                                  update: { isPublic: !roadmap?.isPublic },
-                                  role: company?.role
-                                })
-                              );
-                              setRoadmap((roadmap) => ({
-                                ...roadmap,
-                                isPublic: !roadmap?.isPublic
-                              }));
-                            }}>
-                            <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
-                          </TooltipTrigger>
+            <div className="flex flex-col h-full">
+              {!!company?.roadmaps?.length && (
+                <>
+                  <div className="space-y-2 my-14">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        {isGuest ? (
+                          <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
+                        ) : (
+                          <Tooltip2>
+                            <TooltipTrigger
+                              onClick={() => {
+                                dispatch(
+                                  companyActions.updateCompanySubLists({
+                                    id: roadmap._id,
+                                    property: 'roadmaps',
+                                    update: { isPublic: !roadmap?.isPublic },
+                                    role: company?.role
+                                  })
+                                );
+                                setRoadmap((roadmap) => ({
+                                  ...roadmap,
+                                  isPublic: !roadmap?.isPublic
+                                }));
+                              }}>
+                              <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
+                            </TooltipTrigger>
 
-                          <TooltipContent>
-                            {roadmap?.isPublic
-                              ? 'Make this roadmap private'
-                              : 'Make this roadmap public'}
-                          </TooltipContent>
-                        </Tooltip2>
-                      )}
+                            <TooltipContent>
+                              {roadmap?.isPublic
+                                ? 'Make this roadmap private'
+                                : 'Make this roadmap public'}
+                            </TooltipContent>
+                          </Tooltip2>
+                        )}
 
-                      <BaseListBox
-                        value={roadmap}
-                        label={roadmap?.name}
-                        field="name"
-                        options={filteredRoadmaps}
-                        size="xxl"
-                        onChange={(value) => {
-                          setRoadmap(value);
-                          router.push({
-                            pathname: '/roadmaps',
-                            query: { roadmap: value._id }
-                          });
-                        }}
-                        type="create">
-                        <button
-                          type="button"
-                          className="inline-flex items-center gap-3 text-slate-400 py-2"
-                          onClick={() => setIsCreate(!isCreate)}>
-                          <Plus className="w-4 h-4 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-                          Add a new roadmap
-                        </button>
-                      </BaseListBox>
+                        <BaseListBox
+                          value={roadmap}
+                          label={roadmap?.name}
+                          field="name"
+                          options={filteredRoadmaps}
+                          size="xxl"
+                          onChange={(value) => {
+                            setRoadmap(value);
+                            router.push({
+                              pathname: '/roadmaps',
+                              query: { roadmap: value._id }
+                            });
+                          }}
+                          type="create">
+                          <button
+                            type="button"
+                            className="inline-flex items-center gap-3 text-slate-400 py-2"
+                            onClick={() => setIsCreate(!isCreate)}>
+                            <Plus className="w-4 h-4 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                            Add a new roadmap
+                          </button>
+                        </BaseListBox>
+                      </div>
                     </div>
+                    <p className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
+                      {roadmap?.description}
+                    </p>
                   </div>
-                  <p className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
-                    {roadmap?.description}
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-nowrap items-start gap-8 overflow-auto max-w-full">
-                <DragDropContext onDragEnd={onDragEnd}>
-                  {!isGuest && (
-                    <Droppable droppableId="no-status" index={0} isCombineEnabled>
-                      {(provided) => (
-                        <RoadmapSection
-                          ideas={state?.['no-status']}
-                          provided={provided}
-                          roadmap={roadmap}
-                        />
+                  <div className="flex-1 flex flex-nowrap items-start gap-8 overflow-auto max-w-full">
+                    <DragDropContext onDragEnd={onDragEnd}>
+                      {!isGuest && (
+                        <Droppable droppableId="no-status" index={0} isCombineEnabled>
+                          {(provided) => (
+                            <RoadmapSection
+                              ideas={state?.['no-status']}
+                              provided={provided}
+                              roadmap={roadmap}
+                            />
+                          )}
+                        </Droppable>
                       )}
-                    </Droppable>
-                  )}
-                  {sortedStatuses?.map((status, index) => (
-                    <Droppable
-                      key={status._id}
-                      droppableId={status._id}
-                      index={index + 1}
-                      isCombineEnabled>
-                      {(provided) => (
-                        <RoadmapSection
-                          status={status}
-                          ideas={state?.[status._id]}
-                          provided={provided}
-                          roadmap={roadmap}
-                          isGuest={isGuest}
-                        />
-                      )}
-                    </Droppable>
-                  ))}
-                </DragDropContext>
-              </div>
-              {!roadmap?.publicStatuses.length && (
-                <EmptyState
-                  title="Statuses are private"
-                  description="Please make it public to view ideas"
-                />
+                      {roadmapStatuses?.map((status, index) => (
+                        <Droppable
+                          key={status._id}
+                          droppableId={status._id}
+                          index={index + 1}
+                          isCombineEnabled>
+                          {(provided) => (
+                            <RoadmapSection
+                              status={status}
+                              ideas={state?.[status._id]}
+                              provided={provided}
+                              roadmap={roadmap}
+                              isGuest={isGuest}
+                            />
+                          )}
+                        </Droppable>
+                      ))}
+                    </DragDropContext>
+                  </div>
+                </>
               )}
-            </>
+              <div className="m-auto">
+                {((!roadmap?.publicStatuses?.length && isGuest) || !company?.roadmaps?.length) && (
+                  <EmptyState
+                    title="No Roadmaps"
+                    description="Please make it public to view ideas"
+                  />
+                )}
+              </div>
+            </div>
           )}
         </div>
         <IdeaDetail idea={selectedIdea} company={company} onClose={() => handleCloseIdea()} />

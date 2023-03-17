@@ -24,7 +24,7 @@ export default function AddANewRoadMap({
   const [isPublic, setIsPublic] = useState(false);
   const createRoadMapSchema = new yup.ObjectSchema({
     name: yup.string().required('Roadmap name is required'),
-    description: yup.string().required('Roadmap description is required'),
+    description: yup.string(),
     isPublic: yup.boolean()
   });
   const {
@@ -46,6 +46,7 @@ export default function AddANewRoadMap({
           role: company?.role
         })
       );
+      setEditedRoadmap(null);
     } else {
       dispatch(
         companyActions.addItemToCompanySubLists({
@@ -55,9 +56,15 @@ export default function AddANewRoadMap({
       );
     }
     reset();
-    setEditedRoadmap(null);
+    setIsPublic(false);
     cancelOnClick();
   };
+
+  function handleClose() {
+    reset();
+    setIsPublic(false);
+    cancelOnClick();
+  }
   useEffect(() => {
     if (editedRoadmap) {
       setValue('name', editedRoadmap.name);
@@ -68,7 +75,7 @@ export default function AddANewRoadMap({
   }, [editedRoadmap]);
 
   return (
-    <Modal open={show} onClose={cancelOnClick} {...props}>
+    <Modal open={show} onClose={() => handleClose()} {...props}>
       <div className="absolute top-8 right-8">
         <Button
           variant="icon"
@@ -118,7 +125,7 @@ export default function AddANewRoadMap({
           />
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <Button onClick={cancelOnClick} text="Cancel" variant="blank" {...props} />
+          <Button onClick={() => handleClose()} text="Cancel" variant="blank" {...props} />
           <Button type="submit" variant="indigo" loading={loading} text="Submit" {...props} />
         </div>
       </form>
