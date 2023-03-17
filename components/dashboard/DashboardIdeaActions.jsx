@@ -76,9 +76,9 @@ export default function DashboardIdeaActions() {
       setIdeaOwner({
         value: {
           _id: idea?.author?._id,
-          name: idea?.author?.name,
-          profilePicture: idea?.author?.profilePicture,
-          email: idea?.author?.email,
+          name: idea?.author?.name || idea?.guestName || idea?.name,
+          profilePicture: idea?.author?.profilePicture || idea?.guestProfilePicture,
+          email: idea?.author?.email || idea?.guestEmail,
           isRegistered: !!idea?.author?.provider
         },
         label: idea?.author?.name || idea?.guestName || idea?.name
@@ -92,22 +92,25 @@ export default function DashboardIdeaActions() {
     });
   };
   const filterMembers = async (inputValue) => {
-    const { data, errors } = await ideaService.searchCompanyMembers(company._id, inputValue);
-    if (errors) {
-      return [];
-    }
-    const response = [...data.members, ...data.users];
+    if (inputValue) {
+      const { data, errors } = await ideaService.searchCompanyMembers(company._id, inputValue);
+      if (errors) {
+        return [];
+      }
+      const response = [...data.members, ...data.users];
 
-    return response.map((member) => ({
-      value: {
-        _id: member._id,
-        name: member.name,
-        profilePicture: member.profilePicture,
-        email: member.email,
-        isRegistered: !!member.provider
-      },
-      label: member.name
-    }));
+      return response.map((member) => ({
+        value: {
+          _id: member._id,
+          name: member.name,
+          profilePicture: member.profilePicture,
+          email: member.email,
+          isRegistered: !!member.provider
+        },
+        label: member.name
+      }));
+    }
+    return [];
   };
   const addCompanySubList = (name, fieldName) => {
     dispatch(
@@ -190,6 +193,7 @@ export default function DashboardIdeaActions() {
               loadOptions={filterMembers}
               placeholder="Search for an member"
               defaultValue={ideaOwner}
+              de
               onChange={(res) => {
                 if (!res) {
                   setIdeaOwner(null);
@@ -207,6 +211,7 @@ export default function DashboardIdeaActions() {
                   });
                 }
               }}
+              onFocus={() => setIdeaOwner(null)}
               formatOptionLabel={formatOptionLabel}
             />
           </IdeaActionItem>

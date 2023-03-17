@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import _ from 'lodash';
 import { HYDRATE } from 'next-redux-wrapper';
 
 const initialState = {
@@ -112,6 +113,25 @@ export const ideaSlice = createSlice({
         ...action.payload,
         mergedIdeasDetail: state.selectedIdea.mergedIdeasDetail
       };
+      if (!_.isEmpty(state.roadmapIdeas)) {
+        state.roadmapIdeas = Object.values(state.roadmapIdeas)
+          .flat()
+          .map((idea) => {
+            if (idea._id === action.payload._id) {
+              return action.payload;
+            }
+            return idea;
+          })
+          .reduce((acc, curr) => {
+            const key = curr.status?._id || 'no-status';
+            if (!acc[key]) {
+              // eslint-disable-next-line no-param-reassign
+              acc[key || 'no-status'] = [];
+            }
+            acc[key || 'no-status'].push(curr);
+            return acc;
+          }, {});
+      }
     },
     updateIdeaFailure(state, action) {
       state.isLoading = false;
@@ -203,8 +223,27 @@ export const ideaSlice = createSlice({
       }
       state.selectedIdea = {
         ...action.payload.data,
-        mergedIdeasDetail: state.selectedIdea.mergedIdeasDetail
+        mergedIdeasDetail: state.selectedIdea?.mergedIdeasDetail
       };
+      if (!_.isEmpty(state.roadmapIdeas)) {
+        state.roadmapIdeas = Object.values(state.roadmapIdeas)
+          .flat()
+          .map((idea) => {
+           if (idea._id === action.payload.data._id) {
+             return action.payload.data;
+           }
+           return idea;
+          })
+          .reduce((acc, curr) => {
+            const key = curr.status?._id || 'no-status';
+            if (!acc[key]) {
+              // eslint-disable-next-line no-param-reassign
+              acc[key || 'no-status'] = [];
+            }
+            acc[key || 'no-status'].push(curr);
+            return acc;
+          }, {});
+      }
     },
 
     deleteComment(state, action) {

@@ -31,7 +31,7 @@ const ideaService = {
   mergeIdeas: (baseIdea, mergedIdea) => endpoint.post('/idea/merge', { baseIdea, mergedIdea }),
   getMergedIdeas: (filter) => endpoint.get('/idea/merge', { filter }),
   getIdea: (id) => endpoint.get(`/ideas/${id}`),
-  getIdeasByRoadmap: (roadmapId) => endpoint.get(`/idea/roadmap/${roadmapId}`),
+  getIdeasByRoadmap: (filter) => endpoint.get('/idea/roadmap', { filter }),
   updateIdeasOrder: (ideas) => endpoint.put('/idea/roadmap', ideas)
 };
 export default ideaService;

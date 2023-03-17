@@ -1,30 +1,23 @@
 import { companyActions } from '@/redux/company/companySlice';
+import { useMemo } from 'react';
 import { Draggable, resetServerContext } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
-import { useMemo } from 'react';
 import EmptyState from './EmptyState';
 import { Eye, EyeSlash } from './icons';
 import RoadMapCard from './RoadMapCard';
 import { Tooltip2, TooltipContent, TooltipTrigger } from './Tooltip2';
 
-const grid = 8;
-const getItemStyle = (draggableStyle) => ({
-  userSelect: 'none',
-  margin: `0 0 ${grid}px 0`,
-  ...draggableStyle
-});
 function RoadmapVisibilityIcon({ isPrivate }) {
   return isPrivate ? (
-    <Eye className="w-5 h-5 text-green-500 dark:text-green-700 purple:text-green-700" />
+    <Eye className="w-5 h-5 text-green-500 dark:text-green-600 purple:text-green-600" />
   ) : (
-    <EyeSlash className="w-5 h-5 text-red-500 dark:text-red-700 purple:text-red-700" />
+    <EyeSlash className="w-5 h-5 text-red-500 dark:text-red-600 purple:text-red-600" />
   );
 }
 export default function RoadmapSection({ status, ideas, provided, roadmap, isGuest, ...rest }) {
   resetServerContext();
   const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
-
   const isPrivate = useMemo(
     () => roadmap?.publicStatuses?.includes(status?._id),
     [roadmap, status]
@@ -82,7 +75,7 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, isGue
                 <RoadMapCard
                   idea={idea}
                   provided={provided}
-                  style={isGuest ? {} : getItemStyle(provided.draggableProps.style)}
+                  style={provided?.draggableProps?.style}
                 />
               )}
             </Draggable>
