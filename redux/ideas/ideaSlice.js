@@ -13,7 +13,8 @@ const initialState = {
   similarIdeas: [],
   searchedCompanyMembers: [],
   editedIdea: null,
-  roadmapIdeas: {}
+  roadmapIdeas: {},
+  selectedRoadmap: null
 };
 
 export const ideaSlice = createSlice({
@@ -31,6 +32,7 @@ export const ideaSlice = createSlice({
       } else {
         state.ideas = [...state.ideas, ...action.payload.result];
       }
+      state.roadmapIdeas = {};
     },
     getIdeasByCompanyFailure: (state, action) => {
       state.getIdeaLoading = false;
@@ -54,7 +56,6 @@ export const ideaSlice = createSlice({
     },
     voteIdeaSuccess(state, action) {
       state.isLoading = false;
-
       state.ideaVotes = [...state.ideaVotes, action.payload];
       state.ideas = state.ideas.map((idea) => {
         if (idea._id === action.payload.ideaId) {
@@ -122,18 +123,23 @@ export const ideaSlice = createSlice({
       if (!_.isEmpty(state.roadmapIdeas)) {
         if (
           !state.ideas.some((idea) => idea._id === action.payload._id) &&
-          state.ideas[0].roadmap._id === action.payload.roadmap._id &&
-          action.payload.showOnRoadMap
+          state.selectedRoadmap._id === action.payload.roadmap._id
         ) {
           state.ideas = [action.payload, ...state.ideas];
         } else if (
-          state.ideas[0].roadmap._id !== action.payload.roadmap._id ||
-          !action.payload.showOnRoadMap
+          !action.payload.roadmap?._id ||
+          state.selectedRoadmap._id !== action.payload?.roadmap._id
         ) {
           state.ideas = state.ideas.filter((idea) => idea._id !== action.payload._id);
         }
+        state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
+      } else if (
+        !state.ideas.some((idea) => idea._id === action.payload._id) &&
+        state.selectedRoadmap._id === action.payload.roadmap._id
+      ) {
+        state.ideas = [action.payload.data, ...state.ideas];
+        state.roadmapIdeas = _.groupBy([action.payload], 'status._id');
       }
-      state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
     },
 
     updateIdeaFailure(state, action) {
@@ -235,22 +241,32 @@ export const ideaSlice = createSlice({
         mergedIdeasDetail: state.selectedIdea?.mergedIdeasDetail
       };
       if (!_.isEmpty(state.roadmapIdeas)) {
+        console.log('here 1');
         if (
           !state.ideas.some((idea) => idea._id === action.payload.data._id) &&
-          state.ideas[0].roadmap._id === action.payload.data.roadmap._id &&
+          state.selectedRoadmap._id === action.payload.data.roadmap._id &&
           action.payload.data.showOnRoadMap
         ) {
+          console.log('here 2', [action.payload.data, ...state.ideas]);
           state.ideas = [action.payload.data, ...state.ideas];
         } else if (
           !action.payload.data.roadmap?._id ||
           (!action.payload.data.status &&
-            state.ideas[0].roadmap?._id !== action.payload.data.roadmap?._id) ||
+            state.selectedRoadmap?._id !== action.payload.data.roadmap?._id) ||
           !action.payload.data.showOnRoadMap
         ) {
           state.ideas = state.ideas.filter((idea) => idea._id !== action.payload.data._id);
         }
+        console.log('here 3');
+        state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
+      } else if (
+        !state.ideas.some((idea) => idea._id === action.payload.data._id) &&
+        state.selectedRoadmap._id === action.payload.data.roadmap._id &&
+        action.payload.data.showOnRoadMap
+      ) {
+        state.ideas = [action.payload.data, ...state.ideas];
+        state.roadmapIdeas = _.groupBy([action.payload.data], 'status._id');
       }
-      state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
     },
 
     deleteComment(state, action) {
@@ -427,9 +443,15 @@ export const ideaSlice = createSlice({
     updateIdeasOrder(state) {
       state.isLoading = true;
     },
-    updateIdeasOrderSuccess(state, action) {
+    updateIdeasOrderSuccess(state) {
       state.isLoading = false;
-      if (action.payload.destinationId !== action.payload.sourceIdea) {
+    },
+    updateIdeasOrderRealtime(state, action) {
+      state.isLoading = false;
+      if (
+        action.payload.destinationId !== action.payload.sourceIdea &&
+        state.roadmapIdeas[action.payload.destinationId]
+      ) {
         state.roadmapIdeas[action.payload.destinationId] = state.roadmapIdeas[
           action.payload.destinationId
         ].filter((idea) => idea._id !== action.payload.sourceIdea._id);
@@ -439,6 +461,9 @@ export const ideaSlice = createSlice({
     updateIdeasOrderFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    setSelectedRoadmap(state, action) {
+      state.selectedRoadmap = action.payload;
     }
   },
 

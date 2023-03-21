@@ -1,5 +1,6 @@
+import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import { companyActions } from '@/redux/company/companySlice';
-import { useMemo, useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Draggable, resetServerContext } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 import EmptyState from './EmptyState';
@@ -8,10 +9,11 @@ import RoadMapCard from './RoadMapCard';
 import { Tooltip2, TooltipContent, TooltipTrigger } from './Tooltip2';
 
 const grid = 16;
-const getItemStyle = (isDragging, draggableStyle) => ({
+const getItemStyle = (draggableStyle) => ({
+  ...draggableStyle,
+  position: 'static',
   userSelect: 'none',
-  margin: `0 0 ${grid}px 0`,
-  ...draggableStyle
+  margin: `0 0 ${grid}px 0`
 });
 
 function RoadmapVisibilityIcon({ isPrivate }) {
@@ -31,11 +33,9 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, isGue
     () => roadmap?.publicStatuses?.includes(status?._id),
     [roadmap, status]
   );
-  useEffect(() => {
-    if (ideas) {
-      const temp = structuredClone(ideas);
-      setSortedIdeas(temp.sort((a, b) => a.roadmapOrder - b.roadmapOrder));
-    }
+  useUpdateEffect(() => {
+    const temp = structuredClone(ideas);
+    setSortedIdeas(temp ? temp.sort((a, b) => a.order - b.order) : []);
   }, [ideas]);
 
   return (
@@ -91,7 +91,7 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, isGue
                 <RoadMapCard
                   idea={idea}
                   provided={provided}
-                  style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
+                  style={getItemStyle(provided.draggableProps.style)}
                   combineWith={snapshot.combineWith}
                 />
               )}

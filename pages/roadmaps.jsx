@@ -1,5 +1,7 @@
 import AddANewRoadMap from '@/components/AddANewRoadMap';
 import BaseListBox from '@/components/BaseListBox';
+import EmptyState from '@/components/EmptyState';
+import Errors from '@/components/Errors';
 import { Merge, Plus } from '@/components/icons';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
 import SubmitIdea from '@/components/Idea/SubmitIdea';
@@ -17,9 +19,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
-import Errors from '@/components/Errors';
-import EmptyState from '@/components/EmptyState';
-import _ from 'lodash';
 
 function RoadmapVisibilityIcon({ isPublic }) {
   return isPublic ? (
@@ -94,8 +93,8 @@ export default function RoadMapAdmin() {
 
     if (sInd === dInd) {
       const items = reorder(state[sInd], source.index, destination.index);
-      const effectedItems = _.intersectionBy(items, state[sInd], 'roadmapOrder');
-      dispatch(ideaActions.updateIdeasOrder({ ideas: effectedItems, sourceId: sInd }));
+      // const effectedItems = _.intersectionBy(items, state[sInd], 'roadmapOrder');
+      dispatch(ideaActions.updateIdeasOrder({ ideas: items, sourceId: sInd }));
       setState((state) => ({ ...state, [sInd]: items }));
     } else {
       const destinationList = state[dInd] || [];
@@ -106,21 +105,24 @@ export default function RoadMapAdmin() {
           idea: {
             _id: sourceIdea._id,
             status: dInd === 'undefined' ? null : dInd
+          },
+          onSuccess: () => {
+            const orderedResult = result[dInd].map((item, index) => ({
+              ...item,
+              roadmapOrder: index + 1
+            }));
+            dispatch(
+              ideaActions.updateIdeasOrder({
+                ideas: orderedResult,
+                sourceId: dInd,
+                destinationId: sInd,
+                sourceIdea
+              })
+            );
           }
         })
       );
-      const orderedResult = result[dInd].map((item, index) => ({
-        ...item,
-        roadmapOrder: index + 1
-      }));
-      dispatch(
-        ideaActions.updateIdeasOrder({
-          ideas: orderedResult,
-          sourceId: dInd,
-          destinationId: sInd,
-          sourceIdea
-        })
-      );
+
       setState((state) => ({
         ...state,
         [sInd]: result[sInd],
@@ -183,15 +185,15 @@ export default function RoadMapAdmin() {
   useEffect(() => {
     if (router.isReady && filteredRoadmaps) {
       const roadmapId = router.query.roadmap;
-
       const roadmap =
         filteredRoadmaps.find((roadmap) => roadmap._id === roadmapId) || filteredRoadmaps[0];
       setRoadmap(roadmap);
+      dispatch(ideaActions.setSelectedRoadmap(roadmap));
     }
   }, [filteredRoadmaps, router]);
 
   useEffect(() => {
-    if (roadmapIdeas && _.isEmpty(state)) {
+    if (roadmapIdeas) {
       setState(roadmapIdeas);
     }
   }, [roadmapIdeas]);
@@ -294,6 +296,7 @@ export default function RoadMapAdmin() {
                           size="xxl"
                           onChange={(value) => {
                             setRoadmap(value);
+                            dispatch(ideaActions.setSelectedIdea(value));
                             router.push({
                               pathname: '/roadmaps',
                               query: { roadmap: value._id }
