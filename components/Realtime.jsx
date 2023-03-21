@@ -164,12 +164,14 @@ export default function Realtime() {
     }
   }
   function updateIdeaHandler({ message }) {
-    dispatch(
-      ideaActions.updateIdeaRealtime({
-        data: message,
-        isAdminView: router.asPath.includes('dashboard')
-      })
-    );
+    if (message.sender !== user?._id) {
+      dispatch(
+        ideaActions.updateIdeaRealtime({
+          data: message,
+          isAdminView: router.asPath.includes('dashboard')
+        })
+      );
+    }
   }
   function deleteIdeaHandler({ message }) {
     const idea = new URLSearchParams(document.location.search).get('feedback');
@@ -180,7 +182,6 @@ export default function Realtime() {
     dispatch(ideaActions.deleteIdeaSuccess(message.id));
   }
   function voteIdeaHandler({ message }) {
-    console.log(!user && !userIp && !guestInfoState.current.email);
     if (
       (user && user._id !== message.userId) ||
       (!user && !voteGuest.current && userIp !== message.ip) ||
@@ -260,7 +261,7 @@ export default function Realtime() {
     dispatch(ideaActions.mergeIdeasSuccess(message));
   }
   function updateIdeaOrder({ message }) {
-    if (user?._id !== message.sender) dispatch(ideaActions.updateIdeasOrderSuccess(message));
+    if (user?._id !== message.sender) dispatch(ideaActions.updateIdeasOrderRealtime(message));
   }
 
   useEffect(() => {

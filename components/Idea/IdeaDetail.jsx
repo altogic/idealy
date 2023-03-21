@@ -66,7 +66,7 @@ export default function IdeaDetail({ idea, company, onClose }) {
     if (
       idea &&
       !idea?.mergedIdeasDetail &&
-      idea?.mergedIdeas.length > 0 &&
+      idea?.mergedIdeas?.length > 0 &&
       isMergeFetched.current !== idea._id
     ) {
       let filter = '';

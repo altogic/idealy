@@ -51,7 +51,6 @@ function* voteIdeaSaga({ payload }) {
     if (payload.onError) {
       payload.onError();
     }
-    console.log(error);
     yield put(ideaActions.voteIdeaFailure(error));
   }
 }
@@ -73,14 +72,16 @@ function* downVoteIdeaSaga({ payload }) {
 function* updateIdeaSaga({ payload: { idea, onSuccess } }) {
   try {
     const { data, errors } = yield call(ideaService.updateIdea, idea);
-
+    const user = yield select((state) => state.auth.user);
     if (errors) {
       throw new Error(errors);
     }
     yield put(ideaActions.updateIdeaSuccess(data));
     const company = yield select((state) => state.company.company);
-    console.log('updateIdeaSaga', data);
-    realtime.send(company._id, 'update-idea', data);
+    realtime.send(company._id, 'update-idea', {
+      ...data,
+      sender: user._id
+    });
     if (onSuccess) onSuccess(data);
   } catch (error) {
     console.log(error);
@@ -183,7 +184,6 @@ function* mergeIdeasSaga({ payload: { baseIdea, mergedIdea, onSuccess } }) {
       ideaVotes: data.ideaVotes
     });
   } catch (error) {
-    console.log(error);
     yield put(ideaActions.mergeIdeasFailure(error));
   }
 }
@@ -247,7 +247,8 @@ function* updateIdeasOrderSaga({ payload: { ideas, sourceId, destinationId, sour
         ideas: data,
         sourceId,
         destinationId,
-        sourceIdea
+        sourceIdea,
+        realtime: false
       })
     );
     realtime.send(company._id, 'update-ideas-order', {
