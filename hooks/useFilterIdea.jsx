@@ -111,7 +111,7 @@ export default function useFilterIdea() {
         propertyFilter.push('!EXISTS(this.status)');
       }
       if (router.query.approved) {
-        propertyFilter.push('this.isApproved == true');
+        propertyFilter.push('this.isApproved == false');
       }
       setPropertyFilter(`(${propertyFilter.join(' || ')})`);
     } else {

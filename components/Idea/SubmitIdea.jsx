@@ -70,7 +70,7 @@ export default function SubmitIdea({ idea }) {
         is: () => guestValidation && !user,
         then: yup.string().required('Email is required')
       }),
-    privacyPolicy: yup.boolean().when([], {
+    privacyPolicyIdea: yup.boolean().when([], {
       is: () => guestValidation && !user,
       then: yup.boolean().oneOf([true], 'Privacy Policy is required')
     })
@@ -85,7 +85,7 @@ export default function SubmitIdea({ idea }) {
     formState: { errors }
   } = useForm({
     defaultValues: {
-      privacyPolicy: false
+      privacyPolicyIdea: false
     },
     resolver: yupResolver(schema),
     mode: 'all'
@@ -139,7 +139,7 @@ export default function SubmitIdea({ idea }) {
       costFactor: PRIORITY_VALUES[company?.priorityType][0],
       benefitFactor: PRIORITY_VALUES[company?.priorityType][0]
     };
-    delete reqData.privacyPolicy;
+    delete reqData.privacyPolicyIdea;
 
     if (idea) {
       updateIdea(reqData, (submittedIdea) =>
@@ -247,7 +247,7 @@ export default function SubmitIdea({ idea }) {
     if (guestInfo) {
       setValue('guestName', guestInfo.name);
       setValue('guestEmail', guestInfo.email);
-      setValue('privacyPolicy', true);
+      setValue('privacyPolicyIdea', true);
     }
   }, [feedBackSubmitModal, guestInfo]);
 
@@ -356,7 +356,7 @@ export default function SubmitIdea({ idea }) {
         <Divider className="my-8" />
         <div>
           {((idea?.guestName && idea?.guestEmail) || guestValidation) && (
-            <GuestForm register={register} errors={errors} />
+            <GuestForm register={register} errors={errors} checkBoxName="privacyPolicyIdea" />
           )}
         </div>
         <div className="flex justify-end gap-4 mt-4">

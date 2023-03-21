@@ -46,7 +46,7 @@ export default function CommentForm({
         is: () => guestValidation && !user,
         then: yup.string().required('Email is required')
       }),
-    privacyPolicy: yup.boolean().when([], {
+    privacyPolicyComment: yup.boolean().when([], {
       is: () => guestValidation && !user,
       then: yup.boolean().oneOf([true], 'Privacy Policy is required')
     })
@@ -132,7 +132,7 @@ export default function CommentForm({
       setValue('text', editedComment.text);
       setValue('guestName', editedComment.name);
       setValue('guestEmail', editedComment.email);
-      setValue('privacyPolicy', true);
+      setValue('privacyPolicyComment', true);
     }
   }, [editedComment]);
 
@@ -140,7 +140,7 @@ export default function CommentForm({
     if (guestInfo) {
       setValue('guestName', guestInfo.name);
       setValue('guestEmail', guestInfo.email);
-      setValue('privacyPolicy', true);
+      setValue('privacyPolicyComment', true);
     }
   }, [feedBackSubmitModal, guestInfo]);
 
@@ -179,7 +179,9 @@ export default function CommentForm({
           </div>
         )}
       />
-      {guestValidation && <GuestForm register={register} errors={errors} />}
+      {guestValidation && (
+        <GuestForm register={register} errors={errors} checkBoxName="privacyPolicyComment" />
+      )}
       <div className={`flex justify-end gap-2 ${editedComment ? 'mt-2' : 'my-8'}`}>
         {editedComment && (
           <Button

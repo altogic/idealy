@@ -68,6 +68,9 @@ export const ideaSlice = createSlice({
       if (state.selectedIdea) {
         state.selectedIdea.voteCount += 1;
       }
+      if (!_.isEmpty(state.roadmapIdeas)) {
+        state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
+      }
     },
     voteIdeaFailure(state, action) {
       state.isLoading = false;
@@ -93,6 +96,9 @@ export const ideaSlice = createSlice({
           ? state.selectedIdea.voteCount - 1
           : 0;
       }
+      if (!_.isEmpty(state.roadmapIdeas)) {
+        state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
+      }
     },
     downVoteIdeaFailure(state, action) {
       state.isLoading = false;
@@ -111,28 +117,25 @@ export const ideaSlice = createSlice({
       });
       state.selectedIdea = {
         ...action.payload,
-        mergedIdeasDetail: state.selectedIdea.mergedIdeasDetail
+        mergedIdeasDetail: state.selectedIdea?.mergedIdeasDetail
       };
       if (!_.isEmpty(state.roadmapIdeas)) {
-        state.roadmapIdeas = Object.values(state.roadmapIdeas)
-          .flat()
-          .map((idea) => {
-            if (idea._id === action.payload._id) {
-              return action.payload;
-            }
-            return idea;
-          })
-          .reduce((acc, curr) => {
-            const key = curr.status?._id || 'no-status';
-            if (!acc[key]) {
-              // eslint-disable-next-line no-param-reassign
-              acc[key || 'no-status'] = [];
-            }
-            acc[key || 'no-status'].push(curr);
-            return acc;
-          }, {});
+        if (
+          !state.ideas.some((idea) => idea._id === action.payload._id) &&
+          state.ideas[0].roadmap._id === action.payload.roadmap._id &&
+          action.payload.showOnRoadMap
+        ) {
+          state.ideas = [action.payload, ...state.ideas];
+        } else if (
+          state.ideas[0].roadmap._id !== action.payload.roadmap._id ||
+          !action.payload.showOnRoadMap
+        ) {
+          state.ideas = state.ideas.filter((idea) => idea._id !== action.payload._id);
+        }
       }
+      state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
     },
+
     updateIdeaFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
@@ -175,6 +178,9 @@ export const ideaSlice = createSlice({
       if (state.selectedIdea) {
         state.selectedIdea.commentCount += 1;
       }
+      if (!_.isEmpty(state.roadmapIdeas)) {
+        state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
+      }
     },
     setSelectedIdea(state, action) {
       state.selectedIdea = action.payload;
@@ -197,6 +203,9 @@ export const ideaSlice = createSlice({
         ...state.selectedIdea,
         coverImage: null
       };
+      if (!_.isEmpty(state.roadmapIdeas)) {
+        state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
+      }
     },
     deleteIdeaCoverImageFailure(state, action) {
       state.isLoading = false;
@@ -226,24 +235,22 @@ export const ideaSlice = createSlice({
         mergedIdeasDetail: state.selectedIdea?.mergedIdeasDetail
       };
       if (!_.isEmpty(state.roadmapIdeas)) {
-        state.roadmapIdeas = Object.values(state.roadmapIdeas)
-          .flat()
-          .map((idea) => {
-           if (idea._id === action.payload.data._id) {
-             return action.payload.data;
-           }
-           return idea;
-          })
-          .reduce((acc, curr) => {
-            const key = curr.status?._id || 'no-status';
-            if (!acc[key]) {
-              // eslint-disable-next-line no-param-reassign
-              acc[key || 'no-status'] = [];
-            }
-            acc[key || 'no-status'].push(curr);
-            return acc;
-          }, {});
+        if (
+          !state.ideas.some((idea) => idea._id === action.payload.data._id) &&
+          state.ideas[0].roadmap._id === action.payload.data.roadmap._id &&
+          action.payload.data.showOnRoadMap
+        ) {
+          state.ideas = [action.payload.data, ...state.ideas];
+        } else if (
+          !action.payload.data.roadmap?._id ||
+          (!action.payload.data.status &&
+            state.ideas[0].roadmap?._id !== action.payload.data.roadmap?._id) ||
+          !action.payload.data.showOnRoadMap
+        ) {
+          state.ideas = state.ideas.filter((idea) => idea._id !== action.payload.data._id);
+        }
       }
+      state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
     },
 
     deleteComment(state, action) {
@@ -258,6 +265,9 @@ export const ideaSlice = createSlice({
       });
       if (state.selectedIdea) {
         state.selectedIdea.commentCount -= 1;
+      }
+      if (!_.isEmpty(state.roadmapIdeas)) {
+        state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
       }
     },
     searchCompanyMembers(state) {
@@ -286,6 +296,9 @@ export const ideaSlice = createSlice({
           ? state.selectedIdea.voteCount - 1
           : 0;
       }
+      if (!_.isEmpty(state.roadmapIdeas)) {
+        state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
+      }
     },
     upVoteIdeaRealtime(state, action) {
       state.ideas = state.ideas.map((idea) => {
@@ -300,6 +313,9 @@ export const ideaSlice = createSlice({
       if (state.selectedIdea) {
         state.selectedIdea.voteCount += 1;
       }
+      if (!_.isEmpty(state.roadmapIdeas)) {
+        state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
+      }
     },
 
     approveAllIdeas(state) {
@@ -311,6 +327,9 @@ export const ideaSlice = createSlice({
         ...idea,
         isApproved: true
       }));
+      if (!_.isEmpty(state.roadmapIdeas)) {
+        state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
+      }
     },
     approveAllIdeasFailure(state, action) {
       state.isLoading = false;
@@ -328,6 +347,9 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
+      if (!_.isEmpty(state.roadmapIdeas)) {
+        state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
+      }
     },
     mergeIdeas(state) {
       state.isLoading = true;
@@ -343,17 +365,7 @@ export const ideaSlice = createSlice({
       });
       if (state.selectedIdea) state.selectedIdea = action.payload.baseIdea;
       if (state.roadmapIdeas.length) {
-        state.roadmapIdeas[action.payload?.baseIdea?.status?._id || 'no-status'] =
-          state.roadmapIdeas[action.payload?.baseIdea?.status?._id || 'no-status'].filter(
-            (idea) => idea._id !== action.payload.mergedIdea
-          );
-        state.roadmapIdeas[action.payload?.baseIdea?.status?._id || 'no-status'] =
-          state.roadmapIdeas[action.payload?.baseIdea?.status?._id || 'no-status'].map((idea) => {
-            if (idea._id === action.payload._id) {
-              return action.payload.baseIdea;
-            }
-            return idea;
-          });
+        state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
       }
       state.ideaVotes = [...state.ideaVotes, ...action.payload.ideaVotes];
     },
@@ -406,6 +418,7 @@ export const ideaSlice = createSlice({
     getIdeasByRoadmapSuccess(state, action) {
       state.isLoading = false;
       state.roadmapIdeas = action.payload;
+      state.ideas = Object.values(state.roadmapIdeas).flat();
     },
     getIdeasByRoadmapFailure(state, action) {
       state.isLoading = false;

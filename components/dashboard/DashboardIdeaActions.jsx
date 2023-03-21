@@ -142,8 +142,8 @@ export default function DashboardIdeaActions() {
         <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 mb-4 text-base font-semibold tracking-sm pt-6 px-6">
           Feedback Details
         </h2>
-        <div className="space-y-8 px-6 ">
-          <div>
+        <div className="space-y-8 px-4" name="publicLink">
+          <IdeaActionItem label="Public Link">
             <Label label="Public Link" />
             <div className="flex h-10">
               <Input
@@ -164,7 +164,7 @@ export default function DashboardIdeaActions() {
                 }
               />
             </div>
-          </div>
+          </IdeaActionItem>
           {!idea?.isApproved && (
             <IdeaActionItem label="Approval" name="approval">
               <IdeaApproval />
@@ -193,7 +193,6 @@ export default function DashboardIdeaActions() {
               loadOptions={filterMembers}
               placeholder="Search for an member"
               defaultValue={ideaOwner}
-              de
               onChange={(res) => {
                 if (!res) {
                   setIdeaOwner(null);
@@ -212,6 +211,18 @@ export default function DashboardIdeaActions() {
                 }
               }}
               onFocus={() => setIdeaOwner(null)}
+              onBlur={() =>
+                setIdeaOwner({
+                  value: {
+                    _id: idea?.author?._id,
+                    name: idea?.author?.name || idea?.guestName || idea?.name,
+                    profilePicture: idea?.author?.profilePicture || idea?.guestProfilePicture,
+                    email: idea?.author?.email || idea?.guestEmail,
+                    isRegistered: !!idea?.author?.provider
+                  },
+                  label: idea?.author?.name || idea?.guestName || idea?.name
+                })
+              }
               formatOptionLabel={formatOptionLabel}
             />
           </IdeaActionItem>
