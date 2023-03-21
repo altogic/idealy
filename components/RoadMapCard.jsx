@@ -26,7 +26,7 @@ export default function RoadMapCard({ idea, provided, combineWith, ...rest }) {
   return (
     <button type="button" onClick={handleClickIdea} className="w-full">
       <div
-        id={idea._id}
+        id={idea?._id}
         className="p-4 border border-slate-200  bg-white dark:bg-aa-900 purple:bg-pt-1000 dark:border-aa-600 purple:border-pt-800 rounded-lg mt-2 text-left"
         ref={provided?.innerRef}
         {...provided?.draggableProps}
