@@ -19,6 +19,7 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 import Errors from '@/components/Errors';
 import EmptyState from '@/components/EmptyState';
+import _ from 'lodash';
 
 function RoadmapVisibilityIcon({ isPublic }) {
   return isPublic ? (
@@ -64,8 +65,7 @@ export default function RoadMapAdmin() {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
-
-    return result;
+    return result.map((item, index) => ({ ...item, roadmapOrder: index + 1 }));
   };
 
   const onDragEnd = (result) => {
@@ -94,8 +94,8 @@ export default function RoadMapAdmin() {
 
     if (sInd === dInd) {
       const items = reorder(state[sInd], source.index, destination.index);
-      const temp = items.map((item, index) => ({ ...item, roadmapOrder: index + 1 }));
-      dispatch(ideaActions.updateIdeasOrder({ ideas: temp, sourceId: sInd }));
+      const effectedItems = _.intersectionBy(items, state[sInd], 'roadmapOrder');
+      dispatch(ideaActions.updateIdeasOrder({ ideas: effectedItems, sourceId: sInd }));
       setState((state) => ({ ...state, [sInd]: items }));
     } else {
       const destinationList = state[dInd] || [];
@@ -105,11 +105,10 @@ export default function RoadMapAdmin() {
         ideaActions.updateIdea({
           idea: {
             _id: sourceIdea._id,
-            status: dInd
+            status: dInd === 'undefined' ? null : dInd
           }
         })
       );
-
       const orderedResult = result[dInd].map((item, index) => ({
         ...item,
         roadmapOrder: index + 1
@@ -192,21 +191,22 @@ export default function RoadMapAdmin() {
   }, [filteredRoadmaps, router]);
 
   useEffect(() => {
-    if (roadmapIdeas) {
+    if (roadmapIdeas && _.isEmpty(state)) {
       setState(roadmapIdeas);
     }
   }, [roadmapIdeas]);
 
   useEffect(() => {
     if (roadmap) {
-      console.log('roadmap', roadmap.publicStatuses);
       dispatch(
         ideaActions.getIdeasByRoadmap({
           filter: [
             `this.roadmap._id == '${roadmap._id}'`,
-            isGuest && 'this.showOnRoadMap == true',
+            isGuest &&
+              'this.showOnRoadMap == true && this.isPrivate == false && this.isArchived == false',
             'this.isMerged== false',
-            roadmap.publicStatuses?.length &&
+            isGuest &&
+              roadmap.publicStatuses?.length &&
               `(${roadmap.publicStatuses
                 ?.map((status) => `this.status._id == '${status}'`)
                 .join(' || ')})`
@@ -246,7 +246,7 @@ export default function RoadMapAdmin() {
         <meta name="description" content="Altogic Canny Alternative Roadmap Admin Page" />
       </Head>
       <Layout>
-        <div className="container ml-auto h-full">
+        <div className="h-full w-full px-8">
           {error ? (
             <Errors title={error?.title} message={error?.message} />
           ) : (
@@ -317,10 +317,10 @@ export default function RoadMapAdmin() {
                   <div className="flex-1 flex flex-nowrap items-start gap-8 overflow-auto max-w-full">
                     <DragDropContext onDragEnd={onDragEnd}>
                       {!isGuest && (
-                        <Droppable droppableId="no-status" index={0} isCombineEnabled>
+                        <Droppable droppableId="undefined" index={0} isCombineEnabled>
                           {(provided) => (
                             <RoadmapSection
-                              ideas={state?.['no-status']}
+                              ideas={state?.undefined}
                               provided={provided}
                               roadmap={roadmap}
                             />

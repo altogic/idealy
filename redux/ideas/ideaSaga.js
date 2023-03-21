@@ -79,9 +79,11 @@ function* updateIdeaSaga({ payload: { idea, onSuccess } }) {
     }
     yield put(ideaActions.updateIdeaSuccess(data));
     const company = yield select((state) => state.company.company);
+    console.log('updateIdeaSaga', data);
     realtime.send(company._id, 'update-idea', data);
     if (onSuccess) onSuccess(data);
   } catch (error) {
+    console.log(error);
     yield put(ideaActions.updateIdeaFailure(error));
   }
 }

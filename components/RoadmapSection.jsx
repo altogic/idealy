@@ -1,11 +1,18 @@
 import { companyActions } from '@/redux/company/companySlice';
-import { useMemo } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { Draggable, resetServerContext } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 import EmptyState from './EmptyState';
 import { Eye, EyeSlash } from './icons';
 import RoadMapCard from './RoadMapCard';
 import { Tooltip2, TooltipContent, TooltipTrigger } from './Tooltip2';
+
+const grid = 16;
+const getItemStyle = (isDragging, draggableStyle) => ({
+  userSelect: 'none',
+  margin: `0 0 ${grid}px 0`,
+  ...draggableStyle
+});
 
 function RoadmapVisibilityIcon({ isPrivate }) {
   return isPrivate ? (
@@ -14,14 +21,23 @@ function RoadmapVisibilityIcon({ isPrivate }) {
     <EyeSlash className="w-5 h-5 text-red-500 dark:text-red-600 purple:text-red-600" />
   );
 }
+
 export default function RoadmapSection({ status, ideas, provided, roadmap, isGuest, ...rest }) {
   resetServerContext();
   const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
+  const [sortedIdeas, setSortedIdeas] = useState();
   const isPrivate = useMemo(
     () => roadmap?.publicStatuses?.includes(status?._id),
     [roadmap, status]
   );
+  useEffect(() => {
+    if (ideas) {
+      const temp = structuredClone(ideas);
+      setSortedIdeas(temp.sort((a, b) => a.roadmapOrder - b.roadmapOrder));
+    }
+  }, [ideas]);
+
   return (
     <div
       className="flex-shrink-0 w-[384px] p-6 border border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-lg"
@@ -68,14 +84,15 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, isGue
         </div>
       </div>
       <div className="inline overflow-y-auto space-y-4 max-h-[700px]">
-        {ideas?.length ? (
-          ideas?.map((idea, index) => (
+        {sortedIdeas?.length ? (
+          sortedIdeas?.map((idea, index) => (
             <Draggable key={idea._id} draggableId={idea._id} index={index}>
-              {(provided) => (
+              {(provided, snapshot) => (
                 <RoadMapCard
                   idea={idea}
                   provided={provided}
-                  style={provided?.draggableProps?.style}
+                  style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
+                  combineWith={snapshot.combineWith}
                 />
               )}
             </Draggable>

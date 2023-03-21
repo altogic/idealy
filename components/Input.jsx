@@ -59,7 +59,7 @@ export default function Input({
             <label
               htmlFor={id}
               className={cn(
-                'inline-block text-slate-700 ml-1.5 text-sm font-medium  dark:text-aa-200 purple:text-pt-200',
+                'inline-block select-none text-slate-700 ml-1.5 text-sm font-medium  dark:text-aa-200 purple:text-pt-200',
                 error && 'text-red-600',
                 labelBackground && 'bg-gray-200 dark:bg-aa-600 purple:bg-pt-600 rounded-full px-3'
               )}>

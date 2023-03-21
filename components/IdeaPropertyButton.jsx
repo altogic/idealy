@@ -35,7 +35,7 @@ export default function IdeaPropertyButton({ icon, text, name, active, className
           </span>
         </div>
         {active && (
-          <CircleCheck className="w-5 h-5 text-green-500 dark:text-aa-200 purple:text-pt-200 self-end" />
+          <CircleCheck className="w-5 h-5 text-green-500 dark:text-green-600 purple:text-green-600" />
         )}
       </button>
     </div>

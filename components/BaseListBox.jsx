@@ -40,7 +40,7 @@ export default function BaseListBox({
 
   return (
     <Listbox value={_value} onChange={onChange} multiple={multiple} {...props}>
-      <div className="relative">
+      <div className="relative flex flex-col">
         <Listbox.Button
           className={cn(
             'relative flex items-center   gap-2 w-full rounded-lg text-left cursor-pointer focus:outline-none  sm:text-sm',
@@ -49,7 +49,7 @@ export default function BaseListBox({
             size === 'md' && 'min-w-[auto] md:min-w-[160px]',
             size === 'lg' && 'min-w-[auto] md:min-w-[195px]',
             size === 'xl' && 'min-w-[auto] md:min-w-[250px]',
-            size === 'xxl' && 'min-w-[auto] md:min-w-[300px]',
+            size === 'xxl' && 'min-w-[auto] md:min-w-[275px]',
             (type === 'default' || type === 'status' || type === 'user') &&
               ' dark:bg-aa-800 purple:bg-pt-800  py-3.5 px-2 md:px-[14px] ',
             type === 'icon' && 'text-slate-700 p-3',

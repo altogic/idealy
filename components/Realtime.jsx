@@ -180,10 +180,12 @@ export default function Realtime() {
     dispatch(ideaActions.deleteIdeaSuccess(message.id));
   }
   function voteIdeaHandler({ message }) {
+    console.log(!user && !userIp && !guestInfoState.current.email);
     if (
       (user && user._id !== message.userId) ||
       (!user && !voteGuest.current && userIp !== message.ip) ||
-      (voteGuest.current && guestInfoState.current.email !== message.guestEmail)
+      (voteGuest.current && guestInfoState.current.email !== message.guestEmail) ||
+      (!user && !userIp && !guestInfoState.current.email)
     ) {
       dispatch(ideaActions.upVoteIdeaRealtime(message.ideaId));
     }
@@ -192,7 +194,8 @@ export default function Realtime() {
     if (
       (user && user._id !== message.userId) ||
       (!user && !voteGuest.current && userIp !== message.ip) ||
-      (voteGuest.current && guestInfoState.current.email !== message.guestEmail)
+      (voteGuest.current && guestInfoState.current.email !== message.guestEmail) ||
+      (!user && !userIp && !guestInfoState.current.email)
     ) {
       dispatch(ideaActions.downVoteIdeaRealtime(message.ideaId));
     }
