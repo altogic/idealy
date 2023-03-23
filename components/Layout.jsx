@@ -98,9 +98,9 @@ export default function Layout({ children }) {
           <Head>
             <link rel="icon" href={company?.favicon} />
           </Head>
-          <div className="min-h-screen relative">
+          <div className="flex flex-col min-h-screen relative">
             <Header />
-            <main className="h-[calc(100vh-93px)] transform translate-y-[93px]">
+            <main className="grow pt-[93px]">
               {children}
               <Realtime />
             </main>
