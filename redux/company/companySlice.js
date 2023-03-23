@@ -36,7 +36,8 @@ const initialState = {
   companyUsers: [],
   accessRequest: {},
   accessRequests: [],
-  getAccessRequestLoading: false
+  getAccessRequestLoading: false,
+  isGuest: false
 };
 
 export const companySlice = createSlice({
@@ -573,6 +574,7 @@ export const companySlice = createSlice({
     getCompanyBySubdomainSuccess(state, action) {
       state.getCompanyLoading = false;
       state.company = action.payload;
+      state.isGuest = !action.payload?.role || action.payload?.role === 'Guest';
     },
     getCompanyBySubdomainFailed(state, action) {
       state.getCompanyLoading = false;

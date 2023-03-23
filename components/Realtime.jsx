@@ -25,8 +25,7 @@ export default function Realtime() {
   const [deleteIdeaModal, setDeleteIdeaModal] = useState(false);
   const user = useSelector((state) => state.auth.user);
   const userIp = useSelector((state) => state.auth.userIp);
-  const company = useSelector((state) => state.company.company);
-  const companies = useSelector((state) => state.company.companies);
+  const { company, companies, isGuest } = useSelector((state) => state.company);
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const voteGuestAuth = useGuestValidation('voteIdea');
@@ -165,9 +164,13 @@ export default function Realtime() {
   }
   function updateIdeaHandler({ message }) {
     if (message.sender !== user?._id) {
+      const isShown = isGuest
+        ? message.showOnRoadMap && !message.isPrivate && !message.isArchived && !message.isCompleted
+        : true;
       dispatch(
         ideaActions.updateIdeaRealtime({
           data: message,
+          isShown,
           isAdminView: router.asPath.includes('dashboard')
         })
       );

@@ -31,13 +31,15 @@ export default function PublicView() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const company = useSelector((state) => state.company.company);
-  const ideas = useSelector((state) => state.idea.ideas);
-  const countInfo = useSelector((state) => state.idea.countInfo);
-  const loading = useSelector((state) => state.idea.getIdeaLoading);
-  const selectedIdea = useSelector((state) => state.idea.selectedIdea);
-  const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
-  const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
+  const { company, isGuest } = useSelector((state) => state.company);
+  const {
+    ideas,
+    countInfo,
+    getIdeaLoading: loading,
+    selectedIdea
+  } = useSelector((state) => state.idea);
+
+  const { feedBackDetailModal, feedbackSubmitModal } = useSelector((state) => state.general);
 
   const user = useSelector((state) => state.auth.user);
 
@@ -65,7 +67,7 @@ export default function PublicView() {
         sort,
         page
       };
-      if (!user || !company?.role || company?.role === 'Guest') {
+      if (!user || isGuest) {
         req.filter += `&& this.isApproved == true`;
       }
       dispatch(ideaActions.getIdeasByCompany(req));
@@ -235,7 +237,7 @@ export default function PublicView() {
                       items={ideas}
                       countInfo={countInfo}
                       endOfList={() => setPage((page) => page + 1)}>
-                      {ideas.length > 0 ? (
+                      {ideas?.length > 0 ? (
                         ideas?.map((idea, index) => (
                           <div key={idea._id}>
                             <PublicViewCard idea={idea} onClick={() => handleClickIdea(idea)} />

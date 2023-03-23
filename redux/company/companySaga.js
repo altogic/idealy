@@ -449,7 +449,7 @@ function* getCompanyBySubdomain({ payload: { subdomain, onFail, onSuccess, userI
     }
     if (data) {
       yield put(companyActions.getCompanyBySubdomainSuccess(data));
-      onSuccess(data.company.subdomain);
+      onSuccess(data.subdomain);
     } else {
       onFail();
     }

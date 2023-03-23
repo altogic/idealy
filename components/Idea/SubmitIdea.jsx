@@ -30,18 +30,19 @@ import TopicButton from '../TopicButton';
 const Editor = dynamic(() => import('../Editor'), { ssr: false });
 
 export default function SubmitIdea({ idea }) {
-  const company = useSelector((state) => state.company.company);
+  const { company, isGuest, error: companyError } = useSelector((state) => state.company);
   const user = useSelector((state) => state.auth.user);
-  const similarIdeas = useSelector((state) => state.idea.similarIdeas);
+  const {
+    similarIdeas,
+    isLoading: ideaLoading,
+    searchedCompanyMembers: companyMembers,
+    error
+  } = useSelector((state) => state.idea);
   const loading = useSelector((state) => state.file.isLoading);
-  const ideaLoading = useSelector((state) => state.idea.isLoading);
   const fileLinks = useSelector((state) => state.file.fileLinks);
   const feedBackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const userIp = useSelector((state) => state.auth.userIp);
-  const companyMembers = useSelector((state) => state.idea.searchedCompanyMembers);
   const searchLoading = useSelector((state) => state.idea.isLoading);
-  const error = useSelector((state) => state.idea.error);
-  const companyError = useSelector((state) => state.company.error);
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const [images, setImages] = useState([]);
   const guestValidation = useGuestValidation('submitIdeas');
@@ -135,7 +136,7 @@ export default function SubmitIdea({ idea }) {
       email: member?.email,
       company: company._id,
       ...(!user && !data.guestEmail && { ip: userIp }),
-      isApproved: !company?.privacy?.ideaApproval,
+      isApproved: isGuest ? !company?.privacy?.ideaApproval : true,
       costFactor: PRIORITY_VALUES[company?.priorityType][0],
       benefitFactor: PRIORITY_VALUES[company?.priorityType][0]
     };

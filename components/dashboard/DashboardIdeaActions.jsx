@@ -204,6 +204,7 @@ export default function DashboardIdeaActions() {
                   updateIdea({ author: value._id });
                 } else {
                   updateIdea({
+                    author: null,
                     guestName: value.name,
                     guestAvatar: value.profilePicture,
                     guestEmail: value.email

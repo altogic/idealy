@@ -8,14 +8,6 @@ import { Eye, EyeSlash } from './icons';
 import RoadMapCard from './RoadMapCard';
 import { Tooltip2, TooltipContent, TooltipTrigger } from './Tooltip2';
 
-const grid = 16;
-const getItemStyle = (draggableStyle) => ({
-  ...draggableStyle,
-  position: 'static',
-  userSelect: 'none',
-  margin: `0 0 ${grid}px 0`
-});
-
 function RoadmapVisibilityIcon({ isPrivate }) {
   return isPrivate ? (
     <Eye className="w-5 h-5 text-green-500 dark:text-green-600 purple:text-green-600" />
@@ -24,10 +16,10 @@ function RoadmapVisibilityIcon({ isPrivate }) {
   );
 }
 
-export default function RoadmapSection({ status, ideas, provided, roadmap, isGuest, ...rest }) {
+export default function RoadmapSection({ status, ideas, provided, roadmap, ...rest }) {
   resetServerContext();
   const dispatch = useDispatch();
-  const company = useSelector((state) => state.company.company);
+  const { company, isGuest } = useSelector((state) => state.company);
   const [sortedIdeas, setSortedIdeas] = useState();
   const isPrivate = useMemo(
     () => roadmap?.publicStatuses?.includes(status?._id),
@@ -37,7 +29,14 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, isGue
     const temp = structuredClone(ideas);
     setSortedIdeas(temp ? temp.sort((a, b) => a.order - b.order) : []);
   }, [ideas]);
-
+  const grid = 16;
+  const getItemStyle = (draggableStyle, isDragging) => ({
+    ...draggableStyle,
+    userSelect: 'none',
+    top: isDragging ? draggableStyle.top - 50 : draggableStyle.top,
+    margin: `0 0 ${grid}px 0`,
+    cursor: isGuest ? 'pointer' : draggableStyle.cursor
+  });
   return (
     <div
       className="flex-shrink-0 w-[384px] p-6 border border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-lg"
@@ -91,7 +90,7 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, isGue
                 <RoadMapCard
                   idea={idea}
                   provided={provided}
-                  style={getItemStyle(provided.draggableProps.style)}
+                  style={getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
                   combineWith={snapshot.combineWith}
                 />
               )}
