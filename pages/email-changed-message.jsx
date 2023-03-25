@@ -9,8 +9,10 @@ export default function EmailChangedMessage() {
   const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    realtime.send(company._id, 'user-update', user);
-  }, []);
+    if (company) {
+      realtime.send(company._id, 'user-update', user);
+    }
+  }, [company]);
   return (
     <div className="relative h-screen">
       <div className="grid xl:grid-cols-2 h-full">

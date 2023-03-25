@@ -2,7 +2,6 @@ import Button from '@/components/Button';
 import { Filter, Pen, Search } from '@/components/icons';
 import Input from '@/components/Input';
 import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
-import { XIcon } from '@heroicons/react/outline';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
