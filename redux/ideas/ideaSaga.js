@@ -77,7 +77,8 @@ function* updateIdeaSaga({ payload: { idea, onSuccess } }) {
       throw new Error(errors);
     }
     yield put(ideaActions.updateIdeaSuccess(data));
-    const company = yield select((state) => state.company.company);
+    const { company } = yield select((state) => state.company);
+
     realtime.send(company._id, 'update-idea', {
       ...data,
       sender: user._id
@@ -236,19 +237,19 @@ function* getIdeasByRoadmapSaga({ payload: { filter, onSuccess } }) {
 }
 function* updateIdeasOrderSaga({ payload: { ideas, sourceId, destinationId, sourceIdea } }) {
   try {
-    const company = yield select((state) => state.company.company);
+    const { company } = yield select((state) => state.company);
     const user = yield select((state) => state.auth.user);
     const { data, errors } = yield call(ideaService.updateIdeasOrder, ideas);
     if (errors) {
       throw errors;
     }
+
     yield put(
       ideaActions.updateIdeasOrderSuccess({
         ideas: data,
         sourceId,
         destinationId,
-        sourceIdea,
-        realtime: false
+        sourceIdea
       })
     );
     realtime.send(company._id, 'update-ideas-order', {

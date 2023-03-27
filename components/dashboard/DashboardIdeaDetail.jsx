@@ -1,12 +1,15 @@
 import Divider from '@/components/Divider';
 import FeedbackCardDetail from '@/components/FeedbackCardDetail';
+import useClickMention from '@/hooks/useClickMention';
 import { commentActions } from '@/redux/comments/commentsSlice';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
 import cn from 'classnames';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import 'quill-mention';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import 'react-quill/dist/quill.snow.css';
 import { useDispatch, useSelector } from 'react-redux';
-import useClickMention from '@/hooks/useClickMention';
 import Avatar from '../Avatar';
 import Button from '../Button';
 import CommentCard from '../CommentCard';
@@ -14,23 +17,45 @@ import CommentSkeleton from '../CommentSkeleton';
 import { formats, modules } from '../EditorToolbar';
 import EmptyState from '../EmptyState';
 import InfiniteScroll from '../InfiniteScroll';
-import DashboardIdeaActions from './DashboardIdeaActions';
+import SimilarIdeas from '../SimilarIdeas';
 import UserCard from '../UserCard';
-import 'react-quill/dist/quill.snow.css';
+import DashboardIdeaActions from './DashboardIdeaActions';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 const EditorToolbar = dynamic(() => import('../EditorToolbar'), { ssr: false });
 
 export default function DashboardIdeaDetail() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [isEditorFocus, setIsEditorFocus] = useState();
   const [content, setContent] = useState('');
+  const isMergeFetched = useRef('');
   const comments = useSelector((state) => state.comments.comments);
   const idea = useSelector((state) => state.idea.selectedIdea);
   const user = useSelector((state) => state.auth.user);
   const commentCountInfo = useSelector((state) => state.comments.countInfo);
   const commentLoading = useSelector((state) => state.comments.isLoading);
   const { userCardStyle, userCardInfo, setUserCardStyle } = useClickMention('idea-detail', true);
+
+  useEffect(() => {
+    if (
+      idea &&
+      !idea?.mergedIdeasDetail &&
+      idea?.mergedIdeas?.length > 0 &&
+      isMergeFetched.current !== idea._id
+    ) {
+      let filter = '';
+      idea.mergedIdeas.forEach((i, index) => {
+        if (index === idea.mergedIdeas.length - 1) {
+          filter += `this._id == '${i.mergedIdea}'`;
+          return;
+        }
+        filter += `this._id == '${i.mergedIdea}' || `;
+      });
+      isMergeFetched.current = idea._id;
+      dispatch(ideaActions.getMergedIdeas(filter));
+    }
+  }, [idea, router]);
   return (
     <div className="grid 2xl:grid-cols-[1fr,348px]">
       <div className="relative border-r border-slate-200 dark:border-aa-600 purple:border-pt-800 h-[calc(100vh-242px)]">
@@ -38,6 +63,9 @@ export default function DashboardIdeaDetail() {
           id="dashboard-idea-detail"
           className={cn('p-10 overflow-y-auto', isEditorFocus ? 'max-h-[84%]' : 'max-h-[97%]')}>
           <FeedbackCardDetail setMentionCardStyle={setUserCardStyle} />
+          {!!idea?.mergedIdeasDetail?.length && (
+            <SimilarIdeas ideas={idea?.mergedIdeasDetail} title="Merged Ideas" />
+          )}
           <div className="my-10">
             <div className="flex items-center justify-between gap-6">
               <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200">Comments</h6>

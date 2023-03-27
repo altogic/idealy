@@ -4,7 +4,7 @@ import Label from '../Label';
 
 export default function IdeaActionItem({ label, children, name, openModal }) {
   return (
-    <div className="pr-5">
+    <div className="pr-4">
       {label && <Label label={label} />}
       {children}
       {openModal && (

@@ -31,14 +31,14 @@ function RoadmapVisibilityIcon({ isPublic }) {
 export default function RoadMapAdmin() {
   const router = useRouter();
   const [isCreate, setIsCreate] = useState(false);
-  const { company } = useSelector((state) => state.company);
+  const { company, isGuest } = useSelector((state) => state.company);
   const { roadmapIdeas } = useSelector((state) => state.idea);
   const [roadmap, setRoadmap] = useState(company?.roadmaps?.[0]);
   const [state, setState] = useState();
   const [backupState, setBackupState] = useState();
   const [openMergeDialog, setOpenMergeDialog] = useState(false);
   const [mergedIdeas, setMergedIdeas] = useState();
-  const [isGuest, setIsGuest] = useState();
+
   const [error, setError] = useState();
   const selectedIdea = useSelector((state) => state.idea.selectedIdea);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
@@ -205,7 +205,7 @@ export default function RoadMapAdmin() {
           filter: [
             `this.roadmap._id == '${roadmap._id}'`,
             isGuest &&
-              'this.showOnRoadMap == true && this.isPrivate == false && this.isArchived == false',
+              'this.showOnRoadMap == true && this.isPrivate == false && this.isArchived == false && this.isApproved == true',
             'this.isMerged== false',
             isGuest &&
               roadmap.publicStatuses?.length &&
@@ -221,7 +221,6 @@ export default function RoadMapAdmin() {
   }, [roadmap]);
   useEffect(() => {
     if (company) {
-      setIsGuest(!company?.role || company?.role === 'Guest');
       if (!company?.siteNavigation?.roadmap && !(company?.role && company?.role !== 'Guest')) {
         setError({
           title: 'Roadmaps are disabled',
@@ -342,7 +341,6 @@ export default function RoadMapAdmin() {
                               ideas={state?.[status._id]}
                               provided={provided}
                               roadmap={roadmap}
-                              isGuest={isGuest}
                             />
                           )}
                         </Droppable>

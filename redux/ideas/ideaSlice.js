@@ -231,38 +231,38 @@ export const ideaSlice = createSlice({
         }
         return idea;
       });
-      if (!action.payload.isAdminView) {
+
+      if (state.selectedIdea && state.selectedIdea._id === action.payload.data._id) {
+        state.selectedIdea = {
+          ...action.payload.data,
+          mergedIdeasDetail: state.selectedIdea?.mergedIdeasDetail
+        };
+      }
+      if (!action.payload.isAdminView || !action.payload.isShown) {
+        console.log('here', !action.payload.isShown);
         state.ideas = state.ideas.filter(
           (idea) => !(idea.isArchived || idea.isPrivate || idea.isCompleted)
         );
       }
-      state.selectedIdea = {
-        ...action.payload.data,
-        mergedIdeasDetail: state.selectedIdea?.mergedIdeasDetail
-      };
       if (!_.isEmpty(state.roadmapIdeas)) {
-        console.log('here 1');
         if (
           !state.ideas.some((idea) => idea._id === action.payload.data._id) &&
           state.selectedRoadmap._id === action.payload.data.roadmap._id &&
-          action.payload.data.showOnRoadMap
+          action.payload.isShown
         ) {
-          console.log('here 2', [action.payload.data, ...state.ideas]);
           state.ideas = [action.payload.data, ...state.ideas];
         } else if (
           !action.payload.data.roadmap?._id ||
           (!action.payload.data.status &&
-            state.selectedRoadmap?._id !== action.payload.data.roadmap?._id) ||
-          !action.payload.data.showOnRoadMap
+            state.selectedRoadmap?._id !== action.payload.data.roadmap?._id)
         ) {
           state.ideas = state.ideas.filter((idea) => idea._id !== action.payload.data._id);
         }
-        console.log('here 3');
         state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
       } else if (
         !state.ideas.some((idea) => idea._id === action.payload.data._id) &&
         state.selectedRoadmap._id === action.payload.data.roadmap._id &&
-        action.payload.data.showOnRoadMap
+        action.payload.isShown
       ) {
         state.ideas = [action.payload.data, ...state.ideas];
         state.roadmapIdeas = _.groupBy([action.payload.data], 'status._id');
@@ -380,7 +380,7 @@ export const ideaSlice = createSlice({
         return idea;
       });
       if (state.selectedIdea) state.selectedIdea = action.payload.baseIdea;
-      if (state.roadmapIdeas.length) {
+      if (!_.isEmpty(state.roadmapIdeas)) {
         state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
       }
       state.ideaVotes = [...state.ideaVotes, ...action.payload.ideaVotes];
