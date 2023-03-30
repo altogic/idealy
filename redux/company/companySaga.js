@@ -76,7 +76,19 @@ function* createCompanySaga({ payload: { userId, onSuccess } }) {
       })),
       owner: userId
     });
+    const { company, user, errors } = data;
+    const companyData = {
+      ...company,
+      role: 'Owner'
+    };
+    yield put(companyActions.createCompanySuccess(companyData));
 
+    if (!_.isNil(errors)) {
+      throw errors;
+    }
+
+    yield put(authActions.loginSuccess(user));
+    yield call(AuthService.setUser, user);
     if (selectedTopics.length || status) {
       yield call(ideaService.createIdea, {
         title: yield select((state) => state.company.idea),
@@ -90,19 +102,7 @@ function* createCompanySaga({ payload: { userId, onSuccess } }) {
         benefitFactor: PRIORITY_VALUES[data.company?.priorityType][0]
       });
     }
-
-    const { company, user, errors } = data;
-    if (!_.isNil(errors)) {
-      throw errors;
-    }
-    const companyData = {
-      ...company,
-      role: 'Owner'
-    };
     onSuccess(companyData);
-    yield put(companyActions.createCompanySuccess(companyData));
-    yield put(authActions.loginSuccess(user));
-    yield call(AuthService.setUser, user);
   } catch (error) {
     yield put(companyActions.createCompanyFailed(error));
   }

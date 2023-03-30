@@ -234,12 +234,12 @@ html:has(:is(.modal, .drawer)) {
   @apply text-inherit text-sm font-medium tracking-sm !important;
   text-align: center !important;
 }
+.rdrDateDisplayWrapper,
 .rdrInputRanges {
   display: none;
 }
 .rdrDateRangeWrapper,
-.rdrStaticRange,
-.rdrDateDisplayWrapper {
+.rdrStaticRange {
   @apply bg-white dark:bg-aa-900 purple:bg-pt-1000 !important;
 }
 .rdrStaticRange,
