@@ -59,6 +59,9 @@ export default function CommentForm({
     setError,
     control
   } = useForm({
+    defaultValues: {
+      privacyPolicyComment: false
+    },
     resolver: yupResolver(schema)
   });
   const sendMentionNotification = useSendMentionNotification('comment');
@@ -137,7 +140,7 @@ export default function CommentForm({
   }, [editedComment]);
 
   useEffect(() => {
-    if (guestInfo) {
+    if (guestInfo?.name) {
       setValue('guestName', guestInfo.name);
       setValue('guestEmail', guestInfo.email);
       setValue('privacyPolicyComment', true);

@@ -3,6 +3,7 @@ import { companyActions } from '@/redux/company/companySlice';
 import { useMemo, useState } from 'react';
 import { Draggable, resetServerContext } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
+import { realtime } from '@/utils/altogic';
 import EmptyState from './EmptyState';
 import { Eye, EyeSlash } from './icons';
 import RoadMapCard from './RoadMapCard';
@@ -20,6 +21,7 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, ...re
   resetServerContext();
   const dispatch = useDispatch();
   const { company, isGuest } = useSelector((state) => state.company);
+  const user = useSelector((state) => state.auth.user);
   const [sortedIdeas, setSortedIdeas] = useState();
   const isPrivate = useMemo(
     () => roadmap?.publicStatuses?.includes(status?._id),
@@ -65,6 +67,12 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, ...re
                     publicStatuses.splice(publicStatuses.indexOf(status._id), 1);
                   } else {
                     publicStatuses.push(status._id);
+                    realtime.send(company._id, 'make-status-public', {
+                      statusId: status._id,
+                      roadmapId: roadmap._id,
+                      data: sortedIdeas,
+                      sender: user?.id
+                    });
                   }
                   dispatch(
                     companyActions.updateCompanySubLists({

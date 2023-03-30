@@ -25,6 +25,7 @@ export default function Realtime() {
   const [deleteIdeaModal, setDeleteIdeaModal] = useState(false);
   const user = useSelector((state) => state.auth.user);
   const userIp = useSelector((state) => state.auth.userIp);
+  const selectedRoadmap = useSelector((state) => state.idea.selectedRoadmap);
   const { company, companies, isGuest } = useSelector((state) => state.company);
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
@@ -167,11 +168,13 @@ export default function Realtime() {
       const isShown = isGuest
         ? message.showOnRoadMap && !message.isPrivate && !message.isArchived && !message.isCompleted
         : true;
+
       dispatch(
         ideaActions.updateIdeaRealtime({
           data: message,
           isShown,
-          isAdminView: router.asPath.includes('dashboard')
+          isAdminView: router.asPath.includes('dashboard'),
+          isRoadmap: router.asPath.includes('roadmap')
         })
       );
     }
@@ -267,6 +270,12 @@ export default function Realtime() {
     if (user?._id !== message.sender) dispatch(ideaActions.updateIdeasOrderRealtime(message));
   }
 
+  function makeStatusPublicHandler({ message }) {
+    if (user?._id !== message.sender && selectedRoadmap?._id === message.roadmapId) {
+      dispatch(ideaActions.makeStatusPublicRealtime(message));
+    }
+  }
+
   useEffect(() => {
     if (user && company) {
       realtime.join(user._id);
@@ -314,6 +323,7 @@ export default function Realtime() {
       realtime.on('merge-idea', mergeIdeaHandler);
       realtime.on('update-sublist', updateSublistHandler);
       realtime.on('update-ideas-order', updateIdeaOrder);
+      realtime.on('make-status-public', makeStatusPublicHandler);
     }
     return () => {
       realtime.off('delete-membership', deleteMembershipHandler);
@@ -346,6 +356,9 @@ export default function Realtime() {
       realtime.off('approve-access', approveAccessCompanyHandler);
       realtime.off('reject-access', rejectAccessCompanyHandler);
       realtime.off('request-access', requestAccessHandler);
+      realtime.off('merge-idea', mergeIdeaHandler);
+      realtime.off('update-ideas-order', updateIdeaOrder);
+      realtime.off('make-status-public', makeStatusPublicHandler);
     };
   }, [user, companies, company]);
 

@@ -12,6 +12,7 @@ const memberSelectStyles = {
     width: '100%',
     height: '100%',
     border: 'none',
+    backgroundColor: 'transparent',
     'box-shadow': 'none',
     '&:hover': {
       borderColor: '#e4e4e4'
@@ -20,17 +21,15 @@ const memberSelectStyles = {
       borderColor: '#e4e4e4'
     }
   }),
-  option: (provided, state) => ({
+  option: (provided) => ({
     ...provided,
-    backgroundColor: state.isSelected ? '#e4e4e4' : 'white',
-    color: 'black',
-    '&:hover': {
-      backgroundColor: '#e4e4e4'
-    }
+    backgroundColor: 'inherit',
+    color: 'inherit'
   }),
   menu: (provided) => ({
     ...provided,
-    zIndex: 9999
+    zIndex: 9999,
+    backgroundColor: 'inherit'
   }),
   input: (provided) => ({
     ...provided,

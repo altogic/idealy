@@ -50,7 +50,7 @@ export default function ReplyCard({ reply, dashboard }) {
         'group mt-2 rounded',
         !dashboard && 'bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 sm:p-8 '
       )}>
-      <div className="flex gap-5">
+      <div className="flex gap-2 sm:gap-5">
         {/* Name First Letter Icon */}
         <UserCard
           id="reply-user-card"
@@ -59,11 +59,11 @@ export default function ReplyCard({ reply, dashboard }) {
           email={userCardInfo?.email}
           style={userCardStyle}
         />
-        <button className="w-8 h-8" type="button" onClick={handleShowUserCard}>
+        <button className="w-8 h-8 shrink-0" type="button" onClick={handleShowUserCard}>
           <Avatar
             src={reply?.user?.profilePicture}
             alt={reply?.user?.name || reply.name}
-            size="w-7 h-7"
+            size="w-8 h-8 object-cover"
             fontSize="text-sm"
           />
         </button>
