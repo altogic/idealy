@@ -6,6 +6,7 @@ import ToastMessage from '@/utils/toast';
 import copy from 'copy-to-clipboard';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import companyService from '@/services/company';
 import AsyncListbox from '../AsyncListbox';
 import CategoryListbox from '../CategoryListbox';
 import CreateModal from '../CreateModal';
@@ -34,14 +35,14 @@ const formatOptionLabel = ({ label, value }) => {
       ) : (
         name && (
           <div className="relative inline-flex items-center justify-center cursor-pointer overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600  purple:bg-pt-300  w-6 h-6">
-            <span className="font-medium text-gray-600 dark:text-gray-300 text-xs">
+            <span className="font-medium text-slate-500 dark:text-aa-200 purple:text-pt-200 text-xs">
               {name[0]?.charAt(0).toUpperCase()}
               {name[1]?.charAt(0).toUpperCase()}
             </span>
           </div>
         )
       )}
-      <span className="ml-2">{label}</span>
+      <span className="ml-2 text-slate-500 dark:text-aa-200 purple:text-pt-200">{label}</span>
     </div>
   );
 };
@@ -51,7 +52,6 @@ export default function DashboardIdeaActions() {
 
   const company = useSelector((state) => state.company.company);
   const idea = useSelector((state) => state.idea.selectedIdea);
-
   const [copyText, setCopyText] = useState('');
   const [topics, setTopics] = useState(idea?.topics);
   const [openRoadmapCreateModal, setOpenRoadmapCreateModal] = useState(false);
@@ -110,7 +110,17 @@ export default function DashboardIdeaActions() {
         label: member.name
       }));
     }
-    return [];
+    const { data: companyUsers } = await companyService.getCompanyUsers(company._id);
+    return companyUsers.map((member) => ({
+      value: {
+        _id: member._id,
+        name: member.name,
+        profilePicture: member.profilePicture,
+        email: member.email,
+        isRegistered: !!member.provider
+      },
+      label: member.name
+    }));
   };
   const addCompanySubList = (name, fieldName) => {
     dispatch(
@@ -194,6 +204,7 @@ export default function DashboardIdeaActions() {
               placeholder="Search for an member"
               defaultValue={ideaOwner}
               onChange={(res) => {
+                console.log(res);
                 if (!res) {
                   setIdeaOwner(null);
                   return;

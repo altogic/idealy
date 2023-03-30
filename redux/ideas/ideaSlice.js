@@ -239,9 +239,14 @@ export const ideaSlice = createSlice({
         };
       }
       if (!action.payload.isAdminView || !action.payload.isShown) {
-        console.log('here', !action.payload.isShown);
         state.ideas = state.ideas.filter(
-          (idea) => !(idea.isArchived || idea.isPrivate || idea.isCompleted)
+          (idea) =>
+            !(
+              idea.isArchived ||
+              idea.isPrivate ||
+              idea.isCompleted ||
+              (action.payload.isRoadmap && !idea.showOnRoadMap)
+            )
         );
       }
       if (!_.isEmpty(state.roadmapIdeas)) {

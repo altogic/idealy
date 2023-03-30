@@ -247,7 +247,7 @@ export default function RoadMapAdmin() {
         <meta name="description" content="Altogic Canny Alternative Roadmap Admin Page" />
       </Head>
       <Layout>
-        <div className="h-full w-full px-8">
+        <div className="h-[calc(100vh-93px)] w-full px-8">
           {error ? (
             <Errors title={error?.title} message={error?.message} />
           ) : (
