@@ -177,7 +177,7 @@ export default function IdeaDetail({ idea, company, onClose }) {
             )}
           </div>
 
-          <div className="flex items-center justify-between gap-4 mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
             {/* Feedback Detail Topic Badges */}
             {!!idea?.topics?.length && (
               <div className="flex flex-wrap items-center gap-2">
