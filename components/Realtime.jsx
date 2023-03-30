@@ -317,6 +317,8 @@ export default function Realtime() {
       (!user && !userIp && !guestInfoState.current.email)
     ) {
       dispatch(announcementActions.deleteAnnouncementReactionRealtimeSuccess(message));
+    }
+  }
   function makeStatusPublicHandler({ message }) {
     if (user?._id !== message.sender && selectedRoadmap?._id === message.roadmapId) {
       dispatch(ideaActions.makeStatusPublicRealtime(message));
@@ -374,9 +376,11 @@ export default function Realtime() {
       realtime.on('delete-announcement', deleteAnnouncementHandler);
       realtime.on('create-announcement-reaction', createAnnouncementReaction);
       realtime.on('delete-announcement-reaction', deleteAnnouncementReaction);
-=======
       realtime.on('make-status-public', makeStatusPublicHandler);
->>>>>>> 0fb34bf (bug fix)
+      realtime.on('publish-announcement', publishAnnouncementHandler);
+      realtime.on('delete-announcement', deleteAnnouncementHandler);
+      realtime.on('create-announcement-reaction', createAnnouncementReaction);
+      realtime.on('delete-announcement-reaction', deleteAnnouncementReaction);
     }
     return () => {
       realtime.off('delete-membership', deleteMembershipHandler);
@@ -415,9 +419,11 @@ export default function Realtime() {
       realtime.off('delete-announcement', deleteAnnouncementHandler);
       realtime.off('create-announcement-reaction', createAnnouncementReaction);
       realtime.off('delete-announcement-reaction', deleteAnnouncementReaction);
-=======
       realtime.off('make-status-public', makeStatusPublicHandler);
->>>>>>> 0fb34bf (bug fix)
+      realtime.off('publish-announcement', publishAnnouncementHandler);
+      realtime.off('delete-announcement', deleteAnnouncementHandler);
+      realtime.off('create-announcement-reaction', createAnnouncementReaction);
+      realtime.off('delete-announcement-reaction', deleteAnnouncementReaction);
     };
   }, [user, companies, company]);
 
