@@ -254,3 +254,30 @@ export const DATE_RANGES = [
     }
   }
 ];
+export const REACTION_TYPES = [
+  {
+    id: 1,
+    type: 'like',
+    symbol: '👍'
+  },
+  {
+    id: 2,
+    type: 'love',
+    symbol: '❤️'
+  },
+  {
+    id: 3,
+    type: 'fire',
+    symbol: '🔥'
+  },
+  {
+    id: 4,
+    type: 'clap',
+    symbol: '👏'
+  },
+  {
+    id: 5,
+    type: 'sad',
+    symbol: '😢'
+  }
+];

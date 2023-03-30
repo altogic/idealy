@@ -2,6 +2,7 @@
 
 import { SESSION_COOKIE_OPTIONS } from 'constants';
 import { deleteCookie, setCookie as nextCookie } from 'cookies-next';
+import { DateTime } from 'luxon';
 import localStorageUtil from './localStorageUtil';
 /* eslint-disable no-bitwise */
 export function randomInt(min, max) {
@@ -156,7 +157,12 @@ export const generateRandomName = () => {
   return `Anonymous ${names[randomIndex]}`;
 };
 export const compareDates = (date1, date2) => {
-  const d1 = new Date(date1);
-  const d2 = new Date(date2);
-  return d1.toDateString() === d2.toDateString();
+  const d1 = DateTime.fromJSDate(new Date(date1));
+  const d2 = DateTime.fromJSDate(new Date(date2));
+  return d1.toMillis() === d2.toMillis();
+};
+export const isGreaterThan = (date1, date2) => {
+  const d1 = DateTime.fromJSDate(new Date(date1));
+  const d2 = DateTime.fromJSDate(new Date(date2));
+  return d1.toMillis() > d2.toMillis();
 };

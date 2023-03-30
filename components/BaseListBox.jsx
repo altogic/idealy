@@ -40,10 +40,10 @@ export default function BaseListBox({
 
   return (
     <Listbox value={_value} onChange={onChange} multiple={multiple} {...props}>
-      <div className="relative flex flex-col">
+      <div className="relative">
         <Listbox.Button
           className={cn(
-            'relative flex items-center   gap-2 w-full rounded-lg text-left cursor-pointer focus:outline-none  sm:text-sm',
+            'relative flex items-center gap-2 w-full rounded-lg text-left cursor-pointer focus:outline-none  sm:text-sm',
             size === 'xs' && '',
             size === 'sm' && 'h-11 items-center',
             size === 'md' && 'min-w-[auto] md:min-w-[160px]',
@@ -82,11 +82,14 @@ export default function BaseListBox({
                         ? 'text-slate-800 text-3xl font-semibold'
                         : 'text-slate-500 text-sm tracking-sm'
                     )}>
-                    <span className={cn(hidden === 'mobile' && 'hidden md:inline-block')}>
+                    <div
+                      className={cn(
+                        hidden === 'mobile' && 'hidden md:inline-flex items-center justify-center'
+                      )}>
                       {' '}
                       {label}
-                    </span>
-                    {multiple && !!_value?.length && (
+                    </div>
+                    {multiple && !!_value?.length && (type === 'default' || type === 'status') && (
                       <span className="inline-flex items-center justify-center w-5 h-5 bg-indigo-700 dark:bg-aa-600 purple:bg-pt-600 text-white dark:text-aa-200 rounded-full">
                         {_value?.length}
                       </span>
@@ -110,10 +113,12 @@ export default function BaseListBox({
                     <XIcon className="w-5 h-5 text-gray-400 dark:text-aa-200 purple:text-pt-200" />
                   </button>
                 )}
-                <ChevronDown
-                  className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200"
-                  aria-hidden="true"
-                />
+                {(type !== 'create' || !multiple) && (
+                  <ChevronDown
+                    className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200"
+                    aria-hidden="true"
+                  />
+                )}
               </span>
             </>
           )}

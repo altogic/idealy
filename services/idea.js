@@ -14,8 +14,8 @@ const ideaService = {
     }),
   updateIdea: (req) => endpoint.put('/idea', req),
   deleteIdea: (id) => db.model('ideas').object(id).delete(),
-  searchSimilarIdeas: (title, companyId, random = false) =>
-    endpoint.get('/idea/search', { title, companyId, random }),
+  searchSimilarIdeas: ({ title, companyId, random = false, page = 1, limit = 3 }) =>
+    endpoint.get('/idea/search', { title, companyId, random, page, limit }),
   deleteIdeaCoverImage: (id) =>
     db
       .model('ideas')

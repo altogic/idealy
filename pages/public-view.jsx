@@ -129,9 +129,7 @@ export default function PublicView() {
   }, [router, ideas]);
 
   useEffect(() => {
-    if (!feedBackDetailModal) {
-      getIdeasByCompany();
-    }
+    getIdeasByCompany();
   }, [page, getIdeasByCompany]);
 
   const isSubmitIdeaVisible = useRegisteredUserValidation('submitIdeas');

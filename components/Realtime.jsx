@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useNotification from '@/hooks/useNotification';
+import { announcementActions } from '@/redux/announcement/announcementSlice';
 import { generateUrl } from '../utils';
 import { Email } from './icons';
 import InfoModal from './InfoModal';
@@ -31,6 +32,7 @@ export default function Realtime() {
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const voteGuestAuth = useGuestValidation('voteIdea');
+  const reactionGuestAuth = useGuestValidation('announcementReaction');
 
   const sendNotification = useNotification();
 
@@ -38,6 +40,7 @@ export default function Realtime() {
   const router = useRouter();
   const ideaDetailModal = useRef(false);
   const voteGuest = useRef(false);
+  const reactGuest = useRef(false);
   const guestInfoState = useRef({});
   useEffect(() => {
     ideaDetailModal.current = feedBackDetailModal;
@@ -49,6 +52,10 @@ export default function Realtime() {
   useEffect(() => {
     guestInfoState.current = guestInfo;
   }, [guestInfo]);
+
+  useEffect(() => {
+    reactGuest.current = reactionGuestAuth;
+  }, [reactionGuestAuth]);
 
   function deleteMembershipHandler(data) {
     dispatch(companyActions.deleteCompanyMemberRealtime(data.message));
@@ -276,6 +283,40 @@ export default function Realtime() {
   function makeStatusPublicHandler({ message }) {
     if (user?._id !== message.sender && selectedRoadmap?._id === message.roadmapId) {
       dispatch(ideaActions.makeStatusPublicRealtime(message));
+    }     
+  function publishAnnouncementHandler({ message }) {
+    if (user?._id !== message.sender) {
+      dispatch(announcementActions.createAnnouncementSuccess(message));
+    }
+  }
+  }
+  function deleteAnnouncementHandler({ message }) {
+    if (user?._id !== message.sender) {
+      dispatch(announcementActions.deleteAnnouncementSuccess(message.announcementId));
+    }
+  }
+
+  function createAnnouncementReaction({ message }) {
+    console.log('createAnnouncementReaction', message);
+    if (
+      (user && user._id !== message.userId) ||
+      (!user && !reactGuest.current && userIp !== message.ip) ||
+      (reactGuest.current && guestInfoState.current.email !== message.guestEmail) ||
+      (!user && !userIp && !guestInfoState.current.email)
+    ) {
+      dispatch(announcementActions.createAnnouncementReactionRealtimeSuccess(message));
+    }
+  }
+
+  function deleteAnnouncementReaction({ message }) {
+    console.log('createAnnouncementReaction', message);
+    if (
+      (user && user._id !== message.userId) ||
+      (!user && !reactGuest.current && userIp !== message.ip) ||
+      (reactGuest.current && guestInfoState.current.email !== message.guestEmail) ||
+      (!user && !userIp && !guestInfoState.current.email)
+    ) {
+      dispatch(announcementActions.deleteAnnouncementReactionRealtimeSuccess(message));
     }
   }
 
@@ -327,6 +368,10 @@ export default function Realtime() {
       realtime.on('update-sublist', updateSublistHandler);
       realtime.on('update-ideas-order', updateIdeaOrder);
       realtime.on('make-status-public', makeStatusPublicHandler);
+      realtime.on('publish-announcement', publishAnnouncementHandler);
+      realtime.on('delete-announcement', deleteAnnouncementHandler);
+      realtime.on('create-announcement-reaction', createAnnouncementReaction);
+      realtime.on('delete-announcement-reaction', deleteAnnouncementReaction);
     }
     return () => {
       realtime.off('delete-membership', deleteMembershipHandler);
@@ -362,6 +407,10 @@ export default function Realtime() {
       realtime.off('merge-idea', mergeIdeaHandler);
       realtime.off('update-ideas-order', updateIdeaOrder);
       realtime.off('make-status-public', makeStatusPublicHandler);
+      realtime.off('publish-announcement', publishAnnouncementHandler);
+      realtime.off('delete-announcement', deleteAnnouncementHandler);
+      realtime.off('create-announcement-reaction', createAnnouncementReaction);
+      realtime.off('delete-announcement-reaction', deleteAnnouncementReaction);
     };
   }, [user, companies, company]);
 
