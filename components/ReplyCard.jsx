@@ -59,11 +59,11 @@ export default function ReplyCard({ reply, dashboard }) {
           email={userCardInfo?.email}
           style={userCardStyle}
         />
-        <button className="w-8 h-8" type="button" onClick={handleShowUserCard}>
+        <button className="w-8 h-8 shrink-0" type="button" onClick={handleShowUserCard}>
           <Avatar
             src={reply?.user?.profilePicture}
             alt={reply?.user?.name || reply.name}
-            size="w-7 h-7"
+            size="w-8 h-8 object-cover"
             fontSize="text-sm"
           />
         </button>
