@@ -126,7 +126,7 @@ export default function BaseListBox({
           leaveTo="opacity-0">
           <Listbox.Options
             className={cn(
-              'absolute mt-1 max-h-64 overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50 border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800',
+              'absolute top-[50px] mt-1 max-h-64 overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50 border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800',
               size === 'sm' && 'w-[120px]',
               size === 'md' && 'w-[160px]',
               size === 'lg' && 'max-w-[195px] max-h-60',
@@ -181,7 +181,7 @@ export default function BaseListBox({
                       </div>
                       {selected && (
                         <CheckIcon
-                          className="w-5 h-5 text-indigo-700 dark:text-aa-200 purple:text-pt-200"
+                          className="w-5 h-5 shrink-0 text-indigo-700 dark:text-aa-200 purple:text-pt-200"
                           aria-hidden="true"
                         />
                       )}

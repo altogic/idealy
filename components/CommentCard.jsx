@@ -74,7 +74,7 @@ export default function CommentCard({ comment, dashboard }) {
           setEditComment={setEditComment}
         />
       ) : (
-        <div className="flex gap-5">
+        <div className="flex gap-2 sm:gap-5">
           <UserCard
             profilePicture={userCardInfo?.profilePicture}
             name={userCardInfo?.name}

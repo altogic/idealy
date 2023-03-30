@@ -183,8 +183,7 @@ html:has(:is(.modal, .drawer)) {
   overflow: hidden !important;
 }
 .ql-mention-list-container {
-  @apply border-slate-300 dark:border-aa-1000 purple:border-pt-1000 !important;
-  @apply shadow-lg !important;
+  @apply bg-transparent border-gray-200 dark:border-aa-600 purple:border-pt-800 shadow-none z-40 !important;
   @apply overflow-hidden !important;
 }
 .ql-mention-list-item {
@@ -196,28 +195,31 @@ html:has(:is(.modal, .drawer)) {
   @apply bg-slate-100 dark:bg-aa-700 purple:bg-pt-700 !important;
 }
 .ql-mention-list-item.selected {
-  @apply bg-slate-200 dark:bg-aa-600 purple:bg-pt-600 !important;
+  @apply bg-gray-50 dark:bg-aa-600 purple:bg-pt-600 !important;
 }
 .mention {
-  @apply text-blue-700 dark:text-blue-400 purple:text-blue-400 bg-transparent cursor-pointer select-none !important;
+  @apply text-blue-700 dark:text-aa-200 purple:text-pt-200 bg-transparent cursor-pointer select-none p-0 m-0 !important;
 }
 .mention-suggestion {
   @apply flex items-center gap-2 text-slate-500 tracking-[-0.4px] cursor-pointer;
 }
 .mention-avatar {
-  @apply rounded-full object-contain w-7 h-7;
+  @apply rounded-full object-cover w-full h-full;
 }
 .mention-default-avatar {
-  @apply relative inline-flex items-center justify-center cursor-pointer overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600  purple:bg-pt-300 w-7 h-7;
+  @apply relative inline-flex items-center justify-center cursor-pointer overflow-hidden bg-gray-200 rounded-full dark:bg-gray-600  purple:bg-pt-300 w-7 h-7;
 }
 .mention-avatar-name {
-  @apply font-medium text-gray-600 dark:text-gray-300 text-xs;
+  @apply font-medium text-gray-600 dark:text-gray-300 text-xs tracking-[-0.15em];
 }
 .mention-name {
   @apply text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm font-medium tracking-sm flex-1 truncate;
 }
 .mention-email {
   @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 text-xs font-medium tracking-sm truncate;
+}
+.mention > span {
+  @apply m-0 !important;
 }
 
 .rdrDefinedRangesWrapper {
