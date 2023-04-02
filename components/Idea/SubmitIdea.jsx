@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
+import useNotification from '@/hooks/useNotification';
 import AutoComplete from '../AutoComplete';
 import Button from '../Button';
 import Divider from '../Divider';
@@ -32,6 +33,7 @@ const Editor = dynamic(() => import('../Editor'), { ssr: false });
 export default function SubmitIdea({ idea }) {
   const { company, isGuest, error: companyError } = useSelector((state) => state.company);
   const user = useSelector((state) => state.auth.user);
+  const sendNotification = useNotification();
   const {
     similarIdeas,
     isLoading: ideaLoading,
@@ -112,9 +114,10 @@ export default function SubmitIdea({ idea }) {
     sendMentionNotification({
       content: submittedIdea.content,
       name: user?.name || submittedIdea.guestName,
-      email: submittedIdea.guestEmail,
-      title: submittedIdea.title
+      title: submittedIdea.title,
+      ideaId: submittedIdea._id
     });
+
     handleClose();
     dispatch(fileActions.clearFileLinks());
     dispatch(ideaActions.setEditedIdea(null));
@@ -132,6 +135,7 @@ export default function SubmitIdea({ idea }) {
       topics,
       images: fileLinks,
       author: member?.provider ? member._id : undefined,
+      guest: !member?.provider ? guestInfo._id : undefined,
       name: member?.name || guestName,
       email: member?.email,
       company: company._id,
@@ -150,8 +154,25 @@ export default function SubmitIdea({ idea }) {
       dispatch(
         ideaActions.createIdea({
           idea: reqData,
-          onSuccess: (submittedIdea) =>
-            submitOnSuccess(data.guestEmail, data.guestName, submittedIdea)
+          onSuccess: (submittedIdea) => {
+            submitOnSuccess(data.guestEmail, data.guestName, submittedIdea);
+            if (member && member?._id !== user._id && member?.provider) {
+              sendNotification({
+                message: `<b>${company.name}</b> submit an idea for you`,
+                targetUser: submittedIdea?.author._id,
+                type: 'adminAddIdea',
+                url: `public-view?feedback=${submittedIdea._id}`
+              });
+            }
+            sendNotification({
+              userId: submittedIdea.author?._id,
+              message: `<b>${
+                submittedIdea.author?.name ?? submittedIdea.guestName
+              }</b> submit an idea at <b>${company.name}</b>`,
+              type: 'submitIdea',
+              url: `public-view?feedback=${submittedIdea._id}`
+            });
+          }
         })
       );
     }
@@ -245,7 +266,7 @@ export default function SubmitIdea({ idea }) {
   }, [user, idea, feedBackSubmitModal]);
 
   useEffect(() => {
-    if (guestInfo) {
+    if (!_.isEmpty(guestInfo)) {
       setValue('guestName', guestInfo.name);
       setValue('guestEmail', guestInfo.email);
       setValue('privacyPolicyIdea', true);

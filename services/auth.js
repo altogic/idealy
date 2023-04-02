@@ -1,4 +1,4 @@
-import { auth, db, endpoint } from '@/utils/altogic';
+import { auth, db, endpoint, noSessionDb } from '@/utils/altogic';
 
 const AuthService = {
   register: (user) => auth.signUpWithEmail(user.email, user.password, user),
@@ -16,7 +16,7 @@ const AuthService = {
     return auth.getUserFromDB();
   },
   getUserFromDbByEmail(email) {
-    return db.model('users').filter(`email == '${email}'`).get();
+    return noSessionDb.model('users').filter(`email == '${email}'`).get();
   },
   getUser() {
     return auth.getUser();

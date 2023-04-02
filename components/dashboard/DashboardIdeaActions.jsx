@@ -1,12 +1,12 @@
-import Label from '@/components/Label';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { companyActions } from '@/redux/company/companySlice';
+import companyService from '@/services/company';
 import ideaService from '@/services/idea';
 import ToastMessage from '@/utils/toast';
 import copy from 'copy-to-clipboard';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import companyService from '@/services/company';
+import AddANewRoadMap from '../AddANewRoadMap';
 import AsyncListbox from '../AsyncListbox';
 import CategoryListbox from '../CategoryListbox';
 import CreateModal from '../CreateModal';
@@ -20,7 +20,6 @@ import Input from '../Input';
 import StatusListbox from '../StatusListbox';
 import UserSegmentListbox from '../UserSegmentListbox';
 import IdeaActionItem from './IdeaActionItem';
-import AddANewRoadMap from '../AddANewRoadMap';
 
 const formatOptionLabel = ({ label, value }) => {
   const name = label?.split(' ');
@@ -154,7 +153,6 @@ export default function DashboardIdeaActions() {
         </h2>
         <div className="space-y-8 px-4" name="publicLink">
           <IdeaActionItem label="Public Link">
-            <Label label="Public Link" />
             <div className="flex h-10">
               <Input
                 type="text"

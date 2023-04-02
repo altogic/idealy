@@ -1,55 +1,25 @@
 import { notificationActions } from '@/redux/notification/notificationSlice';
-import { queue, realtime } from '@/utils/altogic';
 import { useDispatch, useSelector } from 'react-redux';
+import { generateUrl } from '../utils';
 
 export default function useNotification() {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
+  const { user, guestInfo } = useSelector((state) => state.auth);
   const company = useSelector((state) => state.company.company);
 
-  const sendNotification = ({
-    message,
-    targetUser,
-    type,
-    notificationType,
-    subject,
-    guestName,
-    guestAvatar
-  }) => {
+  const sendNotification = ({ message, targetUser, type, url, companyId, userId, subdomain }) => {
+    if (targetUser && targetUser === user?._id) return;
     dispatch(
       notificationActions.sendNotification({
-        user: user?._id,
-        companyId: company._id,
+        user: userId ?? user?._id,
+        companyId: companyId ?? company?._id,
+        guest: guestInfo?._id,
         message,
         targetUser,
         type,
-        guestName,
-        guestAvatar
+        url: generateUrl(url, company?.subdomain ?? subdomain)
       })
     );
-    realtime.send(
-      notificationType === 'company' ? company._id : targetUser,
-      notificationType === 'company' ? 'notification' : 'user-notification',
-      {
-        ...(notificationType === 'company' ? { companyId: company._id } : { userId: targetUser }),
-        user,
-        message,
-        guestName,
-        guestAvatar,
-        type,
-        createdAt: new Date().toISOString()
-      }
-    );
-
-    queue.submitMessage('63e4dd7a04f6cf50c3ac8851', {
-      entry: {
-        targetUser,
-        message,
-        type: notificationType,
-        subject,
-        companyName: company.name
-      }
-    });
   };
   return sendNotification;
 }

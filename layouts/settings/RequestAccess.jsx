@@ -2,6 +2,7 @@ import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
 import EmptyState from '@/components/EmptyState';
 import SectionTitle from '@/components/SectionTitle';
+import useNotification from '@/hooks/useNotification';
 import { companyActions } from '@/redux/company/companySlice';
 import { CheckIcon, XIcon } from '@heroicons/react/outline';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,6 +11,7 @@ export default function RequestAccess() {
   const dispatch = useDispatch();
   const accessRequests = useSelector((state) => state.company.accessRequests);
   const company = useSelector((state) => state.company.company);
+  const sendNotification = useNotification();
   return (
     <div>
       <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
@@ -56,7 +58,15 @@ export default function RequestAccess() {
                           user: request.user._id,
                           id: request._id,
                           companyName: company.name,
-                          userEmail: request.user.email
+                          userEmail: request.user.email,
+                          onSuccess: () => {
+                            sendNotification({
+                              targetUser: request.user._id,
+                              message: `Your access request for  <b>${company.name}</b> has been approved.`,
+                              type: 'accountApproval',
+                              url: 'public-view'
+                            });
+                          }
                         })
                       )
                     }
@@ -73,12 +83,15 @@ export default function RequestAccess() {
                     onClick={() =>
                       dispatch(
                         companyActions.rejectCompanyAccessRequest({
-                          body: {
-                            id: request._id,
-                            companyName: company.name,
-                            userEmail: request.user.email
-                          },
-                          message: request
+                          id: request._id,
+                          onSuccess: () => {
+                            sendNotification({
+                              targetUser: request.user._id,
+                              message: `Your access request for <b>${company.name}</b> has been rejected.`,
+                              type: 'accountApproval',
+                              url: 'public-view'
+                            });
+                          }
                         })
                       )
                     }

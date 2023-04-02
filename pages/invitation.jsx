@@ -10,29 +10,39 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import useNotification from '@/hooks/useNotification';
 import { generateUrl } from '../utils';
 
 export default function Invitation({ invitation, errors, companies }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const sendNotification = useNotification();
   useEffect(() => {
     if (errors && !router.asPath.includes('invalid-or-expired-token')) {
       router.push('/invitation', { shallow: true, query: { token: 'invalid-or-expired-token' } });
     }
   }, [errors]);
+
   useEffect(() => {
     if (!errors) {
       if (user?.email !== invitation?.email) {
         dispatch(authActions.logout());
       } else {
-        dispatch(companyActions.updateMemberStatus({ companyId: invitation.companyId }));
         const company = companies.find((c) => c._id === invitation.companyId);
+        dispatch(companyActions.updateMemberStatus({ companyId: invitation.companyId }));
+        sendNotification({
+          message: `<b>${user?.name}</b> accepted your invitation to join <b>${invitation.companyName}</b>`,
+          type: 'acceptInvitation',
+          url: 'settings?tab=invite%20team',
+          companyId: invitation.companyId,
+          subdomain: company?.subdomain
+        });
         router.push(generateUrl('public-view', company?.subdomain));
         deleteCookie('invitation');
       }
     }
-  }, [user]);
+  }, [user, companies]);
 
   return (
     <div>
@@ -107,6 +117,7 @@ export async function getServerSideProps({ req, res, query }) {
   const { token } = query;
   const { data, errors } = await companyService.checkInvitation(token);
   const { data: user } = await AuthService.getUserFromDbByEmail(data?.email);
+
   const { data: companies } = await companyService.getUserCompanies(user[0]?._id);
 
   if (data) {

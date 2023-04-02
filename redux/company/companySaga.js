@@ -155,18 +155,19 @@ function* inviteTeamMemberSaga({ payload }) {
   try {
     const { data, errors } = yield call(companyService.inviteTeamMember, payload);
     const user = yield select((state) => state.auth.user);
-
+    console.log(data);
     if (errors) {
       payload.onError(errors.items[0]);
       throw new Error(errors);
     }
-    yield put(companyActions.inviteTeamMemberSuccess(data));
-    payload.onSuccess(data?.user?._id);
+    yield put(companyActions.inviteTeamMemberSuccess(data.member));
+    payload.onSuccess(data?.member.user?._id, data.invitation.token);
     realtime.send(payload.companyId, 'invite-team-member', {
       sender: user._id,
-      ...data
+      ...data.member
     });
   } catch (error) {
+    console.log(error);
     yield put(companyActions.inviteTeamMemberFailed(error));
   }
 }
@@ -486,7 +487,7 @@ function* createCompanyUser({ payload }) {
       })
     );
     if (payload.onSuccess) {
-      payload.onSuccess();
+      payload.onSuccess(data);
     }
   } catch (error) {
     yield put(companyActions.createCompanyUserFailed(error));
@@ -500,6 +501,7 @@ function* requestAccessSaga({ payload }) {
     }
     yield put(companyActions.requestAccessSuccess(data));
     realtime.send(payload.companyId, 'request-access', data);
+    payload.onSuccess();
   } catch (error) {
     yield put(companyActions.requestAccessFailed(error));
   }
@@ -539,11 +541,12 @@ function* approveCompanyAccessRequestSaga({ payload }) {
       sender: user._id
     });
     realtime.send(data.user._id, 'approve-access', data);
+    payload.onSuccess();
   } catch (error) {
     yield put(companyActions.approveCompanyAccessRequestFailed(error));
   }
 }
-function* rejectCompanyAccessRequestSaga({ payload: { body, message } }) {
+function* rejectCompanyAccessRequestSaga({ payload: { body, message, onSuccess } }) {
   try {
     const { error } = yield call(companyService.rejectCompanyAccessRequest, body);
     if (error) {
@@ -553,6 +556,7 @@ function* rejectCompanyAccessRequestSaga({ payload: { body, message } }) {
 
     realtime.send(message.companyId, 'reject-access', message);
     realtime.send(message.userId, 'reject-access', message);
+    onSuccess();
   } catch (error) {
     yield put(companyActions.rejectCompanyAccessRequestFailed(error));
   }

@@ -115,7 +115,7 @@ export default function IdeaDetail({ idea, company, onClose }) {
         </svg>
       </button>
       <div className="flex gap-6 relative">
-        <VoteIdea voteCount={idea?.voteCount} ideaId={idea?._id} />
+        <VoteIdea voteCount={idea?.voteCount} idea={idea} />
         <div className="flex-1 relative">
           <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold break-all mb-8">
             {idea?.title}

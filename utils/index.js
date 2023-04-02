@@ -51,12 +51,8 @@ export function shadeHexColor(color, percent) {
     .toString(16)
     .slice(1)}`;
 }
-export const addGuestInfoToLocalStorage = (email, name, avatar) => {
-  localStorageUtil.set('guestAuthentication', {
-    name,
-    email,
-    avatar
-  });
+export const addGuestInfoToLocalStorage = (user) => {
+  localStorageUtil.set('guestAuthentication', user);
 };
 
 export const generateRandomName = () => {

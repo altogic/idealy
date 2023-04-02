@@ -3,15 +3,32 @@ import InfoModal from '@/components/InfoModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { toggleDeleteFeedBackModal } from '@/redux/general/generalSlice';
+import useNotification from '@/hooks/useNotification';
 
 export default function DeleteIdeaModal({ onClose }) {
   const dispatch = useDispatch();
   const deleteFeedBackModal = useSelector((state) => state.general.deleteFeedBackModal);
   const selectedIdea = useSelector((state) => state.idea.selectedIdea);
+  const company = useSelector((state) => state.company.company);
+  const sendNotification = useNotification();
   const handleDelete = () => {
     dispatch(toggleDeleteFeedBackModal());
-    dispatch(ideaActions.deleteIdea({ id: selectedIdea._id }));
-    onClose();
+    dispatch(
+      ideaActions.deleteIdea({
+        id: selectedIdea._id,
+        onSuccess: () => {
+          onClose();
+          if (!selectedIdea.isApproved) {
+            sendNotification({
+              message: `Your idea <b>${selectedIdea.title}</b> has been rejected by <b>${company?.name}</b>`,
+              targetUser: selectedIdea?.author?._id,
+              type: 'ideaRejected',
+              url: `public-view?feedback`
+            });
+          }
+        }
+      })
+    );
   };
   return (
     <InfoModal

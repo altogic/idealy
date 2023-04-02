@@ -3,6 +3,7 @@ import { realtime } from '@/utils/altogic';
 import cn from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import useNotification from '@/hooks/useNotification';
 import Avatar from './Avatar';
 import Button from './Button';
 import { CircleUser, Danger, Trash } from './icons';
@@ -16,6 +17,7 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
   const loading = useSelector((state) => state.company.isLoading);
   const isSent = useRef(false);
   const user = useSelector((state) => state.auth.user);
+  const sendNotification = useNotification();
   const dispatch = useDispatch();
   const handleDelete = () => {
     setIsDelete(!isDelete);
@@ -30,13 +32,11 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
           id,
           isRegistered
         });
-        // dispatch(
-        //   notificationActions.sendNotification({
-        //     user: userId,
-        //     companyId: company._id,
-        //     message: `You have been removed from <b>${company?.name}</b>`
-        //   })
-        // );
+        sendNotification({
+          message: `You have been removed from <b>${company?.name}</b>`,
+          targetUser: userId,
+          type: 'deleteMembership'
+        });
       }
     } else {
       dispatch(
@@ -78,18 +78,12 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
         id,
         companyId: company._id
       });
-      // dispatch(
-      //   notificationActions.sendNotification({
-      //     user: userId,
-      //     companyId: company._id,
-      //     message: `Your role has been changed to <b>${role}</b> in <b>${company?.name}</b>`
-      //   })
-      // );
-      // realtime.send(userId, 'notification', {
-      //   userId,
-      //   companyId: company._id,
-      //   message: `Your role has been changed to <b>${role}</b> in <b>${company?.name}</b>`
-      // });
+      sendNotification({
+        message: `Your role has been changed to <b>${role}</b> in <b>${company?.name}</b>`,
+        targetUser: userId,
+        type: 'updateRole',
+        url: 'public-view'
+      });
     } else {
       dispatch(
         companyActions.updateCompanyMemberRole({

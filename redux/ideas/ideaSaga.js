@@ -51,6 +51,7 @@ function* voteIdeaSaga({ payload }) {
     if (payload.onError) {
       payload.onError();
     }
+
     yield put(ideaActions.voteIdeaFailure(error));
   }
 }
@@ -85,7 +86,6 @@ function* updateIdeaSaga({ payload: { idea, onSuccess } }) {
     });
     if (onSuccess) onSuccess(data);
   } catch (error) {
-    console.log(error);
     yield put(ideaActions.updateIdeaFailure(error));
   }
 }

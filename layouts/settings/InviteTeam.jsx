@@ -15,21 +15,22 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
+import useNotification from '@/hooks/useNotification';
 
 export default function InviteTeam() {
   const dispatch = useDispatch();
 
   const [roleSelected, setRoleSelected] = useState(ROLE[0]?.name);
   const [isInvite, setIsInvite] = useState(false);
-
   const company = useSelector((state) => state.company.company);
   const companyMembers = useSelector((state) => state.company.companyMembers);
   const loading = useSelector((state) => state.company.isLoading);
+
   const unregisteredCompanyMembers = useSelector(
     (state) => state.company.unregisteredCompanyMembers
   );
   const getCompanyMembersLoading = useSelector((state) => state.company.getCompanyMembersLoading);
-
+  const sendNotification = useNotification();
   const inviteSchema = new yup.ObjectSchema({
     email: yup.string().email().required('Email is required')
   });
@@ -52,15 +53,25 @@ export default function InviteTeam() {
         companyName: company.name,
         canCreateCompany: company.whiteLabel.canCreateCompany,
         companySubdomain: company.subdomain,
-        onSuccess: (userId) => {
-          setIsInvite(false);
-          setRoleSelected(ROLE[0].name);
-          if (userId) {
-            realtime.send(userId, 'new-invitation', {
-              role: roleSelected,
-              userId,
-              company
-            });
+        onSuccess: (userId, token) => {
+          try {
+            setIsInvite(false);
+            setRoleSelected(ROLE[0].name);
+            if (userId) {
+              realtime.send(userId, 'new-invitation', {
+                role: roleSelected,
+                userId,
+                company
+              });
+              sendNotification({
+                message: `You have been invited to join <b>${company?.name}</b>`,
+                targetUser: userId,
+                type: 'newInvitation',
+                url: `invitation?token=${token}`
+              });
+            }
+          } catch (error) {
+            console.log(error);
           }
         },
         onError: (error) => {
@@ -228,18 +239,18 @@ export default function InviteTeam() {
             </span>
           </div>
           <div className="divide-y divide-slate-200">
-            {companyMembers?.length > 0 || unregisteredCompanyMembers?.length > 0 ? (
+            {!!companyMembers?.length || !!unregisteredCompanyMembers?.length ? (
               <div>
                 {companyMembers.map((item) => (
                   <div key={item._id} className="py-4 first:pt-0">
                     <TeamRole
-                      avatar={item.user.profilePicture}
-                      name={item.user.name}
-                      email={item.user.email}
-                      status={item.status}
-                      role={item.role}
+                      avatar={item.user?.profilePicture}
+                      name={item.user?.name}
+                      email={item.user?.email}
+                      status={item?.status}
+                      role={item?.role}
                       id={item._id}
-                      userId={item.user._id}
+                      userId={item.user?._id}
                       isRegistered
                     />
                   </div>

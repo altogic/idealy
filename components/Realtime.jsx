@@ -12,6 +12,7 @@ import _ from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import useNotification from '@/hooks/useNotification';
 import { generateUrl } from '../utils';
 import { Email } from './icons';
 import InfoModal from './InfoModal';
@@ -30,6 +31,8 @@ export default function Realtime() {
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const voteGuestAuth = useGuestValidation('voteIdea');
+
+  const sendNotification = useNotification();
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -123,12 +126,12 @@ export default function Realtime() {
     setDeleteDialog(true);
   }
   function notificationHandler({ message }) {
-    if (message.user._id !== user._id) {
-      dispatch(notificationActions.receiveNotificationRealtime(message));
+    if (message.userId !== user._id && !isGuest) {
+      dispatch(notificationActions.receiveNotificationRealtime(message.message));
     }
   }
   function userNotificationHandler({ message }) {
-    dispatch(notificationActions.receiveNotificationRealtime(message));
+    dispatch(notificationActions.receiveNotificationRealtime(message.message));
   }
   function updateCompanyHandler({ message }) {
     if (message.company._id === company._id || (user && message.sender !== user?._id)) {
@@ -259,7 +262,7 @@ export default function Realtime() {
   }
 
   function requestAccessHandler({ message }) {
-    if (user._id !== message.user._id) {
+    if (user._id !== message.user._id && router.asPath.includes('request-access')) {
       dispatch(companyActions.requestAccessRealtime(message));
     }
   }
@@ -387,17 +390,10 @@ export default function Realtime() {
       userId: user._id,
       isAccepted: true
     });
-    dispatch(
-      notificationActions.sendNotification({
-        user: user._id,
-        companyId: invitation.company._id,
-        message: `<b>${user.name}</b> has accepted your invitation to join <b>${invitation.company.name}</b>`
-      })
-    );
-    realtime.send(invitation.company._id, 'notification', {
-      user,
-      companyId: invitation.company._id,
-      message: `<b>${user.name}</b> has accepted your invitation to join <b>${invitation.company.name}</b>`
+    sendNotification({
+      message: `<b>${user.name}</b> has accepted your invitation to join <b>${invitation.company.name}</b>`,
+      type: 'acceptInvitation',
+      url: generateUrl('dashboard', invitation.company.subdomain)
     });
     setInvitationDialog(false);
   };
@@ -420,6 +416,11 @@ export default function Realtime() {
         email: user.email
       })
     );
+    sendNotification({
+      message: `<b>${user.name}</b> has declined your invitation to join <b>${invitation.company.name}</b>`,
+      type: 'rejectInvitation',
+      url: generateUrl('dashboard', invitation.company.subdomain)
+    });
     setInvitationDialog(false);
   };
   const handleDeleteMembership = () => {

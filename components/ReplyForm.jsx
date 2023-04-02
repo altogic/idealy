@@ -9,18 +9,16 @@ import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import useSendMentionNotification from '@/hooks/useSendMentionNotification';
+import useNotification from '@/hooks/useNotification';
 import Button from './Button';
 
 const Editor = dynamic(() => import('./Editor'), { ssr: false });
 
 export default function ReplyForm({ setIsReplying, commentId, reply, setShowReplies }) {
   const dispatch = useDispatch();
-  const ip = useSelector((state) => state.auth.userIp);
-  const user = useSelector((state) => state.auth.user);
-  const createReplyLoading = useSelector((state) => state.replies.createReplyLoading);
-  const updateReplyLoading = useSelector((state) => state.replies.updateReplyLoading);
-  const guestInfo = useSelector((state) => state.auth.guestInfo);
-
+  const { userIp: ip, user, guestInfo } = useSelector((state) => state.auth);
+  const { createReplyLoading, updateReplyLoading } = useSelector((state) => state.replies);
+  const idea = useSelector((state) => state.idea.selectedIdea);
   const [inpReply, setInpReply] = useState(false);
   const isLoading = useRef(false);
   const saveGuestInfo = useSaveGuestInformation();
@@ -39,30 +37,57 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
     mode: 'all'
   });
   const sendMentionNotification = useSendMentionNotification('reply');
+  const sendNotification = useNotification();
   const onSubmit = (data) => {
     isLoading.current = true;
     const name = generateRandomName();
     if (reply) {
-      dispatch(repliesActions.updateReply({ ...data, _id: reply._id }));
+      dispatch(
+        repliesActions.updateReply({
+          ...data,
+          _id: reply._id,
+          onSuccess: () => {
+            sendMentionNotification({
+              content: data.content,
+              name: user?.name || guestInfo.name || name,
+              title: idea.title,
+              ideaId: idea._id
+            });
+          }
+        })
+      );
     } else {
       dispatch(
         repliesActions.createReply({
           ...data,
           commentId,
           ...(!user && { ip, name: guestInfo.name || name }),
-          user: user?._id
+          user: user?._id,
+          onSuccess: () => {
+            if (idea?.author?._id) {
+              sendNotification({
+                message: `<b>${
+                  user?.name || guestInfo.name
+                }</b> replied to your comment on  on <b>${idea.title}</b>`,
+                targetUser: idea?.author._id,
+                type: 'reply',
+                url: `public-view?feedback=${idea._id}`
+              });
+              sendMentionNotification({
+                content: data.content,
+                name: user?.name || guestInfo.name || name,
+                title: idea.title,
+                ideaId: idea._id
+              });
+            }
+            if (!user && !guestInfo.name) {
+              saveGuestInfo({
+                name
+              });
+            }
+          }
         })
       );
-    }
-    sendMentionNotification({
-      content: data.content,
-      name: user?.name || data.guestName || name,
-      email: data.guestEmail
-    });
-    if (!user && !guestInfo.name) {
-      saveGuestInfo({
-        name
-      });
     }
   };
 

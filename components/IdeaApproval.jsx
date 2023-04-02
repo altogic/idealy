@@ -1,8 +1,7 @@
-import React from 'react';
 import Button from '@/components/Button';
+import useNotification from '@/hooks/useNotification';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { toggleDeleteFeedBackModal } from '@/redux/general/generalSlice';
-import { endpoint } from '@/utils/altogic';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function IdeaApproval() {
@@ -11,6 +10,7 @@ export default function IdeaApproval() {
   const company = useSelector((state) => state.company.company);
   const updateIdea = useUpdateIdea(idea);
   const dispatch = useDispatch();
+  const sendNotification = useNotification();
 
   function handleApprove(isApproved) {
     updateIdea(
@@ -18,10 +18,11 @@ export default function IdeaApproval() {
         isApproved
       },
       () => {
-        endpoint.post('/idea/approval', {
-          companyName: company.name,
-          email: idea.author.email || idea.guestEmail,
-          message: `Your idea has been ${isApproved ? 'approved' : 'rejected'}`
+        sendNotification({
+          message: `Your idea <b>${idea.title}</b> has been approved by <b>${company?.name}</b>`,
+          targetUser: idea?.author?._id,
+          type: 'ideaApproved',
+          url: `public-view?feedback=${idea._id}`
         });
       }
     );
