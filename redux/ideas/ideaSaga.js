@@ -211,7 +211,7 @@ function* searchIdeasSaga({ payload: searchText }) {
     yield put(ideaActions.searchIdeasFailure(error));
   }
 }
-function* getIdeaByIdSaga({ payload: { id, onSuccess } }) {
+function* getIdeaByIdSaga({ payload: { id, onSuccess, onError } }) {
   try {
     const { data, errors } = yield call(ideaService.getIdea, id);
     if (errors) {
@@ -220,6 +220,7 @@ function* getIdeaByIdSaga({ payload: { id, onSuccess } }) {
     yield put(ideaActions.getIdeaByIdSuccess(data));
     onSuccess();
   } catch (error) {
+    onError();
     yield put(ideaActions.getIdeaByIdFailure(error));
   }
 }

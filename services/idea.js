@@ -21,8 +21,8 @@ const ideaService = {
       .model('ideas')
       .object(id)
       .updateFields([{ field: 'coverImage', updateType: 'unset' }]),
-  searchCompanyMembers: (companyId, searchText) =>
-    endpoint.get('/company/member/search', { companyId, searchText }),
+  searchCompanyMembers: (companyId, searchText, userId = null) =>
+    endpoint.get('/company/member/search', { companyId, searchText, userId }),
   approveAllIdeas: (companyId) =>
     db
       .model('ideas')

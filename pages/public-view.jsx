@@ -2,7 +2,7 @@ import Button from '@/components/Button';
 import Divider from '@/components/Divider';
 import EmptyState from '@/components/EmptyState';
 import Errors from '@/components/Errors';
-import { Plus } from '@/components/icons';
+import { Plus, Email } from '@/components/icons';
 import DeleteIdeaModal from '@/components/Idea/DeleteIdeaModal';
 import FilterIdea from '@/components/Idea/FilterIdea';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
@@ -20,6 +20,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import InfoModal from '@/components/InfoModal';
 
 export default function PublicView() {
   const [page, setPage] = useState(1);
@@ -27,7 +28,7 @@ export default function PublicView() {
   const [filterStatus, setFilterStatus] = useState([]);
   const [sortType, setSortType] = useState();
   const [error, setError] = useState();
-
+  const [openInfoModal, setOpenInfoModal] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -85,6 +86,17 @@ export default function PublicView() {
           id: feedbackId,
           onSuccess: () => {
             if (!feedBackDetailModal) dispatch(toggleFeedBackDetailModal());
+          },
+          onError: () => {
+            setOpenInfoModal(true);
+            router.push(
+              {
+                pathname: router.pathname,
+                query: { ...router.query, feedback: undefined }
+              },
+              undefined,
+              { scroll: false }
+            );
           }
         })
       );
@@ -129,9 +141,7 @@ export default function PublicView() {
   }, [router, ideas]);
 
   useEffect(() => {
-    if (!feedBackDetailModal) {
-      getIdeasByCompany();
-    }
+    getIdeasByCompany();
   }, [page, getIdeasByCompany]);
 
   const isSubmitIdeaVisible = useRegisteredUserValidation('submitIdeas');
@@ -275,6 +285,20 @@ export default function PublicView() {
             </div>
             <IdeaDetail idea={selectedIdea} company={company} onClose={() => handleCloseIdea()} />
             <DeleteIdeaModal onClose={() => handleCloseIdea()} />
+            <InfoModal
+              show={openInfoModal}
+              cancelOnClick={() => {
+                setOpenInfoModal(false);
+              }}
+              onClose={() => setOpenInfoModal(false)}
+              icon={<Email className="w-6 h-6 text-indigo-600" />}
+              title="The idea you are try to view has been deleted."
+              onConfirm={() => {
+                setOpenInfoModal(false);
+              }}
+              confirmColor="indigo"
+              confirmText="OK"
+            />
           </>
         )}
       </Layout>
