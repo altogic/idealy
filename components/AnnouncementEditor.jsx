@@ -432,61 +432,67 @@ export default function AnnouncementEditor({ onChange, value }) {
   };
 
   return (
-    <div className="text-editor">
+    <div className=" h-full">
       <div
         ref={tooltip}
         id="tooltip-controls"
-        className="hidden fixed bg-white border rounded-md shadow py-2 px-3">
+        className="hidden fixed bg-white dark:bg-aa-900 purple:bg-pt-900 border border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-md shadow py-2 px-3">
         <div className="space-x-3  transition ease-in-out duration-500" ref={tooltipButtons}>
           <button type="button" id="bold-button" onClick={() => handleFormat('bold', true)}>
-            <TextB size={20} color="#1E313B" />
+            <TextB size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
           </button>
           <button type="button" id="italic-button" onClick={() => handleFormat('italic', true)}>
-            <TextItalic size={20} color="#1E313B" />
+            <TextItalic size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
           </button>
           <button type="button" id="italic-button" onClick={() => handleFormat('underline', true)}>
-            <TextUnderline size={20} color="#1E313B" />
+            <TextUnderline
+              size={20}
+              className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200"
+            />
           </button>
           <button type="button" id="italic-button" onClick={() => handleFormat('strike', true)}>
-            <TextStrikethrough size={20} color="#1E313B" />
+            <TextStrikethrough
+              size={20}
+              className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200"
+            />
           </button>
-          <div className="flex w-px h-4 border-r border-slate-200" />
+          <div className="flex w-px h-4 border-r border-slate-200 dark:border-aa-400 purple:border-pt-400" />
           <button type="button" id="link-button" onClick={addLink}>
-            <Link size={20} color="#1E313B" />
+            <Link size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
           </button>
-          <div className="flex w-px h-4 border-r border-slate-200" />
+          <div className="flex w-px h-4 border-r border-slate-200 dark:border-aa-400 purple:border-pt-400" />
           <button
             type="button"
             id="link-button"
             onClick={() => handleFormat('list', 'bullet', true)}>
-            <ListDashes size={20} color="#1E313B" />
+            <ListDashes size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
           </button>
           <button
             type="button"
             id="link-button"
             onClick={() => handleFormat('list', 'ordered', true)}>
-            <ListNumbers size={20} color="#1E313B" />
+            <ListNumbers size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
           </button>
-          <div className="flex w-px h-4 border-r border-slate-200" />
+          <div className="flex w-px h-4 border-r border-slate-200 dark:border-aa-400 purple:border-pt-400" />
           <button
             type="button"
             id="blockquote-button"
             onClick={() => handleFormat('blockquote', true)}>
-            <Quotes size={20} color="#1E313B" />
+            <Quotes size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
           </button>
-          <div className="flex w-px h-4 border-r border-slate-200" />
+          <div className="flex w-px h-4 border-r border-slate-200 dark:border-aa-400 purple:border-pt-400" />
           <button type="button" id="header-1-button" onClick={() => handleFormat('header', 1)}>
-            <TextHOne size={20} color="#1E313B" />
+            <TextHOne size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
           </button>
           <button type="button" id="header-2-button" onClick={() => handleFormat('header', 2)}>
-            <TextHTwo size={20} color="#1E313B" />
+            <TextHTwo size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
           </button>
-          <div className="flex w-px h-4 border-r border-slate-200" />
+          <div className="flex w-px h-4 border-r border-slate-200 dark:border-aa-400 purple:border-pt-400" />
           <button type="button" id="divider-button" onClick={formatCode}>
-            <Code size={20} color="#1E313B" />
+            <Code size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
           </button>
           <button type="button" id="divider-button" onClick={removeFormat}>
-            <Broom size={20} color="#1E313B" />
+            <Broom size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
           </button>
         </div>
         <div ref={tooltipInput} className="hidden w-[244px] h-[22px]">
@@ -595,7 +601,7 @@ export default function AnnouncementEditor({ onChange, value }) {
           )}
         </div>
       </div>
-      <div ref={editor} id="editor-container" className="relative" />
+      <div ref={editor} id="editor-container" className="relative h-full bg-inherit" />
       <div ref={input} className="hidden absolute w-full">
         <input
           className="w-full focus:border-none focus:outline-none"

@@ -283,12 +283,12 @@ export default function Realtime() {
   function makeStatusPublicHandler({ message }) {
     if (user?._id !== message.sender && selectedRoadmap?._id === message.roadmapId) {
       dispatch(ideaActions.makeStatusPublicRealtime(message));
-    }     
+    }
+  }
   function publishAnnouncementHandler({ message }) {
     if (user?._id !== message.sender) {
       dispatch(announcementActions.createAnnouncementSuccess(message));
     }
-  }
   }
   function deleteAnnouncementHandler({ message }) {
     if (user?._id !== message.sender) {
@@ -297,7 +297,6 @@ export default function Realtime() {
   }
 
   function createAnnouncementReaction({ message }) {
-    console.log('createAnnouncementReaction', message);
     if (
       (user && user._id !== message.userId) ||
       (!user && !reactGuest.current && userIp !== message.ip) ||
@@ -309,7 +308,6 @@ export default function Realtime() {
   }
 
   function deleteAnnouncementReaction({ message }) {
-    console.log('createAnnouncementReaction', message);
     if (
       (user && user._id !== message.userId) ||
       (!user && !reactGuest.current && userIp !== message.ip) ||
@@ -319,12 +317,6 @@ export default function Realtime() {
       dispatch(announcementActions.deleteAnnouncementReactionRealtimeSuccess(message));
     }
   }
-  function makeStatusPublicHandler({ message }) {
-    if (user?._id !== message.sender && selectedRoadmap?._id === message.roadmapId) {
-      dispatch(ideaActions.makeStatusPublicRealtime(message));
-    }
-  }
-
   useEffect(() => {
     if (user && company) {
       realtime.join(user._id);
@@ -372,15 +364,11 @@ export default function Realtime() {
       realtime.on('merge-idea', mergeIdeaHandler);
       realtime.on('update-sublist', updateSublistHandler);
       realtime.on('update-ideas-order', updateIdeaOrder);
-      realtime.on('publish-announcement', publishAnnouncementHandler);
       realtime.on('delete-announcement', deleteAnnouncementHandler);
       realtime.on('create-announcement-reaction', createAnnouncementReaction);
       realtime.on('delete-announcement-reaction', deleteAnnouncementReaction);
       realtime.on('make-status-public', makeStatusPublicHandler);
       realtime.on('publish-announcement', publishAnnouncementHandler);
-      realtime.on('delete-announcement', deleteAnnouncementHandler);
-      realtime.on('create-announcement-reaction', createAnnouncementReaction);
-      realtime.on('delete-announcement-reaction', deleteAnnouncementReaction);
     }
     return () => {
       realtime.off('delete-membership', deleteMembershipHandler);
@@ -415,15 +403,11 @@ export default function Realtime() {
       realtime.off('request-access', requestAccessHandler);
       realtime.off('merge-idea', mergeIdeaHandler);
       realtime.off('update-ideas-order', updateIdeaOrder);
-      realtime.off('publish-announcement', publishAnnouncementHandler);
       realtime.off('delete-announcement', deleteAnnouncementHandler);
       realtime.off('create-announcement-reaction', createAnnouncementReaction);
       realtime.off('delete-announcement-reaction', deleteAnnouncementReaction);
       realtime.off('make-status-public', makeStatusPublicHandler);
       realtime.off('publish-announcement', publishAnnouncementHandler);
-      realtime.off('delete-announcement', deleteAnnouncementHandler);
-      realtime.off('create-announcement-reaction', createAnnouncementReaction);
-      realtime.off('delete-announcement-reaction', deleteAnnouncementReaction);
     };
   }, [user, companies, company]);
 

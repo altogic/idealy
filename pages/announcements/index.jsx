@@ -6,11 +6,10 @@ import EmptyState from '@/components/EmptyState';
 import { FilterHamburger, Plus } from '@/components/icons';
 import InfiniteScroll from '@/components/InfiniteScroll';
 import Layout from '@/components/Layout';
-import useGuestValidation from '@/hooks/useGuestValidation';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
 import { useRouter } from 'next/router';
-import { useState, useEffect, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Announcements() {
   const router = useRouter();
@@ -102,7 +101,7 @@ export default function Announcements() {
 
   return (
     <Layout>
-      <div className="bg-white dark:bg-aa-900 max-h-screen space-y-8">
+      <div className="bg-white dark:bg-aa-900 purple:bg-pt-1000 max-h-screen space-y-8">
         <div className="pt-14 px-4">
           <div className="mx-auto w-8/12">
             <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-8">

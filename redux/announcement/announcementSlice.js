@@ -22,6 +22,10 @@ export const announcementSlice = createSlice({
       state.announcement = action.payload;
       if (!state.announcements.find((announcement) => announcement._id === action.payload._id)) {
         state.announcements = [action.payload, ...state.announcements];
+      } else {
+        state.announcements = state.announcements.map((announcement) =>
+          announcement._id === action.payload._id ? action.payload : announcement
+        );
       }
     },
     createAnnouncementFailure: (state, action) => {

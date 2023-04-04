@@ -22,7 +22,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   return (
     <>
-      <div className="w-full first:px-8 first:pb-8 [&:not(:first-child)]:p-8  even:bg-slate-100 group">
+      <div className="w-full first:px-8 first:pb-8 [&:not(:first-child)]:p-8 odd:bg-white dark:odd:bg-aa-900 odd:purple:bg-pt-1000 even:bg-slate-100 dark:even:bg-aa-800 purple:even:bg-pt-900 group">
         <div className="mx-auto w-8/12 flex gap-8">
           {onPage && (
             <div>
@@ -44,17 +44,17 @@ export default function AnnouncementCard({ announcement, onPage }) {
                     </h2>
                   </a>
                 </Link>
-                <h6 className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-sm font-normal tracking-md text-left">
+                <h6 className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm font-normal tracking-md text-left">
                   {!announcement?.isPublished && '(Draft)'}
                 </h6>
-                <h6 className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-sm font-normal tracking-md text-left">
+                <h6 className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm font-normal tracking-md text-left">
                   {announcement?.publishDate &&
                     isGreaterThan(announcement?.publishDate, Date.now()) && (
                       <span>
                         Will be published on{' '}
-                        {DateTime.fromISO(announcement?.publishDate).toLocaleString(
-                          DateTime.DATETIME_MED_WITH_WEEKDAY
-                        )}
+                        {DateTime.fromISO(announcement?.publishDate)
+                          .setLocale('en')
+                          .toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}
                       </span>
                     )}
                 </h6>

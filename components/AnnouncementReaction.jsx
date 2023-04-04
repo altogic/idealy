@@ -19,8 +19,7 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
   const [openGuestForm, setOpenGuestForm] = useState(false);
   const { company } = useSelector((state) => state.company);
   const { user, guestInfo, userIp } = useSelector((state) => state.auth);
-  const error = useSelector((state) => state.announcement.error);
-  const reactions = useSelector((state) => state.announcement.reactions);
+  const { error, reactions, announcements } = useSelector((state) => state.announcement);
   const [reacted, setReacted] = useState([]);
   const [count, setCount] = useState(reactionCount);
 
@@ -111,13 +110,20 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
     if (reactions.length > 0) handleReacted();
   }, [reactions]);
 
+  useEffect(() => {
+    if (announcements.length > 0) {
+      const announcement = announcements.find((a) => a._id === announcementId);
+      setCount(announcement.reactionCount);
+    }
+  }, [announcements]);
+
   return (
     <div className="inline-block self-end relative">
       <Popover>
         {({ open }) => (
           <>
             <Popover.Button className="flex items-center">
-              <FaceHappy className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400" />
+              <FaceHappy className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
               {reactionCount > 0 && (
                 <span className="ml-1 text-xs text-slate-500 dark:text-aa-400 purple:text-pt-400">
                   {count}
@@ -127,7 +133,7 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
 
             <Transition
               show={open}
-              className="absolute mb-4 -left-16 w-full  bg-white bottom-full bg-transparent"
+              className="absolute mb-4 -left-16 w-full   bottom-full bg-transparent"
               enter="transition duration-100 ease-out"
               enterFrom="transform scale-95 opacity-0"
               enterTo="transform scale-100 opacity-100"
@@ -135,7 +141,7 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
               leaveFrom="transform scale-100 opacity-100"
               leaveTo="transform scale-95 opacity-0">
               {/* Mark this component as `static` */}
-              <Popover.Panel className="py-2 px-3 mt-2 bg-white rounded-xl shadow-lg outline-none inline-flex gap-4">
+              <Popover.Panel className="py-2 px-3 mt-2 bg-white dark:bg-aa-800 purple:bg-pt-900 rounded-xl shadow-lg outline-none inline-flex gap-4">
                 {REACTION_TYPES.map((reaction) => (
                   <AnnouncementButton
                     key={reaction.type}

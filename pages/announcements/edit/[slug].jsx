@@ -29,9 +29,13 @@ export default function EditAnnouncements({ slug }) {
       <AnnouncementForm onSave={handleUpdateAnnouncement} announcement={announcement}>
         <div className="flex items-center self-start mt-4">
           {loading ? (
-            <span className="ml-2 animate-pulse">Saving...</span>
+            <span className="ml-2 animate-pulse text-slate-500 dark:text-aa-200 purple:text-pt-200">
+              Saving...
+            </span>
           ) : (
-            <span>{DateTime.fromISO(announcement?.updatedAt).setLocale('en').toRelative()}</span>
+            <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200">
+              {DateTime.fromISO(announcement?.updatedAt).setLocale('en').toRelative()}
+            </span>
           )}
         </div>
       </AnnouncementForm>

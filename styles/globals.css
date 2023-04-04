@@ -357,6 +357,7 @@ html:has(:is(.modal, .drawer)) {
   overflow-y: inherit;
   padding: 0 0 75px 0 !important;
   outline: none;
+  background: inherit;
 }
 #editor-container .ql-editor::before {
   content: attr(data-placeholder);
