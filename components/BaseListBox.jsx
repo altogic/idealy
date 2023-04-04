@@ -152,7 +152,7 @@ export default function BaseListBox({
                 <Listbox.Option
                   key={item.id || item._id || item[valueField] || item[field] || item}
                   className={({ active }) =>
-                    `relative flex items-center justify-between select-none py-2 px-3.5 transition cursor-pointer hover:text-slate-900 dark:hover:text-aa-200 purple:hover:text-pt-200 ${
+                    `relative flex items-center justify-between select-none py-2 px-3.5 transition cursor-pointer hover:text-slate-900 dark:hover:text-aa-200 purple:hover:text-pt-200 truncate ${
                       active
                         ? 'bg-slate-100 dark:bg-aa-700 purple:bg-pt-700'
                         : 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
