@@ -109,7 +109,7 @@ export default function Header() {
               <li
                 className={cn(
                   `flex items-center justify-center py-2 px-3 rounded-md transition`,
-                  router.pathname === '/announcements'
+                  router.asPath.includes('announcements')
                     ? 'bg-indigo-700 dark:bg-aa-600 purple:bg-pt-900'
                     : 'hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900'
                 )}>
