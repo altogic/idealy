@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -29,11 +30,12 @@ export default function IdeaInfo({ idea, detail }) {
         type="button"
         onClick={(e) => {
           e.stopPropagation();
-          const userCards = document.querySelectorAll('.idea-user-card');
+
+          const userCards = document.querySelectorAll('#idea-user-card');
           userCards.forEach((userCard) => {
-            // eslint-disable-next-line no-param-reassign
             userCard.style.display = 'none';
           });
+          e.currentTarget.childNodes[1].style.display = 'flex';
           setUserCardStyle({
             top: detail ? '-6rem' : '3rem',
             left: detail ? '-6rem' : '2.5rem',

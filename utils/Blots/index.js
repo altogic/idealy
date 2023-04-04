@@ -1,0 +1,23 @@
+import Bold from './BoldBlot';
+import Italic from './ItalicBlot';
+import Blockquote from './BlockquoteBlot';
+import Header from './HeaderBlot';
+import Link from './LinkBlot';
+import CustomCode from './CustomCodeBlot';
+import Image from './ImageBlot';
+import Video from './VideoBlot';
+import Tweet from './TweetBlot';
+import Divider from './DividerBlot';
+import Idea from './IdeaBlot';
+
+export const BoldBlot = Bold;
+export const ItalicBlot = Italic;
+export const BlockquoteBlot = Blockquote;
+export const HeaderBlot = Header;
+export const LinkBlot = Link;
+export const CustomCodeBlot = CustomCode;
+export const ImageBlot = Image;
+export const VideoBlot = Video;
+export const TweetBlot = Tweet;
+export const IdeaBlot = Idea;
+export const DividerBlot = Divider;

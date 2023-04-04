@@ -13,6 +13,12 @@ class LocalStorageUtil {
     }
     return null;
   };
+
+  remove = (key) => {
+    if (window) {
+      window.localStorage.removeItem(key);
+    }
+  };
 }
 
 export default new LocalStorageUtil();

@@ -10,22 +10,22 @@ import { commentActions } from '@/redux/comments/commentsSlice';
 import { toggleDeleteFeedBackModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { useRouter } from 'next/router';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CommentForm from '../CommentForm';
 import CommentSkeleton from '../CommentSkeleton';
 import Drawer from '../Drawer';
 import EmptyState from '../EmptyState';
-import { Pen, Thumbtack, Trash } from '../icons';
 import InfiniteScroll from '../InfiniteScroll';
 import SanitizeHtml from '../SanitizeHtml';
+import SimilarIdeas from '../SimilarIdeas';
 import UserCard from '../UserCard';
-import IdeaActionButton from './admin/IdeaActionButton';
+import { Pen, Thumbtack, Trash } from '../icons';
 import IdeaBadges from './IdeaBadges';
 import IdeaDetailAdmin from './IdeaDetailAdmin';
 import IdeaInfo from './IdeaInfo';
 import VoteIdea from './VoteIdea';
-import SimilarIdeas from '../SimilarIdeas';
+import IdeaActionButton from './admin/IdeaActionButton';
 
 export default function IdeaDetail({ idea, company, onClose }) {
   const dispatch = useDispatch();
@@ -115,7 +115,7 @@ export default function IdeaDetail({ idea, company, onClose }) {
         </svg>
       </button>
       <div className="flex gap-6 relative">
-        <VoteIdea voteCount={idea?.voteCount} ideaId={idea?._id} />
+        <VoteIdea voteCount={idea?.voteCount} idea={idea} />
         <div className="flex-1 relative">
           <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold break-all mb-8">
             {idea?.title}

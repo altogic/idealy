@@ -22,6 +22,7 @@ function* createReply({ payload: reply }) {
     if (errors) {
       throw new Error(errors);
     }
+    reply.onSuccess();
     yield put(repliesActions.createReplySuccess(data));
 
     realtime.send(company._id, 'add-reply', data);
@@ -38,6 +39,7 @@ function* updateReply({ payload: reply }) {
       throw new Error(errors);
     }
     yield put(repliesActions.updateReplySuccess(data));
+    reply.onSuccess();
     realtime.send(company._id, 'update-reply', data);
   } catch (error) {
     yield put(repliesActions.updateReplyFailure(error));

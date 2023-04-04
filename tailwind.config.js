@@ -8,6 +8,11 @@ module.exports = {
     './layouts/**/*.{js,ts,jsx,tsx}',
     './node_modules/flowbite-react/**/*.js'
   ],
+  variants: {
+    extend: {
+      backgroundColor: ['responsive', 'even', 'hover', 'focus']
+    }
+  },
   darkMode: 'class',
   theme: {
     themeVariants: ['dark', 'purple'],

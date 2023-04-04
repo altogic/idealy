@@ -32,10 +32,9 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, ...re
     setSortedIdeas(temp ? temp.sort((a, b) => a.order - b.order) : []);
   }, [ideas]);
   const grid = 16;
-  const getItemStyle = (draggableStyle, isDragging) => ({
+  const getItemStyle = (draggableStyle) => ({
     ...draggableStyle,
     userSelect: 'none',
-    top: isDragging ? draggableStyle.top - 50 : draggableStyle.top,
     margin: `0 0 ${grid}px 0`,
     cursor: isGuest ? 'pointer' : draggableStyle.cursor
   });
@@ -98,7 +97,7 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, ...re
                 <RoadMapCard
                   idea={idea}
                   provided={provided}
-                  style={getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+                  style={getItemStyle(provided.draggableProps.style)}
                   combineWith={snapshot.combineWith}
                 />
               )}

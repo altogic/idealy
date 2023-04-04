@@ -4,9 +4,12 @@ import localStorageUtil from '@/utils/localStorageUtil';
 import 'quill-mention/dist/quill.mention.css';
 
 async function suggestPeople(searchTerm) {
+  const user = localStorageUtil.get('user');
+  const guest = localStorageUtil.get('guestAuthentication');
   const { data } = await ideaService.searchCompanyMembers(
     localStorageUtil.get('companyId'),
-    searchTerm
+    searchTerm,
+    user?._id || guest?._id
   );
   const { users, members } = data;
   return [

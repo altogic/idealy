@@ -1,8 +1,8 @@
 import Button from '@/components/Button';
 import { Check } from '@/components/icons';
 import Layout from '@/components/Layout';
+import useNotification from '@/hooks/useNotification';
 import { companyActions } from '@/redux/company/companySlice';
-import { notificationActions } from '@/redux/notification/notificationSlice';
 import Link from 'next/link';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
@@ -16,6 +16,7 @@ export default function RequestAccess() {
   const accessRequest = useSelector((state) => state.company.accessRequest);
   const isLoading = useSelector((state) => state.company.getAccessRequestLoading);
   const companyLoading = useSelector((state) => state.company.getCompanyLoading);
+  const sendNotification = useNotification();
 
   const [user, setUser] = useState();
   const [userApproval, setUserApproval] = useState(false);
@@ -85,14 +86,14 @@ export default function RequestAccess() {
                         dispatch(
                           companyActions.requestAccess({
                             companyId: company._id,
-                            user: user._id
-                          })
-                        );
-                        dispatch(
-                          notificationActions.sendNotification({
                             user: user._id,
-                            companyId: company._id,
-                            message: `New request access for <b>${company?.name}</b>`
+                            onSuccess: () => {
+                              sendNotification({
+                                message: `<b>${user.name}</b> has requested access to <b>${company.name}</b>`,
+                                type: 'requestAccess',
+                                url: 'settings?tab=access%20requests'
+                              });
+                            }
                           })
                         );
                       }}

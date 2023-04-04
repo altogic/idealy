@@ -51,6 +51,7 @@ function* voteIdeaSaga({ payload }) {
     if (payload.onError) {
       payload.onError();
     }
+
     yield put(ideaActions.voteIdeaFailure(error));
   }
 }
@@ -85,7 +86,6 @@ function* updateIdeaSaga({ payload: { idea, onSuccess } }) {
     });
     if (onSuccess) onSuccess(data);
   } catch (error) {
-    console.log(error);
     yield put(ideaActions.updateIdeaFailure(error));
   }
 }
@@ -107,9 +107,15 @@ function* deleteIdeaSaga({ payload: { id, onSuccess } }) {
     yield put(ideaActions.deleteIdeaFailure(error));
   }
 }
-function* searchSimilarIdeasSaga({ payload: { title, companyId } }) {
+function* searchSimilarIdeasSaga({ payload: { title, companyId, random, page, limit } }) {
   try {
-    const { data, errors } = yield call(ideaService.searchSimilarIdeas, title, companyId);
+    const { data, errors } = yield call(ideaService.searchSimilarIdeas, {
+      title,
+      companyId,
+      random,
+      page,
+      limit
+    });
     if (errors) {
       throw new Error(errors);
     }
@@ -211,7 +217,7 @@ function* searchIdeasSaga({ payload: searchText }) {
     yield put(ideaActions.searchIdeasFailure(error));
   }
 }
-function* getIdeaByIdSaga({ payload: { id, onSuccess } }) {
+function* getIdeaByIdSaga({ payload: { id, onSuccess, onError } }) {
   try {
     const { data, errors } = yield call(ideaService.getIdea, id);
     if (errors) {
@@ -220,6 +226,7 @@ function* getIdeaByIdSaga({ payload: { id, onSuccess } }) {
     yield put(ideaActions.getIdeaByIdSuccess(data));
     onSuccess();
   } catch (error) {
+    onError();
     yield put(ideaActions.getIdeaByIdFailure(error));
   }
 }

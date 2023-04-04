@@ -77,7 +77,7 @@ export default function RoadMapAdmin() {
           (idea) => idea._id !== result.draggableId
         )
       }));
-      setBackupState(state[result.source.droppableId]);
+      setBackupState(state);
       setMergedIdeas({
         baseIdea: result.combine.draggableId,
         mergedIdea: result.draggableId,

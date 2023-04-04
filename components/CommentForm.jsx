@@ -1,4 +1,5 @@
 import useGuestValidation from '@/hooks/useGuestValidation';
+import useNotification from '@/hooks/useNotification';
 import useSaveGuestInformation from '@/hooks/useSaveGuestInformation';
 import useSendMentionNotification from '@/hooks/useSendMentionNotification';
 import { commentActions } from '@/redux/comments/commentsSlice';
@@ -14,24 +15,19 @@ import GuestForm from './GuestForm';
 
 const Editor = dynamic(() => import('./Editor'), { ssr: false });
 
-export default function CommentForm({
-  ideaId,
-  editedComment,
-  setEditComment,
-  setIsFetched,
-  dashboard
-}) {
+export default function CommentForm({ editedComment, setEditComment, setIsFetched, dashboard }) {
   const dispatch = useDispatch();
-  const isLoading = useSelector((state) => state.comments.createCommentLoading);
-  const updateCommentLoading = useSelector((state) => state.comments.updateCommentLoading);
-  const user = useSelector((state) => state.auth.user);
-  const [comment, setComment] = useState('');
-  const guestValidation = useGuestValidation('commentIdea');
-  const userIp = useSelector((state) => state.auth.userIp);
-  const guestInfo = useSelector((state) => state.auth.guestInfo);
+  const { userIp, guestInfo, user } = useSelector((state) => state.auth);
+  const { createCommentLoading: isLoading, updateCommentLoading } = useSelector(
+    (state) => state.comments
+  );
+  const idea = useSelector((state) => state.idea.selectedIdea);
   const feedBackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const error = useSelector((state) => state.comments.error);
+  const [comment, setComment] = useState('');
+  const guestValidation = useGuestValidation('commentIdea');
   const saveGuestInfo = useSaveGuestInformation();
+  const sendNotification = useNotification();
 
   const schema = yup.object().shape({
     text: yup.string(),
@@ -93,7 +89,8 @@ export default function CommentForm({
             sendMentionNotification({
               content: comment,
               name: user?.name || data.guestName || guestName,
-              email: data.guestEmail
+              title: idea.title,
+              ideaId: idea._id
             });
           }
         })
@@ -102,7 +99,7 @@ export default function CommentForm({
       dispatch(
         commentActions.addComment({
           ...data,
-          ideaId,
+          ideaId: idea._id,
           text: comment,
           user: user?._id,
           ...(!user && guestValidation && { guestName: data.guestName || guestName }),
@@ -114,11 +111,20 @@ export default function CommentForm({
                 email: data.guestEmail
               });
             }
-            sendMentionNotification({
-              content: comment,
-              name: user?.name || data.guestName || guestName,
-              email: data.guestEmail
-            });
+            if (idea.author?._id) {
+              sendNotification({
+                message: `<b>${user?.name || guestInfo.name}</b> commented on <b>${idea.title}</b>`,
+                targetUser: idea?.author._id,
+                type: 'comment',
+                url: `public-view?feedback=${idea._id}`
+              });
+              sendMentionNotification({
+                content: comment,
+                name: user?.name || data.guestName || guestName,
+                title: idea.title,
+                ideaId: idea._id
+              });
+            }
           }
         })
       );

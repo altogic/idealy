@@ -27,7 +27,7 @@ export default function Button({
       type={type === 'submit' ? 'submit' : 'button'}
       className={cn(
         `text-${size}`,
-        `inline-flex items-center justify-center gap-2 tracking-sm border rounded-md transition ease-linear duration-200 focus:outline-none`,
+        `inline-flex items-center justify-center gap-2 tracking-sm rounded-md transition ease-linear duration-200 focus:outline-none`,
         size === 'sm' ? 'p-3' : '',
         size === 'xs' ? 'p-2' : '',
         size === 'base' && variant !== 'text' ? 'px-4 py-2.5' : '',
@@ -37,7 +37,7 @@ export default function Button({
         mobileFullWidth ? 'w-full md:w-auto' : '',
         loading ? 'opacity-50 cursor-not-allowed' : null,
         disabled ? 'opacity-50 cursor-not-allowed' : '',
-        variant === 'icon' ? 'border-0 px-0 py-0' : '',
+        variant === 'icon' ? 'border-0 px-0 py-0' : 'border',
         variant === 'blank'
           ? ' bg-white dark:bg-aa-600 purple:bg-pt-900 text-gray-700 dark:text-aa-200 purple:text-pt-200 border-gray-300 hover:bg-gray-100 dark:hover:bg-aa-400 purple:hover:bg-pt-400'
           : '',

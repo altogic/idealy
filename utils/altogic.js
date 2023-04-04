@@ -9,4 +9,4 @@ const realtimeClient = createClient(
   process.env.NEXT_PUBLIC_REALTIME_CLIENT_KEY
 );
 export const { db, auth, storage, endpoint, queue } = altogic;
-export const { realtime } = realtimeClient;
+export const { realtime, db: noSessionDb } = realtimeClient;

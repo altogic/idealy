@@ -5,11 +5,12 @@ const notificationService = {
     db
       .model('notifications')
       .filter(
-        `(targetUser == '${userId}' && companyId =='${companyId}') ${
+        `targetUser == '${userId}'  ${
           isMember ? `|| (companyId == '${companyId}' && !EXISTS(targetUser))` : ''
         }  ${filter}`
       )
       .lookup({ field: 'user' })
+      .lookup({ field: 'guest' })
       .sort('createdAt', 'desc')
       .limit(limit)
       .page(page)

@@ -8,15 +8,8 @@ export default function useSaveGuestInformation(saveLocal = true) {
   const company = useSelector((state) => state.company.company);
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const saveGuestInformation = ({ email, name, avatar, onSuccess }) => {
-    if (saveLocal) {
-      addGuestInfoToLocalStorage(email, name, avatar);
-      dispatch(
-        authActions.setGuestInfo({
-          email,
-          name,
-          avatar: avatar || guestInfo.avatar
-        })
-      );
+    if (saveLocal && !email) {
+      addGuestInfoToLocalStorage({ name, avatar });
     }
     if (email) {
       dispatch(
@@ -25,7 +18,15 @@ export default function useSaveGuestInformation(saveLocal = true) {
           name,
           email,
           avatar: avatar || guestInfo.avatar,
-          onSuccess
+          onSuccess: (user) => {
+            onSuccess();
+            addGuestInfoToLocalStorage(user);
+            dispatch(
+              authActions.setGuestInfo({
+                ...user
+              })
+            );
+          }
         })
       );
     }

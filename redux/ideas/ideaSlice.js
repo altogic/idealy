@@ -135,7 +135,7 @@ export const ideaSlice = createSlice({
         state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
       } else if (
         !state.ideas.some((idea) => idea._id === action.payload._id) &&
-        state.selectedRoadmap._id === action.payload.roadmap._id
+        state.selectedRoadmap?._id === action.payload.roadmap?._id
       ) {
         state.ideas = [action.payload.data, ...state.ideas];
         state.roadmapIdeas = _.groupBy([action.payload], 'status._id');
@@ -266,7 +266,7 @@ export const ideaSlice = createSlice({
         state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
       } else if (
         !state.ideas.some((idea) => idea._id === action.payload.data._id) &&
-        state.selectedRoadmap._id === action.payload.data.roadmap._id &&
+        state.selectedRoadmap?._id === action.payload.data.roadmap?._id &&
         action.payload.isShown
       ) {
         state.ideas = [action.payload.data, ...state.ideas];

@@ -1,23 +1,22 @@
 import { ChevronDown, ChevronUp } from '@/components/icons';
 import useGuestValidation from '@/hooks/useGuestValidation';
+import useNotification from '@/hooks/useNotification';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import useSaveGuestInformation from '@/hooks/useSaveGuestInformation';
-import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { generateRandomName } from '@/utils/index';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
 import cn from 'classnames';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import GuestFormModal from '../GuestFormModal';
 
-export default function VoteIdea({ voteCount, ideaId }) {
+export default function VoteIdea({ voteCount, idea }) {
   const dispatch = useDispatch();
   const canVote = useRegisteredUserValidation('voteIdea');
-  const userIp = useSelector((state) => state.auth.userIp);
-  const user = useSelector((state) => state.auth.user);
+  const { userIp, user, guestInfo } = useSelector((state) => state.auth);
   const company = useSelector((state) => state.company.company);
   const voteGuestAuthentication = useGuestValidation('voteIdea');
-  const guestInfo = useSelector((state) => state.auth.guestInfo);
   const error = useSelector((state) => state.idea.error);
   const [voteCountState, setVoteCountState] = useState();
   const [voted, setVoted] = useState();
@@ -26,13 +25,13 @@ export default function VoteIdea({ voteCount, ideaId }) {
   const ideaVotes = useSelector((state) => state.idea.ideaVotes);
   const voteGuestAuth = useGuestValidation('voteIdea');
   const saveGuestInfo = useSaveGuestInformation();
-
+  const sendNotification = useNotification();
   const downVote = () => {
     setVoteCountState((prev) => prev - 1);
     setVoted(false);
     dispatch(
       ideaActions.downVoteIdea({
-        ideaId,
+        ideaId: idea._id,
         ...(!user && { ip: userIp }),
         ...(voteGuestAuthentication && { email: guestInfo.email }),
         userId: user?._id
@@ -49,7 +48,7 @@ export default function VoteIdea({ voteCount, ideaId }) {
         setVoted(true);
         dispatch(
           ideaActions.voteIdea({
-            ideaId,
+            ideaId: idea._id,
             ...(!user && !voteGuestAuthentication && { ip: userIp }),
             ...(voteGuestAuthentication && {
               guestEmail: guestInfo.email,
@@ -57,6 +56,24 @@ export default function VoteIdea({ voteCount, ideaId }) {
             }),
             companyId: company._id,
             userId: user?._id,
+            onSuccess: () => {
+              if (!user && !voteGuestAuthentication && !guestInfo.name) {
+                saveGuestInfo({
+                  name: generateRandomName()
+                });
+              }
+              if (idea?.author?._id) {
+                console.log('voted');
+                sendNotification({
+                  message: `<p><b>${user?.name || guestInfo.name}</b>  voted for <b>${
+                    idea.title
+                  }</b></p>`,
+                  targetUser: idea?.author._id,
+                  type: 'vote',
+                  url: `public-view?feedback=${idea._id}`
+                });
+              }
+            },
             onError: () => {
               if (voteCountState > 0) {
                 setVoteCountState((prev) => prev - 1);
@@ -65,11 +82,6 @@ export default function VoteIdea({ voteCount, ideaId }) {
             }
           })
         );
-        if (!user && !voteGuestAuthentication && !guestInfo.name) {
-          saveGuestInfo({
-            name: generateRandomName()
-          });
-        }
       }
     } else {
       downVote();
@@ -81,11 +93,19 @@ export default function VoteIdea({ voteCount, ideaId }) {
     setOpenGuestForm(false);
     dispatch(
       ideaActions.voteIdea({
-        ideaId,
+        ideaId: idea._id,
         ...(!user && !voteGuestAuthentication && { ip: userIp }),
         ...(voteGuestAuthentication && { ...data }),
         companyId: company._id,
         userId: user?._id,
+        onSuccess: () => {
+          sendNotification({
+            message: `${user?.name || guestInfo.name}  voted for  ${idea.title}`,
+            targetUser: idea?.author._id,
+            type: 'vote',
+            url: `public-view?feedback=${idea._id}`
+          });
+        },
         onError: () => {
           setVoteCountState((prev) => prev - 1);
           setVoted(false);
@@ -95,19 +115,19 @@ export default function VoteIdea({ voteCount, ideaId }) {
   };
   const handleVoted = () => {
     if (user) {
-      return ideaVotes.find((v) => v.ideaId === ideaId && v.userId === user._id);
+      return ideaVotes.some((v) => v.ideaId === idea._id && v.userId === user._id);
     }
     if (voteGuestAuth) {
-      return ideaVotes.find(
-        (v) => v.ideaId === ideaId && guestInfo.email === v.guestEmail && !v.userId
+      return ideaVotes.some(
+        (v) => v.ideaId === idea._id && guestInfo.email === v.guestEmail && !v.userId
       );
     }
-    return ideaVotes.find((v) => v.ideaId === ideaId && v.ip === userIp && !v.userId);
+    return ideaVotes.some((v) => v.ideaId === idea._id && v.ip === userIp && !v.userId);
   };
   useEffect(() => {
     setVoteCountState(voteCount);
     setVoted(handleVoted());
-  }, [voteCount]);
+  }, [voteCount, ideaVotes]);
 
   return (
     <div

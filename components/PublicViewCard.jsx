@@ -10,7 +10,7 @@ export default function PublicViewCard({ idea, onClick }) {
   return (
     <div className="relative px-2 py-6 lg:p-6 inline-block w-full rounded-lg transition hover:bg-slate-50 dark:hover:bg-aa-800 purple:hover:bg-pt-900">
       <div className="flex gap-6">
-        <VoteIdea voteCount={idea?.voteCount} ideaId={idea?._id} />
+        <VoteIdea voteCount={idea?.voteCount} idea={idea} />
         <button type="button" onClick={onClick} className="w-full">
           <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-0 mb-2">
             {(idea?.isPrivate ||

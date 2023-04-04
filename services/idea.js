@@ -14,15 +14,15 @@ const ideaService = {
     }),
   updateIdea: (req) => endpoint.put('/idea', req),
   deleteIdea: (id) => db.model('ideas').object(id).delete(),
-  searchSimilarIdeas: (title, companyId, random = false) =>
-    endpoint.get('/idea/search', { title, companyId, random }),
+  searchSimilarIdeas: ({ title, companyId, random = false, page = 1, limit = 3 }) =>
+    endpoint.get('/idea/search', { title, companyId, random, page, limit }),
   deleteIdeaCoverImage: (id) =>
     db
       .model('ideas')
       .object(id)
       .updateFields([{ field: 'coverImage', updateType: 'unset' }]),
-  searchCompanyMembers: (companyId, searchText) =>
-    endpoint.get('/company/member/search', { companyId, searchText }),
+  searchCompanyMembers: (companyId, searchText, userId = null) =>
+    endpoint.get('/company/member/search', { companyId, searchText, userId }),
   approveAllIdeas: (companyId) =>
     db
       .model('ideas')
