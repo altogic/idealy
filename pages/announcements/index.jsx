@@ -18,7 +18,7 @@ export default function Announcements() {
   const { company, isGuest } = useSelector((state) => state.company);
   const { user, guestInfo, userIp } = useSelector((state) => state.auth);
   const [filterCategories, setFilterCategories] = useState([]);
-  const [page, setPage] = useState(1);
+
   function setCategoryQuery() {
     const queryArray = [];
     filterCategories.forEach((category) => {
@@ -29,11 +29,21 @@ export default function Announcements() {
 
   const handleFilterCategoriesChange = (value) => {
     if (value) {
-      router.query.categories = value.map((category) => category.name).join(',');
-      router.push(router);
+      router.push({
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          categories: value.map((category) => category.name).join(',')
+        }
+      });
     } else {
       delete router.query.categories;
-      router.push(router);
+      router.push({
+        pathname: router.pathname,
+        query: {
+          ...router.query
+        }
+      });
     }
   };
 
@@ -50,11 +60,11 @@ export default function Announcements() {
           ]
             .filter(Boolean)
             .join(' && '),
-          page
+          page: router.query.page || 1
         })
       );
     }
-  }, [filterCategories, page]);
+  }, [filterCategories, router.query.page]);
 
   useEffect(() => {
     const { categories } = router.query;
@@ -91,13 +101,16 @@ export default function Announcements() {
   }, [getAnnouncements]);
 
   useEffect(() => {
-    if (router.isReady && router.query.page) {
-      setPage(router.query.page);
+    if (router.isReady) {
+      router.push({
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          page: 1
+        }
+      });
     }
-    if (router.isReady && !router.query.page) {
-      setPage(1);
-    }
-  }, [router]);
+  }, [router.isReady]);
 
   return (
     <Layout>
@@ -125,7 +138,12 @@ export default function Announcements() {
                   type="status"
                   onReset={() => {
                     delete router.query.categories;
-                    router.push(router);
+                    router.push({
+                      pathname: router.pathname,
+                      query: {
+                        ...router.query
+                      }
+                    });
                   }}
                 />
                 {!isGuest && (
@@ -149,7 +167,16 @@ export default function Announcements() {
             items={announcements}
             countInfo={countInfo}
             endOfList={() => {
-              setPage((page) => page + 1);
+              const page = Number.isNaN(parseInt(router.query.page, 2) + 1)
+                ? router.query.page
+                : parseInt(router.query.page, 2) + 1;
+              router.push({
+                pathname: router.pathname,
+                query: {
+                  ...router.query,
+                  page
+                }
+              });
             }}>
             {announcements?.length ? (
               announcements?.map((announcement) => (
