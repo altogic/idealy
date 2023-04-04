@@ -103,7 +103,9 @@ export default function AnnouncementCard({ announcement, onPage }) {
               )}
             </div>
             <p className="mt-2 mb-8 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm font-normal tracking-md text-left">
-              {DateTime.fromISO(announcement?.createdAt).toLocaleString(DateTime.DATE_MED)}
+              {DateTime.fromISO(announcement?.createdAt)
+                .setLocale('en')
+                .toLocaleString(DateTime.DATE_MED)}
             </p>
             <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-200 purple:prose-p:text-pt-200 prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-4">
               <SanitizeHtml id="idea-detail" html={announcement?.content} />
