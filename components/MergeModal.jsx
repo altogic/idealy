@@ -32,7 +32,11 @@ export default function MergeModal({ openMergeModal, setOpenMergeModal }) {
     resolver: yupResolver(schema)
   });
   const filterIdeas = async (inputValue) => {
-    const { data, errors } = await ideaService.searchSimilarIdeas(inputValue, company._id, true);
+    const { data, errors } = await ideaService.searchSimilarIdeas({
+      companyId: company._id,
+      title: inputValue,
+      random: true
+    });
     if (errors) {
       return [];
     }
