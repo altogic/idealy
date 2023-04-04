@@ -29,7 +29,7 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, ...re
   );
   useUpdateEffect(() => {
     const temp = structuredClone(ideas);
-    setSortedIdeas(temp ? temp.sort((a, b) => a.order - b.order) : []);
+    setSortedIdeas(temp.length ? temp.sort((a, b) => a.order - b.order) : []);
   }, [ideas]);
   const grid = 16;
   const getItemStyle = (draggableStyle) => ({

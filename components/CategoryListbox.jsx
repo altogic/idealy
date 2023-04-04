@@ -29,7 +29,6 @@ export default function CategoryListbox({ size }) {
       field="name"
       options={company?.categories}
       size={size}
-      hidden="mobile"
       type="status"
       onReset={() => handleReset()}
     />

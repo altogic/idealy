@@ -156,10 +156,7 @@ export default function RoadMapAdmin() {
   }
   function cancelMerge() {
     setOpenMergeDialog(false);
-    setState((state) => ({
-      ...state,
-      [mergedIdeas.status]: backupState
-    }));
+    setState(backupState);
   }
   const roadmapStatuses = useMemo(() => {
     if (company && roadmap) {

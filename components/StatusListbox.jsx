@@ -54,7 +54,6 @@ export default function StatusListbox({ size }) {
       field="name"
       options={company?.statuses}
       size={size}
-      hidden="mobile"
       type="status"
       onReset={() => handleReset()}
     />

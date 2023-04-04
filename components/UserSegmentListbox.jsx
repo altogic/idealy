@@ -30,7 +30,6 @@ export default function UserSegmentListbox({ size }) {
       type="status"
       options={company?.userSegments}
       size={size}
-      hidden="mobile"
       onReset={() => handleReset()}
     />
   );
