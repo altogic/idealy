@@ -175,6 +175,9 @@ export const announcementSlice = createSlice({
         ...state.announcement,
         reactionCount: state.announcement.reactionCount - 1
       };
+    },
+    resetAnnouncement: (state) => {
+      state.announcement = null;
     }
   },
   extraReducers: (builder) => {

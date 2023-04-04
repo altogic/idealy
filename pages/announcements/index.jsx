@@ -109,6 +109,7 @@ export default function Announcements() {
           page: 1
         }
       });
+      dispatch(announcementActions.resetAnnouncement());
     }
   }, [router.isReady]);
 
