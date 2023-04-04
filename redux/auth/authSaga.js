@@ -224,7 +224,6 @@ function* disableAllNotificationsSaga({ payload: { id, value } }) {
 }
 function* updateSavedFilterNameSaga({ payload }) {
   try {
-    console.log(payload);
     const { data, errors } = yield call(AuthService.updateSavedFilterName, payload);
     if (errors) throw errors;
     if (data) {

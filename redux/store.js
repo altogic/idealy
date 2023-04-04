@@ -11,6 +11,7 @@ import rootSaga from './rootSaga';
 import { ideaSlice } from './ideas/ideaSlice';
 import { commentsSlice } from './comments/commentsSlice';
 import { repliesSlice } from './replies/repliesSlice';
+import { announcementSlice } from './announcement/announcementSlice';
 
 const sagaMiddleware = createSagaMiddleware();
 const makeStore = () => {
@@ -24,7 +25,8 @@ const makeStore = () => {
       [ideaSlice.name]: ideaSlice.reducer,
       [commentsSlice.name]: commentsSlice.reducer,
       [generalSlice.name]: generalSlice.reducer,
-      [repliesSlice.name]: repliesSlice.reducer
+      [repliesSlice.name]: repliesSlice.reducer,
+      [announcementSlice.name]: announcementSlice.reducer
     },
     devTools: true,
     middleware: (getDefaultMiddleware) =>

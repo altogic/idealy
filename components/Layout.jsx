@@ -22,8 +22,8 @@ export default function Layout({ children }) {
   const user = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.company.getCompanyLoading);
   const guestInfo = useSelector((state) => state.auth.guestInfo);
-  const voteGuestAuth = useGuestValidation('voteIdea');
   const userIp = useSelector((state) => state.auth.userIp);
+  const voteGuestAuth = useGuestValidation('voteIdea');
   const dispatch = useDispatch();
 
   useEffect(() => {
