@@ -113,7 +113,7 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
   useEffect(() => {
     if (announcements.length > 0) {
       const announcement = announcements.find((a) => a._id === announcementId);
-      setCount(announcement.reactionCount);
+      setCount(announcement?.reactionCount);
     }
   }, [announcements]);
 
