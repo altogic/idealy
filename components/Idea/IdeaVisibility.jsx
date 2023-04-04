@@ -103,7 +103,6 @@ export default function IdeaVisibility({ listBoxSize }) {
             field="name"
             options={company?.roadmaps}
             size={listBoxSize}
-            hidden="mobile"
             onReset={() => {
               setRoadMap(null);
               updateIdea({ roadmap: null });
