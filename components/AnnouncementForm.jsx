@@ -252,7 +252,7 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
         show={openCreateModal}
         onClose={() => setOpenCreateModal(false)}
         cancelOnClick={() => setOpenCreateModal(false)}
-        createOnClick={() => addCompanySubList('Category', 'categories')}
+        createOnClick={(name) => addCompanySubList(name, 'categories')}
         icon={<Sparkle size={20} className="fill-green-600" />}
         title="Create a new category"
         description="Create a new category to organize your announcements."
