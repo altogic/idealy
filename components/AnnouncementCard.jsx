@@ -133,9 +133,9 @@ export default function AnnouncementCard({ announcement, onPage }) {
           );
         }}
         icon={<Danger className="w-7 h-7 text-red-600" />}
-        title="Delete Idea"
-        description="Are you sure you want to delete this idea? This action cannot be undone."
-        confirmText="Delete Idea"
+        title="Delete Announcement"
+        description="Are you sure you want to delete this announcement? This action cannot be undone."
+        confirmText="Delete Announcement"
         confirmColor="red"
         canCancel
         loading={loading}
