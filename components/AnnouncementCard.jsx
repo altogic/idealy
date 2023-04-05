@@ -1,17 +1,17 @@
-import Button from '@/components/Button';
-import { ChevronLeft, Danger, Pen, Trash } from '@/components/icons';
 import SanitizeHtml from '@/components/SanitizeHtml';
 import StatusBadge from '@/components/StatusBadge';
+import { ChevronLeft, Danger, Pen, Trash } from '@/components/icons';
+import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
-import AnnouncementReaction from './AnnouncementReaction';
-import InfoModal from './InfoModal';
 import { isGreaterThan } from '../utils';
+import AnnouncementReaction from './AnnouncementReaction';
+import IdeaActionButton from './Idea/admin/IdeaActionButton';
+import InfoModal from './InfoModal';
 
 export default function AnnouncementCard({ announcement, onPage }) {
   const router = useRouter();
@@ -59,6 +59,18 @@ export default function AnnouncementCard({ announcement, onPage }) {
                     )}
                 </h6>
               </div>
+            </div>
+            <p className="mt-2 mb-8 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm font-normal tracking-md text-left">
+              {DateTime.fromISO(announcement?.createdAt)
+                .setLocale('en')
+                .toLocaleString(DateTime.DATE_MED)}
+            </p>
+            <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-200 purple:prose-p:text-pt-200 prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-4">
+              <SanitizeHtml id="idea-detail" html={announcement?.content} />
+            </div>
+          </div>
+          <div className="flex flex-col justify-between items-center">
+            <div className="flex">
               {!!announcement?.categories?.length && (
                 <>
                   <div className="flex flex-wrap items-center justify-center gap-2 ml-auto max-w-md">
@@ -77,46 +89,35 @@ export default function AnnouncementCard({ announcement, onPage }) {
                 </>
               )}
               {!isGuest && (
-                <div className="flex invisible items-center gap-4 group-hover:visible ">
-                  <Button
-                    variant="icon"
-                    size="sm"
-                    mobileFullWidth="mobileFullWidth"
-                    icon={
-                      <Pen className="w-3 h-3 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-                    }
+                <div className="flex invisible items-center group-hover:visible ">
+                  <IdeaActionButton
+                    type="Edit"
+                    color="blue"
+                    Icon={Pen}
                     onClick={() => {
                       dispatch(announcementActions.setAnnouncement(announcement));
                       router.push(`/announcements/edit/${announcement?.slug}`);
                     }}
                   />
-                  <Button
-                    variant="icon"
-                    size="sm"
-                    icon={
-                      <Trash className="w-3 h-3 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-                    }
-                    mobileFullWidth="mobileFullWidth"
-                    onClick={() => setOpenDeleteModal(true)}
+                  <IdeaActionButton
+                    type="delete"
+                    color="red"
+                    Icon={Trash}
+                    onClick={() => {
+                      dispatch(announcementActions.setAnnouncement(announcement));
+                      router.push(`/announcements/edit/${announcement?.slug}`);
+                    }}
                   />
                 </div>
               )}
             </div>
-            <p className="mt-2 mb-8 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm font-normal tracking-md text-left">
-              {DateTime.fromISO(announcement?.createdAt)
-                .setLocale('en')
-                .toLocaleString(DateTime.DATE_MED)}
-            </p>
-            <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-200 purple:prose-p:text-pt-200 prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-4">
-              <SanitizeHtml id="idea-detail" html={announcement?.content} />
-            </div>
+            {canReact && (
+              <AnnouncementReaction
+                announcementId={announcement?._id}
+                reactionCount={announcement?.reactionCount}
+              />
+            )}
           </div>
-          {canReact && (
-            <AnnouncementReaction
-              announcementId={announcement?._id}
-              reactionCount={announcement?.reactionCount}
-            />
-          )}
         </div>
       </div>
       <InfoModal
