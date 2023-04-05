@@ -131,7 +131,7 @@ export default function Announcements() {
                   icon={
                     <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
                   }
-                  label="Topics"
+                  label="Categories"
                   multiple
                   size="md"
                   align="right"
