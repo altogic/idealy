@@ -123,30 +123,32 @@ export default function Announcements() {
                 Announcements
               </h1>
               <div className="flex gap-4 items-center ">
-                <BaseListBox
-                  value={filterCategories}
-                  onChange={handleFilterCategoriesChange}
-                  field="name"
-                  options={company?.categories}
-                  icon={
-                    <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-                  }
-                  label="Categories"
-                  multiple
-                  size="md"
-                  align="right"
-                  hidden="mobile"
-                  type="status"
-                  onReset={() => {
-                    delete router.query.categories;
-                    router.push({
-                      pathname: router.pathname,
-                      query: {
-                        ...router.query
-                      }
-                    });
-                  }}
-                />
+                {!!company?.categories.length && (
+                  <BaseListBox
+                    value={filterCategories}
+                    onChange={handleFilterCategoriesChange}
+                    field="name"
+                    options={company?.categories}
+                    icon={
+                      <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                    }
+                    label="Categories"
+                    multiple
+                    size="md"
+                    align="right"
+                    hidden="mobile"
+                    type="status"
+                    onReset={() => {
+                      delete router.query.categories;
+                      router.push({
+                        pathname: router.pathname,
+                        query: {
+                          ...router.query
+                        }
+                      });
+                    }}
+                  />
+                )}
                 {!isGuest && (
                   <Button
                     type="button"
