@@ -9,7 +9,7 @@ import DeleteIdeaModal from '@/components/Idea/DeleteIdeaModal';
 import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfiniteScroll from '@/components/InfiniteScroll';
 import Layout from '@/components/Layout';
-import Tooltip from '@/components/Tooltip';
+import { Tooltip2, TooltipContent, TooltipTrigger } from '@/components/Tooltip';
 import useFilterIdea from '@/hooks/useFilterIdea';
 import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import { commentActions } from '@/redux/comments/commentsSlice';
@@ -19,7 +19,7 @@ import _ from 'lodash';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const DashboardIdeaDetail = dynamic(() => import('@/components/dashboard/DashboardIdeaDetail'), {
@@ -181,12 +181,16 @@ export default function AdminDashboard() {
 
             <div>
               <div className="p-[33px] border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
-                <div className="relative group">
-                  <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md truncate w-[65ch] cursor-default ">
-                    {idea?.title}
-                  </h2>
-                  <Tooltip content={idea?.title} />
-                </div>
+                <Tooltip2>
+                  <TooltipTrigger>
+                    <div className="relative">
+                      <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md truncate w-[65ch] cursor-default ">
+                        {idea?.title}
+                      </h2>
+                      <TooltipContent>{idea?.title}</TooltipContent>
+                    </div>
+                  </TooltipTrigger>
+                </Tooltip2>
               </div>
               <DashboardIdeaDetail />
             </div>

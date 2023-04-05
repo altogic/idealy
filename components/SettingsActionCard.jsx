@@ -10,7 +10,7 @@ import { Pen, Trash, Danger, Star, Eye, EyeSlash } from '@/components/icons';
 import Button from './Button';
 import InfoModal from './InfoModal';
 import Input from './Input';
-import { Tooltip2, TooltipTrigger, TooltipContent } from './Tooltip2';
+import { Tooltip, TooltipTrigger, TooltipContent } from './Tooltip';
 
 export default function SettingsActionCard({
   id,
@@ -194,7 +194,7 @@ export default function SettingsActionCard({
               {onEdit && (
                 <div>
                   {isPublic ? (
-                    <Tooltip2>
+                    <Tooltip>
                       <TooltipTrigger>
                         <Eye className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
                       </TooltipTrigger>
@@ -203,9 +203,9 @@ export default function SettingsActionCard({
                           Public Roadmap
                         </p>
                       </TooltipContent>
-                    </Tooltip2>
+                    </Tooltip>
                   ) : (
-                    <Tooltip2>
+                    <Tooltip>
                       <TooltipTrigger>
                         <EyeSlash className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
                       </TooltipTrigger>
@@ -214,7 +214,7 @@ export default function SettingsActionCard({
                           Private Roadmap
                         </p>
                       </TooltipContent>
-                    </Tooltip2>
+                    </Tooltip>
                   )}
                 </div>
               )}

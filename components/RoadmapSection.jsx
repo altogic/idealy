@@ -7,7 +7,7 @@ import { realtime } from '@/utils/altogic';
 import EmptyState from './EmptyState';
 import { Eye, EyeSlash } from './icons';
 import RoadMapCard from './RoadMapCard';
-import { Tooltip2, TooltipContent, TooltipTrigger } from './Tooltip2';
+import { Tooltip, TooltipContent, TooltipTrigger } from './Tooltip';
 
 function RoadmapVisibilityIcon({ isPrivate }) {
   return isPrivate ? (
@@ -58,7 +58,7 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, ...re
           {isGuest ? (
             <RoadmapVisibilityIcon isPrivate={isPrivate} />
           ) : (
-            <Tooltip2>
+            <Tooltip>
               <TooltipTrigger
                 onClick={() => {
                   const publicStatuses = structuredClone(roadmap?.publicStatuses || []);
@@ -85,7 +85,7 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, ...re
                 <RoadmapVisibilityIcon isPrivate={isPrivate} />
               </TooltipTrigger>
               <TooltipContent>{isPrivate ? 'Hide Status' : 'Show Status'}</TooltipContent>
-            </Tooltip2>
+            </Tooltip>
           )}
         </div>
       </div>

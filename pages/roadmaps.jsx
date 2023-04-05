@@ -8,7 +8,7 @@ import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfoModal from '@/components/InfoModal';
 import Layout from '@/components/Layout';
 import RoadmapSection from '@/components/RoadmapSection';
-import { Tooltip2, TooltipContent, TooltipTrigger } from '@/components/Tooltip2';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/Tooltip';
 import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import { companyActions } from '@/redux/company/companySlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
@@ -257,7 +257,7 @@ export default function RoadMapAdmin() {
                         {isGuest ? (
                           <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
                         ) : (
-                          <Tooltip2>
+                          <Tooltip>
                             <TooltipTrigger
                               onClick={() => {
                                 dispatch(
@@ -281,7 +281,7 @@ export default function RoadMapAdmin() {
                                 ? 'Make this roadmap private'
                                 : 'Make this roadmap public'}
                             </TooltipContent>
-                          </Tooltip2>
+                          </Tooltip>
                         )}
 
                         <BaseListBox
