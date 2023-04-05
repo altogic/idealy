@@ -8,10 +8,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { isGreaterThan } from '../utils';
+import { generateUrl, isGreaterThan } from '../utils';
 import AnnouncementReaction from './AnnouncementReaction';
 import IdeaActionButton from './Idea/admin/IdeaActionButton';
 import InfoModal from './InfoModal';
+import ShareButtons from './ShareButtons';
 
 export default function AnnouncementCard({ announcement, onPage }) {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   return (
     <>
-      <div className="w-full first:px-8 first:pb-8 [&:not(:first-child)]:p-8 odd:bg-white dark:odd:bg-aa-900 odd:purple:bg-pt-1000 even:bg-slate-100 dark:even:bg-aa-800 purple:even:bg-pt-900 group">
+      <div className="w-full first:px-8 first:pb-8 [&:not(:first-child)]:p-8 odd:bg-white dark:odd:bg-aa-900 odd:purple:bg-pt-1000 even:bg-slate-100 dark:even:bg-aa-800 purple:even:bg-pt-900">
         <div className="mx-auto w-8/12 flex gap-8">
           {onPage && (
             <div>
@@ -65,31 +66,33 @@ export default function AnnouncementCard({ announcement, onPage }) {
                 .setLocale('en')
                 .toLocaleString(DateTime.DATE_MED)}
             </p>
+
             <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-200 purple:prose-p:text-pt-200 prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-4">
               <SanitizeHtml id="idea-detail" html={announcement?.content} />
             </div>
           </div>
+
           <div className="flex flex-col justify-between items-center">
-            <div className="flex">
+            <div className="flex space-x-4 divide-x divide-slate-200 dark:divide-aa-600 purple:divide-pt-600">
               {!!announcement?.categories?.length && (
-                <>
-                  <div className="flex flex-wrap items-center justify-center gap-2 ml-auto max-w-md">
-                    {company.categories
-                      .filter((category) => announcement?.categories.includes(category._id))
-                      .map((cat) => (
-                        <StatusBadge key={cat._id} name={cat?.name} color={cat?.color} />
-                      ))}
-                  </div>
-                  <svg
-                    className="h-1.5 w-1.5 text-slate-500 dark:text-aa-400 purple:text-pt-400 invisible group-hover:visible"
-                    fill="currentColor"
-                    viewBox="0 0 8 8">
-                    <circle cx={4} cy={4} r={3} />
-                  </svg>
-                </>
+                <div className="flex flex-wrap items-center justify-center gap-2 ml-auto max-w-md">
+                  {company.categories
+                    .filter((category) => announcement?.categories.includes(category._id))
+                    .map((cat) => (
+                      <StatusBadge key={cat._id} name={cat?.name} color={cat?.color} />
+                    ))}
+                </div>
               )}
+              <ShareButtons
+                url={generateUrl(`/announcements/${announcement?.slug}`, company?.subdomain)}
+                title={announcement?.title}
+                hashtags={company?.categories
+                  .filter((category) => announcement?.categories.includes(category._id))
+                  .map((cat) => cat.name)}
+                summary={announcement?.content}
+              />
               {!isGuest && (
-                <div className="flex invisible items-center group-hover:visible ">
+                <div className="flex items-center">
                   <IdeaActionButton
                     type="Edit"
                     color="blue"
