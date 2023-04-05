@@ -6,7 +6,7 @@ import { Exclamation } from './icons';
 export default function Errors({ title, message }) {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center gap-11">
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-11 h-full">
       <div className="max-w-lg lg:max-w-full mx-auto lg:mx-0 text-center lg:text-left">
         <span className="inline-flex items-center justify-center flex-shrink-0 w-12 h-12 bg-red-100 dark:bg-aa-200 purple:bg-pt-200 mb-4 rounded-full">
           <Exclamation className="w-7 h-7 text-red-600" />
