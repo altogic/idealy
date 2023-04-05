@@ -50,7 +50,10 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
       .string()
       .min(3, 'Title must be at least 3 characters')
       .max(100, 'Title must be less than 100 characters')
-      .matches(/^^[A-Za-z0-9][A-Za-z0-9\s\-;,:'"()]*$/)
+      .matches(
+        /^^[A-Za-z0-9][A-Za-z0-9\s\-.,!?:;'"()%$&]+$/,
+        'Blog title must start with a letter or a number and can include letters, numbers, spaces, and certain special characters.'
+      )
   });
 
   const {
@@ -150,7 +153,7 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
   return (
     <>
       <div className="max-w-screen-xl h-[calc(100vh-93px)] px-9 lg:px-8 pt-8 pb-[72px] relative mx-auto">
-        <div id="editor-scroll-container" className="w-full h-full lg:px-0 grow overflow-y-auto">
+        <div id="editor-scroll-container" className="w-full lg:px-0 grow">
           <div className="h-6">{children}</div>
           <div className="h-full">
             <Input
@@ -208,7 +211,7 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
                 </button>
               </BaseListBox>
             </div>
-            <div className="mt-4 w-11/12 h-full">
+            <div className="mt-4 w-11/12 overflow-auto">
               <AnnouncementEditor onChange={setContent} value={content} />
             </div>
           </div>
