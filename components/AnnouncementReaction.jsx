@@ -118,7 +118,7 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
   }, [announcements]);
 
   return (
-    <div className="inline-block self-end relative">
+    <div className="inline-block relative">
       <Popover>
         {({ open }) => (
           <>
