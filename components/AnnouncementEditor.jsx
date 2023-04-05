@@ -506,7 +506,11 @@ export default function AnnouncementEditor({ onChange, value }) {
 
       <div ref={sidebar} id="sidebar-controls">
         <button type="button" id="show-controls" className="self-start" onClick={handleShowControl}>
-          <PlusCircle size={32} weight="thin" />
+          <PlusCircle
+            size={32}
+            weight="thin"
+            className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200"
+          />
         </button>
         <div className="controls flex-1 border border-slate-200 dark:border-aa-400 purple:border-pt-400 shadow-sm rounded bg-white min-w-[288px] w-  max-w-[384px] min-h-[300px]">
           {!addNewIdea ? (
@@ -601,7 +605,7 @@ export default function AnnouncementEditor({ onChange, value }) {
           )}
         </div>
       </div>
-      <div ref={editor} id="editor-container" className="relative h-full bg-inherit" />
+      <div ref={editor} id="editor-container" className="relative bg-inherit" />
       <div ref={input} className="hidden absolute w-full">
         <input
           className="w-full focus:border-none focus:outline-none"
