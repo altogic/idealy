@@ -6,6 +6,7 @@ import copy from 'copy-to-clipboard';
 
 export default function ShareButtons({ url, title, summary, hashtags }) {
   function copyToClipboard() {
+    copy(url);
     ToastMessage.success('Copied to clipboard');
   }
   return (
