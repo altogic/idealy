@@ -113,8 +113,8 @@ export default function AnnouncementCard({ announcement, onPage }) {
           </div>
           {canReact && (
             <AnnouncementReaction
-              announcementId={announcement._id}
-              reactionCount={announcement.reactionCount}
+              announcementId={announcement?._id}
+              reactionCount={announcement?.reactionCount}
             />
           )}
         </div>
