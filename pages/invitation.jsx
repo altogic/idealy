@@ -34,9 +34,8 @@ export default function Invitation({ invitation, errors, companies }) {
         sendNotification({
           message: `<b>${user?.name}</b> accepted your invitation to join <b>${invitation.companyName}</b>`,
           type: 'acceptInvitation',
-          url: 'settings?tab=invite%20team',
-          companyId: invitation.companyId,
-          subdomain: company?.subdomain
+          url: '/settings?tab=invite%20team',
+          companyId: invitation.companyId
         });
         router.push(generateUrl('public-view', company?.subdomain));
         deleteCookie('invitation');
