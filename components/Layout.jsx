@@ -72,7 +72,7 @@ export default function Layout({ children }) {
   }, []);
 
   useEffect(() => {
-    if (company && user) {
+    if (company) {
       dispatch(
         ideaActions.getUserVotes({
           ...(voteGuestAuth ? { email: guestInfo.email } : { ip: userIp }),
