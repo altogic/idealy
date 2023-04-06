@@ -240,12 +240,11 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
               dateFormat="MMMM d, yyyy h:mm aa"
               customInput={<DatePickerButton />}
             />
-
             <Button
               text="Publish"
               variant="indigo"
               loading={loading}
-              disabled={loading || isDirty}
+              disabled={loading}
               onClick={publishAnnouncement()}
             />
           </div>
