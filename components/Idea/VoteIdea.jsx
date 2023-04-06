@@ -63,7 +63,6 @@ export default function VoteIdea({ voteCount, idea }) {
                 });
               }
               if (idea?.author?._id) {
-                console.log('voted');
                 sendNotification({
                   message: `<p><b>${user?.name || guestInfo.name}</b>  voted for <b>${
                     idea.title

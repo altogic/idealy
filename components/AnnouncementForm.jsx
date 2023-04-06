@@ -15,6 +15,9 @@ import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useDispatch, useSelector } from 'react-redux';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 import { compareDates, isGreaterThan } from '../utils';
 
 const AnnouncementEditor = dynamic(() => import('@/components/AnnouncementEditor'), {
@@ -32,15 +35,35 @@ const DatePickerButton = forwardRef(({ onClick }, ref) => (
 DatePickerButton.displayName = 'DatePickerButton';
 export default function AnnouncementForm({ onSave, announcement, children }) {
   const [openCreateModal, setOpenCreateModal] = useState(false);
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState(announcement?.content || '');
   const [categories, setCategories] = useState([]);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState(announcement?.title || '');
   const [date, setDate] = useState(Date.now());
   const loading = useSelector((state) => state.announcement.updateAnnouncementLoading);
   const router = useRouter();
   const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
   const user = useSelector((state) => state.auth.user);
+
+  const schema = yup.object().shape({
+    title: yup
+      .string()
+      .min(3, 'Title must be at least 3 characters')
+      .max(100, 'Title must be less than 100 characters')
+      .matches(
+        /^^[A-Za-z0-9][A-Za-z0-9\s\-.,!?:;'"()%$&]+$/,
+        'Blog title must start with a letter or a number and can include letters, numbers, spaces, and certain special characters.'
+      )
+  });
+
+  const {
+    register,
+    formState: { errors },
+    setError
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: 'onBlur'
+  });
 
   const addCompanySubList = (name, fieldName) => {
     dispatch(
@@ -68,11 +91,37 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
     });
   }
 
+  function publishAnnouncement() {
+    return () => {
+      if (title) {
+        saveAnnouncement(true);
+        if (!isGreaterThan(date, Date.now())) {
+          realtime.send(company._id, 'publish-announcement', {
+            title,
+            content,
+            ...(announcement?._id && { _id: announcement._id }),
+            ...(title && { slug: title.toLowerCase().replace(/ /g, '-') }),
+            categories: categories.map((category) => category._id),
+            company: company._id,
+            isPublished: true,
+            publishDate: date,
+            sender: user?._id
+          });
+        }
+        router.push('/announcements');
+      } else {
+        setError('title', {
+          type: 'manual',
+          message: 'Title is required'
+        });
+      }
+    };
+  }
+
   useDebounce(
     title,
     () => {
       saveAnnouncement();
-      router.push(`/announcements/edit/${title.toLowerCase().replace(/ /g, '-')}`);
     },
     500
   );
@@ -89,6 +138,9 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
       setDate(
         isGreaterThan(announcement.publishDate, Date.now()) ? announcement.publishDate : Date.now()
       );
+      if (announcement.title) {
+        document.title = `${announcement.title} - ${company.name} | Idealy`;
+      }
     }
   }, [announcement, router, company]);
 
@@ -101,16 +153,20 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
   return (
     <>
       <div className="max-w-screen-xl h-[calc(100vh-93px)] px-9 lg:px-8 pt-8 pb-[72px] relative mx-auto">
-        <div id="editor-scroll-container" className="w-full h-full lg:px-0 grow overflow-y-auto">
-          {children}
+        <div id="editor-scroll-container" className="w-full lg:px-0 grow">
+          <div className="h-6">{children}</div>
           <div className="h-full">
             <Input
               type="text"
-              name="story-title"
+              name="title"
+              id="title"
               className="block text-slate-500 dark:text-aa-200 purple:text-pt-200 px-0 py-4 w-full text-3xl font-medium border-0 placeholder-slate-500 focus:outline-none focus:ring-0 placeholder:text-2xl bg-inherit"
               placeholder="Share with your audience what you are shipping for."
               onChange={(e) => setTitle(e.target.value)}
               value={title}
+              register={register('title')}
+              error={errors.title}
+              autoFocus={!!title}
             />
             <div className="flex items-center">
               <div className="my-auto">
@@ -155,7 +211,7 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
                 </button>
               </BaseListBox>
             </div>
-            <div className="mt-4 w-11/12 h-full">
+            <div className="mt-4 w-11/12 overflow-auto">
               <AnnouncementEditor onChange={setContent} value={content} />
             </div>
           </div>
@@ -184,28 +240,12 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
               dateFormat="MMMM d, yyyy h:mm aa"
               customInput={<DatePickerButton />}
             />
-
             <Button
               text="Publish"
               variant="indigo"
               loading={loading}
-              onClick={() => {
-                saveAnnouncement(true);
-                if (!isGreaterThan(date, Date.now())) {
-                  realtime.send(company._id, 'publish-announcement', {
-                    title,
-                    content,
-                    ...(announcement?._id && { _id: announcement._id }),
-                    ...(title && { slug: title.toLowerCase().replace(/ /g, '-') }),
-                    categories: categories.map((category) => category._id),
-                    company: company._id,
-                    isPublished: true,
-                    publishDate: date,
-                    sender: user?._id
-                  });
-                }
-                router.push('/announcements');
-              }}
+              disabled={loading}
+              onClick={publishAnnouncement()}
             />
           </div>
         </div>
@@ -214,7 +254,7 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
         show={openCreateModal}
         onClose={() => setOpenCreateModal(false)}
         cancelOnClick={() => setOpenCreateModal(false)}
-        createOnClick={() => addCompanySubList('Category', 'categories')}
+        createOnClick={(name) => addCompanySubList(name, 'categories')}
         icon={<Sparkle size={20} className="fill-green-600" />}
         title="Create a new category"
         description="Create a new category to organize your announcements."

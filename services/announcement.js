@@ -1,8 +1,8 @@
 import { db, endpoint } from '@/utils/altogic';
 
 const AnnouncementService = {
-  getAnnouncements({ page = 1, limit = 10, sort = 'createdAt:desc', filter } = {}) {
-    return endpoint.get('/announcement', { page, limit, filter, sort });
+  getAnnouncements({ page = 1, limit = 10, sort = 'createdAt:desc', filter, search } = {}) {
+    return endpoint.get('/announcement', { page, limit, filter, sort, search });
   },
   getAnnouncement(slug) {
     return endpoint.get('/announcement/slug', { slug });

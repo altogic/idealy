@@ -74,17 +74,11 @@ function* getAnnouncementBySlug({ payload }) {
 function* createAnnouncementReaction({ payload }) {
   try {
     const company = yield select((state) => state.company.company);
-    const user = yield select((state) => state.auth.user);
     const { data, errors } = yield call(AnnouncementService.createAnnouncementReaction, payload);
     if (errors) {
       throw errors.items;
     }
-    yield put(
-      announcementActions.createAnnouncementReactionSuccess({
-        ...data,
-        sender: user._id
-      })
-    );
+    yield put(announcementActions.createAnnouncementReactionSuccess(data));
     realtime.send(company._id, 'create-announcement-reaction', data);
   } catch (error) {
     yield put(announcementActions.createAnnouncementReactionFailure(error));
@@ -94,21 +88,16 @@ function* createAnnouncementReaction({ payload }) {
 function* deleteAnnouncementReaction({ payload }) {
   try {
     const company = yield select((state) => state.company.company);
-    const user = yield select((state) => state.auth.user);
-    const { errors } = yield call(
+
+    const { data, errors } = yield call(
       AnnouncementService.deleteAnnouncementReaction,
       payload.reactionId
     );
     if (errors) {
       throw errors.items;
     }
-    yield put(
-      announcementActions.deleteAnnouncementReactionSuccess({
-        ...payload,
-        sender: user._id
-      })
-    );
-    realtime.send(company._id, 'delete-announcement-reaction', payload);
+    yield put(announcementActions.deleteAnnouncementReactionSuccess(data));
+    realtime.send(company._id, 'delete-announcement-reaction', data);
   } catch (error) {
     yield put(announcementActions.deleteAnnouncementReactionFailure(error));
   }

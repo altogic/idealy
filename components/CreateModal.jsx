@@ -68,6 +68,7 @@ export default function CreateModal({
             id={id}
             placeholder={placeholder}
             error={error}
+            autoFocus
           />
         </div>
         <div className="grid grid-cols-2 gap-3">
