@@ -3,14 +3,16 @@ import BaseListBox from '@/components/BaseListBox';
 import Button from '@/components/Button';
 import Divider from '@/components/Divider';
 import EmptyState from '@/components/EmptyState';
-import { FilterHamburger, Plus } from '@/components/icons';
+import Errors from '@/components/Errors';
 import InfiniteScroll from '@/components/InfiniteScroll';
 import Layout from '@/components/Layout';
+import SearchInput from '@/components/SearchInput';
+import { FilterHamburger, Plus } from '@/components/icons';
+import useDebounce from '@/hooks/useDebounce';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Errors from '@/components/Errors';
 
 export default function Announcements() {
   const router = useRouter();
@@ -20,6 +22,22 @@ export default function Announcements() {
   const { user, guestInfo, userIp } = useSelector((state) => state.auth);
   const [filterCategories, setFilterCategories] = useState([]);
   const [error, setError] = useState();
+  const [searchText, setSearchText] = useState('');
+  useDebounce(searchText, () => {
+    if (router.isReady) {
+      router.push({
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          search: searchText
+        }
+      });
+    }
+  });
+
+  function onSearchChange(e) {
+    setSearchText(e.target.value);
+  }
 
   function setCategoryQuery() {
     const queryArray = [];
@@ -62,21 +80,19 @@ export default function Announcements() {
           ]
             .filter(Boolean)
             .join(' && '),
-          page: router.query.page || 1
+          page: router.query.page || 1,
+          search: router.query.search
         })
       );
     }
-  }, [filterCategories, router.query.page]);
+  }, [filterCategories, router.query.page, router.query.search]);
 
   useEffect(() => {
-    const { categories } = router.query;
-    if (categories && company) {
-      setFilterCategories(
-        company.categories.filter((category) => categories.includes(category.name))
-      );
-    } else {
-      setFilterCategories([]);
-    }
+    const { categories, search } = router.query;
+    setFilterCategories(
+      company?.categories.filter((category) => categories?.includes(category.name))
+    );
+    setSearchText(search || '');
   }, [router.query.categories, company]);
 
   useEffect(() => {
@@ -146,6 +162,18 @@ export default function Announcements() {
                     Announcements
                   </h1>
                   <div className="flex gap-4 items-center ">
+                    <SearchInput
+                      searchText={searchText}
+                      onSearch={(e, text) => onSearchChange(e, text)}
+                      onClear={() => {
+                        setSearchText('');
+                        router.push({
+                          pathname: router.pathname,
+                          query: { ...router.query, search: '' }
+                        });
+                      }}
+                    />
+
                     {!!company?.categories.length && (
                       <BaseListBox
                         value={filterCategories}
