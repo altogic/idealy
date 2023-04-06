@@ -9,7 +9,7 @@ import DeleteIdeaModal from '@/components/Idea/DeleteIdeaModal';
 import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfiniteScroll from '@/components/InfiniteScroll';
 import Layout from '@/components/Layout';
-import { Tooltip2, TooltipContent, TooltipTrigger } from '@/components/Tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/Tooltip';
 import useFilterIdea from '@/hooks/useFilterIdea';
 import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import { commentActions } from '@/redux/comments/commentsSlice';
@@ -181,7 +181,7 @@ export default function AdminDashboard() {
 
             <div>
               <div className="p-[33px] border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
-                <Tooltip2>
+                <Tooltip>
                   <TooltipTrigger>
                     <div className="relative">
                       <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md truncate w-[65ch] cursor-default ">
@@ -190,7 +190,7 @@ export default function AdminDashboard() {
                       <TooltipContent>{idea?.title}</TooltipContent>
                     </div>
                   </TooltipTrigger>
-                </Tooltip2>
+                </Tooltip>
               </div>
               <DashboardIdeaDetail />
             </div>

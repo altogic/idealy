@@ -58,7 +58,7 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
 
   const {
     register,
-    formState: { errors, isDirty },
+    formState: { errors },
     setError
   } = useForm({
     resolver: yupResolver(schema),

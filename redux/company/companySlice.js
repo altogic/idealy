@@ -122,15 +122,11 @@ export const companySlice = createSlice({
       state.isLoading = true;
     },
     inviteTeamMemberSuccess(state, action) {
-      try {
-        state.isLoading = false;
-        if (action.payload.email) {
-          state.unregisteredCompanyMembers = [...state.unregisteredCompanyMembers, action.payload];
-        } else {
-          state.companyMembers = [...state.companyMembers, action.payload];
-        }
-      } catch (error) {
-        console.log(error);
+      state.isLoading = false;
+      if (action.payload.email) {
+        state.unregisteredCompanyMembers = [...state.unregisteredCompanyMembers, action.payload];
+      } else {
+        state.companyMembers = [...state.companyMembers, action.payload];
       }
     },
     inviteTeamMemberFailed(state, action) {

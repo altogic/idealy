@@ -155,7 +155,6 @@ function* inviteTeamMemberSaga({ payload }) {
   try {
     const { data, errors } = yield call(companyService.inviteTeamMember, payload);
     const user = yield select((state) => state.auth.user);
-    console.log(data);
     if (errors) {
       payload.onError(errors.items[0]);
       throw new Error(errors);
@@ -167,7 +166,6 @@ function* inviteTeamMemberSaga({ payload }) {
       ...data.member
     });
   } catch (error) {
-    console.log(error);
     yield put(companyActions.inviteTeamMemberFailed(error));
   }
 }
