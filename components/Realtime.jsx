@@ -439,7 +439,7 @@ export default function Realtime() {
     sendNotification({
       message: `<b>${user.name}</b> has accepted your invitation to join <b>${invitation.company.name}</b>`,
       type: 'acceptInvitation',
-      url: generateUrl('dashboard', invitation.company.subdomain)
+      url: '/dashboard'
     });
     setInvitationDialog(false);
   };
@@ -465,7 +465,7 @@ export default function Realtime() {
     sendNotification({
       message: `<b>${user.name}</b> has declined your invitation to join <b>${invitation.company.name}</b>`,
       type: 'rejectInvitation',
-      url: generateUrl('dashboard', invitation.company.subdomain)
+      url: '/dashboard'
     });
     setInvitationDialog(false);
   };

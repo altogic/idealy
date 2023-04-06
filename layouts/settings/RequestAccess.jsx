@@ -64,7 +64,7 @@ export default function RequestAccess() {
                               targetUser: request.user._id,
                               message: `Your access request for  <b>${company.name}</b> has been approved.`,
                               type: 'accountApproval',
-                              url: 'public-view'
+                              url: '/public-view'
                             });
                           }
                         })
@@ -89,7 +89,7 @@ export default function RequestAccess() {
                               targetUser: request.user._id,
                               message: `Your access request for <b>${company.name}</b> has been rejected.`,
                               type: 'accountApproval',
-                              url: 'public-view'
+                              url: '/public-view'
                             });
                           }
                         })

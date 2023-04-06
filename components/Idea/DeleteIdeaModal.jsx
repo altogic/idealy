@@ -23,7 +23,7 @@ export default function DeleteIdeaModal({ onClose }) {
               message: `Your idea <b>${selectedIdea.title}</b> has been rejected by <b>${company?.name}</b>`,
               targetUser: selectedIdea?.author?._id,
               type: 'ideaRejected',
-              url: `public-view?feedback`
+              url: `/public-view`
             });
           }
         }

@@ -26,16 +26,11 @@ export default function Notification() {
     router.push(`/settings?tab=notifications&section=${tabName}`, undefined, { shallow: true });
   };
   useEffect(() => {
-    if (router.query?.section) {
+    if (router.isReady && router.query?.section) {
       const index = router.query.section === 'settings' ? 0 : 1;
       setTabIndex(index);
     }
   }, [router]);
-
-  useEffect(() => {
-    setTabIndex(0);
-    router.push('/settings?tab=notifications&section=settings', undefined, { shallow: true });
-  }, []);
 
   useEffect(() => {
     if (page) {

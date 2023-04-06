@@ -161,7 +161,7 @@ export default function SubmitIdea({ idea }) {
                 message: `<b>${company.name}</b> submit an idea for you`,
                 targetUser: submittedIdea?.author._id,
                 type: 'adminAddIdea',
-                url: `public-view?feedback=${submittedIdea._id}`
+                url: `/public-view?feedback=${submittedIdea._id}`
               });
             }
             sendNotification({
@@ -170,7 +170,7 @@ export default function SubmitIdea({ idea }) {
                 submittedIdea.author?.name ?? submittedIdea.guestName
               }</b> submit an idea at <b>${company.name}</b>`,
               type: 'submitIdea',
-              url: `public-view?feedback=${submittedIdea._id}`
+              url: `/public-view?feedback=${submittedIdea._id}`
             });
           }
         })
