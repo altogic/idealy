@@ -69,7 +69,7 @@ export default function VoteIdea({ voteCount, idea }) {
                   }</b></p>`,
                   targetUser: idea?.author._id,
                   type: 'vote',
-                  url: `public-view?feedback=${idea._id}`
+                  url: `/public-view?feedback=${idea._id}`
                 });
               }
             },
@@ -102,7 +102,7 @@ export default function VoteIdea({ voteCount, idea }) {
             message: `${user?.name || guestInfo.name}  voted for  ${idea.title}`,
             targetUser: idea?.author._id,
             type: 'vote',
-            url: `public-view?feedback=${idea._id}`
+            url: `/public-view?feedback=${idea._id}`
           });
         },
         onError: () => {

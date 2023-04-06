@@ -66,7 +66,7 @@ export default function InviteTeam() {
               message: `You have been invited to join <b>${company?.name}</b>`,
               targetUser: userId,
               type: 'newInvitation',
-              url: `invitation?token=${token}`
+              url: `/invitation?token=${token}`
             });
           }
         },

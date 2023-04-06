@@ -116,7 +116,7 @@ export default function CommentForm({ editedComment, setEditComment, setIsFetche
                 message: `<b>${user?.name || guestInfo.name}</b> commented on <b>${idea.title}</b>`,
                 targetUser: idea?.author._id,
                 type: 'comment',
-                url: `public-view?feedback=${idea._id}`
+                url: `/public-view?feedback=${idea._id}`
               });
               sendMentionNotification({
                 content: comment,

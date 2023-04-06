@@ -16,7 +16,7 @@ export default function StatusListbox({ size }) {
         message: `The  status of ${idea.title} cleared`,
         targetUser: idea?.author?._id,
         type: 'ideaStatusChanged',
-        url: `public-view?feedback=${idea._id}`
+        url: `/public-view?feedback=${idea._id}`
       });
     });
 
@@ -46,7 +46,7 @@ export default function StatusListbox({ size }) {
               message: `The  status of <b>${idea.title}</b> changed to <b>${value.name}</b>`,
               targetUser: idea?.author?._id,
               type: 'statusChange',
-              url: `public-view?feedback=${idea._id}`
+              url: `/public-view?feedback=${idea._id}`
             });
           }
         );

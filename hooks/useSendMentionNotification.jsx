@@ -31,7 +31,7 @@ export default function useSendMentionNotification(type) {
               message: handleNotificationMessage(name, title),
               targetUser: id.split('-')[0],
               type: 'mention',
-              url: `public-view?feedback=${ideaId}`
+              url: `/public-view?feedback=${ideaId}`
             });
           }
         });
