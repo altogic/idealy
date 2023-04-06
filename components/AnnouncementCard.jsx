@@ -103,12 +103,11 @@ export default function AnnouncementCard({ announcement, onPage }) {
                     }}
                   />
                   <IdeaActionButton
-                    type="delete"
+                    type="Delete"
                     color="red"
                     Icon={Trash}
                     onClick={() => {
-                      dispatch(announcementActions.setAnnouncement(announcement));
-                      router.push(`/announcements/edit/${announcement?.slug}`);
+                      setOpenDeleteModal(true);
                     }}
                   />
                 </div>
