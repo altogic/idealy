@@ -54,20 +54,21 @@ export default function InviteTeam() {
         canCreateCompany: company.whiteLabel.canCreateCompany,
         companySubdomain: company.subdomain,
         onSuccess: (userId, token) => {
-           setIsInvite(false);
-            setRoleSelected(ROLE[0].name);
-            if (userId) {
-              realtime.send(userId, 'new-invitation', {
-                role: roleSelected,
-                userId,
-                company
-              });
-              sendNotification({
-                message: `You have been invited to join <b>${company?.name}</b>`,
-                targetUser: userId,
-                type: 'newInvitation',
-                url: `invitation?token=${token}`
-              });
+          setIsInvite(false);
+          setRoleSelected(ROLE[0].name);
+          if (userId) {
+            realtime.send(userId, 'new-invitation', {
+              role: roleSelected,
+              userId,
+              company
+            });
+            sendNotification({
+              message: `You have been invited to join <b>${company?.name}</b>`,
+              targetUser: userId,
+              type: 'newInvitation',
+              url: `invitation?token=${token}`
+            });
+          }
         },
         onError: (error) => {
           setError('email', { type: 'manuel', message: error.message });
