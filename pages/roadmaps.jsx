@@ -8,6 +8,7 @@ import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfoModal from '@/components/InfoModal';
 import Layout from '@/components/Layout';
 import RoadmapSection from '@/components/RoadmapSection';
+import SearchInput from '@/components/SearchInput';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/Tooltip';
 import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import { companyActions } from '@/redux/company/companySlice';
@@ -16,9 +17,11 @@ import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/outline';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
+import useDebounce from '@/hooks/useDebounce';
+import _ from 'lodash';
 
 function RoadmapVisibilityIcon({ isPublic }) {
   return isPublic ? (
@@ -38,14 +41,27 @@ export default function RoadMapAdmin() {
   const [backupState, setBackupState] = useState();
   const [openMergeDialog, setOpenMergeDialog] = useState(false);
   const [mergedIdeas, setMergedIdeas] = useState();
-
+  const [searchText, setSearchText] = useState();
   const [error, setError] = useState();
+  const isFiltered = useRef(false);
   const selectedIdea = useSelector((state) => state.idea.selectedIdea);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
 
   const loading = useSelector((state) => state.idea.isLoading);
 
   const dispatch = useDispatch();
+  useDebounce(searchText, () => {
+    if (router.isReady) {
+      router.push({
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          search: searchText
+        }
+      });
+      dispatch(ideaActions.searchRoadmapIdeas(searchText));
+    }
+  });
   const move = (source, destination, droppableSource, droppableDestination) => {
     const sourceClone = Array.from(source);
     const destClone = Array.from(destination);
@@ -158,6 +174,11 @@ export default function RoadMapAdmin() {
     setOpenMergeDialog(false);
     setState(backupState);
   }
+
+  function onSearchChange(e) {
+    setSearchText(e.target.value);
+  }
+
   const roadmapStatuses = useMemo(() => {
     if (company && roadmap) {
       const temp = structuredClone(company?.statuses);
@@ -237,6 +258,17 @@ export default function RoadMapAdmin() {
     }
   }, [company]);
 
+  useEffect(() => {
+    const { search } = router.query;
+    if (search) {
+      setSearchText(search);
+      if (!_.isEmpty(roadmapIdeas) && !isFiltered.current) {
+        dispatch(ideaActions.searchRoadmapIdeas(search));
+        isFiltered.current = true;
+      }
+    }
+  }, [router.query.search]);
+
   return (
     <>
       <Head>
@@ -253,7 +285,7 @@ export default function RoadMapAdmin() {
                 <>
                   <div className="space-y-2 my-14">
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-1">
                         {isGuest ? (
                           <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
                         ) : (
@@ -290,6 +322,7 @@ export default function RoadMapAdmin() {
                           field="name"
                           options={filteredRoadmaps}
                           size="xxl"
+                          className="flex-1"
                           onChange={(value) => {
                             setRoadmap(value);
                             dispatch(ideaActions.setSelectedIdea(value));
@@ -307,6 +340,17 @@ export default function RoadMapAdmin() {
                             Add a new roadmap
                           </button>
                         </BaseListBox>
+                        <SearchInput
+                          searchText={searchText}
+                          onSearch={(e) => onSearchChange(e)}
+                          onClear={() => {
+                            setSearchText('');
+                            router.push({
+                              pathname: router.pathname,
+                              query: { ...router.query, search: '' }
+                            });
+                          }}
+                        />
                       </div>
                     </div>
                     <p className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
