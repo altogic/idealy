@@ -24,11 +24,7 @@ export default function BaseListBox({
   className,
   ...props
 }) {
-  const [_value, setValue] = useState();
   const [_options, setOptions] = useState([]);
-  useEffect(() => {
-    setValue(value);
-  }, [value]);
 
   useEffect(() => {
     if (options?.[0]?.order) {
@@ -40,7 +36,7 @@ export default function BaseListBox({
   }, [options]);
 
   return (
-    <Listbox value={_value} onChange={onChange} multiple={multiple} {...props}>
+    <Listbox value={value} onChange={onChange} multiple={multiple} {...props}>
       <div className={cn('relative', className)}>
         <Listbox.Button
           className={cn(
@@ -64,14 +60,14 @@ export default function BaseListBox({
                   {icon && icon}
                   {labelIcon && labelIcon}
                   {type === 'status' && !multiple && (
-                    <svg className="h-2.5 w-2.5" fill={_value?.color} viewBox="0 0 8 8">
+                    <svg className="h-2.5 w-2.5" fill={value?.color} viewBox="0 0 8 8">
                       <circle cx={4} cy={4} r={3} />
                     </svg>
                   )}
                   {type === 'user' && !multiple && (
                     <Avatar
-                      src={_value?.profilePicture}
-                      alt={_value?.name}
+                      src={value?.profilePicture}
+                      alt={value?.name}
                       size="w-6 h-6"
                       fontSize="text-sm"
                     />
@@ -90,9 +86,9 @@ export default function BaseListBox({
                       {' '}
                       {label}
                     </div>
-                    {multiple && !!_value?.length && (type === 'default' || type === 'status') && (
+                    {multiple && !!value?.length && (type === 'default' || type === 'status') && (
                       <span className="inline-flex items-center justify-center w-5 h-5 bg-indigo-700 dark:bg-aa-600 purple:bg-pt-600 text-white dark:text-aa-200 rounded-full">
-                        {_value?.length}
+                        {value?.length}
                       </span>
                     )}
                   </div>
@@ -105,14 +101,16 @@ export default function BaseListBox({
 
               <span className="flex items-center gap-2">
                 {((multiple && !!value?.length) || (!multiple && label)) && onReset && (
-                  <button
-                    type="button"
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    aria-hidden="true"
                     onClick={(e) => {
                       e.stopPropagation();
                       onReset();
                     }}>
                     <XIcon className="w-5 h-5 text-gray-400 dark:text-aa-200 purple:text-pt-200" />
-                  </button>
+                  </div>
                 )}
                 {(type !== 'create' || !multiple) && (
                   <ChevronDown
@@ -155,7 +153,7 @@ export default function BaseListBox({
                   <Listbox.Option
                     key={item.id || item._id || item[valueField] || item[field] || item}
                     className={({ active }) =>
-                      `relative flex items-center justify-between select-none py-2 px-3.5 transition cursor-pointer hover:text-slate-900 dark:hover:text-aa-200 purple:hover:text-pt-200 truncate ${
+                      `relative flex items-center justify-between select-none py-2 px-3.5 transition cursor-pointer hover:text-slate-900 dark:hover:text-aa-200 purple:hover:text-pt-200 ${
                         active
                           ? 'bg-slate-100 dark:bg-aa-700 purple:bg-pt-700'
                           : 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
@@ -179,10 +177,10 @@ export default function BaseListBox({
                             />
                           )}
                           <span
-                            className={`block truncate ${
+                            className={`block truncate  ${
                               selected
-                                ? 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
-                                : 'font-normal'
+                                ? 'text-slate-900 dark:text-aa-200 purple:text-pt-200 max-w-[6rem]'
+                                : 'font-normal max-w-[7rem]'
                             }`}>
                             {item?.[field] || item}
                           </span>

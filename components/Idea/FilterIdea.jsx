@@ -21,27 +21,41 @@ export default function FilterIdea({
   const handleSortChange = (value) => {
     setSortType(value);
     router.query.sort = value.url;
-    router.push(router);
+    router.push({
+      pathname: router.pathname,
+      query: router.query
+    });
   };
   const handleFilterStatusChange = (value) => {
     if (value.length) {
       router.query.status = value.join(',');
-      router.push(router);
+      router.push({
+        pathname: router.pathname,
+        query: router.query
+      });
       setFilterStatus(value);
     } else {
-      delete router.query.status;
-      router.push(router);
+      router.push({
+        pathname: router.pathname,
+        query: router.query
+      });
       setFilterStatus(value);
     }
   };
   const handleFilterTopicsChange = (value) => {
     if (value.length) {
       router.query.topics = value.join(',');
-      router.push(router);
+      router.push({
+        pathname: router.pathname,
+        query: router.query
+      });
       setFilterTopics(value);
     } else {
       delete router.query.topics;
-      router.push(router);
+      router.push({
+        pathname: router.pathname,
+        query: router.query
+      });
       setFilterTopics(value);
     }
   };
@@ -77,7 +91,10 @@ export default function FilterIdea({
           onReset={() => {
             setFilterTopics([]);
             delete router.query.topics;
-            router.push(router);
+            router.push({
+              pathname: router.pathname,
+              query: router.query
+            });
           }}
         />
         <BaseListBox
@@ -98,7 +115,10 @@ export default function FilterIdea({
           onReset={() => {
             setFilterStatus([]);
             delete router.query.status;
-            router.push(router);
+            router.push({
+              pathname: router.pathname,
+              query: router.query
+            });
           }}
         />
       </div>

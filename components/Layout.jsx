@@ -17,7 +17,6 @@ export default function Layout({ children }) {
   const company = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const user = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.company.getCompanyLoading);
   const dispatch = useDispatch();
 
@@ -32,7 +31,7 @@ export default function Layout({ children }) {
       );
       deleteCookie('invitation-token');
     }
-    if (isAuthenticated && !user) {
+    if (isAuthenticated) {
       dispatch(authActions.setUser());
     }
   }, [isAuthenticated]);
