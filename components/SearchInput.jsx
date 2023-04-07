@@ -8,7 +8,7 @@ export default function SearchInput({ searchText, onSearch, onClear }) {
   const deferredSearch = useDeferredValue(searchText);
 
   return (
-    <div className="flex-1 relative">
+    <div className="relative">
       <Input
         type="text"
         name="search"
