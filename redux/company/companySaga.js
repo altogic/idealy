@@ -233,12 +233,10 @@ function* updateCompanySubLists({ payload: { id, property, update, role } }) {
       sender: user._id,
       property,
       companyId: company._id,
-      data: company[property].map((item) => {
-        if (item._id === data._id) {
-          return data;
-        }
-        return item;
-      })
+      data: {
+        ...data,
+        role
+      }
     });
   } catch (error) {
     yield put(companyActions.updateCompanySubListsFailed(error));
@@ -359,7 +357,7 @@ function* updateCompanySubListsOrder({ payload: { property, value } }) {
         role: company.role
       })
     );
-    realtime.send(data._id, 'update-sublist', {
+    realtime.send(data._id, 'update-sublist-order', {
       sender: user._id,
       companyId: data._id,
       property,

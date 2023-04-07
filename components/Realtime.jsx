@@ -27,7 +27,6 @@ export default function Realtime() {
   const [deleteIdeaModal, setDeleteIdeaModal] = useState(false);
   const user = useSelector((state) => state.auth.user);
   const userIp = useSelector((state) => state.auth.userIp);
-  const selectedRoadmap = useSelector((state) => state.idea.selectedRoadmap);
   const { company, companies, isGuest } = useSelector((state) => state.company);
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
@@ -142,10 +141,14 @@ export default function Realtime() {
   }
   function updateCompanyHandler({ message }) {
     if (message.company._id === company._id || (user && message.sender !== user?._id)) {
+      const { company } = message;
       localStorageUtil.set('theme', message.company.theme);
+      if (company.roadmaps?.length > 0 && isGuest) {
+        company.roadmaps = company.roadmaps.filter((r) => r.isPublic);
+      }
       dispatch(
         companyActions.updateCompanySuccess({
-          ...message.company,
+          ...company,
           role: company?.role
         })
       );
@@ -154,9 +157,15 @@ export default function Realtime() {
   function acceptedInvitationHandler({ message }) {
     dispatch(companyActions.acceptInvitation(message));
   }
-  function updateSublistHandler(data) {
+  function updateSublistOrderHandler(data) {
     if (data.message.sender !== user?._id && company._id === data.message.companyId) {
       dispatch(companyActions.updateCompanySubListsOrderRealtime(data.message));
+    }
+  }
+  function updateSublistHandler(data) {
+    console.log(data);
+    if (data.message.sender !== user?._id && company._id === data.message.companyId) {
+      dispatch(companyActions.updateCompanySubListsRealtime(data.message));
     }
   }
   function createIdeasHandler({ message }) {
@@ -280,11 +289,6 @@ export default function Realtime() {
     if (user?._id !== message.sender) dispatch(ideaActions.updateIdeasOrderRealtime(message));
   }
 
-  function makeStatusPublicHandler({ message }) {
-    if (user?._id !== message.sender && selectedRoadmap?._id === message.roadmapId) {
-      dispatch(ideaActions.makeStatusPublicRealtime(message));
-    }
-  }
   function publishAnnouncementHandler({ message }) {
     if (user?._id !== message.sender) {
       dispatch(announcementActions.createAnnouncementSuccess(message));
@@ -362,13 +366,13 @@ export default function Realtime() {
       realtime.on('reject-access', rejectAccessCompanyHandler);
       realtime.on('request-access', requestAccessHandler);
       realtime.on('merge-idea', mergeIdeaHandler);
-      realtime.on('update-sublist', updateSublistHandler);
+      realtime.on('update-sublist-order', updateSublistOrderHandler);
       realtime.on('update-ideas-order', updateIdeaOrder);
       realtime.on('delete-announcement', deleteAnnouncementHandler);
       realtime.on('create-announcement-reaction', createAnnouncementReaction);
       realtime.on('delete-announcement-reaction', deleteAnnouncementReaction);
-      realtime.on('make-status-public', makeStatusPublicHandler);
       realtime.on('publish-announcement', publishAnnouncementHandler);
+      realtime.on('update-sublist', updateSublistHandler);
     }
     return () => {
       realtime.off('delete-membership', deleteMembershipHandler);
@@ -384,6 +388,7 @@ export default function Realtime() {
       realtime.off('notification', notificationHandler);
       realtime.off('update-company', updateCompanyHandler);
       realtime.off('accept-invitation', acceptedInvitationHandler);
+      realtime.off('update-sublist-order', updateSublistOrderHandler);
       realtime.off('update-sublist', updateSublistHandler);
       realtime.off('create-idea', createIdeasHandler);
       realtime.off('update-idea', updateIdeaHandler);
@@ -406,7 +411,6 @@ export default function Realtime() {
       realtime.off('delete-announcement', deleteAnnouncementHandler);
       realtime.off('create-announcement-reaction', createAnnouncementReaction);
       realtime.off('delete-announcement-reaction', deleteAnnouncementReaction);
-      realtime.off('make-status-public', makeStatusPublicHandler);
       realtime.off('publish-announcement', publishAnnouncementHandler);
     };
   }, [user, companies, company]);
