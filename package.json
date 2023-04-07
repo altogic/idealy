@@ -17,7 +17,7 @@
     "@emotion/react": "^11.10.5",
     "@floating-ui/react": "^0.21.1",
     "@headlessui/react": "^1.6.6",
-    "@heroicons/react": "^1.0.6",
+    "@heroicons/react": "v1",
     "@hookform/resolvers": "^2.9.8",
     "@phosphor-icons/react": "^2.0.8",
     "@reduxjs/toolkit": "^1.8.5",
