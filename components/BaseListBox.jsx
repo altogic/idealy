@@ -21,6 +21,7 @@ export default function BaseListBox({
   align,
   onReset,
   children,
+  className,
   ...props
 }) {
   const [_value, setValue] = useState();
@@ -40,7 +41,7 @@ export default function BaseListBox({
 
   return (
     <Listbox value={_value} onChange={onChange} multiple={multiple} {...props}>
-      <div className="relative">
+      <div className={cn('relative', className)}>
         <Listbox.Button
           className={cn(
             'relative flex items-center gap-2 w-full rounded-lg text-left cursor-pointer focus:outline-none  sm:text-sm',
