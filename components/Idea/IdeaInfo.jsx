@@ -25,7 +25,10 @@ export default function IdeaInfo({ idea, detail }) {
   }, [feedBackDetailModal]);
   return (
     <div className="flex flex-wrap items-center sm:items-center gap-4">
-      <button
+      <div
+        role="button"
+        tabIndex={0}
+        aria-hidden="true"
         className="flex items-center gap-4"
         type="button"
         onClick={(e) => {
@@ -84,7 +87,7 @@ export default function IdeaInfo({ idea, detail }) {
           }
           style={userCardStyle}
         />
-      </button>
+      </div>
       <svg
         className="hidden lg:block h-1 w-1 text-slate-500 dark:text-aa-400 purple:text-pt-400"
         fill="currentColor"
