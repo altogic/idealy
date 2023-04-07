@@ -1,6 +1,13 @@
 /* eslint-disable no-param-reassign */
 
-import { SESSION_COOKIE_OPTIONS } from 'constants';
+import {
+  SESSION_COOKIE_OPTIONS,
+  WEIGHT_BENEFIT,
+  WEIGHT_COST,
+  WEIGHT_VOTE,
+  PRIORITY_SCALE,
+  PRIORITY_VALUES
+} from 'constants';
 import { deleteCookie, setCookie as nextCookie } from 'cookies-next';
 import { DateTime } from 'luxon';
 import localStorageUtil from './localStorageUtil';
@@ -166,3 +173,31 @@ export const isGreaterThan = (date1, date2) => {
   const d2 = DateTime.fromJSDate(new Date(date2));
   return d1.toMillis() > d2.toMillis();
 };
+export function normalize(x, min, max, minNorm, maxNorm) {
+  return Math.round(((x - min) * (maxNorm - minNorm)) / (max - min) + minNorm);
+}
+
+export function calculatePriority(benefit, voteCount, cost) {
+  const scoreBenefit = WEIGHT_BENEFIT * (benefit / PRIORITY_SCALE);
+  const scoreVote = WEIGHT_VOTE * (voteCount / PRIORITY_SCALE);
+  const scoreCost = WEIGHT_COST * (-cost / PRIORITY_SCALE);
+  return scoreBenefit + scoreVote + scoreCost;
+}
+
+function calcMinAndMaxPriority() {
+  console.log(PRIORITY_VALUES[0].default, PRIORITY_VALUES[PRIORITY_VALUES.length - 1].default);
+  const minValue = PRIORITY_VALUES[0].default;
+  const maxValue = PRIORITY_VALUES[PRIORITY_VALUES.length - 1].default;
+  const min = calculatePriority(minValue, 1, maxValue);
+  const max = calculatePriority(maxValue, 1, minValue);
+
+  return { min, max };
+}
+
+export function calculateNormalizedPriority(benefit, voteCount, cost) {
+  const { min, max } = calcMinAndMaxPriority();
+
+  const priority = calculatePriority(benefit, voteCount, cost);
+  const normalizedPriority = normalize(priority, min, max, 0, 100);
+  return normalizedPriority > 100 ? 100 : normalizedPriority;
+}

@@ -62,15 +62,54 @@ export const SESSION_COOKIE_OPTIONS = {
   domain: process.env.NEXT_PUBLIC_DOMAIN
 };
 // TODO: change default value if needed
-export const PRIORITY_VALUES = {
-  fibonacci: [2, 3, 5, 8, 13, 21],
-  tshirt: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
-  default: [3, 5, 8, 14, 20, 32]
-};
+
+export const PRIORITY_VALUES = [
+  {
+    id: 1,
+    fibonacci: 2,
+    tshirt: 'XS',
+    default: 3
+  },
+  {
+    id: 2,
+    fibonacci: 3,
+    tshirt: 'S',
+    default: 5
+  },
+  {
+    id: 3,
+    fibonacci: 5,
+    tshirt: 'M',
+    default: 8
+  },
+  {
+    id: 4,
+    fibonacci: 8,
+    tshirt: 'L',
+    default: 14
+  },
+  {
+    id: 5,
+    fibonacci: 13,
+    tshirt: 'XL',
+    default: 20
+  },
+  {
+    id: 6,
+    fibonacci: 21,
+    tshirt: 'XXL',
+    default: 32
+  }
+];
 export const PRIORITY_TYPES = [
   { id: 1, name: 'Fibonacci', value: 'fibonacci' },
   { id: 2, name: 'T-Shirt', value: 'tshirt' }
 ];
+export const WEIGHT_BENEFIT = 0.3;
+export const WEIGHT_VOTE = 0.7;
+export const WEIGHT_COST = 0.3;
+export const PRIORITY_SCALE = 6;
+
 export const IDEA_BADGES = [
   {
     name: 'Pinned',

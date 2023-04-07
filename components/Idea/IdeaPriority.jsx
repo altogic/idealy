@@ -1,5 +1,6 @@
 import BaseListBox from '@/components/BaseListBox';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
+import { calculateNormalizedPriority } from '@/utils/index';
 import { PRIORITY_VALUES } from 'constants';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -13,7 +14,7 @@ export default function IdeaPriority() {
 
   const updateIdea = useUpdateIdea(idea);
   useEffect(() => {
-    setPriorityValues(PRIORITY_VALUES[company?.priorityType]);
+    setPriorityValues(PRIORITY_VALUES.map((value) => value[company?.priorityType]));
   }, [PRIORITY_VALUES]);
 
   useEffect(() => {
@@ -22,6 +23,21 @@ export default function IdeaPriority() {
       setCostFactor(idea?.costFactor);
     }
   }, [idea]);
+
+  const updatePriority = (benefitFactor, costFactor) => {
+    const benefitIndex = PRIORITY_VALUES.find(
+      (value) => value[company?.priorityType] === benefitFactor
+    ).default;
+
+    const costIndex = PRIORITY_VALUES.find(
+      (value) => value[company?.priorityType] === costFactor
+    ).default;
+    updateIdea({
+      benefitFactor,
+      costFactor,
+      priorityScore: calculateNormalizedPriority(benefitIndex, idea?.voteCount, costIndex)
+    });
+  };
 
   return (
     <div className="grid grid-cols-2 gap-2">
@@ -37,18 +53,7 @@ export default function IdeaPriority() {
             size="sm"
             onChange={(selected) => {
               setBenefitFactor(selected);
-              const benefitIndex = priorityValues.indexOf(selected);
-              const costIndex = priorityValues.indexOf(
-                company?.priorityType === 'fibonacci' ? Number(costFactor) : costFactor
-              );
-              // TODO: get weight from company settings
-              updateIdea({
-                benefitFactor: selected,
-                priorityScore:
-                  0.4 * PRIORITY_VALUES.default[benefitIndex] +
-                  0.8 * idea.voteCount -
-                  0.2 * PRIORITY_VALUES.default[costIndex]
-              });
+              updatePriority(selected, Number(costFactor));
             }}
           />
         </div>
@@ -65,17 +70,7 @@ export default function IdeaPriority() {
             size="sm"
             onChange={(selected) => {
               setCostFactor(selected);
-              const benefitIndex = priorityValues.indexOf(
-                company?.priorityType === 'fibonacci' ? Number(benefitFactor) : benefitFactor
-              );
-              const costIndex = priorityValues.indexOf(selected);
-              updateIdea({
-                costFactor: selected,
-                priorityScore:
-                  0.4 * PRIORITY_VALUES.default[benefitIndex] +
-                  0.4 * idea.voteCount -
-                  0.2 * PRIORITY_VALUES.default[costIndex]
-              });
+              updatePriority(Number(benefitFactor), selected);
             }}
           />
         </div>
