@@ -39,7 +39,6 @@ function* markNotificationAsRead({ payload: { userId, companyId } }) {
 
 function* sendNotification({ payload }) {
   try {
-    console.log('payload', payload);
     const { data, errors } = yield call(notificationService.sendNotification, payload);
     if (errors) {
       throw errors;

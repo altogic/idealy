@@ -202,7 +202,6 @@ export default function DashboardIdeaActions() {
               placeholder="Search for an member"
               defaultValue={ideaOwner}
               onChange={(res) => {
-                console.log(res);
                 if (!res) {
                   setIdeaOwner(null);
                   return;

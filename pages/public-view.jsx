@@ -179,11 +179,11 @@ export default function PublicView() {
       <Layout>
         {company && (
           <>
-            <div className="max-w-screen-lg mx-auto pt-14 px-4">
+            <div className="h-[calc(100vh-93px)]">
               {error ? (
                 <Errors title={error?.title} message={error?.message} />
               ) : (
-                <>
+                <div className="max-w-screen-lg mx-auto pt-14 px-4">
                   <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-16">
                     <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
                       Feature Ideas
@@ -280,7 +280,7 @@ export default function PublicView() {
                       )}
                     </InfiniteScroll>
                   )}
-                </>
+                </div>
               )}
             </div>
             <IdeaDetail idea={selectedIdea} company={company} onClose={() => handleCloseIdea()} />

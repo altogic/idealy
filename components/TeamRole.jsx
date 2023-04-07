@@ -82,7 +82,7 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
         message: `Your role has been changed to <b>${role}</b> in <b>${company?.name}</b>`,
         targetUser: userId,
         type: 'updateRole',
-        url: 'public-view'
+        url: '/public-view'
       });
     } else {
       dispatch(

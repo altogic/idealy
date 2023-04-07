@@ -5,7 +5,7 @@ const notificationService = {
     db
       .model('notifications')
       .filter(
-        `targetUser == '${userId}'  ${
+        `(targetUser == '${userId}' && companyId =='${companyId}') ${
           isMember ? `|| (companyId == '${companyId}' && !EXISTS(targetUser))` : ''
         }  ${filter}`
       )

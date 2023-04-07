@@ -1,6 +1,7 @@
 import ideaService from '@/services/idea';
 import { realtime } from '@/utils/altogic';
 import { call, put, takeEvery, select } from 'redux-saga/effects';
+import _ from 'lodash';
 import { ideaActions } from './ideaSlice';
 
 function* getIdeasByCompanySaga({ payload: { limit, page, sort, filter } }) {
@@ -135,9 +136,9 @@ function* deleteIdeaCoverImage({ payload: id }) {
     yield put(ideaActions.deleteIdeaCoverImageFailure(error));
   }
 }
-function* getUserVotesSaga({ payload: { ip, companyId, userId, email } }) {
+function* getUserVotesSaga({ payload: { filter } }) {
   try {
-    const { data, errors } = yield call(ideaService.getUserVotes, { ip, companyId, userId, email });
+    const { data, errors } = yield call(ideaService.getUserVotes, { filter });
     if (errors) {
       throw new Error(errors);
     }
@@ -271,6 +272,21 @@ function* updateIdeasOrderSaga({ payload: { ideas, sourceId, destinationId, sour
   }
 }
 
+function* searchRoadmapIdeasSaga({ payload: searchText }) {
+  try {
+    const roadmapIdeas = yield select((state) => state.idea.roadmapIdeas);
+    const result = _.groupBy(
+      Object.values(roadmapIdeas)
+        .flat()
+        .filter((idea) => idea.title.toLowerCase().includes(searchText.toLowerCase())),
+      'status._id'
+    );
+    yield put(ideaActions.searchRoadmapIdeasSuccess(result));
+  } catch (error) {
+    yield put(ideaActions.searchRoadmapIdeasFailure(error));
+  }
+}
+
 export default function* ideaSaga() {
   yield takeEvery(ideaActions.getIdeasByCompany.type, getIdeasByCompanySaga);
   yield takeEvery(ideaActions.createIdea.type, createIdeaSaga);
@@ -289,4 +305,5 @@ export default function* ideaSaga() {
   yield takeEvery(ideaActions.getIdeaById.type, getIdeaByIdSaga);
   yield takeEvery(ideaActions.getIdeasByRoadmap.type, getIdeasByRoadmapSaga);
   yield takeEvery(ideaActions.updateIdeasOrder.type, updateIdeasOrderSaga);
+  yield takeEvery(ideaActions.searchRoadmapIdeas.type, searchRoadmapIdeasSaga);
 }

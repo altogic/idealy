@@ -122,15 +122,11 @@ export const companySlice = createSlice({
       state.isLoading = true;
     },
     inviteTeamMemberSuccess(state, action) {
-      try {
-        state.isLoading = false;
-        if (action.payload.email) {
-          state.unregisteredCompanyMembers = [...state.unregisteredCompanyMembers, action.payload];
-        } else {
-          state.companyMembers = [...state.companyMembers, action.payload];
-        }
-      } catch (error) {
-        console.log(error);
+      state.isLoading = false;
+      if (action.payload.email) {
+        state.unregisteredCompanyMembers = [...state.unregisteredCompanyMembers, action.payload];
+      } else {
+        state.companyMembers = [...state.companyMembers, action.payload];
       }
     },
     inviteTeamMemberFailed(state, action) {
@@ -569,7 +565,32 @@ export const companySlice = createSlice({
       if (action.payload.property === 'roadmaps') {
         state.company.roadmaps = action.payload.data;
       } else {
-        state[action.payload.property] = action.payload.data.sort((a, b) => a.order - b.order);
+        state.company[action.payload.property] = action.payload.data.sort(
+          (a, b) => a.order - b.order
+        );
+      }
+    },
+    updateCompanySubListsRealtime(state, action) {
+      if (action.payload.property === 'roadmaps' && !action.payload.data.isPublic) {
+        state.company.roadmaps = state.company.roadmaps.filter(
+          (roadmap) => roadmap._id !== action.payload.data._id
+        );
+      } else if (
+        state.company[action.payload.property].some((s) => s._id === action.payload.data._id)
+      ) {
+        state.company[action.payload.property] = state.company[action.payload.property].map(
+          (item) => {
+            if (item._id === action.payload.data._id) {
+              return action.payload.data;
+            }
+            return item;
+          }
+        );
+      } else {
+        state.company[action.payload.property] = [
+          ...state.company[action.payload.property],
+          action.payload.data
+        ];
       }
     },
     getCompanyBySubdomain(state) {

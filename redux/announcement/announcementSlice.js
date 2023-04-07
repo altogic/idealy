@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import _ from 'lodash';
 import { HYDRATE } from 'next-redux-wrapper';
 
 export const announcementSlice = createSlice({
@@ -96,14 +97,19 @@ export const announcementSlice = createSlice({
         announcement._id === action.payload.announcementId
           ? {
               ...announcement,
-              reactionCount: announcement.reactionCount + 1
+              reactionCount: {
+                ...announcement.reactionCount,
+                [action.payload.type]: announcement.reactionCount[action.payload.type] + 1
+              }
             }
           : announcement
       );
-      state.announcement = {
-        ...state.announcement,
-        reactionCount: state.announcement.reactionCount + 1
-      };
+      if (!_.isEmpty(state.announcement)) {
+        state.announcement.reactionCount = {
+          ...state.announcement.reactionCount,
+          [action.payload.type]: state.announcement.reactionCount[action.payload.type] + 1
+        };
+      }
     },
     createAnnouncementReactionFailure: (state, action) => {
       state.isLoading = false;
@@ -114,21 +120,24 @@ export const announcementSlice = createSlice({
     },
     deleteAnnouncementReactionSuccess: (state, action) => {
       state.isLoading = false;
-      state.reactions = state.reactions.filter(
-        (reaction) => reaction._id !== action.payload.reactionId
-      );
+      state.reactions = state.reactions.filter((reaction) => reaction._id !== action.payload._id);
       state.announcements = state.announcements.map((announcement) =>
         announcement._id === action.payload.announcementId
           ? {
               ...announcement,
-              reactionCount: announcement.reactionCount - 1
+              reactionCount: {
+                ...announcement.reactionCount,
+                [action.payload.type]: announcement.reactionCount[action.payload.type] - 1
+              }
             }
           : announcement
       );
-      state.announcement = {
-        ...state.announcement,
-        reactionCount: state.announcement.reactionCount - 1
-      };
+      if (!_.isEmpty(state.announcement)) {
+        state.announcement.reactionCount = {
+          ...state.announcement.reactionCount,
+          [action.payload.type]: state.announcement.reactionCount[action.payload.type] - 1
+        };
+      }
     },
     deleteAnnouncementReactionFailure: (state, action) => {
       state.isLoading = false;
@@ -153,28 +162,41 @@ export const announcementSlice = createSlice({
         announcement._id === action.payload.announcementId
           ? {
               ...announcement,
-              reactionCount: announcement.reactionCount + 1
+              reactionCount: {
+                ...announcement.reactionCount,
+                [action.payload.type]: announcement.reactionCount[action.payload.type] + 1
+              }
             }
           : announcement
       );
-      state.announcement = {
-        ...state.announcement,
-        reactionCount: state.announcement.reactionCount + 1
-      };
+      if (!_.isEmpty(state.announcement)) {
+        state.announcement.reactionCount = {
+          ...state.announcement.reactionCount,
+          [action.payload.type]: state.announcement.reactionCount[action.payload.type] + 1
+        };
+      }
     },
     deleteAnnouncementReactionRealtimeSuccess: (state, action) => {
-      state.announcements = state.announcements.map((announcement) =>
+      state.announcements = state.announcements?.map((announcement) =>
         announcement._id === action.payload.announcementId
           ? {
               ...announcement,
-              reactionCount: announcement.reactionCount - 1
+              reactionCount: {
+                ...announcement.reactionCount,
+                [action.payload.type]: announcement.reactionCount[action.payload.type] - 1
+              }
             }
           : announcement
       );
-      state.announcement = {
-        ...state.announcement,
-        reactionCount: state.announcement.reactionCount - 1
-      };
+      if (!_.isEmpty(state.announcement)) {
+        state.announcement.reactionCount = {
+          ...state.announcement.reactionCount,
+          [action.payload.type]: state.announcement.reactionCount[action.payload.type] - 1
+        };
+      }
+    },
+    resetAnnouncement: (state) => {
+      state.announcement = null;
     }
   },
   extraReducers: (builder) => {

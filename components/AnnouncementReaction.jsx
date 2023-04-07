@@ -6,6 +6,7 @@ import { Popover, Transition } from '@headlessui/react';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import cx from 'classnames';
 import { REACTION_TYPES } from '../constants';
 import AnnouncementButton from './AnnouncementButton';
 import GuestFormModal from './GuestFormModal';
@@ -19,12 +20,15 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
   const [openGuestForm, setOpenGuestForm] = useState(false);
   const { company } = useSelector((state) => state.company);
   const { user, guestInfo, userIp } = useSelector((state) => state.auth);
-  const { error, reactions, announcements } = useSelector((state) => state.announcement);
+  const { error, reactions, isLoading } = useSelector((state) => state.announcement);
   const [reacted, setReacted] = useState([]);
   const [count, setCount] = useState(reactionCount);
 
   function deleteReaction(type) {
-    setCount((prev) => prev - 1);
+    setCount((prev) => ({
+      ...prev,
+      [type]: prev[type] - 1
+    }));
     setReacted((prev) => prev.filter((r) => r !== type));
 
     const reactionId = reactions.find(
@@ -33,7 +37,8 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
     dispatch(
       announcementActions.deleteAnnouncementReaction({
         announcementId,
-        reactionId
+        reactionId,
+        type
       })
     );
   }
@@ -44,7 +49,10 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
       if (guestAuth && _.isEmpty(guestInfo)) {
         setOpenGuestForm(true);
       } else {
-        setCount((prev) => prev + 1);
+        setCount((prev) => ({
+          ...prev,
+          [type]: prev[type] + 1
+        }));
         setReacted((prev) => [...prev, type]);
         dispatch(
           announcementActions.createAnnouncementReaction({
@@ -69,7 +77,10 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
 
   const handleGuestFormSubmit = (data) => {
     setOpenGuestForm(false);
-    setCount((prev) => prev + 1);
+    setCount((prev) => ({
+      ...prev,
+      [type]: prev[type] + 1
+    }));
     setReacted((prev) => [...prev, type]);
     dispatch(
       announcementActions.createAnnouncementReaction({
@@ -111,25 +122,37 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
   }, [reactions]);
 
   useEffect(() => {
-    if (announcements.length > 0) {
-      const announcement = announcements.find((a) => a._id === announcementId);
-      setCount(announcement?.reactionCount);
-    }
-  }, [announcements]);
-
+    setCount(reactionCount);
+  }, [reactionCount]);
   return (
-    <div className="inline-block self-end relative">
+    <div className="inline-block relative">
       <Popover>
         {({ open }) => (
           <>
-            <Popover.Button className="flex items-center">
-              <FaceHappy className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-              {reactionCount > 0 && (
-                <span className="ml-1 text-xs text-slate-500 dark:text-aa-400 purple:text-pt-400">
-                  {count}
-                </span>
+            <div className="flex">
+              <Popover.Button className="flex items-center gap-4">
+                <FaceHappy className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+              </Popover.Button>
+              {REACTION_TYPES?.map(
+                (reaction) =>
+                  count?.[reaction?.type] > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => handleReact(reaction.type)}
+                      className={cx(
+                        'flex items-center justify-center gap-1 p-1',
+                        isLoading && 'opacity-50 cursor-wait'
+                      )}
+                      disabled={isLoading}
+                      key={reaction?.type}>
+                      <span className="text-xl">{reaction?.symbol}</span>
+                      <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200">
+                        {count[reaction?.type]}
+                      </span>
+                    </button>
+                  )
               )}
-            </Popover.Button>
+            </div>
 
             <Transition
               show={open}
@@ -149,6 +172,7 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
                     label={reaction.type}
                     onClick={() => handleReact(reaction.type)}
                     active={reacted.includes(reaction.type)}
+                    disabled={isLoading}
                   />
                 ))}
               </Popover.Panel>

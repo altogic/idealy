@@ -469,6 +469,17 @@ export const ideaSlice = createSlice({
     },
     setSelectedRoadmap(state, action) {
       state.selectedRoadmap = action.payload;
+    },
+    searchRoadmapIdeas(state) {
+      state.isLoading = true;
+    },
+    searchRoadmapIdeasSuccess(state, action) {
+      state.isLoading = false;
+      state.roadmapIdeas = action.payload;
+    },
+    searchRoadmapIdeasFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   },
 

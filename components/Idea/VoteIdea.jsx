@@ -63,14 +63,13 @@ export default function VoteIdea({ voteCount, idea }) {
                 });
               }
               if (idea?.author?._id) {
-                console.log('voted');
                 sendNotification({
                   message: `<p><b>${user?.name || guestInfo.name}</b>  voted for <b>${
                     idea.title
                   }</b></p>`,
                   targetUser: idea?.author._id,
                   type: 'vote',
-                  url: `public-view?feedback=${idea._id}`
+                  url: `/public-view?feedback=${idea._id}`
                 });
               }
             },
@@ -103,7 +102,7 @@ export default function VoteIdea({ voteCount, idea }) {
             message: `${user?.name || guestInfo.name}  voted for  ${idea.title}`,
             targetUser: idea?.author._id,
             type: 'vote',
-            url: `public-view?feedback=${idea._id}`
+            url: `/public-view?feedback=${idea._id}`
           });
         },
         onError: () => {

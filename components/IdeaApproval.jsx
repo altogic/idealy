@@ -22,7 +22,7 @@ export default function IdeaApproval() {
           message: `Your idea <b>${idea.title}</b> has been approved by <b>${company?.name}</b>`,
           targetUser: idea?.author?._id,
           type: 'ideaApproved',
-          url: `public-view?feedback=${idea._id}`
+          url: `/public-view?feedback=${idea._id}`
         });
       }
     );

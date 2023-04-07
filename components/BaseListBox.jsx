@@ -21,6 +21,7 @@ export default function BaseListBox({
   align,
   onReset,
   children,
+  className,
   ...props
 }) {
   const [_value, setValue] = useState();
@@ -40,7 +41,7 @@ export default function BaseListBox({
 
   return (
     <Listbox value={_value} onChange={onChange} multiple={multiple} {...props}>
-      <div className="relative">
+      <div className={cn('relative', className)}>
         <Listbox.Button
           className={cn(
             'relative flex items-center gap-2 w-full rounded-lg text-left cursor-pointer focus:outline-none  sm:text-sm',
@@ -141,60 +142,63 @@ export default function BaseListBox({
               type === 'icon' && 'w-[195px]',
               align === 'right' && 'right-0',
               align === 'left' && 'left-0',
-              type === 'create' ? ' p-4 gap-2' : 'py-1'
+              type === 'create' ? ' p-4 gap-2' : 'py-1',
+              type === 'create' && options?.length === 0 && 'p-2'
             )}>
-            <div
-              className={cn(
-                type === 'create' &&
-                  'max-h-[180px] mb-2 border border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-lg overflow-auto'
-              )}>
-              {_options?.map((item) => (
-                <Listbox.Option
-                  key={item.id || item._id || item[valueField] || item[field] || item}
-                  className={({ active }) =>
-                    `relative flex items-center justify-between select-none py-2 px-3.5 transition cursor-pointer hover:text-slate-900 dark:hover:text-aa-200 purple:hover:text-pt-200 truncate ${
-                      active
-                        ? 'bg-slate-100 dark:bg-aa-700 purple:bg-pt-700'
-                        : 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
-                    }`
-                  }
-                  value={valueField ? item[valueField] : item}>
-                  {({ selected }) => (
-                    <>
-                      <div className="flex items-center gap-2">
-                        {type === 'status' && (
-                          <svg className="h-2.5 w-2.5" fill={item.color} viewBox="0 0 8 8">
-                            <circle cx={4} cy={4} r={3} />
-                          </svg>
-                        )}
-                        {type === 'user' && (
-                          <Avatar
-                            src={item.profilePicture}
-                            alt={item.name}
-                            size="w-6 h-6"
-                            fontSize="text-sm"
+            {!!options?.length && (
+              <div
+                className={cn(
+                  type === 'create' &&
+                    'max-h-[180px] mb-2 border border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-lg overflow-auto'
+                )}>
+                {_options?.map((item) => (
+                  <Listbox.Option
+                    key={item.id || item._id || item[valueField] || item[field] || item}
+                    className={({ active }) =>
+                      `relative flex items-center justify-between select-none py-2 px-3.5 transition cursor-pointer hover:text-slate-900 dark:hover:text-aa-200 purple:hover:text-pt-200 truncate ${
+                        active
+                          ? 'bg-slate-100 dark:bg-aa-700 purple:bg-pt-700'
+                          : 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
+                      }`
+                    }
+                    value={valueField ? item[valueField] : item}>
+                    {({ selected }) => (
+                      <>
+                        <div className="flex items-center gap-2">
+                          {type === 'status' && (
+                            <svg className="h-2.5 w-2.5" fill={item.color} viewBox="0 0 8 8">
+                              <circle cx={4} cy={4} r={3} />
+                            </svg>
+                          )}
+                          {type === 'user' && (
+                            <Avatar
+                              src={item.profilePicture}
+                              alt={item.name}
+                              size="w-6 h-6"
+                              fontSize="text-sm"
+                            />
+                          )}
+                          <span
+                            className={`block truncate ${
+                              selected
+                                ? 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
+                                : 'font-normal'
+                            }`}>
+                            {item?.[field] || item}
+                          </span>
+                        </div>
+                        {selected && (
+                          <CheckIcon
+                            className="w-5 h-5 shrink-0 text-indigo-700 dark:text-aa-200 purple:text-pt-200"
+                            aria-hidden="true"
                           />
                         )}
-                        <span
-                          className={`block truncate ${
-                            selected
-                              ? 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
-                              : 'font-normal'
-                          }`}>
-                          {item?.[field] || item}
-                        </span>
-                      </div>
-                      {selected && (
-                        <CheckIcon
-                          className="w-5 h-5 shrink-0 text-indigo-700 dark:text-aa-200 purple:text-pt-200"
-                          aria-hidden="true"
-                        />
-                      )}
-                    </>
-                  )}
-                </Listbox.Option>
-              ))}
-            </div>
+                      </>
+                    )}
+                  </Listbox.Option>
+                ))}
+              </div>
+            )}
             {children}
           </Listbox.Options>
         </Transition>

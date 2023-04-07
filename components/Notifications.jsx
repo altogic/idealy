@@ -2,12 +2,12 @@ import { notificationActions } from '@/redux/notification/notificationSlice';
 import { Menu, Transition } from '@headlessui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Notification, Settings } from './icons';
 import Indicator from './Indicator';
 import InfiniteScroll from './InfiniteScroll';
 import NotificationItem from './NotificationItem';
+import { Notification, Settings } from './icons';
 
 export default function Notifications() {
   const dispatch = useDispatch();
@@ -19,21 +19,6 @@ export default function Notifications() {
   const unreadNotificationCount = useSelector(
     (state) => state.notification.unreadNotificationCount
   );
-  const [page, setPage] = useState(1);
-
-  useEffect(() => {
-    if (user && selectedCompany && page) {
-      dispatch(
-        notificationActions.getNotifications({
-          userId: user?._id,
-          companyId: selectedCompany?._id,
-          limit: 50,
-          page,
-          isMember: selectedCompany.role && selectedCompany?.role !== 'Guest'
-        })
-      );
-    }
-  }, [user, selectedCompany, page]);
 
   return (
     <Menu as="div" className="relative">
@@ -88,7 +73,15 @@ export default function Notifications() {
                     <InfiniteScroll
                       items={notifications}
                       countInfo={countInfo}
-                      endOfList={() => setPage((prev) => prev + 1)}>
+                      endOfList={() =>
+                        notificationActions.getNotifications({
+                          userId: user?._id,
+                          companyId: selectedCompany?._id,
+                          limit: 50,
+                          page: countInfo.currentPage + 1,
+                          isMember: selectedCompany.role && selectedCompany?.role !== 'Guest'
+                        })
+                      }>
                       {notifications?.length ? (
                         notifications?.map((notification) => (
                           <NotificationItem

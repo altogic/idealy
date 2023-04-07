@@ -155,7 +155,6 @@ function* inviteTeamMemberSaga({ payload }) {
   try {
     const { data, errors } = yield call(companyService.inviteTeamMember, payload);
     const user = yield select((state) => state.auth.user);
-    console.log(data);
     if (errors) {
       payload.onError(errors.items[0]);
       throw new Error(errors);
@@ -167,7 +166,6 @@ function* inviteTeamMemberSaga({ payload }) {
       ...data.member
     });
   } catch (error) {
-    console.log(error);
     yield put(companyActions.inviteTeamMemberFailed(error));
   }
 }
@@ -235,12 +233,10 @@ function* updateCompanySubLists({ payload: { id, property, update, role } }) {
       sender: user._id,
       property,
       companyId: company._id,
-      data: company[property].map((item) => {
-        if (item._id === data._id) {
-          return data;
-        }
-        return item;
-      })
+      data: {
+        ...data,
+        role
+      }
     });
   } catch (error) {
     yield put(companyActions.updateCompanySubListsFailed(error));
@@ -361,7 +357,7 @@ function* updateCompanySubListsOrder({ payload: { property, value } }) {
         role: company.role
       })
     );
-    realtime.send(data._id, 'update-sublist', {
+    realtime.send(data._id, 'update-sublist-order', {
       sender: user._id,
       companyId: data._id,
       property,

@@ -318,7 +318,7 @@ html:has(:is(.modal, .drawer)) {
 }
 
 @layer components {
-  .tooltip {
+  .base-tooltip {
     @apply bg-slate-50 dark:bg-aa-700 purple:bg-pt-900;
     @apply text-slate-600 dark:text-aa-200 purple:text-pt-200;
 
@@ -329,7 +329,7 @@ html:has(:is(.modal, .drawer)) {
     width: max-content;
     max-width: calc(100vw - 10px);
   }
-  .tooltip::after {
+  .base-tooltip::after {
     content: '';
     position: absolute;
     left: 1/2;

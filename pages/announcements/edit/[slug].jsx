@@ -1,12 +1,14 @@
 import AnnouncementForm from '@/components/AnnouncementForm';
 import Layout from '@/components/Layout';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
-import { DateTime } from 'luxon';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
 import _ from 'lodash';
+import { DateTime } from 'luxon';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function EditAnnouncements({ slug }) {
+  const router = useRouter();
   const announcement = useSelector((state) => state.announcement.announcement);
   const loading = useSelector((state) => state.announcement.updateAnnouncementLoading);
   const dispatch = useDispatch();
@@ -14,7 +16,12 @@ export default function EditAnnouncements({ slug }) {
   const handleUpdateAnnouncement = (req) => {
     dispatch(
       announcementActions.updateAnnouncement({
-        ...req
+        ...req,
+        onSuccess: (data) => {
+          if (router.query.slug !== data.slug) {
+            router.push(`/announcements/edit/${data.slug}`);
+          }
+        }
       })
     );
   };
@@ -27,7 +34,7 @@ export default function EditAnnouncements({ slug }) {
   return (
     <Layout>
       <AnnouncementForm onSave={handleUpdateAnnouncement} announcement={announcement}>
-        <div className="flex items-center self-start mt-4">
+        <div className="flex items-center self-start">
           {loading ? (
             <span className="ml-2 animate-pulse text-slate-500 dark:text-aa-200 purple:text-pt-200">
               Saving...
