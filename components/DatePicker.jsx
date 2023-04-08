@@ -1,10 +1,9 @@
 import { Popover, Transition } from '@headlessui/react';
-import { CalendarIcon } from '@heroicons/react/outline';
 import { DateRange, DefinedRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css';
 import { DATE_RANGES } from '../constants';
-import { ChevronDown } from './icons';
+import { ChevronDown, Calendar } from './icons';
 
 export default function DatePicker({ onChange, value }) {
   const renderStaticRangeLabel = ({ label, isSelected }) => (
@@ -19,7 +18,7 @@ export default function DatePicker({ onChange, value }) {
         <>
           <Popover.Button className="relative flex items-center bg-white dark:bg-aa-700 purple:bg-pt-700 justify-between gap-2 w-full border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-lg text-left cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm py-3.5 px-[10px]">
             <div className="grid grid-cols-[1fr,1fr,1fr] gap-2 w-full">
-              <CalendarIcon className="h-5 w-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+              <Calendar className="h-5 w-5 icon" />
               <span className="text-sm text-slate-500 dark:text-aa-200 purple:text-pt-200 whitespace-nowrap text-center">
                 {value[0].startDate && value[0].endDate ? (
                   <>
@@ -39,9 +38,7 @@ export default function DatePicker({ onChange, value }) {
                   'All Time'
                 )}
               </span>
-              <div className="flex items-center justify-end">
-                <ChevronDown className="h-5 w-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-              </div>
+              <ChevronDown className="h-5 w-5 icon" />
             </div>
           </Popover.Button>
           <div className="absolute z-[100] rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">

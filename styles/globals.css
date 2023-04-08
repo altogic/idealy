@@ -512,3 +512,23 @@ html:has(:is(.modal, .drawer)) {
 .react-datepicker-wrapper {
   width: initial !important;
 }
+
+.icon {
+  @apply stroke-slate-500 dark:stroke-aa-200 purple:stroke-pt-200;
+}
+.icon-indigo {
+  @apply stroke-indigo-600 dark:stroke-aa-200 purple:stroke-pt-200;
+}
+
+.icon-purple {
+  @apply stroke-indigo-900 dark:stroke-aa-200 purple:stroke-pt-200;
+}
+.icon-red {
+  @apply stroke-red-500 dark:stroke-red-600 purple:stroke-red-600;
+}
+.icon-green {
+  @apply stroke-green-500 dark:stroke-green-600 purple:stroke-green-600;
+}
+.icon-slate {
+  @apply stroke-slate-100 dark:stroke-aa-200 purple:stroke-pt-200;
+}

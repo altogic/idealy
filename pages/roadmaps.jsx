@@ -2,7 +2,7 @@ import AddANewRoadMap from '@/components/AddANewRoadMap';
 import BaseListBox from '@/components/BaseListBox';
 import EmptyState from '@/components/EmptyState';
 import Errors from '@/components/Errors';
-import { Merge, Plus } from '@/components/icons';
+import { Merge, Plus, Lock, LockOpen } from '@/components/icons';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
 import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfoModal from '@/components/InfoModal';
@@ -14,7 +14,6 @@ import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import { companyActions } from '@/redux/company/companySlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/outline';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -25,9 +24,9 @@ import _ from 'lodash';
 
 function RoadmapVisibilityIcon({ isPublic }) {
   return isPublic ? (
-    <LockClosedIcon className="w-7 h-7 text-red-500 dark:text-red-600 purple:text-red-600" />
+    <Lock className="w-7 h-7 icon-red" />
   ) : (
-    <LockOpenIcon className="w-7 h-7 text-green-500 dark:text-green-600 purple:text-green-600" />
+    <LockOpen className="w-7 h-7 icon-green" />
   );
 }
 
@@ -322,38 +321,42 @@ export default function RoadMapAdmin() {
                             </TooltipContent>
                           </Tooltip>
                         )}
-                        <div className="flex flex-1 justify-between items-center">
-                          <BaseListBox
-                            value={roadmap}
-                            label={roadmap?.name}
-                            field="name"
-                            options={filteredRoadmaps}
-                            size="xs"
-                            onChange={(value) => {
-                              setRoadmap(value);
-                              dispatch(ideaActions.setSelectedIdea(value));
-                              router.push({
-                                pathname: '/roadmaps',
-                                query: { roadmap: value._id }
-                              });
-                            }}
-                            type="create">
-                            <button
-                              type="button"
-                              className="inline-flex items-center gap-3 text-slate-400 py-2"
-                              onClick={() => setIsCreate(!isCreate)}>
-                              <Plus className="w-4 h-4 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-                              Add a new roadmap
-                            </button>
-                          </BaseListBox>
-                          <SearchInput
-                            searchText={searchText}
-                            onSearch={(e) => onSearchChange(e)}
-                            onClear={() => {
-                              setSearchText('');
-                            }}
-                          />
-                        </div>
+
+                        <BaseListBox
+                          value={roadmap}
+                          label={roadmap?.name}
+                          field="name"
+                          options={filteredRoadmaps}
+                          size="xxl"
+                          className="flex-1"
+                          onChange={(value) => {
+                            setRoadmap(value);
+                            dispatch(ideaActions.setSelectedIdea(value));
+                            router.push({
+                              pathname: '/roadmaps',
+                              query: { roadmap: value._id }
+                            });
+                          }}
+                          type="create">
+                          <button
+                            type="button"
+                            className="inline-flex items-center gap-3 text-slate-400 py-2 whitespace-nowrap"
+                            onClick={() => setIsCreate(!isCreate)}>
+                            <Plus className="w-4 h-4 icon" />
+                            Add a new roadmap
+                          </button>
+                        </BaseListBox>
+                        <SearchInput
+                          searchText={searchText}
+                          onSearch={(e) => onSearchChange(e)}
+                          onClear={() => {
+                            setSearchText('');
+                            router.push({
+                              pathname: router.pathname,
+                              query: { ...router.query, search: '' }
+                            });
+                          }}
+                        />
                       </div>
                     </div>
                     <p className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">

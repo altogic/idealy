@@ -55,7 +55,7 @@ export default function GuestDropdown() {
             <div className="flex flex-col divide-y divide-gray-200 dark:divide-aa-600 purple:divide-pt-800">
               <Menu.Button onClick={() => setOpenGuestForm(true)}>
                 <span className="inline-flex items-start gap-3  dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700">
-                  <People className="w-4 h-4 text-slate-700 dark:text-aa-300 purple:text-pt-300" />
+                  <People className="w-4 h-4 icon" />
                   Profile
                 </span>
               </Menu.Button>
@@ -63,7 +63,7 @@ export default function GuestDropdown() {
               <Menu.Button
                 onClick={handleLogout}
                 className="inline-flex items-center gap-3 p-4 hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700">
-                <Logout className="w-4 h-4 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
+                <Logout className="w-4 h-4 icon" />
                 <span className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm font-medium tracking-sm ">
                   Log out
                 </span>

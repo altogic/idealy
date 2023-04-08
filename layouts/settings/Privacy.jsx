@@ -111,7 +111,7 @@ export default function Privacy() {
         }}
         onClose={() => setIdeaApproveModal(false)}
         cancelOnClick={() => setIdeaApproveModal(false)}
-        icon={<Email className="w-6 h-6 text-indigo-600" />}
+        icon={<Email className="w-6 h-6 icon-indigo" />}
         confirmColor="indigo"
         canCancel
       />

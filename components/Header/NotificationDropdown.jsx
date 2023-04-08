@@ -6,7 +6,7 @@ export default function NotificationDropdown() {
   return (
     <Menu as="div" className="relative hidden lg:inline-flex items-center">
       <Menu.Button className="relative inline-flex items-center justify-center w-10 h-10 p-[10px] rounded-full text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-        <Notification className="w-5 h-5 text-indigo-50" />
+        <Notification className="w-5 h-5 icon-slate" />
       </Menu.Button>
 
       <Transition
@@ -80,7 +80,7 @@ export default function NotificationDropdown() {
                     type="button"
                     className="rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     <span className="sr-only">Close</span>
-                    <Close className="h-5 w-5" aria-hidden="true" />
+                    <Close className="h-5 w-5 icon" aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -90,7 +90,7 @@ export default function NotificationDropdown() {
                 type="button"
                 className="flex items-center justify-center gap-2 w-full text-indigo-700 text-sm font-medium tracking-sm">
                 See all notification
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-5 h-5 icon" />
               </button>
             </div>
           </div>

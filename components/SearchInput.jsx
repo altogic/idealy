@@ -1,7 +1,6 @@
 import React, { useDeferredValue } from 'react';
-import { X } from '@phosphor-icons/react';
 import Input from './Input';
-import { Search } from './icons';
+import { Search, Close as X } from './icons';
 import Button from './Button';
 
 export default function SearchInput({ searchText, onSearch, onClear }) {
@@ -13,7 +12,7 @@ export default function SearchInput({ searchText, onSearch, onClear }) {
         type="text"
         name="search"
         id="search"
-        icon={<Search className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
+        icon={<Search className="w-5 h-5 icon" />}
         placeholder="Search"
         value={searchText}
         onChange={(e) => onSearch(e, deferredSearch)}

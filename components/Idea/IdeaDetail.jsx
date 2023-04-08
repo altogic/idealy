@@ -20,7 +20,7 @@ import InfiniteScroll from '../InfiniteScroll';
 import SanitizeHtml from '../SanitizeHtml';
 import SimilarIdeas from '../SimilarIdeas';
 import UserCard from '../UserCard';
-import { Pen, Thumbtack, Trash } from '../icons';
+import { Pen, Archive, Trash } from '../icons';
 import IdeaBadges from './IdeaBadges';
 import IdeaDetailAdmin from './IdeaDetailAdmin';
 import IdeaInfo from './IdeaInfo';
@@ -155,7 +155,7 @@ export default function IdeaDetail({ idea, company, onClose }) {
                           isPinned: !idea.isPinned
                         })
                       }
-                      Icon={Thumbtack}
+                      Icon={Archive}
                       color="green"
                       control={idea?.isPinned}
                     />

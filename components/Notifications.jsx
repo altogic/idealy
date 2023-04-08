@@ -41,7 +41,7 @@ export default function Notifications() {
         return (
           <>
             <Menu.Button className="relative inline-flex items-center justify-center w-10 h-10 p-[10px] rounded-full text-gray-500 focus:outline-none">
-              <Notification className="w-5 h-5 text-white" />
+              <Notification className="w-5 h-5 icon-slate" />
               {!!unreadNotificationCount && (
                 <Indicator
                   count={unreadNotificationCount}
@@ -66,7 +66,7 @@ export default function Notifications() {
                     <button
                       type="button"
                       onClick={() => router.push('/settings?tab=notifications')}>
-                      <Settings className="w-6 h-6 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
+                      <Settings className="w-6 h-6 icon" />
                     </button>
                   </div>
                   <div className="divide-y divide-slate-200 dark:divide-aa-600 purple:divide-pt-600 overflow-auto max-h-[500px]">

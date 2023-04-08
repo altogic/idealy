@@ -18,7 +18,7 @@ export default function CommentDeleteModal({ commentId, onClose }) {
         dispatch(commentActions.deleteComment({ commentId, ideaId: idea._id }));
         onClose();
       }}
-      icon={<Danger className="w-6 h-6 text-red-600" />}
+      icon={<Danger className="w-6 h-6 icon-red" />}
       title="Delete Comment"
       description="Are you sure you want to delete this comment? This action cannot be undone."
       confirmText="Delete Comment"

@@ -36,7 +36,7 @@ export default function DeleteIdeaModal({ onClose }) {
       onClose={() => dispatch(toggleDeleteFeedBackModal())}
       cancelOnClick={() => dispatch(toggleDeleteFeedBackModal())}
       onConfirm={handleDelete}
-      icon={<Danger className="w-7 h-7 text-red-600" />}
+      icon={<Danger className="w-7 h-7 icon-red" />}
       title="Delete Idea"
       description="Are you sure you want to delete this idea? This action cannot be undone."
       confirmText="Delete Idea"

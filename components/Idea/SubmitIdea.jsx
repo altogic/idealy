@@ -336,7 +336,7 @@ export default function SubmitIdea({ idea }) {
           <Editor content={content} setContent={setContent} errors={errors.content}>
             {images?.length < 5 && (
               <button type="button" onClick={imageHandler}>
-                <Photo className="w-6 h-6 text-slate-500 dark:text-aa-200 purple:text-pt-200 hover:text-[#06c] dark:hover:text-[#06c] purple:hover:text-[#06c]" />
+                <Photo className="w-6 h-6 icon hover:stroke-[#06c]" />
               </button>
             )}
           </Editor>

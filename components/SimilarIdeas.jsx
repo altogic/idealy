@@ -16,7 +16,7 @@ export default function SimilarIdeas({ ideas, title }) {
               <ChevronUp
                 className={`${
                   open ? 'rotate-180 transform' : ''
-                } h-5 w-5 text-slate-500 dark:text-aa-200 purple:text-pt-200`}
+                } h-5 w-5 icon`}
               />
             </Disclosure.Button>
             <Disclosure.Panel

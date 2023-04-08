@@ -141,11 +141,7 @@ export default function VoteIdea({ voteCount, idea }) {
           onClick={upVote}
           disabled={!canVote || isLoading}
           className="inline-flex items-center justify-center">
-          <ChevronUp
-            className={`w-5 h-5 ${
-              voted ? ' text-indigo-900 dark:text-aa-200 purple:text-pt-200' : 'text-slate-400'
-            } `}
-          />
+          <ChevronUp className={`w-5 h-5 ${voted ? ' icon-purple' : 'stroke-slate-400'} `} />
         </button>
       )}
       <span
@@ -161,7 +157,7 @@ export default function VoteIdea({ voteCount, idea }) {
           onClick={downVote}
           className="inline-flex items-center justify-center"
           disabled={!voted}>
-          <ChevronDown className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400" />
+          <ChevronDown className="w-5 h-5 icon" />
         </button>
       )}
       <GuestFormModal

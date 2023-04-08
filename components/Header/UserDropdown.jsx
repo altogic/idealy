@@ -66,14 +66,14 @@ export default function UserDropdown({ companies }) {
             {selectedCompany?.role !== 'Moderator' && selectedCompany?.role !== 'Guest' && (
               <Menu.Button onClick={() => Router.push('/settings?tab=general%20settings')}>
                 <span className="inline-flex items-center gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700">
-                  <Settings className="w-4 h-4 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
+                  <Settings className="w-4 h-4 icon" />
                   Settings
                 </span>
               </Menu.Button>
             )}
             <Menu.Button onClick={() => Router.push('/settings?tab=profile')}>
               <span className="inline-flex items-start gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700">
-                <People className="w-4 h-4 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
+                <People className="w-4 h-4 icon" />
                 Profile
               </span>
             </Menu.Button>
@@ -96,7 +96,7 @@ export default function UserDropdown({ companies }) {
                       {company.name}
                     </div>
                     {company._id === selectedCompany?._id && (
-                      <CircleCheck className="w-5 h-5 text-green-700 dark:text-aa-300 purple:text-pt-300" />
+                      <CircleCheck className="w-5 h-5 icon-green" />
                     )}
                   </span>
                 </Menu.Button>
@@ -106,7 +106,7 @@ export default function UserDropdown({ companies }) {
                 <Menu.Item>
                   <Link href={generateUrl('select-company')}>
                     <a className="inline-flex items-center gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700">
-                      <Switch className="w-4 h-4 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
+                      <Switch className="w-4 h-4 icon" />
                       Select Company
                     </a>
                   </Link>
@@ -116,7 +116,7 @@ export default function UserDropdown({ companies }) {
                 <Menu.Item>
                   <Link href={generateUrl('create-new-company')}>
                     <a className="inline-flex items-center gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700">
-                      <Plus className="w-4 h-4 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
+                      <Plus className="w-4 h-4 icon" />
                       Create a company
                     </a>
                   </Link>
@@ -128,7 +128,7 @@ export default function UserDropdown({ companies }) {
                 type="button"
                 className="inline-flex items-center gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm w-full hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700"
                 onClick={handleLogout}>
-                <Logout className="w-4 h-4 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
+                <Logout className="w-4 h-4 icon" />
                 Log out
               </button>
             </Menu.Item>

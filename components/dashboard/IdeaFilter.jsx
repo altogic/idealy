@@ -1,5 +1,5 @@
 import Button from '@/components/Button';
-import { Filter, Pen, Search } from '@/components/icons';
+import { Filter, Pen, Search, Close as X } from '@/components/icons';
 import Input from '@/components/Input';
 import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { useRouter } from 'next/router';
@@ -30,7 +30,7 @@ export default function IdeaFilter({ isFilterSlide, setIsFilterSlide }) {
       <div className="2xl:hidden">
         <Button
           variant="indigo"
-          icon={<Filter className="w-5 h-5 text-slate-100 dark:text-aa-200 purple:text-pt-200" />}
+          icon={<Filter className="w-5 h-5 icon-slate" />}
           type="button"
           size="sm"
           onClick={() => setIsFilterSlide(!isFilterSlide)}
@@ -41,7 +41,7 @@ export default function IdeaFilter({ isFilterSlide, setIsFilterSlide }) {
           type="text"
           name="search"
           id="search"
-          icon={<Search className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
+          icon={<Search className="w-5 h-5 icon" />}
           placeholder="Search"
           value={searchText}
           onChange={(e) => {
@@ -51,7 +51,7 @@ export default function IdeaFilter({ isFilterSlide, setIsFilterSlide }) {
         {searchText && (
           <Button
             variant="icon"
-            icon={<XIcon className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
+            icon={<X className="w-5 h-5 icon" />}
             type="button"
             size="xs"
             className="absolute right-2 top-3"
@@ -68,7 +68,7 @@ export default function IdeaFilter({ isFilterSlide, setIsFilterSlide }) {
       <SortListBox type="icon" size="xs" />
       <Button
         variant="indigo"
-        icon={<Pen className="w-5 h-5 text-slate-100 dark:text-aa-200 purple:text-pt-200" />}
+        icon={<Pen className="w-5 h-5 icon-slate" />}
         type="button"
         size="sm"
         onClick={() => dispatch(toggleFeedBackSubmitModal())}

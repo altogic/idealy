@@ -123,7 +123,7 @@ export default function ReplyCard({ reply, dashboard }) {
           );
           setIsDelete(!isDelete);
         }}
-        icon={<Danger className="w-6 h-6 text-red-600" />}
+        icon={<Danger className="w-6 h-6 icon-red" />}
         title="Delete Reply"
         description="Are you sure you want to delete this reply? This action cannot be undone."
         confirmText="Delete Reply"

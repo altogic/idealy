@@ -11,7 +11,7 @@ export default function IdeaActionItem({ label, children, name, openModal }) {
         <Button
           variant="text"
           text={`Add ${name}`}
-          icon={<Plus className="w-4 h-4 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
+          icon={<Plus className="w-4 h-4 icon" />}
           onClick={openModal}
         />
       )}
