@@ -424,7 +424,7 @@ export default function RoadMapAdmin() {
               cancelOnClick={() => cancelMerge()}
               onConfirm={() => handleMerge()}
               onClose={() => cancelMerge()}
-              icon={<Merge className="w-6 h-6 text-indigo-600" />}
+              icon={<Merge className="w-6 h-6 icon-indigo" />}
               confirmText="Accept"
               cancelText="Decline"
               confirmColor="indigo"
