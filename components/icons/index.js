@@ -45,6 +45,7 @@ export { default as Notification } from './Notification';
 export { default as Pen } from './Pen';
 export { default as People } from './People';
 export { default as Photo } from './Photo';
+export { default as Pin } from './Pin';
 export { default as PlusCircle } from './PlusCircle';
 export { default as PlusPeople } from './PlusPeople';
 export { default as Plus } from './Plus';
