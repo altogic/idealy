@@ -1,4 +1,4 @@
-import { Archive, Bug, Merge, Pen, Trash } from '@/components/icons';
+import { Archive, Bug, Merge, Pen, Trash, Pin } from '@/components/icons';
 import MergeModal from '@/components/MergeModal';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { toggleDeleteFeedBackModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
@@ -18,7 +18,7 @@ export default function IdeaActions({ dashboard }) {
     {
       type: 'Pin',
       onClick: () => updateIdea({ isPinned: !idea?.isPinned }),
-      Icon: Archive,
+      Icon: Pin,
       color: 'green',
       control: idea?.isPinned
     },
