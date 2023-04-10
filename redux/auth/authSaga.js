@@ -326,11 +326,8 @@ function* authStateChangeSaga({ payload: { user, session } }) {
 
 function* getUserIpSaga() {
   try {
-    const { data, errors } = yield call(AuthService.getUserIp);
-    if (errors) {
-      throw errors;
-    }
-    yield put(authActions.getUserIpSuccess(data));
+    const res = yield call(AuthService.getUserIp);
+    yield put(authActions.getUserIpSuccess(res));
   } catch (error) {
     yield put(authActions.getUserIpFailure(error));
   }

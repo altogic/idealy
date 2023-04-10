@@ -239,13 +239,15 @@ export const authSlice = createSlice({
       state.user = action.payload.user;
       state.isAuthenticated = true;
     },
-    getUserIp(state, action) {
-      state.userIp = action.payload;
+    getUserIp(state) {
+      state.isLoading = true;
     },
     getUserIpSuccess(state, action) {
+      state.isLoading = false;
       state.userIp = action.payload;
     },
     getUserIpFailure(state, action) {
+      state.isLoading = false;
       state.error = action.payload;
     },
 
