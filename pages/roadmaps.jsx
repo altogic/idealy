@@ -216,6 +216,16 @@ export default function RoadMapAdmin() {
     }
   }, [roadmapIdeas]);
 
+  useUpdateEffect(() => {
+    if (!searchText) {
+      router.push({
+        pathname: router.pathname,
+        query: { ...router.query, search: '' }
+      });
+      dispatch(ideaActions.clearSearch());
+    }
+  }, [searchText]);
+
   useEffect(() => {
     if (roadmap) {
       dispatch(
@@ -267,7 +277,7 @@ export default function RoadMapAdmin() {
         isFiltered.current = true;
       }
     }
-  }, [router.query.search]);
+  }, [router.query.search, roadmapIdeas]);
 
   return (
     <>
@@ -345,10 +355,6 @@ export default function RoadMapAdmin() {
                           onSearch={(e) => onSearchChange(e)}
                           onClear={() => {
                             setSearchText('');
-                            router.push({
-                              pathname: router.pathname,
-                              query: { ...router.query, search: '' }
-                            });
                           }}
                         />
                       </div>

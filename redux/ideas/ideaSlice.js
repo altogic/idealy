@@ -480,6 +480,9 @@ export const ideaSlice = createSlice({
     searchRoadmapIdeasFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    clearSearch(state) {
+      state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
     }
   },
 

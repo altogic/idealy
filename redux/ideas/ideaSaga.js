@@ -274,11 +274,9 @@ function* updateIdeasOrderSaga({ payload: { ideas, sourceId, destinationId, sour
 
 function* searchRoadmapIdeasSaga({ payload: searchText }) {
   try {
-    const roadmapIdeas = yield select((state) => state.idea.roadmapIdeas);
+    const ideas = yield select((state) => state.idea.ideas);
     const result = _.groupBy(
-      Object.values(roadmapIdeas)
-        .flat()
-        .filter((idea) => idea.title.toLowerCase().includes(searchText.toLowerCase())),
+      ideas.filter((idea) => idea.title.toLowerCase().includes(searchText.toLowerCase())),
       'status._id'
     );
     yield put(ideaActions.searchRoadmapIdeasSuccess(result));
