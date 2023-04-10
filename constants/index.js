@@ -39,13 +39,13 @@ export const COMPANY_TABS = [
   { id: 6, name: 'Topics', roles: ['Owner', 'Admin'] },
   { id: 7, name: 'Status', roles: ['Owner', 'Admin'] },
   { id: 8, name: 'Categories', roles: ['Owner', 'Admin'] },
-  { id: 8, name: 'User Segments', roles: ['Owner', 'Admin'] },
-  { id: 9, name: 'Roadmaps', roles: ['Owner', 'Admin'] },
-  { id: 10, name: 'Privacy', roles: ['Owner', 'Admin'] },
-  { id: 11, name: 'White Labeling', roles: ['Owner', 'Admin'] },
-  { id: 12, name: 'Authentication', roles: ['Owner', 'Admin'] },
-  { id: 13, name: 'Miscellaneous', roles: ['Owner', 'Admin'] },
-  { id: 14, name: 'Access Requests', roles: ['Owner', 'Admin'] }
+  { id: 9, name: 'User Segments', roles: ['Owner', 'Admin'] },
+  { id: 20, name: 'Roadmaps', roles: ['Owner', 'Admin'] },
+  { id: 12, name: 'Privacy', roles: ['Owner', 'Admin'] },
+  { id: 13, name: 'White Labeling', roles: ['Owner', 'Admin'] },
+  { id: 14, name: 'Authentication', roles: ['Owner', 'Admin'] },
+  { id: 15, name: 'Miscellaneous', roles: ['Owner', 'Admin'] },
+  { id: 16, name: 'Access Requests', roles: ['Owner', 'Admin'] }
 ];
 export const IDEA_SORT_TYPES = [
   { name: 'Trending', url: 'trending', query: 'trendingScore:desc' },
