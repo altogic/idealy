@@ -12,6 +12,7 @@ import Router from 'next/router';
 
 export default function ChangeEmail({ user }) {
   const changeEmailSchema = new yup.ObjectSchema({
+    currentEmail: yup.string().required('Email is required').email('Please enter a valid email'),
     newEmail: yup.string().required('Email is required').email('Please enter a valid email'),
     password: yup
       .string()
@@ -27,6 +28,7 @@ export default function ChangeEmail({ user }) {
     handleSubmit,
     setError,
     reset,
+    setValue,
     formState: { errors }
   } = useForm({
     resolver: yupResolver(changeEmailSchema)
@@ -64,6 +66,11 @@ export default function ChangeEmail({ user }) {
       })
     );
   };
+
+  useEffect(() => {
+    setValue('currentEmail', user?.email);
+  }, [user?.email]);
+
   useEffect(
     () => () => {
       dispatch(authActions.resetErrorsRequest());
@@ -80,15 +87,17 @@ export default function ChangeEmail({ user }) {
         />
       </div>
       <form onSubmit={handleSubmit(formSubmit)} className="space-y-6">
-        <Input
-          label="Current Email"
-          type="text"
-          name="email"
-          id="email"
-          value={user?.email}
-          icon={<Email className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200" />}
-          disabled
-        />
+        <fieldset className="space-y-4" disabled>
+          <Input
+            label="Current Email"
+            type="text"
+            name="email"
+            id="email"
+            register={register('currentEmail')}
+            icon={<Email className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200" />}
+            disabled
+          />
+        </fieldset>
         <Input
           label="New Email"
           type="text"
