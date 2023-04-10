@@ -9,11 +9,21 @@ import RoadMapCard from './RoadMapCard';
 import { Tooltip, TooltipContent, TooltipTrigger } from './Tooltip';
 import { Eye, EyeSlash } from './icons';
 
-function RoadmapVisibilityIcon({ isPrivate }) {
+function RoadmapVisibilityIcon({ isPrivate, disabled }) {
   return isPrivate ? (
-    <Eye className="w-5 h-5 text-green-500 dark:text-green-600 purple:text-green-600" />
+    <Eye
+      className={cn(
+        'w-5 h-5 text-green-500 dark:text-green-600 purple:text-green-600',
+        disabled && 'opacity-50'
+      )}
+    />
   ) : (
-    <EyeSlash className="w-5 h-5 text-red-500 dark:text-red-600 purple:text-red-600" />
+    <EyeSlash
+      className={cn(
+        'w-5 h-5 text-red-500 dark:text-red-600 purple:text-red-600',
+        disabled && 'opacity-50'
+      )}
+    />
   );
 }
 
@@ -56,7 +66,7 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, ...re
             </div>
           </div>
         </div>
-        <div className="relative group border-l border-slate-200 dark:border-aa-600 purple:border-pt-800 px-4">
+        <div className="relative group border-l border-slate-200 dark:border-aa-600 purple:border-pt-800 px-4 flex items-center">
           {isGuest ? (
             <RoadmapVisibilityIcon isPrivate={isPrivate} />
           ) : (
@@ -82,7 +92,7 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, ...re
                   }}
                   disabled={!status?.name}
                   className={cn(!status?.name && 'cursor-not-allowed')}>
-                  <RoadmapVisibilityIcon isPrivate={isPrivate} />
+                  <RoadmapVisibilityIcon isPrivate={isPrivate} disabled={!status?.name} />
                 </button>
               </TooltipTrigger>
               <TooltipContent>{isPrivate ? 'Hide Status' : 'Show Status'}</TooltipContent>
