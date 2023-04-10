@@ -357,44 +357,46 @@ export default function RoadMapAdmin() {
                       {roadmap?.description}
                     </p>
                   </div>
-                  <div className="flex-1 flex flex-nowrap items-start gap-8 overflow-auto max-w-full">
-                    <DragDropContext onDragEnd={onDragEnd}>
-                      {!isGuest && (
-                        <Droppable droppableId="undefined" index={0} isCombineEnabled>
-                          {(provided) => (
-                            <RoadmapSection
-                              ideas={state?.undefined}
-                              provided={provided}
-                              roadmap={roadmap}
-                            />
-                          )}
-                        </Droppable>
-                      )}
-                      {roadmapStatuses?.map((status, index) => (
-                        <Droppable
-                          key={status._id}
-                          droppableId={status._id}
-                          index={index + 1}
-                          isCombineEnabled>
-                          {(provided) => (
-                            <RoadmapSection
-                              status={status}
-                              ideas={state?.[status._id]}
-                              provided={provided}
-                              roadmap={roadmap}
-                            />
-                          )}
-                        </Droppable>
-                      ))}
-                    </DragDropContext>
-                  </div>
+                  {!!roadmapStatuses.length && (
+                    <div className="flex-1 flex flex-nowrap items-start gap-8 overflow-auto max-w-full">
+                      <DragDropContext onDragEnd={onDragEnd}>
+                        {!isGuest && (
+                          <Droppable droppableId="undefined" index={0} isCombineEnabled>
+                            {(provided) => (
+                              <RoadmapSection
+                                ideas={state?.undefined}
+                                provided={provided}
+                                roadmap={roadmap}
+                              />
+                            )}
+                          </Droppable>
+                        )}
+                        {roadmapStatuses?.map((status, index) => (
+                          <Droppable
+                            key={status._id}
+                            droppableId={status._id}
+                            index={index + 1}
+                            isCombineEnabled>
+                            {(provided) => (
+                              <RoadmapSection
+                                status={status}
+                                ideas={state?.[status._id]}
+                                provided={provided}
+                                roadmap={roadmap}
+                              />
+                            )}
+                          </Droppable>
+                        ))}
+                      </DragDropContext>
+                    </div>
+                  )}
                 </>
               )}
               <div className="m-auto">
                 {((!roadmap?.publicStatuses?.length && isGuest) || !company?.roadmaps?.length) && (
                   <EmptyState
-                    title="No Roadmaps"
-                    description="Please make it public to view ideas"
+                    title="No items to view"
+                    description="There is no public status for this roadmap."
                   />
                 )}
               </div>
