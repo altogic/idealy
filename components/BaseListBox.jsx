@@ -74,7 +74,7 @@ export default function BaseListBox({
                   )}
                   <div
                     className={cn(
-                      'dark:text-aa-200 purple:text-pt-200 truncate flex gap-2',
+                      'dark:text-aa-200 purple:text-pt-200 flex gap-2',
                       type === 'create'
                         ? 'text-slate-800 text-3xl font-semibold'
                         : 'text-slate-500 text-sm tracking-sm'
@@ -130,12 +130,12 @@ export default function BaseListBox({
           leaveTo="opacity-0">
           <Listbox.Options
             className={cn(
-              'absolute top-[50px] mt-1 max-h-64 overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50 border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800',
-              size === 'sm' && 'w-[120px]',
-              size === 'md' && 'w-[160px]',
-              size === 'lg' && 'max-w-[195px] max-h-60',
-              size === 'xl' && 'w-[250px]',
-              size === 'xxl' && 'w-[300px]',
+              'absolute top-[50px]  mt-1 max-h-64 overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50 border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800',
+              size === 'sm' && 'min-w-[120px] max-w-[160px]',
+              size === 'md' && 'min-w-[160px] max-w-[195px]',
+              size === 'lg' && 'min-w-[195px] max-w-[250px] max-h-60',
+              size === 'xl' && 'min-w-[250px] max-w-[300px]',
+              size === 'xxl' && 'min-w-[300px] max-w-full',
               size === 'full' && 'w-full',
               type === 'icon' && 'w-[195px]',
               align === 'right' && 'right-0',
@@ -153,7 +153,7 @@ export default function BaseListBox({
                   <Listbox.Option
                     key={item.id || item._id || item[valueField] || item[field] || item}
                     className={({ active }) =>
-                      `relative flex items-center justify-between select-none py-2 px-3.5 transition cursor-pointer hover:text-slate-900 dark:hover:text-aa-200 purple:hover:text-pt-200 ${
+                      `relative flex items-center justify-between select-none w-[calc(w-full-w-3.5)] py-2 px-3.5 transition cursor-pointer hover:text-slate-900 dark:hover:text-aa-200 purple:hover:text-pt-200 overflow-hidden ${
                         active
                           ? 'bg-slate-100 dark:bg-aa-700 purple:bg-pt-700'
                           : 'text-slate-900 dark:text-aa-200 purple:text-pt-200'
@@ -162,7 +162,7 @@ export default function BaseListBox({
                     value={valueField ? item[valueField] : item}>
                     {({ selected }) => (
                       <>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 w-[calc(100%-0.875rem)]">
                           {type === 'status' && (
                             <svg className="h-2.5 w-2.5" fill={item.color} viewBox="0 0 8 8">
                               <circle cx={4} cy={4} r={3} />
@@ -177,10 +177,10 @@ export default function BaseListBox({
                             />
                           )}
                           <span
-                            className={`block truncate  ${
+                            className={`block whitespace-nowrap  truncate ${
                               selected
-                                ? 'text-slate-900 dark:text-aa-200 purple:text-pt-200 max-w-[6rem]'
-                                : 'font-normal max-w-[7rem]'
+                                ? 'text-slate-900 dark:text-aa-200 purple:text-pt-200 w-4/5 '
+                                : 'font-normal w-[90%]'
                             }`}>
                             {item?.[field] || item}
                           </span>
