@@ -141,8 +141,7 @@ export default function SubmitIdea({ idea }) {
       company: company._id,
       ...(!user && !data.guestEmail && { ip: userIp }),
       isApproved: isGuest ? !company?.privacy?.ideaApproval : true,
-      costFactor: PRIORITY_VALUES[company?.priorityType][0],
-      benefitFactor: PRIORITY_VALUES[company?.priorityType][0]
+      
     };
     delete reqData.privacyPolicyIdea;
 
