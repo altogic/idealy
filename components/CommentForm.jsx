@@ -113,7 +113,7 @@ export default function CommentForm({ editedComment, setEditComment, setIsFetche
             }
             if (idea.author?._id) {
               sendNotification({
-                message: `<b>${user?.name || guestInfo.name}</b> commented on <b>${idea.title}</b>`,
+                message: `<b>${user?.name || data.guestName}</b> commented on <b>${idea.title}</b>`,
                 targetUser: idea?.author._id,
                 type: 'comment',
                 url: `/public-view?feedback=${idea._id}`

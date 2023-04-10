@@ -11,6 +11,7 @@ export default function useSaveGuestInformation(saveLocal = true) {
     if (saveLocal && !email) {
       addGuestInfoToLocalStorage({ name, avatar });
     }
+
     if (email) {
       dispatch(
         companyActions.createCompanyUser({
@@ -19,7 +20,7 @@ export default function useSaveGuestInformation(saveLocal = true) {
           email,
           avatar: avatar || guestInfo.avatar,
           onSuccess: (user) => {
-            onSuccess();
+            if (onSuccess) onSuccess();
             addGuestInfoToLocalStorage(user);
             dispatch(
               authActions.setGuestInfo({
