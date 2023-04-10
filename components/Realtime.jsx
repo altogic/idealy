@@ -140,7 +140,7 @@ export default function Realtime() {
     dispatch(notificationActions.receiveNotificationRealtime(message.message));
   }
   function updateCompanyHandler({ message }) {
-    if (message.company._id === company._id || (user && message.sender !== user?._id)) {
+    if (message.company._id === company._id && message.sender !== user?._id) {
       const { company } = message;
       localStorageUtil.set('theme', message.company.theme);
       if (company.roadmaps?.length > 0 && isGuest) {
@@ -343,7 +343,6 @@ export default function Realtime() {
       realtime.on('user-update', userUpdateHandler);
       realtime.on('company-deleted', companyDeletedHandler);
       realtime.on('notification', notificationHandler);
-      realtime.on('update-company', updateCompanyHandler);
       realtime.on('accept-invitation', acceptedInvitationHandler);
       realtime.on('request-access', requestAccessHandler);
       realtime.on('reject-access', rejectAccessHandler);
