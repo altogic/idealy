@@ -1,5 +1,6 @@
 import ImageList from '@/components/ImageList';
 import useGuestValidation from '@/hooks/useGuestValidation';
+import useNotification from '@/hooks/useNotification';
 import useSaveGuestInformation from '@/hooks/useSaveGuestInformation';
 import useSendMentionNotification from '@/hooks/useSendMentionNotification';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
@@ -8,25 +9,23 @@ import { toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { generateRandomName } from '@/utils/index';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { PRIORITY_VALUES } from 'constants';
 import _ from 'lodash';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
-import useNotification from '@/hooks/useNotification';
 import AutoComplete from '../AutoComplete';
 import Button from '../Button';
 import Divider from '../Divider';
 import Drawer from '../Drawer';
 import GuestForm from '../GuestForm';
 import GuestFormModal from '../GuestFormModal';
-import { Photo } from '../icons';
 import Input from '../Input';
 import SimilarIdeas from '../SimilarIdeas';
 import Suggestion from '../Suggestion';
 import TopicButton from '../TopicButton';
+import { Photo } from '../icons';
 
 const Editor = dynamic(() => import('../Editor'), { ssr: false });
 
@@ -140,8 +139,7 @@ export default function SubmitIdea({ idea }) {
       email: member?.email,
       company: company._id,
       ...(!user && !data.guestEmail && { ip: userIp }),
-      isApproved: isGuest ? !company?.privacy?.ideaApproval : true,
-      
+      isApproved: isGuest ? !company?.privacy?.ideaApproval : true
     };
     delete reqData.privacyPolicyIdea;
 
