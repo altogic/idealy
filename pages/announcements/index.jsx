@@ -152,7 +152,9 @@ export default function Announcements() {
     <Layout>
       <div className="bg-white dark:bg-aa-900 purple:bg-pt-1000 h-[calc(100vh-93px)] space-y-8">
         {error ? (
-          <Errors title={error?.title} message={error?.message} />
+          <div className="w-full h-full lg:px-20">
+            <Errors title={error?.title} message={error?.message} />
+          </div>
         ) : (
           <>
             <div className="pt-14 px-4">
