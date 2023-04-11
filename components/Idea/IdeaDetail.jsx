@@ -86,7 +86,7 @@ export default function IdeaDetail({ idea, company, onClose }) {
     <Drawer
       open={feedBackDetailModal}
       onClose={() => onClose()}
-      className="z-50"
+      className="z-[52]"
       position="right"
       size="lg"
       sidebar={

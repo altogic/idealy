@@ -202,7 +202,7 @@ export default function AdminDashboard() {
         open={isFilterSlide}
         onClose={() => setIsFilterSlide(false)}
         position="left"
-        className="z-50"
+        className="z-[52]"
         title="Filter Ideas"
         size="md">
         <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold break-all">
