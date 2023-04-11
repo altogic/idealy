@@ -462,7 +462,7 @@ html:has(:is(.modal, .drawer)) {
 
 #sidebar-controls {
   display: none;
-  position: fixed;
+  position: absolute;
 }
 
 #sidebar-controls button {
