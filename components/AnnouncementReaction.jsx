@@ -129,7 +129,7 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
       <Popover>
         {({ open }) => (
           <>
-            <div className="flex">
+            <div className="flex justify-end">
               <Popover.Button className="flex items-center gap-4">
                 <FaceHappy className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
               </Popover.Button>
