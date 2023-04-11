@@ -256,10 +256,13 @@ export default function AnnouncementEditor({ onChange, value }) {
         sidebarControl.classList.remove('active');
         sidebarControl.style.display = 'flex';
         const range = quill.getSelection(true);
-        const caret = quill.getBounds(range);
-        const cursorPosition = quill.container.getBoundingClientRect();
-        sidebarControl.style.left = `${caret.left + cursorPosition.left + window.scrollX - 40}px`;
-        sidebarControl.style.top = `${caret.top + cursorPosition.top + window.scrollY - 5}px`;
+        if(range){
+
+          const caret = quill.getBounds(range);
+          const cursorPosition = quill.container.getBoundingClientRect();
+          sidebarControl.style.left = `${caret.left + cursorPosition.left + window.scrollX - 40}px`;
+          sidebarControl.style.top = `${caret.top + cursorPosition.top + window.scrollY - 5}px`;
+        }
       } else {
         sidebarControl.style.display = 'none';
       }
