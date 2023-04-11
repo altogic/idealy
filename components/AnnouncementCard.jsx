@@ -124,15 +124,15 @@ export default function AnnouncementCard({ announcement, onPage }) {
             )}
           </div>
         </div>
+        <IdeaDetail
+          idea={selectedIdea}
+          company={company}
+          onClose={() => {
+            dispatch(ideaActions.setSelectedIdea(null));
+            dispatch(toggleFeedBackDetailModal());
+          }}
+        />
       </div>
-      <IdeaDetail
-        idea={selectedIdea}
-        company={company}
-        onClose={() => {
-          dispatch(ideaActions.setSelectedIdea(null));
-          dispatch(toggleFeedBackDetailModal());
-        }}
-      />
       <InfoModal
         show={openDeleteModal}
         onClose={() => setOpenDeleteModal(false)}
