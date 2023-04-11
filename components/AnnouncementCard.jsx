@@ -94,7 +94,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
                 summary={announcement?.content}
               />
               {!isGuest && (
-                <div className="flex items-center">
+                <div className="flex items-center px-2">
                   <IdeaActionButton
                     type="Edit"
                     color="blue"
