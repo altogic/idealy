@@ -36,48 +36,31 @@ export default function AnnouncementCard({ announcement, onPage }) {
             </div>
           )}
           <div className="grow flex flex-col">
-            <div className="flex justify-between items-center gap-2">
-              <div className="flex items-center gap-4">
-                <Link href={`/announcements/${announcement?.slug}`}>
-                  <a>
-                    <h2 className="flex-1 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left lg:truncate">
-                      {announcement?.title || 'Untitled'}
-                    </h2>
-                  </a>
-                </Link>
-                <StatusBadge
-                  name={announcement?.isPublished ? 'Published' : 'Draft'}
-                  color={announcement?.isPublished ? '#8CD460' : '#FF891C'}
-                />
+            <div className="flex justify-between items-center gap-2 divide-x divide-slate-200 dark:divide-aa-600 purple:divide-pt-600">
+              <Link href={`/announcements/${announcement?.slug}`}>
+                <a className="flex-1">
+                  <h2 className="flex-1 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left lg:truncate">
+                    {announcement?.title || 'Untitled'}
+                  </h2>
+                </a>
+              </Link>
+              {announcement?.publishDate && isGreaterThan(announcement?.publishDate, Date.now()) && (
+                <div className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-md text-left">
+                  Will be published on{' '}
+                  <span className="text-slate-800 dark:text-aa-200 purple:text-pt-200 font-bold ">
+                    {DateTime.fromISO(announcement?.publishDate)
+                      .setLocale('en')
+                      .toLocaleString(DateTime.DATETIME_SHORT)}
+                  </span>
+                </div>
+              )}
+              <StatusBadge
+                name={announcement?.isPublished ? 'Published' : 'Draft'}
+                color={announcement?.isPublished ? '#8CD460' : '#FF891C'}
+              />
 
-                <h6 className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm font-normal tracking-md text-left">
-                  {announcement?.publishDate &&
-                    isGreaterThan(announcement?.publishDate, Date.now()) && (
-                      <span>
-                        Will be published on{' '}
-                        {DateTime.fromISO(announcement?.publishDate)
-                          .setLocale('en')
-                          .toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}
-                      </span>
-                    )}
-                </h6>
-              </div>
-            </div>
-            <p className="mt-2 mb-8 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm font-normal tracking-md text-left">
-              {DateTime.fromISO(announcement?.createdAt)
-                .setLocale('en')
-                .toLocaleString(DateTime.DATE_MED)}
-            </p>
-
-            <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-200 purple:prose-p:text-pt-200 prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-4">
-              <SanitizeHtml id="idea-detail" html={announcement?.content} />
-            </div>
-          </div>
-
-          <div className="flex flex-col justify-between items-center">
-            <div className="flex space-x-4 divide-x divide-slate-200 dark:divide-aa-600 purple:divide-pt-600">
               {!!announcement?.categories?.length && (
-                <div className="flex flex-wrap items-center justify-center gap-2 ml-auto max-w-md">
+                <div className="flex flex-wrap items-center justify-center gap-2 ml-auto max-w-md pl-2">
                   {company.categories
                     .filter((category) => announcement?.categories.includes(category._id))
                     .map((cat) => (
@@ -85,14 +68,18 @@ export default function AnnouncementCard({ announcement, onPage }) {
                     ))}
                 </div>
               )}
-              <ShareButtons
-                url={generateUrl(`/announcements/${announcement?.slug}`, company?.subdomain)}
-                title={announcement?.title}
-                hashtags={company?.categories
-                  .filter((category) => announcement?.categories.includes(category._id))
-                  .map((cat) => cat.name)}
-                summary={announcement?.content}
-              />
+
+              <div className="pl-2">
+                <ShareButtons
+                  url={generateUrl(`/announcements/${announcement?.slug}`, company?.subdomain)}
+                  title={announcement?.title}
+                  hashtags={company?.categories
+                    .filter((category) => announcement?.categories.includes(category._id))
+                    .map((cat) => cat.name)}
+                  summary={announcement?.content}
+                />
+              </div>
+
               {!isGuest && (
                 <div className="flex items-center px-2">
                   <IdeaActionButton
@@ -114,6 +101,16 @@ export default function AnnouncementCard({ announcement, onPage }) {
                   />
                 </div>
               )}
+            </div>
+
+            <span className="mt-2 mb-8 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm font-normal tracking-md text-left">
+              {DateTime.fromISO(announcement?.createdAt)
+                .setLocale('en')
+                .toLocaleString(DateTime.DATE_MED)}
+            </span>
+
+            <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-200 purple:prose-p:text-pt-200 prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm prose-headings:m-0 prose-headings:p-0 max-w-full mb-4">
+              <SanitizeHtml id="idea-detail" html={announcement?.content} />
             </div>
             {canReact && (
               <AnnouncementReaction
