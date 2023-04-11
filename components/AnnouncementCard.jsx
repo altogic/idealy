@@ -8,17 +8,21 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
+import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { generateUrl, isGreaterThan } from '../utils';
 import AnnouncementReaction from './AnnouncementReaction';
 import IdeaActionButton from './Idea/admin/IdeaActionButton';
 import InfoModal from './InfoModal';
 import ShareButtons from './ShareButtons';
+import IdeaDetail from './Idea/IdeaDetail';
 
 export default function AnnouncementCard({ announcement, onPage }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const canReact = useRegisteredUserValidation('announcementReaction');
   const { company, isGuest } = useSelector((state) => state.company);
+  const { selectedIdea } = useSelector((state) => state.idea);
   const loading = useSelector((state) => state.announcement?.isLoading);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   return (
@@ -121,6 +125,14 @@ export default function AnnouncementCard({ announcement, onPage }) {
           </div>
         </div>
       </div>
+      <IdeaDetail
+        idea={selectedIdea}
+        company={company}
+        onClose={() => {
+          dispatch(ideaActions.setSelectedIdea(null));
+          dispatch(toggleFeedBackDetailModal());
+        }}
+      />
       <InfoModal
         show={openDeleteModal}
         onClose={() => setOpenDeleteModal(false)}
