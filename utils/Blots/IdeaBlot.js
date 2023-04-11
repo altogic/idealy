@@ -30,13 +30,13 @@ export default class IdeaBlot extends BlockEmbed {
     <div class="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-0 mb-4"><h3 class="text-slate-800 dark:text-aa-200 purple:text-pt-200 font-semibold tracking-md text-left lg:truncate max-w-2xl" title=${
       value?.title
     }>${value?.title}</h2></div>
-    <div spellCheck="false" class="w-3/4 text-slate-500 dark:text-aa-300 purple:text-pt-300 mb-6 text-xs tracking-sm text-left line-clamp-3">${
+    <div spellCheck="false" class="w-3/4 text-slate-500 dark:text-aa-300 purple:text-pt-300 mb-6 text-sm tracking-sm text-left line-clamp-3">${
       value?.content
     }</div>
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-2"><div class="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-2 mb-4 lg:mb-0">
     <div class="flex flex-wrap items-center sm:items-center gap-4"><div class="flex items-center gap-2">${
       profilePicture
-        ? `<img src=${profilePicture} alt=${name} class="mention-avatar"/>`
+        ? `<img src=${profilePicture} alt=${name} class="rounded-full object-contain w-8 h-8"/>`
         : name &&
           `<div class="relative font-medium text-gray-600 dark:text-gray-300 text-xs inline-flex items-center justify-center cursor-pointer overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600  purple:bg-pt-300 w-8 h-8">${name}</div>`
     }
@@ -62,8 +62,6 @@ export default class IdeaBlot extends BlockEmbed {
     button.innerHTML = ideaCard;
     node.appendChild(button);
     node.setAttribute('data-id', value._id);
-    node.style.width = '75%';
-    node.style.margin = '0 auto';
     node.classList.add('border');
     node.classList.add('border-slate-300');
     node.classList.add('dark:border-aa-700');
