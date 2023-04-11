@@ -45,9 +45,11 @@ export default function AnnouncementCard({ announcement, onPage }) {
                     </h2>
                   </a>
                 </Link>
-                <h6 className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm font-normal tracking-md text-left">
-                  {!announcement?.isPublished && '(Draft)'}
-                </h6>
+                <StatusBadge
+                  name={announcement?.isPublished ? 'Published' : 'Draft'}
+                  color={announcement?.isPublished ? '#8CD460' : '#FF891C'}
+                />
+
                 <h6 className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm font-normal tracking-md text-left">
                   {announcement?.publishDate &&
                     isGreaterThan(announcement?.publishDate, Date.now()) && (
