@@ -152,8 +152,8 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
 
   return (
     <>
-      <div className="max-w-screen-xl h-[calc(100vh-93px)] px-9 lg:px-8 pt-8 pb-[72px] relative mx-auto">
-        <div id="editor-scroll-container" className="w-full lg:px-0 grow">
+      <div className="h-[calc(100vh-93px)] px-9 lg:px-8 pt-8 pb-[72px] relative overflow-auto">
+        <div id="editor-scroll-container" className="w-full lg:px-0 grow max-w-screen-xl mx-auto">
           <div className="h-6">{children}</div>
           <div className="h-full">
             <Input
@@ -211,14 +211,14 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
                 </button>
               </BaseListBox>
             </div>
-            <div className="mt-4 w-11/12 overflow-auto">
+            <div className="mt-4 w-11/12">
               <AnnouncementEditor onChange={setContent} value={content} />
             </div>
           </div>
         </div>
       </div>
       {title && content && (
-        <div className="animate__animated animate__fadeInUp bg-white dark:bg-aa-900 purple:bg-pt-1000  w-full mt-4 border-t border-slate-200 dark:border-aa-600 purple:border-pt-800 p-2 absolute bottom-0 py-8 px-5 md:px-10 space-y-4 flex justify-between">
+        <div className="animate__animated animate__fadeInUp bg-white dark:bg-aa-900 purple:bg-pt-1000  w-full mt-4 border-t border-slate-200 dark:border-aa-600 purple:border-pt-800 p-2 fixed bottom-0 py-8 px-5 md:px-10 space-y-4 flex justify-between">
           {isGreaterThan(date, Date.now()) && (
             <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200 mt-4">
               Will be published on{' '}
