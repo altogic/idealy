@@ -204,9 +204,14 @@ export default function AnnouncementEditor({ onChange, value }) {
       if (range == null) return;
       if (range.length === 0) {
         tooltip.current.style.display = 'none';
-        sidebar.current.style.display = 'flex';
         const [block] = quill.scroll.descendant(Block, range.index);
-        if (!(block != null && block.domNode.firstChild instanceof HTMLBRElement)) {
+        if (block != null && block.domNode.firstChild instanceof HTMLBRElement) {
+          const lineBounds = quill.getBounds(range);
+          sidebar.current.classList.remove('active');
+          sidebar.current.style.display = 'block';
+          sidebar.current.style.left = `${lineBounds.left - 50}px`;
+          sidebar.current.style.top = `${lineBounds.top - 2}px`;
+        } else {
           tooltip.current.style.display = 'none';
           sidebar.current.style.display = 'none';
           sidebar.current.classList.remove('active');
@@ -215,9 +220,14 @@ export default function AnnouncementEditor({ onChange, value }) {
         tooltip.current.style.display = 'none';
         sidebar.current.style.display = 'none';
         sidebar.current.classList.remove('active');
-        tooltip.current.style.display = 'flex';
+        const rangeBounds = quill.getBounds(range);
+        tooltip.current.style.display = 'block';
         tooltipButtons.current.style.display = 'flex';
         tooltipInput.current.style.display = 'none';
+        tooltip.current.style.left = `${
+          rangeBounds.left + rangeBounds.width / 2 - tooltip.current.offsetWidth / 2
+        }px`;
+        tooltip.current.style.top = `${rangeBounds.bottom + 10}px`;
       }
     });
     quill.on(Quill.events.TEXT_CHANGE, (delta) => {
@@ -234,53 +244,10 @@ export default function AnnouncementEditor({ onChange, value }) {
       }
 
       setContent(quill.root.innerHTML);
+      tooltip.current.style.display = 'none';
       sidebar.current.style.display = 'none';
       sidebar.current.classList.remove('active');
     });
-    const tooltipControl = document.querySelector('#tooltip-controls');
-    const sidebarControl = document.querySelector('#sidebar-controls');
-    document.addEventListener('selectionchange', (e) => {
-      if (e.target.activeElement.className !== 'ql-editor') return;
-      const s = window.getSelection();
-      const oRange = s.getRangeAt(0); // get the text range
-
-      if (s.type === 'Range' && !s.isCollapsed) {
-        const oRect = oRange.getBoundingClientRect();
-        tooltipControl.style.left = `${oRect.left + oRect.width / 2}px`;
-        tooltipControl.style.top = `${oRect.bottom + 10}px`;
-        tooltipControl.style.transform = 'translateX(-50%)';
-      } else {
-        tooltipControl.style.display = 'none';
-      }
-      if (s.type === 'Caret' && s.anchorOffset === 0) {
-        sidebarControl.classList.remove('active');
-        sidebarControl.style.display = 'flex';
-        const range = quill.getSelection(true);
-        if(range){
-
-          const caret = quill.getBounds(range);
-          const cursorPosition = quill.container.getBoundingClientRect();
-          sidebarControl.style.left = `${caret.left + cursorPosition.left + window.scrollX - 40}px`;
-          sidebarControl.style.top = `${caret.top + cursorPosition.top + window.scrollY - 5}px`;
-        }
-      } else {
-        sidebarControl.style.display = 'none';
-      }
-    });
-
-    const scrollContainer = document.getElementById('editor-scroll-container');
-    scrollContainer.addEventListener('scroll', () => {
-      tooltipControl.style.display = 'none';
-      sidebarControl.style.display = 'none';
-      sidebarControl.classList.remove('active');
-    });
-
-    return () => {
-      quill.off(Quill.events.EDITOR_CHANGE);
-      quill.off(Quill.events.TEXT_CHANGE);
-      document.removeEventListener('selectionchange', () => {});
-      scrollContainer.removeEventListener('scroll', () => {});
-    };
   }, []);
 
   useEffect(() => {
@@ -439,8 +406,8 @@ export default function AnnouncementEditor({ onChange, value }) {
       <div
         ref={tooltip}
         id="tooltip-controls"
-        className="hidden fixed bg-white dark:bg-aa-900 purple:bg-pt-900 border border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-md shadow py-2 px-3">
-        <div className="space-x-3  transition ease-in-out duration-500" ref={tooltipButtons}>
+        className="hidden absolute bg-white dark:bg-aa-900 purple:bg-pt-900 border border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-md shadow py-2 px-3">
+        <div className="space-x-3 transition ease-in-out duration-500" ref={tooltipButtons}>
           <button type="button" id="bold-button" onClick={() => handleFormat('bold', true)}>
             <TextB size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
           </button>
