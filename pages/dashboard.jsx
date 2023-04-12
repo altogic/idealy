@@ -29,7 +29,7 @@ export default function AdminDashboard() {
   // List Box States
   const router = useRouter();
   const dispatch = useDispatch();
-  const ideas = useSelector((state) => state.idea.ideas);
+  const { ideas, getIdeaLoading: loading } = useSelector((state) => state.idea);
   const company = useSelector((state) => state.company.company);
   const countInfo = useSelector((state) => state.idea.countInfo);
   const sessionUser = useSelector((state) => state.auth.user);
@@ -154,6 +154,26 @@ export default function AdminDashboard() {
             <div className="border-r border-slate-200 dark:border-aa-600 purple:border-pt-800">
               <IdeaFilter isFilterSlide={isFilterSlide} setIsFilterSlide={setIsFilterSlide} />
               <div className="overflow-y-auto h-[calc(100vh-188px)]">
+                <div
+                  role="status"
+                  className="w-full space-y-4 divide-y divide-gray-300 animate-pulse">
+                  <div className="flex justify-between items-center px-4 py-8">
+                    <div className="flex flex-col items-start gap-4 w-full">
+                      <div className="w-64 h-2.5 bg-gray-300 rounded-full" />
+                      <div className="w-full h-2.5 bg-gray-300 rounded-full" />
+                      <div className="flex items-center justify-between gap-4 w-full">
+                        <div className="w-64 h-2.5 bg-gray-300 rounded-full" />
+                        <div className="w-32 h-2.5 bg-gray-300 rounded-full" />
+                      </div>
+                      <div className="flex justify-end w-full">
+                        <div className="w-64 h-2.5 bg-gray-300 rounded-full" />
+                      </div>
+                      {/* <div className="h-2.5 bg-gray-300 rounded-full w-24" /> */}
+                    </div>
+                    {/* <div className="h-2.5 bg-gray-300 rounded-full w-12" /> */}
+                  </div>
+                  <span className="sr-only">Loading...</span>
+                </div>
                 <InfiniteScroll items={ideas} countInfo={countInfo} endOfList={handlePageChange}>
                   {ideas.length ? (
                     ideas.map((i, index) => (
