@@ -16,13 +16,8 @@ export default class IdeaBlot extends BlockEmbed {
     const words = author.split(' ');
     const name = [words[0], words[words.length - 1]].map((word) => word.charAt(0)).join('');
 
-    function onIdeaClick() {
-      value.onClick();
-    }
     const button = document.createElement('button');
-    button.onclick = onIdeaClick;
 
-    window.onIdeaClick = onIdeaClick;
     const ideaCard = `<div class="select-none relative p-4 w-full rounded-lg hover:bg-slate-50 dark:hover:bg-aa-800 purple:hover:bg-pt-900"><div class="flex gap-6"><div class="inline-flex items-center justify-center shrink-0 w-[50px] h-[50px] text-indigo-700 dark:text-aa-200 purple:text-pt-200 text-2xl font-semibold tracking-md border-2 border-slate-300 rounded-lg mt-3"><span>${
       value?.voteCount
     }</span></div><div class="flex flex-col justify-between w-full">
@@ -59,6 +54,8 @@ export default class IdeaBlot extends BlockEmbed {
       value?.commentCount
     }</div></div></div></div></div></button>`;
     button.innerHTML = ideaCard;
+    button.setAttribute('data-id', value._id);
+    button.setAttribute('id', 'idea-button');
     node.appendChild(button);
     node.setAttribute('data-id', value._id);
     node.classList.add('border');

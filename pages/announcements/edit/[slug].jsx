@@ -5,6 +5,8 @@ import _ from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import useClickAnnouncementIdea from '@/hooks/useClickAnnouncementIdea';
+import useOpenFeedbackModal from '@/hooks/useOpenFeedbackModal';
 
 export default function EditAnnouncements({ slug }) {
   const router = useRouter();
@@ -24,6 +26,8 @@ export default function EditAnnouncements({ slug }) {
       })
     );
   };
+  useClickAnnouncementIdea(announcement);
+  useOpenFeedbackModal();
   useEffect(() => {
     if (_.isEmpty(announcement)) {
       dispatch(announcementActions.getAnnouncement(slug));
