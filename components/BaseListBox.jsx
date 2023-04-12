@@ -81,7 +81,7 @@ export default function BaseListBox({
                     )}>
                     <div
                       className={cn(
-                        hidden === 'mobile' && 'hidden md:inline-flex items-center justify-center'
+                        hidden === 'mobile' && 'inline-flex items-center justify-center'
                       )}>
                       {' '}
                       {label}

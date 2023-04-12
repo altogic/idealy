@@ -61,7 +61,7 @@ export default function FilterIdea({
   };
 
   return (
-    <div className="flex items-center gap-3 md:gap-4 justify-between md:w-full">
+    <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4 justify-between md:w-full">
       <BaseListBox
         value={sortType}
         icon={<UpDown className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
@@ -73,7 +73,7 @@ export default function FilterIdea({
         hidden="mobile"
       />
 
-      <div className="flex items-center gap-3 md:gap-4">
+      <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
         <BaseListBox
           value={filterTopics}
           onChange={handleFilterTopicsChange}
