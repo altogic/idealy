@@ -33,7 +33,7 @@ export default function IdeaFilter({ isFilterSlide, setIsFilterSlide }) {
           variant="indigo"
           icon={<Filter className="w-5 h-5 text-slate-100 dark:text-aa-200 purple:text-pt-200" />}
           type="button"
-          size="xs"
+          size="sm"
           onClick={() => setIsFilterSlide(!isFilterSlide)}
         />
       </div>
@@ -71,7 +71,7 @@ export default function IdeaFilter({ isFilterSlide, setIsFilterSlide }) {
         variant="indigo"
         icon={<Pen className="w-5 h-5 text-slate-100 dark:text-aa-200 purple:text-pt-200" />}
         type="button"
-        size="xs"
+        size="sm"
         onClick={() => dispatch(toggleFeedBackSubmitModal())}
       />
     </div>
