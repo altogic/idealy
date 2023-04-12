@@ -2,7 +2,7 @@ import Button from '@/components/Button';
 import Divider from '@/components/Divider';
 import EmptyState from '@/components/EmptyState';
 import Errors from '@/components/Errors';
-import { Plus, Email } from '@/components/icons';
+import { Plus, Email, Close } from '@/components/icons';
 import DeleteIdeaModal from '@/components/Idea/DeleteIdeaModal';
 import FilterIdea from '@/components/Idea/FilterIdea';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
@@ -18,12 +18,14 @@ import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { IDEA_SORT_TYPES } from 'constants';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfoModal from '@/components/InfoModal';
 
 export default function PublicView() {
   const [page, setPage] = useState(1);
+  const [openMobileFilter, setOpenMobileFilter] = useState(false);
   const [filterTopics, setFilterTopics] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [sortType, setSortType] = useState();
@@ -184,27 +186,91 @@ export default function PublicView() {
                 <Errors title={error?.title} message={error?.message} />
               ) : (
                 <div className="max-w-screen-lg mx-auto pt-14 px-4">
-                  <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-16">
+                  <div className="flex flex-col md:flex-row items-start justify-between gap-4 md:gap-8 mb-8 md:mb-16">
                     <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
                       Feature Ideas
                     </h1>
-
-                    {isSubmitIdeaVisible && (
-                      <>
+                    <div className="flex items-center gap-4 w-full md:w-auto">
+                      {isSubmitIdeaVisible && (
+                        <>
+                          <Button
+                            type="button"
+                            text="Submit Idea"
+                            icon={<Plus className="w-5 h-5" />}
+                            variant="indigo"
+                            size="sm"
+                            mobileFullWidth="mobileFullWidth"
+                            onClick={() => dispatch(toggleFeedBackSubmitModal())}
+                          />
+                          <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />
+                        </>
+                      )}
+                      <div className="md:hidden w-full">
                         <Button
                           type="button"
-                          text="Submit Idea"
-                          icon={<Plus className="w-5 h-5" />}
+                          text="Filters"
                           variant="indigo"
                           size="sm"
                           mobileFullWidth="mobileFullWidth"
-                          onClick={() => dispatch(toggleFeedBackSubmitModal())}
+                          onClick={() => setOpenMobileFilter(!openMobileFilter)}
                         />
-                        <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />
-                      </>
-                    )}
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-start justify-center md:justify-between mb-9">
+                  <div>
+                    <Transition.Root show={openMobileFilter} as={Fragment}>
+                      <Dialog as="div" className="relative z-[9999]" onClose={setOpenMobileFilter}>
+                        <div className="fixed inset-0" />
+
+                        <div className="fixed inset-0 overflow-hidden">
+                          <div className="absolute inset-0 overflow-hidden">
+                            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
+                              <Transition.Child
+                                as={Fragment}
+                                enter="transform transition ease-in-out duration-500 sm:duration-700"
+                                enterFrom="translate-x-full"
+                                enterTo="translate-x-0"
+                                leave="transform transition ease-in-out duration-500 sm:duration-700"
+                                leaveFrom="translate-x-0"
+                                leaveTo="translate-x-full">
+                                <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
+                                  <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
+                                    <div className="px-4 sm:px-6">
+                                      <div className="flex items-start justify-between">
+                                        <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
+                                          Filter
+                                        </Dialog.Title>
+                                        <div className="ml-3 flex h-7 items-center">
+                                          <button
+                                            type="button"
+                                            className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            onClick={() => setOpenMobileFilter(false)}>
+                                            <span className="sr-only">Close panel</span>
+                                            <Close className="h-6 w-6" aria-hidden="true" />
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                                      <FilterIdea
+                                        sortType={sortType}
+                                        setSortType={setSortType}
+                                        filterTopics={filterTopics}
+                                        filterStatus={filterStatus}
+                                        setFilterTopics={setFilterTopics}
+                                        setFilterStatus={setFilterStatus}
+                                      />
+                                    </div>
+                                  </div>
+                                </Dialog.Panel>
+                              </Transition.Child>
+                            </div>
+                          </div>
+                        </div>
+                      </Dialog>
+                    </Transition.Root>
+                  </div>
+                  <div className="hidden md:flex items-start justify-center md:justify-between mb-9">
                     <FilterIdea
                       sortType={sortType}
                       setSortType={setSortType}
