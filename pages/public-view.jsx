@@ -220,7 +220,7 @@ export default function PublicView() {
                   <div>
                     <Transition.Root show={openMobileFilter} as={Fragment}>
                       <Dialog as="div" className="relative z-[9999]" onClose={setOpenMobileFilter}>
-                        <div className="fixed inset-0 bg-black/50" />
+                        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
 
                         <div className="fixed inset-0 overflow-hidden">
                           <div className="absolute inset-0 overflow-hidden">
