@@ -234,16 +234,16 @@ export default function PublicView() {
                                 leaveFrom="translate-x-0"
                                 leaveTo="translate-x-full">
                                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-                                  <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
+                                  <div className="flex h-full flex-col overflow-y-scroll bg-white dark:bg-aa-900 purple:bg-pt-1000 py-6 shadow-xl">
                                     <div className="px-4 sm:px-6">
                                       <div className="flex items-start justify-between">
-                                        <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
+                                        <Dialog.Title className="text-base font-semibold leading-6 text-slate-800 dark:text-aa-200 purple:text-pt-200">
                                           Filter
                                         </Dialog.Title>
                                         <div className="ml-3 flex h-7 items-center">
                                           <button
                                             type="button"
-                                            className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            className="rounded-md bg-white dark:bg-aa-900 purple:bg-pt-1000 text-slate-800 dark:text-aa-200 purple:text-pt-200 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                             onClick={() => setOpenMobileFilter(false)}>
                                             <span className="sr-only">Close panel</span>
                                             <Close className="h-6 w-6" aria-hidden="true" />
