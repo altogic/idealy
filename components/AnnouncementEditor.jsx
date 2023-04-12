@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import useDebounce from '@/hooks/useDebounce';
+import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import FileService from '@/services/file';
 import {
@@ -42,11 +43,13 @@ import Quill from 'quill';
 import QuillImageDropAndPaste from 'quill-image-drop-and-paste';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
+import { announcementActions } from '@/redux/announcement/announcementSlice';
+import _ from 'lodash';
+import { useRouter } from 'next/router';
 import EditorSideBarButton from './EditorSideBarButton';
 import EmptyState from './EmptyState';
-import StatusBadge from './StatusBadge';
 import IdeaDetail from './Idea/IdeaDetail';
+import StatusBadge from './StatusBadge';
 
 const uploadImage = async (file) => {
   const { data } = await FileService.uploadFile(file, file.name);
@@ -76,12 +79,12 @@ async function imageHandler(imageDataUrl, type, imageData) {
 export default function AnnouncementEditor({ onChange, value }) {
   const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
+  const router = useRouter();
   const { similarIdeas: ideas, selectedIdea } = useSelector((state) => state.idea);
   const [quillInstance, setQuillInstance] = useState();
   const [isStateUpdated, setIsStateUpdated] = useState(false);
   const [addNewIdea, setAddNewIdea] = useState(false);
   const [ideaTitle, setIdeaTitle] = useState();
-  const [content, setContent] = useState(value);
   useDebounce(ideaTitle, () => {
     dispatch(
       ideaActions.searchSimilarIdeas({
@@ -93,14 +96,6 @@ export default function AnnouncementEditor({ onChange, value }) {
       })
     );
   });
-
-  useDebounce(
-    content,
-    () => {
-      onChange(content);
-    },
-    10
-  );
 
   const tooltip = useRef();
   const sidebar = useRef();
@@ -164,7 +159,6 @@ export default function AnnouncementEditor({ onChange, value }) {
     Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste);
 
     const quill = new Quill('#editor-container', {
-      // scrollingContainer: document.documentElement,
       modules: {
         imageDropAndPaste: {
           handler: imageHandler
@@ -181,7 +175,7 @@ export default function AnnouncementEditor({ onChange, value }) {
         }
       }
     });
-    quill.root.dataset.placeholder = 'Tell your story...';
+    quill.root.dataset.placeholder = router.asPath.includes('new') ? 'Tell your story...' : '';
     setQuillInstance(quill);
     Quill.register(BoldBlot);
     Quill.register(ItalicBlot);
@@ -242,23 +236,36 @@ export default function AnnouncementEditor({ onChange, value }) {
       } else {
         quill.root.dataset.placeholder = 'Tell your story...';
       }
-
-      setContent(quill.root.innerHTML);
+      onChange(quill.root.innerHTML);
       tooltip.current.style.display = 'none';
       sidebar.current.style.display = 'none';
       sidebar.current.classList.remove('active');
     });
+    quill.on(Quill.events.SELECTION_CHANGE, (range, oldRange) => {
+      if (range !== null && oldRange === null) {
+        const title = document.querySelector('#title').value;
+        if (_.isEmpty(value) && title) {
+          router.push(`/announcements/edit/${title.toLowerCase().replace(/ /g, '-')}`);
+          dispatch(
+            announcementActions.createAnnouncement({
+              slug: title.toLowerCase().replace(/ /g, '-'),
+              title
+            })
+          );
+        }
+      }
+    });
   }, []);
 
   useEffect(() => {
-    if (value && quillInstance && !isStateUpdated) {
+    if (quillInstance && !isStateUpdated) {
       quillInstance.root.innerHTML = value;
 
       quillInstance.getSelection();
       quillInstance.setSelection(quillInstance.getLength(), 0);
       setIsStateUpdated(true);
     }
-  }, [value, quillInstance]);
+  }, [quillInstance]);
 
   const removeFormat = () => {
     const range = quillInstance.getSelection(true);
