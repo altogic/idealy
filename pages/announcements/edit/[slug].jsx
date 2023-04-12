@@ -2,7 +2,6 @@ import AnnouncementForm from '@/components/AnnouncementForm';
 import Layout from '@/components/Layout';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
 import _ from 'lodash';
-import { DateTime } from 'luxon';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,13 +34,9 @@ export default function EditAnnouncements({ slug }) {
     <Layout>
       <AnnouncementForm onSave={handleUpdateAnnouncement} announcement={announcement}>
         <div className="flex items-center self-start">
-          {loading ? (
+          {loading && (
             <span className="ml-2 animate-pulse text-slate-500 dark:text-aa-200 purple:text-pt-200">
               Saving...
-            </span>
-          ) : (
-            <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200">
-              {DateTime.fromISO(announcement?.updatedAt).setLocale('en').toRelative()}
             </span>
           )}
         </div>
