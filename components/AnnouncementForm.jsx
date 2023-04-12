@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
+import { announcementActions } from '@/redux/announcement/announcementSlice';
 import { compareDates, isGreaterThan } from '../utils';
 
 const AnnouncementEditor = dynamic(() => import('@/components/AnnouncementEditor'), {
@@ -35,11 +36,13 @@ const DatePickerButton = forwardRef(({ onClick }, ref) => (
 DatePickerButton.displayName = 'DatePickerButton';
 export default function AnnouncementForm({ onSave, announcement, children }) {
   const [openCreateModal, setOpenCreateModal] = useState(false);
-  const [content, setContent] = useState(announcement?.content || '');
-  const [categories, setCategories] = useState([]);
-  const [title, setTitle] = useState(announcement?.title || '');
   const [date, setDate] = useState(Date.now());
-  const loading = useSelector((state) => state.announcement.updateAnnouncementLoading);
+  const {
+    updateAnnouncementLoading: loading,
+    title,
+    content,
+    categories
+  } = useSelector((state) => state.announcement);
   const router = useRouter();
   const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
@@ -118,38 +121,29 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
     };
   }
 
-  useDebounce(
-    title,
-    () => {
-      saveAnnouncement();
-    },
-    500
-  );
-  useDebounce(content?.replace(/<p><br><\/p>/g, ''), saveAnnouncement, 500);
+  useDebounce(title, saveAnnouncement, 1500);
+  useDebounce(content?.replace(/<p><br><\/p>/g, ''), saveAnnouncement, 1500);
   useDebounce(categories, saveAnnouncement, 750);
 
   useEffect(() => {
-    if (router.isReady && announcement && !title && !content && !categories.length && company) {
-      setTitle(announcement.title);
-      setContent(announcement.content);
-      setCategories(
-        company.categories.filter((category) => announcement.categories?.includes(category._id))
+    if (categories?.length && company) {
+      dispatch(
+        announcementActions.setCategories(
+          company.categories.filter((category) => announcement.categories?.includes(category._id))
+        )
       );
-      setDate(
-        isGreaterThan(announcement.publishDate, Date.now()) ? announcement.publishDate : Date.now()
-      );
-      if (announcement.title) {
-        document.title = `${announcement.title} - ${company.name} | Idealy`;
-      }
+
+      // setDate(
+      //   isGreaterThan(announcement.publishDate, Date.now()) ? announcement.publishDate : Date.now()
+      // );
     }
-  }, [announcement, router, company]);
+  }, [announcement, company]);
 
   useUpdateEffect(() => {
     if (!compareDates(date, Date.now())) {
       saveAnnouncement(true);
     }
   }, [date]);
-
   return (
     <>
       <div className="h-[calc(100vh-93px)] px-9 lg:px-8 pt-8 pb-[72px] relative overflow-auto">
@@ -162,7 +156,7 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
               id="title"
               className="block text-slate-500 dark:text-aa-200 purple:text-pt-200 px-0 py-4 w-full text-3xl font-medium border-0 placeholder-slate-500 focus:outline-none focus:ring-0 placeholder:text-2xl bg-inherit"
               placeholder="Share with your audience what you are shipping for."
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => dispatch(announcementActions.setTitle(e.target.value))}
               value={title}
               register={register('title')}
               error={errors.title}
@@ -170,13 +164,17 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
             />
             <div className="flex items-center">
               <div className="my-auto">
-                {categories.map((category) => (
+                {categories?.map((category) => (
                   <StatusBadge
                     key={category._id}
                     name={category.name}
                     color={category.color}
                     onClose={() =>
-                      setCategories(categories.filter((cat) => cat._id !== category._id))
+                      dispatch(
+                        announcementActions.setCategories(
+                          categories.filter((cat) => cat._id !== category._id)
+                        )
+                      )
                     }
                   />
                 ))}
@@ -196,7 +194,7 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
                 size="xxl"
                 onChange={(value) => {
                   if (value.length <= 3) {
-                    setCategories(value);
+                    dispatch(announcementActions.setCategories(value));
                   }
                 }}
                 multiple
@@ -212,7 +210,10 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
               </BaseListBox>
             </div>
             <div className="mt-4 w-11/12">
-              <AnnouncementEditor onChange={setContent} value={content} />
+              <AnnouncementEditor
+                onChange={(val) => dispatch(announcementActions.setContent(val))}
+                value={content}
+              />
             </div>
           </div>
         </div>

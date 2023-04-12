@@ -99,7 +99,7 @@ export default function AnnouncementEditor({ onChange, value }) {
     () => {
       onChange(content);
     },
-    1000
+    10
   );
 
   const tooltip = useRef();
