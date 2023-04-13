@@ -9,7 +9,7 @@ import { generateUrl } from '../utils';
 import CompanyAvatar from './CompanyAvatar';
 import GuestDropdown from './Header/GuestDropdown';
 import UserDropdown from './Header/UserDropdown';
-import { Announcements, Feedback, People, Roadmap, Search } from './icons';
+import { Announcements, Feedback, People, Roadmap, Search, HamburgerMenu, Close } from './icons';
 import Notifications from './Notifications';
 import ThemeChanger from './ThemeChanger';
 
@@ -20,6 +20,7 @@ export default function Header() {
   const selectedCompany = useSelector((state) => state.company.company);
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const [open, setOpen] = useState(false);
+  const [openHamburgerMenu, setOpenHamburgerMenu] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userCompanies, setUserCompanies] = useState();
 
@@ -50,6 +51,78 @@ export default function Header() {
           router.asPath.includes('settings') ? 'pl-16' : null
         )}>
         <div className="flex items-center">
+          <button
+            type="button"
+            className="inline-flex lg:hidden items-center justify-center w-10 h-10"
+            onClick={() => setOpenHamburgerMenu(!openHamburgerMenu)}>
+            <HamburgerMenu className="w-6 h-6 text-white" />
+          </button>
+          <Transition.Root show={openHamburgerMenu} as={Fragment}>
+            <Dialog as="div" className="relative z-[9999]" onClose={setOpenHamburgerMenu}>
+              <div className="fixed inset-0" />
+
+              <div className="fixed inset-0 overflow-hidden">
+                <div className="absolute inset-0 overflow-hidden">
+                  <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
+                    <Transition.Child
+                      as={Fragment}
+                      enter="transform transition ease-in-out duration-500 sm:duration-700"
+                      enterFrom="translate-x-full"
+                      enterTo="translate-x-0"
+                      leave="transform transition ease-in-out duration-500 sm:duration-700"
+                      leaveFrom="translate-x-0"
+                      leaveTo="translate-x-full">
+                      <Dialog.Panel className="pointer-events-auto w-screen">
+                        <div className="flex h-full flex-col overflow-y-scroll bg-indigo-900 dark:bg-aa-900 purple:bg-pt-1000 py-6 shadow-xl">
+                          <div className="px-4 sm:px-6">
+                            <div className="flex items-start justify-end">
+                              <div className="flex h-7 items-center">
+                                <button
+                                  type="button"
+                                  className="rounded-md text-white dark:text-aa-200 purple:text-pt-200 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                  onClick={() => setOpenHamburgerMenu(!openHamburgerMenu)}>
+                                  <span className="sr-only">Close panel</span>
+                                  <Close className="h-10 w-10" aria-hidden="true" />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                            <div className="flex flex-col items-start">
+                              <Link href="/public-view">
+                                <a className="inline-flex items-center justify-center text-white py-4 font-medium tracking-sm">
+                                  <Feedback className="w-6 h-6 text-indigo-50 mr-3" />
+                                  Feedback
+                                </a>
+                              </Link>
+                              <Link href="/roadmaps">
+                                <a className="inline-flex items-center justify-center text-white py-4 font-medium tracking-sm">
+                                  <Roadmap className="w-6 h-6 text-indigo-50 mr-3" />
+                                  Roadmap
+                                </a>
+                              </Link>
+                              <Link href="/announcements">
+                                <a className="inline-flex items-center justify-center text-white py-4 font-medium tracking-sm">
+                                  <Announcements className="w-6 h-6 text-indigo-50 mr-3" />
+                                  Announcements
+                                </a>
+                              </Link>
+                              <Link href="/">
+                                <a className="inline-flex items-center justify-center text-white py-4 font-medium tracking-sm">
+                                  <People className="w-6 h-6 text-indigo-50 mr-3" />
+                                  Users
+                                </a>
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      </Dialog.Panel>
+                    </Transition.Child>
+                  </div>
+                </div>
+              </div>
+            </Dialog>
+          </Transition.Root>
           {selectedCompany?.name && (
             <Link href="/">
               <a
@@ -157,7 +230,7 @@ export default function Header() {
                 )}
               </div>
             )}
-          {process.env.NODE_ENV === 'development' && <ThemeChanger />}
+          {/* {process.env.NODE_ENV === 'development' && <ThemeChanger />} */}
           {/* Notification */}
           {isLoggedIn && <Notifications />}
           <button
