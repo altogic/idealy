@@ -9,9 +9,8 @@ import { generateUrl } from '../utils';
 import CompanyAvatar from './CompanyAvatar';
 import GuestDropdown from './Header/GuestDropdown';
 import UserDropdown from './Header/UserDropdown';
-import { Announcements, Feedback, People, Roadmap, Search, HamburgerMenu, Close } from './icons';
 import Notifications from './Notifications';
-import ThemeChanger from './ThemeChanger';
+import { Announcements, Close, Feedback, HamburgerMenu, People, Roadmap, Search } from './icons';
 
 export default function Header() {
   const router = useRouter();
