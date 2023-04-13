@@ -26,7 +26,7 @@ export default function FilterCheckboxes({ options, label, onChange, name, selec
   }, [selectedItems]);
 
   return (
-    <div className="space-y-2 px-2">
+    <div className="space-y-2">
       {!!options?.length && (
         <div className="space-y-3">
           <BaseListBox
