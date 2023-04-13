@@ -1,6 +1,7 @@
 import SanitizeHtml from '@/components/SanitizeHtml';
 import StatusBadge from '@/components/StatusBadge';
 import { ChevronLeft, Danger, Pen, Trash } from '@/components/icons';
+import useClickAnnouncementIdea from '@/hooks/useClickAnnouncementIdea';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
 import { DateTime } from 'luxon';
@@ -8,23 +9,23 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ideaActions } from '@/redux/ideas/ideaSlice';
-import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { generateUrl, isGreaterThan } from '../utils';
 import AnnouncementReaction from './AnnouncementReaction';
 import IdeaActionButton from './Idea/admin/IdeaActionButton';
 import InfoModal from './InfoModal';
 import ShareButtons from './ShareButtons';
-import IdeaDetail from './Idea/IdeaDetail';
 
 export default function AnnouncementCard({ announcement, onPage }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const canReact = useRegisteredUserValidation('announcementReaction');
   const { company, isGuest } = useSelector((state) => state.company);
-  const { selectedIdea } = useSelector((state) => state.idea);
+
   const loading = useSelector((state) => state.announcement?.isLoading);
+
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  useClickAnnouncementIdea();
+
   return (
     <>
       <div className="w-full first:px-8 first:pb-8 [&:not(:first-child)]:p-8 odd:bg-white dark:odd:bg-aa-900 odd:purple:bg-pt-1000 even:bg-slate-100 dark:even:bg-aa-800 purple:even:bg-pt-900">
@@ -32,7 +33,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
           {onPage && (
             <div>
               <Link href="/announcements">
-                <a className="flex items-center  mt-4 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm font-medium tracking-md text-left">
+                <a className="flex items-center  mt-4 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm font-medium tracking-md text-left whitespace-nowrap">
                   <ChevronLeft className="w-4 h-4" />
                   Back to Announcements
                 </a>
@@ -125,14 +126,6 @@ export default function AnnouncementCard({ announcement, onPage }) {
           </div>
         </div>
       </div>
-      <IdeaDetail
-        idea={selectedIdea}
-        company={company}
-        onClose={() => {
-          dispatch(ideaActions.setSelectedIdea(null));
-          dispatch(toggleFeedBackDetailModal());
-        }}
-      />
       <InfoModal
         show={openDeleteModal}
         onClose={() => setOpenDeleteModal(false)}

@@ -21,6 +21,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import DashboardIdeaCardSkeleton from '@/components/DashboardIdeaCardSkeleton';
 
 const DashboardIdeaDetail = dynamic(() => import('@/components/dashboard/DashboardIdeaDetail'), {
   ssr: false
@@ -29,7 +30,7 @@ export default function AdminDashboard() {
   // List Box States
   const router = useRouter();
   const dispatch = useDispatch();
-  const ideas = useSelector((state) => state.idea.ideas);
+  const { ideas, getIdeaLoading: loading } = useSelector((state) => state.idea);
   const company = useSelector((state) => state.company.company);
   const countInfo = useSelector((state) => state.idea.countInfo);
   const sessionUser = useSelector((state) => state.auth.user);
@@ -146,7 +147,7 @@ export default function AdminDashboard() {
         {error ? (
           <Errors title={error.title} message={error.message} />
         ) : (
-          <div className="grid grid-cols-[500px,1fr] 2xl:grid-cols-[300px,499px,1fr] h-[calc(100vh-88px)] -mx-4">
+          <div className="grid grid-cols-[500px,1fr] 2xl:grid-cols-[300px,499px,1fr] h-[calc(100vh-88px)]">
             <FilterSave
               className="hidden 2xl:block h-[calc(100vh-88px)] bg-slate-50 dark:bg-aa-900 purple:bg-pt-1000 px-6 py-8 space-y-8 border-r border-slate-200 dark:border-aa-600 purple:border-pt-800 overflow-y-auto shadow-lg"
               filters={user?.savedFilters}
@@ -154,28 +155,32 @@ export default function AdminDashboard() {
             <div className="border-r border-slate-200 dark:border-aa-600 purple:border-pt-800">
               <IdeaFilter isFilterSlide={isFilterSlide} setIsFilterSlide={setIsFilterSlide} />
               <div className="overflow-y-auto h-[calc(100vh-188px)]">
-                <InfiniteScroll items={ideas} countInfo={countInfo} endOfList={handlePageChange}>
-                  {ideas.length ? (
-                    ideas.map((i, index) => (
-                      <>
-                        <DashboardIdeaCard
-                          key={i._id}
-                          id={i._id}
-                          idea={i}
-                          selected={i._id === idea?._id}
+                {loading && router.query.page === '1' ? (
+                  <DashboardIdeaCardSkeleton />
+                ) : (
+                  <InfiniteScroll items={ideas} countInfo={countInfo} endOfList={handlePageChange}>
+                    {ideas.length ? (
+                      ideas.map((i, index) => (
+                        <>
+                          <DashboardIdeaCard
+                            key={i._id}
+                            id={i._id}
+                            idea={i}
+                            selected={i._id === idea?._id}
+                          />
+                          {ideas.length - 1 !== index && <Divider />}
+                        </>
+                      ))
+                    ) : (
+                      <div className="m-auto my-8">
+                        <EmptyState
+                          title="No Ideas Found"
+                          description="No ideas found for this company"
                         />
-                        {ideas.length - 1 !== index && <Divider />}
-                      </>
-                    ))
-                  ) : (
-                    <div className="m-auto my-8">
-                      <EmptyState
-                        title="No Ideas Found"
-                        description="No ideas found for this company"
-                      />
-                    </div>
-                  )}
-                </InfiniteScroll>
+                      </div>
+                    )}
+                  </InfiniteScroll>
+                )}
               </div>
             </div>
 
@@ -204,7 +209,7 @@ export default function AdminDashboard() {
         position="left"
         className="z-[52]"
         title="Filter Ideas"
-        size="md">
+        size="lg">
         <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold break-all">
           Filter Ideas
         </h2>

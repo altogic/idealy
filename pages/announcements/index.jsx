@@ -13,6 +13,10 @@ import { announcementActions } from '@/redux/announcement/announcementSlice';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
+import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
+import IdeaDetail from '@/components/Idea/IdeaDetail';
+import useOpenFeedbackModal from '@/hooks/useOpenFeedbackModal';
 
 export default function Announcements() {
   const router = useRouter();
@@ -20,9 +24,12 @@ export default function Announcements() {
   const { announcements, countInfo } = useSelector((state) => state.announcement);
   const { company, isGuest } = useSelector((state) => state.company);
   const { user, guestInfo, userIp } = useSelector((state) => state.auth);
+
+  const { selectedIdea } = useSelector((state) => state.idea);
   const [filterCategories, setFilterCategories] = useState([]);
   const [error, setError] = useState();
   const [searchText, setSearchText] = useState('');
+  useOpenFeedbackModal();
   useDebounce(searchText, () => {
     if (router.isReady) {
       router.push({
@@ -152,7 +159,9 @@ export default function Announcements() {
     <Layout>
       <div className="bg-white dark:bg-aa-900 purple:bg-pt-1000 h-[calc(100vh-93px)] space-y-8">
         {error ? (
-          <Errors title={error?.title} message={error?.message} />
+          <div className="w-full h-full lg:px-20">
+            <Errors title={error?.title} message={error?.message} />
+          </div>
         ) : (
           <>
             <div className="pt-14 px-4">
@@ -251,6 +260,22 @@ export default function Announcements() {
           </>
         )}
       </div>
+      <IdeaDetail
+        idea={selectedIdea}
+        company={company}
+        onClose={() => {
+          dispatch(ideaActions.setSelectedIdea(null));
+          dispatch(toggleFeedBackDetailModal());
+          router.push(
+            {
+              pathname: router.pathname,
+              query: { ...router.query, feedback: undefined }
+            },
+            undefined,
+            { scroll: false }
+          );
+        }}
+      />
     </Layout>
   );
 }

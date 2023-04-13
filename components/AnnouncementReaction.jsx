@@ -125,7 +125,7 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
     setCount(reactionCount);
   }, [reactionCount]);
   return (
-    <div className="inline-block relative">
+    <div className="flex justify-end relative">
       <Popover>
         {({ open }) => (
           <>
@@ -156,7 +156,7 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
 
             <Transition
               show={open}
-              className="absolute mb-4 -left-16 w-full   bottom-full bg-transparent"
+              className="absolute mb-4 transform -translate-x-1/3  bottom-full bg-transparent"
               enter="transition duration-100 ease-out"
               enterFrom="transform scale-95 opacity-0"
               enterTo="transform scale-100 opacity-100"

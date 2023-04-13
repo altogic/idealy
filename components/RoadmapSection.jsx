@@ -8,6 +8,7 @@ import EmptyState from './EmptyState';
 import RoadMapCard from './RoadMapCard';
 import { Tooltip, TooltipContent, TooltipTrigger } from './Tooltip';
 import { Eye, EyeSlash } from './icons';
+import RoadmapCardSkeleton from './RoadmapCardSkeleton';
 
 function RoadmapVisibilityIcon({ isPrivate, disabled }) {
   return isPrivate ? (
@@ -31,6 +32,7 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, ...re
   resetServerContext();
   const dispatch = useDispatch();
   const { company, isGuest } = useSelector((state) => state.company);
+  const loading = useSelector((state) => state.idea.getIdeaLoading);
   const [sortedIdeas, setSortedIdeas] = useState();
   const isPrivate = useMemo(
     () => roadmap?.publicStatuses?.includes(status?._id),
@@ -101,7 +103,9 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, ...re
         </div>
       </div>
       <div className="inline overflow-y-auto space-y-4 max-h-[700px]">
-        {sortedIdeas?.length ? (
+        {loading ? (
+          <RoadmapCardSkeleton />
+        ) : sortedIdeas?.length ? (
           sortedIdeas?.map((idea, index) => (
             <Draggable key={idea._id} draggableId={idea._id} index={index}>
               {(provided, snapshot) => (

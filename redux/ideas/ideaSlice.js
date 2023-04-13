@@ -434,15 +434,15 @@ export const ideaSlice = createSlice({
       state.editedIdea = action.payload;
     },
     getIdeasByRoadmap(state) {
-      state.isLoading = true;
+      state.getIdeaLoading = true;
     },
     getIdeasByRoadmapSuccess(state, action) {
-      state.isLoading = false;
+      state.getIdeaLoading = false;
       state.roadmapIdeas = action.payload;
       state.ideas = Object.values(state.roadmapIdeas).flat();
     },
     getIdeasByRoadmapFailure(state, action) {
-      state.isLoading = false;
+      state.getIdeaLoading = false;
       state.error = action.payload;
     },
     updateIdeasOrder(state) {
