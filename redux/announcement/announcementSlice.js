@@ -85,9 +85,9 @@ export const announcementSlice = createSlice({
     getAnnouncementSuccess: (state, action) => {
       state.isLoading = false;
       state.announcement = action.payload;
+      state.categories = action.payload.categories;
       state.title = action.payload.title;
       state.content = action.payload.content;
-      state.categories = action.payload.categories;
     },
     getAnnouncementFailed: (state, action) => {
       state.isLoading = false;
@@ -162,9 +162,9 @@ export const announcementSlice = createSlice({
     },
     setAnnouncement: (state, action) => {
       state.announcement = action.payload;
+      state.categories = action.payload.categories;
       state.title = action.payload.title;
       state.content = action.payload.content;
-      state.categories = action.payload.categories;
     },
     createAnnouncementReactionRealtimeSuccess: (state, action) => {
       state.announcements = state.announcements.map((announcement) =>

@@ -37,11 +37,12 @@ DatePickerButton.displayName = 'DatePickerButton';
 export default function AnnouncementForm({ onSave, announcement, children }) {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [date, setDate] = useState(Date.now());
+  const [categories, setCategories] = useState([]);
   const {
     updateAnnouncementLoading: loading,
     title,
     content,
-    categories
+    categories: _categories
   } = useSelector((state) => state.announcement);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -121,23 +122,15 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
     };
   }
 
-  useDebounce(title, saveAnnouncement, 1500);
-  useDebounce(content?.replace(/<p><br><\/p>/g, ''), saveAnnouncement, 1500);
-  useDebounce(categories, saveAnnouncement, 750);
+  useDebounce(title, saveAnnouncement, 500);
+  useDebounce(content?.replace(/<p><br><\/p>/g, ''), saveAnnouncement, 550);
+  useDebounce(categories, saveAnnouncement, 600);
 
   useEffect(() => {
-    if (categories?.length && company) {
-      dispatch(
-        announcementActions.setCategories(
-          company.categories.filter((category) => announcement.categories?.includes(category._id))
-        )
-      );
-
-      // setDate(
-      //   isGreaterThan(announcement.publishDate, Date.now()) ? announcement.publishDate : Date.now()
-      // );
+    if (_categories?.length) {
+      setCategories(company.categories.filter((category) => _categories?.includes(category._id)));
     }
-  }, [announcement, company]);
+  }, [_categories]);
 
   useUpdateEffect(() => {
     if (!compareDates(date, Date.now())) {
@@ -194,7 +187,8 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
                 size="xxl"
                 onChange={(value) => {
                   if (value.length <= 3) {
-                    dispatch(announcementActions.setCategories(value));
+                    const cats = value.map((cat) => cat._id);
+                    dispatch(announcementActions.setCategories(cats));
                   }
                 }}
                 multiple
