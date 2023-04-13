@@ -180,7 +180,7 @@ export default function FilterSave({ className, filters }) {
   return (
     <div className={className}>
       {filters?.length > 0 && (
-        <div className="space-y-1.5 px-2">
+        <div className="space-y-1.5">
           <Label label="Filters" />
           <BaseListBox
             value={selectedFilter}
@@ -196,7 +196,7 @@ export default function FilterSave({ className, filters }) {
           />
         </div>
       )}
-      <div className="space-y-1.5 px-2">
+      <div>
         <Label label="Data Range" />
         <Tab.Group
           onChange={(index) => {
@@ -210,13 +210,13 @@ export default function FilterSave({ className, filters }) {
               }
             });
           }}>
-          <Tab.List className="lg:flex gap-1 lg:static w-full lg:w-auto transform pb-3">
+          <Tab.List className="flex gap-2 w-full mb-4">
             {DATA_RANGE.map((item) => (
               <Tab
                 key={item.id}
                 className={({ selected }) =>
                   cn(
-                    ' px-3 py-2 text-sm font-medium tracking-sm rounded-md text-center  focus:outline-none w-1/2 ',
+                    'w-full px-3 py-2 text-sm font-medium tracking-sm rounded-md text-center focus:outline-none ',
                     selected
                       ? 'bg-indigo-50 dark:bg-aa-500 purple:bg-pt-500 border-2 text-indigo-600  dark:text-aa-200 purple:text-pt-200 border-indigo-700 dark:border-aa-600 purple:border-pt-800'
                       : 'text-slate-500 dark:text-aa-200 purple:text-pt-200 dark:bg-aa-800 purple:bg-pt-800'
