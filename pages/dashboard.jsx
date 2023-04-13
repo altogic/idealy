@@ -21,6 +21,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import DashboardIdeaCardSkeleton from '@/components/DashboardIdeaCardSkeleton';
 
 const DashboardIdeaDetail = dynamic(() => import('@/components/dashboard/DashboardIdeaDetail'), {
   ssr: false
@@ -154,48 +155,32 @@ export default function AdminDashboard() {
             <div className="border-r border-slate-200 dark:border-aa-600 purple:border-pt-800">
               <IdeaFilter isFilterSlide={isFilterSlide} setIsFilterSlide={setIsFilterSlide} />
               <div className="overflow-y-auto h-[calc(100vh-188px)]">
-                <div
-                  role="status"
-                  className="w-full space-y-4 divide-y divide-gray-300 animate-pulse">
-                  <div className="flex justify-between items-center px-4 py-8">
-                    <div className="flex flex-col items-start gap-4 w-full">
-                      <div className="w-64 h-2.5 bg-gray-300 rounded-full" />
-                      <div className="w-full h-2.5 bg-gray-300 rounded-full" />
-                      <div className="flex items-center justify-between gap-4 w-full">
-                        <div className="w-64 h-2.5 bg-gray-300 rounded-full" />
-                        <div className="w-32 h-2.5 bg-gray-300 rounded-full" />
-                      </div>
-                      <div className="flex justify-end w-full">
-                        <div className="w-64 h-2.5 bg-gray-300 rounded-full" />
-                      </div>
-                      {/* <div className="h-2.5 bg-gray-300 rounded-full w-24" /> */}
-                    </div>
-                    {/* <div className="h-2.5 bg-gray-300 rounded-full w-12" /> */}
-                  </div>
-                  <span className="sr-only">Loading...</span>
-                </div>
-                <InfiniteScroll items={ideas} countInfo={countInfo} endOfList={handlePageChange}>
-                  {ideas.length ? (
-                    ideas.map((i, index) => (
-                      <>
-                        <DashboardIdeaCard
-                          key={i._id}
-                          id={i._id}
-                          idea={i}
-                          selected={i._id === idea?._id}
+                {loading && router.query.page === '1' ? (
+                  <DashboardIdeaCardSkeleton />
+                ) : (
+                  <InfiniteScroll items={ideas} countInfo={countInfo} endOfList={handlePageChange}>
+                    {ideas.length ? (
+                      ideas.map((i, index) => (
+                        <>
+                          <DashboardIdeaCard
+                            key={i._id}
+                            id={i._id}
+                            idea={i}
+                            selected={i._id === idea?._id}
+                          />
+                          {ideas.length - 1 !== index && <Divider />}
+                        </>
+                      ))
+                    ) : (
+                      <div className="m-auto my-8">
+                        <EmptyState
+                          title="No Ideas Found"
+                          description="No ideas found for this company"
                         />
-                        {ideas.length - 1 !== index && <Divider />}
-                      </>
-                    ))
-                  ) : (
-                    <div className="m-auto my-8">
-                      <EmptyState
-                        title="No Ideas Found"
-                        description="No ideas found for this company"
-                      />
-                    </div>
-                  )}
-                </InfiniteScroll>
+                      </div>
+                    )}
+                  </InfiniteScroll>
+                )}
               </div>
             </div>
 
