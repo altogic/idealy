@@ -7,13 +7,14 @@ export default class IdeaBlot extends BlockEmbed {
   static create(value) {
     const node = super.create(value);
     const profilePicture = value?.author?.profilePicture || value?.guestAvatar;
+    console.log('value', value);
     const author = !_.isEmpty(value?.author)
       ? value?.author.name
       : value?.guestName
       ? value?.guestName
       : value?.name;
 
-    const words = author.split(' ');
+    const words = author?.split(' ');
     const name = [words[0], words[words.length - 1]].map((word) => word.charAt(0)).join('');
 
     const button = document.createElement('button');
@@ -25,7 +26,7 @@ export default class IdeaBlot extends BlockEmbed {
       value?.title
     }>${value?.title}</h2></div>
     <div spellCheck="false" class="w-3/4 text-slate-500 dark:text-aa-300 purple:text-pt-300 mb-6 text-sm tracking-sm text-left line-clamp-3">${
-      value?.content
+      value?.content ?? ''
     }</div>
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-2"><div class="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-2 mb-4 lg:mb-0">
     <div class="flex flex-wrap items-center sm:items-center gap-4"><div class="flex items-center gap-2">${
