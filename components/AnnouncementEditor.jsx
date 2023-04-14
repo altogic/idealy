@@ -176,7 +176,7 @@ export default function AnnouncementEditor({ onChange, value }) {
         }
       }
     });
-    quill.root.dataset.placeholder = router.asPath.includes('new') ? 'Tell your story...' : '';
+    quill.root.dataset.placeholder = !router.query.focus ? 'Tell your story...' : '';
     setQuillInstance(quill);
     Quill.register(BoldBlot);
     Quill.register(ItalicBlot);
@@ -245,8 +245,8 @@ export default function AnnouncementEditor({ onChange, value }) {
     quill.on(Quill.events.SELECTION_CHANGE, (range, oldRange) => {
       if (range !== null && oldRange === null) {
         const title = document.querySelector('#title').value;
-        if (_.isEmpty(value) && title) {
-          router.push(`/announcements/edit/${title.toLowerCase().replace(/ /g, '-')}`);
+        if (_.isEmpty(value) && title && router.asPath.includes('new')) {
+          router.push(`/announcements/edit/${title.toLowerCase().replace(/ /g, '-')}&focus=true`);
           dispatch(
             announcementActions.createAnnouncement({
               slug: title.toLowerCase().replace(/ /g, '-'),
@@ -260,7 +260,7 @@ export default function AnnouncementEditor({ onChange, value }) {
   }, []);
 
   useUpdateEffect(() => {
-    if (quillInstance && !isStateUpdated && router.asPath.includes('edit')) {
+    if (quillInstance && !isStateUpdated && router.asPath.includes('edit') && router.query.focus) {
       quillInstance.getSelection();
       quillInstance.setSelection(quillInstance.getLength(), 0);
       setIsStateUpdated(true);
@@ -399,18 +399,7 @@ export default function AnnouncementEditor({ onChange, value }) {
 
   const handleAddIdea = (idea) => {
     const range = quillInstance.getSelection(true);
-    quillInstance.insertEmbed(
-      range.index,
-      'idea',
-      {
-        ...idea,
-        onClick: () => {
-          dispatch(ideaActions.setSelectedIdea(idea));
-          dispatch(toggleFeedBackDetailModal(true));
-        }
-      },
-      Quill.sources.USER
-    );
+    quillInstance.insertEmbed(range.index, 'idea', idea, Quill.sources.USER);
     quillInstance.setSelection(range.index + 1, Quill.sources.SILENT);
     sidebar.current.style.display = 'none';
   };
