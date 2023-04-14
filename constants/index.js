@@ -297,12 +297,12 @@ export const REACTION_TYPES = [
   {
     id: 1,
     type: 'like',
-    symbol: '👍'
+    symbol: '✨'
   },
   {
     id: 2,
     type: 'love',
-    symbol: '❤️'
+    symbol: '😍'
   },
   {
     id: 3,
