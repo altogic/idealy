@@ -83,8 +83,8 @@ export default function AnnouncementForm({ onSave, children }) {
     onSave({
       title: announcement?.title,
       content: announcement?.content,
-      ...(announcement?._id && { _id: announcement._id }),
-      ...(announcement.title && { slug: announcement.title.toLowerCase().replace(/ /g, '-') }),
+      ...(announcement?._id && { _id: announcement?._id }),
+      ...(announcement?.title && { slug: announcement?.title.toLowerCase().replace(/ /g, '-') }),
       categories: categories.map((category) => category._id),
       company: company._id,
       isPublished: isPublished || isGreaterThan(date, Date.now()),
@@ -94,16 +94,16 @@ export default function AnnouncementForm({ onSave, children }) {
 
   function publishAnnouncement() {
     return () => {
-      if (announcement.title) {
+      if (announcement?.title) {
         saveAnnouncement(true);
         if (!isGreaterThan(date, Date.now())) {
           realtime.send(company._id, 'publish-announcement', {
             ...announcement,
-            title: announcement.title,
-            content: announcement.content,
-            ...(announcement?._id && { _id: announcement._id }),
-            ...(announcement.title && {
-              slug: announcement.title.toLowerCase().replace(/ /g, '-')
+            title: announcement?.title,
+            content: announcement?.content,
+            ...(announcement?._id && { _id: announcement?._id }),
+            ...(announcement?.title && {
+              slug: announcement?.title.toLowerCase().replace(/ /g, '-')
             }),
             categories: categories.map((category) => category._id),
             company: company._id,
@@ -127,7 +127,7 @@ export default function AnnouncementForm({ onSave, children }) {
   useEffect(() => {
     if (categories?.length) {
       setCategories(
-        company.categories.filter((category) => announcement.categories?.includes(category._id))
+        company.categories.filter((category) => announcement?.categories?.includes(category._id))
       );
     }
   }, [announcement]);
@@ -157,10 +157,10 @@ export default function AnnouncementForm({ onSave, children }) {
                   })
                 )
               }
-              value={announcement.title}
+              value={announcement?.title}
               register={register('title')}
               error={errors.title}
-              autoFocus={!!announcement.title}
+              autoFocus={!!announcement?.title && !announcement?.content}
             />
             <div className="flex items-center">
               <div className="my-auto">
@@ -174,7 +174,7 @@ export default function AnnouncementForm({ onSave, children }) {
                       dispatch(
                         announcementActions.setAnnouncement({
                           ...announcement,
-                          categories: announcement.categories.filter((cat) => cat !== category._id)
+                          categories: announcement?.categories.filter((cat) => cat !== category._id)
                         })
                       );
                     }}
@@ -228,13 +228,13 @@ export default function AnnouncementForm({ onSave, children }) {
                     })
                   )
                 }
-                value={announcement.content}
+                value={announcement?.content}
               />
             </div>
           </div>
         </div>
       </div>
-      {announcement.title && announcement.content && (
+      {announcement?.title && announcement?.content && (
         <div className="animate__animated animate__fadeInUp bg-white dark:bg-aa-900 purple:bg-pt-1000  w-full mt-4 border-t border-slate-200 dark:border-aa-600 purple:border-pt-800 p-2 fixed bottom-0 py-8 px-5 md:px-10 space-y-4 flex justify-between">
           {isGreaterThan(date, Date.now()) && (
             <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200 mt-4">
