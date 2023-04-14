@@ -112,7 +112,7 @@ export default function Announcements() {
               ? `this.userId == '${user._id}'`
               : guestInfo.email
               ? `this.guestEmail == '${guestInfo.email}'`
-              : `ip == '${userIp}'`
+              : `this.ip == '${userIp}'`
           ]
             .filter(Boolean)
             .join(' && ')
