@@ -181,7 +181,7 @@ export default function PublicView() {
       <Layout>
         {company && (
           <>
-            <div className="h-[calc(100vh-93px)]">
+            <div className="min-h-[calc(100vh-93px)]">
               {error ? (
                 <Errors title={error?.title} message={error?.message} />
               ) : (
