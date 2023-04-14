@@ -227,7 +227,7 @@ export default function RoadMapAdmin() {
   }, [searchText]);
 
   useEffect(() => {
-    if (roadmap && !roadmapIdeas) {
+    if (roadmap) {
       dispatch(
         ideaActions.getIdeasByRoadmap({
           filter: [
