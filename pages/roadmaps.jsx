@@ -227,7 +227,7 @@ export default function RoadMapAdmin() {
   }, [searchText]);
 
   useEffect(() => {
-    if (roadmap) {
+    if (roadmap && !roadmapIdeas) {
       dispatch(
         ideaActions.getIdeasByRoadmap({
           filter: [
@@ -247,6 +247,7 @@ export default function RoadMapAdmin() {
       );
     }
   }, [roadmap]);
+
   useEffect(() => {
     if (company) {
       if (!company?.siteNavigation?.roadmap && !(company?.role && company?.role !== 'Guest')) {

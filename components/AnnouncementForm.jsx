@@ -101,6 +101,7 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
         saveAnnouncement(true);
         if (!isGreaterThan(date, Date.now())) {
           realtime.send(company._id, 'publish-announcement', {
+            ...announcement,
             title,
             content,
             ...(announcement?._id && { _id: announcement._id }),

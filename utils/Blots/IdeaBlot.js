@@ -56,6 +56,8 @@ export default class IdeaBlot extends BlockEmbed {
     button.innerHTML = ideaCard;
     button.setAttribute('data-id', value._id);
     button.setAttribute('id', 'idea-button');
+    button.setAttribute('type', 'button');
+    button.setAttribute('spellcheck', 'false');
     node.appendChild(button);
     node.setAttribute('data-id', value._id);
     node.classList.add('border');

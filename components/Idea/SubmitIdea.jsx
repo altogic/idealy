@@ -349,7 +349,7 @@ export default function SubmitIdea({ idea }) {
           <ImageList images={images} onRemove={removeImage} removable loading={loading} />
         )}
         <div className="mt-8">
-          <span className="inline-block text-slate-600 dark:text-aa-300 purple:text-pt-300 mb-4 text-base tracking-sm">
+          <span className="inline-block text-slate-600 dark:text-aa-300 purple:text-pt-300 mb-4 text-sm tracking-sm">
             Choose up to 3 Topics for this Idea (optional)
           </span>
           <div className="flex flex-wrap items-center gap-4">
