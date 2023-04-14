@@ -227,7 +227,7 @@ export default function RoadMapAdmin() {
   }, [searchText]);
 
   useEffect(() => {
-    if (roadmap) {
+    if (roadmap && _.isEmpty(roadmapIdeas)) {
       dispatch(
         ideaActions.getIdeasByRoadmap({
           filter: [
@@ -320,9 +320,7 @@ export default function RoadMapAdmin() {
                             </TooltipTrigger>
 
                             <TooltipContent>
-                              {roadmap?.isPublic
-                                ? 'Make this roadmap private'
-                                : 'Make this roadmap public'}
+                              Make this roadmap {roadmap?.isPublic ? 'private' : 'public'}
                             </TooltipContent>
                           </Tooltip>
                         )}

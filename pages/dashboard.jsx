@@ -183,13 +183,12 @@ export default function AdminDashboard() {
                 )}
               </div>
             </div>
-
             <div>
               <div className="p-[33px] border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
                 <Tooltip>
                   <TooltipTrigger>
                     <div className="relative">
-                      <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md truncate w-[65ch] cursor-default ">
+                      <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md truncate w-[65ch] cursor-default  text-left">
                         {idea?.title}
                       </h2>
                       <TooltipContent>{idea?.title}</TooltipContent>
