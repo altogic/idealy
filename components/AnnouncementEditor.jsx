@@ -46,6 +46,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
 import _ from 'lodash';
 import { useRouter } from 'next/router';
+import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import EditorSideBarButton from './EditorSideBarButton';
 import EmptyState from './EmptyState';
 import IdeaDetail from './Idea/IdeaDetail';
@@ -249,7 +250,8 @@ export default function AnnouncementEditor({ onChange, value }) {
           dispatch(
             announcementActions.createAnnouncement({
               slug: title.toLowerCase().replace(/ /g, '-'),
-              title
+              title,
+              content: quill.root.innerHTML
             })
           );
         }
@@ -257,15 +259,20 @@ export default function AnnouncementEditor({ onChange, value }) {
     });
   }, []);
 
-  useEffect(() => {
-    if (quillInstance && !isStateUpdated) {
-      quillInstance.root.innerHTML = value;
-
+  useUpdateEffect(() => {
+    if (quillInstance && !isStateUpdated && router.asPath.includes('edit')) {
       quillInstance.getSelection();
       quillInstance.setSelection(quillInstance.getLength(), 0);
       setIsStateUpdated(true);
     }
   }, [quillInstance]);
+
+  useEffect(() => {
+    if (quillInstance && value && quillInstance.getLength() <= 1) {
+      quillInstance.clipboard.dangerouslyPasteHTML(0, value);
+      quillInstance.setSelection(quillInstance.getLength(), 0);
+    }
+  }, [value, quillInstance]);
 
   const removeFormat = () => {
     const range = quillInstance.getSelection(true);
@@ -540,13 +547,13 @@ export default function AnnouncementEditor({ onChange, value }) {
                 </button>
                 <input
                   placeholder="Search idea"
-                  className="outline-none grow"
+                  className="outline-none grow placeholder:text-sm text-sm text-slate-700 dark:text-aa-200 purple:text-pt-200"
                   onChange={(e) => setIdeaTitle(e.target.value)}
                   value={ideaTitle}
                 />
                 {ideaTitle && (
                   <button type="button" onClick={() => setIdeaTitle('')}>
-                    <X size={24} weight="thin" />
+                    <X size={16} weight="thin" />
                   </button>
                 )}
               </div>
