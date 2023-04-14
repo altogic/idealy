@@ -34,16 +34,13 @@ const DatePickerButton = forwardRef(({ onClick }, ref) => (
   </button>
 ));
 DatePickerButton.displayName = 'DatePickerButton';
-export default function AnnouncementForm({ onSave, announcement, children }) {
+export default function AnnouncementForm({ onSave, children }) {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [date, setDate] = useState(Date.now());
   const [categories, setCategories] = useState([]);
-  const {
-    updateAnnouncementLoading: loading,
-    title,
-    content,
-    categories: _categories
-  } = useSelector((state) => state.announcement);
+  const { updateAnnouncementLoading: loading, announcement } = useSelector(
+    (state) => state.announcement
+  );
   const router = useRouter();
   const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
@@ -84,10 +81,10 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
 
   function saveAnnouncement(isPublished = false) {
     onSave({
-      title,
-      content,
+      title: announcement?.title,
+      content: announcement?.content,
       ...(announcement?._id && { _id: announcement._id }),
-      ...(title && { slug: title.toLowerCase().replace(/ /g, '-') }),
+      ...(announcement.title && { slug: announcement.title.toLowerCase().replace(/ /g, '-') }),
       categories: categories.map((category) => category._id),
       company: company._id,
       isPublished: isPublished || isGreaterThan(date, Date.now()),
@@ -97,15 +94,17 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
 
   function publishAnnouncement() {
     return () => {
-      if (title) {
+      if (announcement.title) {
         saveAnnouncement(true);
         if (!isGreaterThan(date, Date.now())) {
           realtime.send(company._id, 'publish-announcement', {
             ...announcement,
-            title,
-            content,
+            title: announcement.title,
+            content: announcement.content,
             ...(announcement?._id && { _id: announcement._id }),
-            ...(title && { slug: title.toLowerCase().replace(/ /g, '-') }),
+            ...(announcement.title && {
+              slug: announcement.title.toLowerCase().replace(/ /g, '-')
+            }),
             categories: categories.map((category) => category._id),
             company: company._id,
             isPublished: true,
@@ -123,15 +122,15 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
     };
   }
 
-  useDebounce(title, saveAnnouncement, 500);
-  useDebounce(content?.replace(/<p><br><\/p>/g, ''), saveAnnouncement, 550);
-  useDebounce(categories, saveAnnouncement, 600);
+  useDebounce(announcement, saveAnnouncement, 600);
 
   useEffect(() => {
-    if (_categories?.length) {
-      setCategories(company.categories.filter((category) => _categories?.includes(category._id)));
+    if (categories?.length) {
+      setCategories(
+        company.categories.filter((category) => announcement.categories?.includes(category._id))
+      );
     }
-  }, [_categories]);
+  }, [announcement]);
 
   useUpdateEffect(() => {
     if (!compareDates(date, Date.now())) {
@@ -150,11 +149,18 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
               id="title"
               className="block text-slate-500 dark:text-aa-200 purple:text-pt-200 px-0 py-4 w-full text-3xl font-medium border-0 placeholder-slate-500 focus:outline-none focus:ring-0 placeholder:text-2xl bg-inherit"
               placeholder="Share with your audience what you are shipping for."
-              onChange={(e) => dispatch(announcementActions.setTitle(e.target.value))}
-              value={title}
+              onChange={(e) =>
+                dispatch(
+                  announcementActions.setAnnouncement({
+                    ...announcement,
+                    title: e.target.value
+                  })
+                )
+              }
+              value={announcement.title}
               register={register('title')}
               error={errors.title}
-              autoFocus={!!title}
+              autoFocus={!!announcement.title}
             />
             <div className="flex items-center">
               <div className="my-auto">
@@ -163,13 +169,15 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
                     key={category._id}
                     name={category.name}
                     color={category.color}
-                    onClose={() =>
+                    onClose={() => {
+                      setCategories(categories.filter((cat) => cat._id !== category._id));
                       dispatch(
-                        announcementActions.setCategories(
-                          categories.filter((cat) => cat._id !== category._id)
-                        )
-                      )
-                    }
+                        announcementActions.setAnnouncement({
+                          ...announcement,
+                          categories: announcement.categories.filter((cat) => cat !== category._id)
+                        })
+                      );
+                    }}
                   />
                 ))}
               </div>
@@ -188,8 +196,14 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
                 size="xxl"
                 onChange={(value) => {
                   if (value.length <= 3) {
-                    const cats = value.map((cat) => cat._id);
-                    dispatch(announcementActions.setCategories(cats));
+                    const categories = value.map((cat) => cat._id);
+                    setCategories(value);
+                    dispatch(
+                      announcementActions.setAnnouncement({
+                        ...announcement,
+                        categories
+                      })
+                    );
                   }
                 }}
                 multiple
@@ -206,14 +220,21 @@ export default function AnnouncementForm({ onSave, announcement, children }) {
             </div>
             <div className="mt-4 w-11/12">
               <AnnouncementEditor
-                onChange={(val) => dispatch(announcementActions.setContent(val))}
-                value={content}
+                onChange={(content) =>
+                  dispatch(
+                    announcementActions.setAnnouncement({
+                      ...announcement,
+                      content
+                    })
+                  )
+                }
+                value={announcement.content}
               />
             </div>
           </div>
         </div>
       </div>
-      {title && content && (
+      {announcement.title && announcement.content && (
         <div className="animate__animated animate__fadeInUp bg-white dark:bg-aa-900 purple:bg-pt-1000  w-full mt-4 border-t border-slate-200 dark:border-aa-600 purple:border-pt-800 p-2 fixed bottom-0 py-8 px-5 md:px-10 space-y-4 flex justify-between">
           {isGreaterThan(date, Date.now()) && (
             <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200 mt-4">
