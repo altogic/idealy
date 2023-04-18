@@ -10,7 +10,6 @@ export default function useNotification() {
   const sendNotification = ({ message, targetUser, type, url, companyId, userId, name }) => {
     if (targetUser && targetUser === user?._id) return;
     const guest = guestInfo?._id ? guestInfo : localStorageUtil.get('guestAuthentication');
-    console.log('guest', guest);
     dispatch(
       notificationActions.sendNotification({
         user: userId ?? user?._id,

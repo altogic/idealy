@@ -163,7 +163,6 @@ export default function Realtime() {
     }
   }
   function updateSublistHandler(data) {
-    console.log(data);
     if (data.message.sender !== user?._id && company._id === data.message.companyId) {
       dispatch(companyActions.updateCompanySubListsRealtime(data.message));
     }

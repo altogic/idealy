@@ -9,7 +9,6 @@ export default function useOpenFeedbackModal() {
   const dispatch = useDispatch();
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   useEffect(() => {
-    console.log(router.isReady && router.query.feedback && !feedBackDetailModal);
     if (router.isReady && router.query.feedback && !feedBackDetailModal) {
       dispatch(
         ideaActions.getIdeaById({
