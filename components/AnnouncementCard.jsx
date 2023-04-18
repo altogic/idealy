@@ -24,7 +24,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
   const loading = useSelector((state) => state.announcement?.isLoading);
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  useClickAnnouncementIdea();
+  useClickAnnouncementIdea(announcement);
 
   return (
     <>
