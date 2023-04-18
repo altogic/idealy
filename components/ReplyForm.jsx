@@ -64,25 +64,26 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
           ...(!user && { ip, name: guestInfo.name || name }),
           user: user?._id,
           onSuccess: () => {
+            if (!user && !guestInfo.name) {
+              saveGuestInfo({
+                name
+              });
+            }
             if (idea?.author?._id) {
               sendNotification({
                 message: `<b>${
-                  user?.name || guestInfo.name
-                }</b> replied to your comment on  on <b>${idea.title}</b>`,
+                  user?.name || guestInfo.name || name
+                }</b> replied to a comment on <b>${idea.title}</b>`,
                 targetUser: idea?.author._id,
                 type: 'reply',
-                url: `/public-view?feedback=${idea._id}`
+                url: `/public-view?feedback=${idea._id}`,
+                name: !user && !guestInfo.name ? name : ''
               });
               sendMentionNotification({
                 content: data.content,
                 name: user?.name || guestInfo.name || name,
                 title: idea.title,
                 ideaId: idea._id
-              });
-            }
-            if (!user && !guestInfo.name) {
-              saveGuestInfo({
-                name
               });
             }
           }
