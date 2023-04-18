@@ -44,6 +44,15 @@ export default function Announcements() {
 
   function onSearchChange(e) {
     setSearchText(e.target.value);
+    if (!e.target.value) {
+      router.push({
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          search: searchText
+        }
+      });
+    }
   }
 
   function setCategoryQuery() {
