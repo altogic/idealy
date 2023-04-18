@@ -8,8 +8,9 @@ import { useSelector } from 'react-redux';
 import { generateUrl } from '../utils';
 import CompanyAvatar from './CompanyAvatar';
 import GuestDropdown from './Header/GuestDropdown';
+import NotificationDropdown from './Header/NotificationDropdown';
 import UserDropdown from './Header/UserDropdown';
-import Notifications from './Notifications';
+import ThemeChanger from './ThemeChanger';
 import { Announcements, Close, Feedback, HamburgerMenu, People, Roadmap, Search } from './icons';
 
 export default function Header() {
@@ -153,7 +154,7 @@ export default function Header() {
                 )}>
                 <Link href="/public-view">
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
-                    <Feedback className="w-6 h-6 text-indigo-50 mr-3" />
+                    <Feedback className="w-6 h-6 icon-slate mr-3" />
                     Feedback
                   </a>
                 </Link>
@@ -170,7 +171,7 @@ export default function Header() {
                 )}>
                 <Link href="/roadmaps">
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
-                    <Roadmap className="w-6 h-6 text-indigo-50 mr-3" />
+                    <Roadmap className="w-6 h-6 icon-slate mr-3" />
                     Roadmap
                   </a>
                 </Link>
@@ -187,7 +188,7 @@ export default function Header() {
                 )}>
                 <Link href="/announcements">
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
-                    <Announcements className="w-6 h-6 text-indigo-50 mr-3" />
+                    <Announcements className="w-6 h-6 icon-slate mr-3" />
                     Announcements
                   </a>
                 </Link>
@@ -197,7 +198,7 @@ export default function Header() {
               <li className="flex items-center justify-center py-2 px-3 rounded-md transition hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
                 <Link href="/">
                   <a className="inline-flex items-center justify-center text-white font-medium tracking-sm">
-                    <People className="w-6 h-6 text-indigo-50 mr-3" />
+                    <People className="w-6 h-6 icon-slate mr-3" />
                     Users
                   </a>
                 </Link>
@@ -229,18 +230,17 @@ export default function Header() {
                 )}
               </div>
             )}
-          {/* {process.env.NODE_ENV === 'development' && <ThemeChanger />} */}
+          {process.env.NODE_ENV === 'development' && <ThemeChanger />}
           {/* Notification */}
-          {isLoggedIn && <Notifications />}
           <button
             type="button"
             className="inline-flex items-center justify-center w-10 h-10 rounded-full"
             onClick={() => setOpen(!open)}>
-            <Search className="w-5 h-5 text-indigo-50" />
+            <Search className="w-5 h-5 icon-slate" />
           </button>
           {isLoggedIn ? (
             <>
-              {/* <NotificationDropdown /> */}
+              <NotificationDropdown />
               <UserDropdown companies={userCompanies} />
             </>
           ) : !_.isEmpty(guestInfo) ? (

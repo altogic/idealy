@@ -42,7 +42,7 @@ export default function InviteMemberForm() {
             placeholder="you@domain.com"
             register={register('email')}
             error={errors.email}
-            icon={<Email className="w-5 h-5 text-slate-500" />}
+            icon={<Email className="w-5 h-5 icon" />}
           />
           <Input
             type="text"

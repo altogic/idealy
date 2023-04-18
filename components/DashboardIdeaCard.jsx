@@ -69,7 +69,7 @@ export default function DashboardIdeaCard({ idea, selected, id }) {
             <circle cx={4} cy={4} r={3} />
           </svg>
           <span className="inline-flex items-center gap-1.5   text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
-            <Comment className="w-5 h-5 " />
+            <Comment className="w-5 h-5 icon" />
             {idea?.commentCount}
           </span>
           <svg
@@ -78,8 +78,8 @@ export default function DashboardIdeaCard({ idea, selected, id }) {
             viewBox="0 0 8 8">
             <circle cx={4} cy={4} r={3} />
           </svg>
-          <span className="inline-flex items-center gap-1.5   text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
-            <ThreeStar className="w-5 h-5 " />
+          <span className="inline-flex items-center gap-1.5 text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
+            <ThreeStar className="w-5 h-5 icon" />
             {idea?.priorityScore}
           </span>
         </div>

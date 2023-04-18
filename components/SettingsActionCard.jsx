@@ -196,7 +196,7 @@ export default function SettingsActionCard({
                   {isPublic ? (
                     <Tooltip>
                       <TooltipTrigger>
-                        <Eye className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                        <Eye className="w-5 h-5 icon" />
                       </TooltipTrigger>
                       <TooltipContent>
                         <p className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm">
@@ -207,7 +207,7 @@ export default function SettingsActionCard({
                   ) : (
                     <Tooltip>
                       <TooltipTrigger>
-                        <EyeSlash className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                        <EyeSlash className="w-5 h-5 icon" />
                       </TooltipTrigger>
                       <TooltipContent>
                         <p className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-sm">
@@ -238,7 +238,7 @@ export default function SettingsActionCard({
             <Button
               type="button"
               icon={
-                <Pen className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-slate-600 dark:hover:text-aa-500 purple:hover:text-pt-500" />
+                <Pen className="w-5 h-5 icon transition hover:text-slate-600 dark:hover:text-aa-500 purple:hover:text-pt-500" />
               }
               variant="icon"
               onClick={(e) => {
@@ -253,7 +253,7 @@ export default function SettingsActionCard({
             <Button
               type="button"
               icon={
-                <Trash className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-slate-600 dark:hover:text-aa-500 purple:hover:text-pt-500" />
+                <Trash className="w-5 h-5 icon transition hover:text-slate-600 dark:hover:text-aa-500 purple:hover:text-pt-500" />
               }
               variant="icon"
               onClick={() => setIsDelete(!isDelete)}
@@ -280,7 +280,7 @@ export default function SettingsActionCard({
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
         onConfirm={deleteAction}
-        icon={<Danger className="w-6 h-6 text-red-600" />}
+        icon={<Danger className="w-6 h-6 icon-red" />}
         title={modalTitle}
         description={modalDescription}
         confirmText="Delete"

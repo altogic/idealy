@@ -33,7 +33,7 @@ export default function Image({ isPreview, src, alt, loading, onRemove, removabl
             type="button"
             className="absolute -top-[0.6rem] -right-[0.6rem] z-50 bg-white  hidden group-hover:flex  rounded-full"
             onClick={() => onRemove(index)}>
-            <XCircle className="w-6 h-6 text-gray-400" />
+            <XCircle className="w-6 h-6 icon" />
           </button>
         )}
       </div>

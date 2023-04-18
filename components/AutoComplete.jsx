@@ -1,10 +1,10 @@
 /* eslint-disable react/forbid-prop-types */
-import { XIcon } from '@heroicons/react/outline';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import Avatar from './Avatar';
 import Input from './Input';
 import SuggestionsList from './SuggestionList';
+import { Close } from './icons';
 
 function AutoComplete({
   suggestions,
@@ -107,8 +107,8 @@ function AutoComplete({
             {...rest}
           />
           {(input || selectedSuggestion) && (
-            <XIcon
-              className="w-5 h-5 text-slate-400 absolute right-2 top-10 cursor-pointer"
+            <Close
+              className="w-5 h-5 icon absolute right-2 top-10 cursor-pointer"
               onClick={() => {
                 setInput('');
                 setSelectedSuggestion();

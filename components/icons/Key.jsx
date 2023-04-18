@@ -1,23 +1,21 @@
 import * as React from 'react';
 
 function SvgKey(props) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      width="1em"
-      height="1em"
-      {...props}>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25z"
-      />
-    </svg>
-  );
+  return <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="key_svg__icon key_svg__icon-tabler key_svg__icon-tabler-key"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="#2c3e50"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}>
+    <path d="M0 0h24v24H0z" stroke="none" />
+    <circle cx={8} cy={15} r={4} />
+    <path d="M10.85 12.15 19 4M18 5l2 2M15 8l2 2" />
+  </svg>
 }
-
 export default SvgKey;

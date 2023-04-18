@@ -6,7 +6,7 @@ import {
   Eye,
   FilterHamburger,
   ThreeStar,
-  Thumbtack,
+  Archive,
   XCircle
 } from '@/components/icons';
 import Label from '@/components/Label';
@@ -187,7 +187,7 @@ export default function FilterSave({ className, filters }) {
             label={selectedFilter?.name}
             onChange={handleFilterSelect}
             icon={
-              <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+              <FilterHamburger className="w-5 h-5 icon" />
             }
             field="name"
             options={filters}
@@ -311,21 +311,21 @@ export default function FilterSave({ className, filters }) {
             text="Archive"
             active={router.query.archive === 'true'}
             icon={
-              <Thumbtack className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+              <Archive className="w-5 h-5 icon" />
             }
             name="archive"
           />
           <IdeaPropertyButton
             text="Private"
             active={router.query.private === 'true'}
-            icon={<Eye className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
+            icon={<Eye className="w-5 h-5 icon" />}
             name="private"
           />
           <IdeaPropertyButton
             text="Need Approval"
             active={router.query.approved === 'true'}
             icon={
-              <CircleCheck className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+              <CircleCheck className="w-5 h-5 icon" />
             }
             name="approved"
           />
@@ -333,7 +333,7 @@ export default function FilterSave({ className, filters }) {
           <IdeaPropertyButton
             text="Bug"
             active={router.query.bug === 'true'}
-            icon={<Bug className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
+            icon={<Bug className="w-5 h-5 icon" />}
             name="bug"
           />
 
@@ -341,7 +341,7 @@ export default function FilterSave({ className, filters }) {
             text="No Status"
             active={router.query.noStatus === 'true'}
             icon={
-              <XCircle className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+              <XCircle className="w-5 h-5 icon" />
             }
             name="noStatus"
           />

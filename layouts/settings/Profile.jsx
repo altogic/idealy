@@ -81,7 +81,7 @@ export default function Profile() {
         onClose={() => setDeleteProfile(!deleteProfile)}
         cancelOnClick={() => setDeleteProfile(!deleteProfile)}
         onConfirm={deleteProfileHandler}
-        icon={<Danger className="w-6 h-6 text-red-600" />}
+        icon={<Danger className="w-6 h-6 icon-red" />}
         title="Delete Profile"
         description="Are you sure you want to delete your profile? This action will delete all data associated with owned companies and remove you from the membership of all other companies."
         confirmText="Delete Profile"

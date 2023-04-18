@@ -4,20 +4,19 @@ function SvgUpDown(props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
+      className="up-down_svg__icon up-down_svg__icon-tabler up-down_svg__icon-tabler-sort-ascending"
       width="1em"
       height="1em"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="#2c3e50"
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       {...props}>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
-      />
+      <path d="M0 0h24v24H0z" stroke="none" />
+      <path d="M4 6h7M4 12h7M4 18h9M15 9l3-3 3 3M18 6v12" />
     </svg>
   );
 }
-
 export default SvgUpDown;

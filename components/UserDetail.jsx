@@ -63,7 +63,7 @@ export default function UserDetail() {
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
         onConfirm={() => setIsDelete(!isDelete)}
-        icon={<Danger className="w-6 h-6 text-red-600" />}
+        icon={<Danger className="w-6 h-6 icon-red" />}
         title="Delete post"
         description="Are you sure you want to delete this post? This action cannot be undone."
         confirmText="Delete"

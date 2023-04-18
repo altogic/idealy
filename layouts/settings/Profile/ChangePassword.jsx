@@ -91,7 +91,7 @@ export default function ChangePassword() {
           register={register('currentPassword')}
           error={errors.currentPassword}
           placeholder="Current Password"
-          icon={<Key className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200" />}
+          icon={<Key className="w-5 h-5 icon" />}
           autoComplete="off"
         />
         <Input
@@ -101,7 +101,7 @@ export default function ChangePassword() {
           register={register('newPassword')}
           error={errors.newPassword}
           placeholder="New Password"
-          icon={<Key className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200" />}
+          icon={<Key className="w-5 h-5 icon" />}
           autoComplete="off"
         />
         <Input
@@ -111,7 +111,7 @@ export default function ChangePassword() {
           register={register('confirmNewPassword')}
           error={errors.confirmNewPassword}
           placeholder="Confirm New Password"
-          icon={<Key className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200" />}
+          icon={<Key className="w-5 h-5 icon" />}
           autoComplete="off"
         />
         <div className="flex items-center justify-end gap-3">

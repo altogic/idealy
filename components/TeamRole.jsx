@@ -128,7 +128,7 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
               alt={name}
             />
           ) : (
-            <CircleUser className="flex-shrink-0 w-[50px] h-[50px] rounded-full text-slate-400" />
+            <CircleUser className="flex-shrink-0 w-[50px] h-[50px] rounded-full icon" />
           )}
           <div className={cn(email ? 'space-y-1' : '')}>
             <h6
@@ -173,7 +173,7 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
             <Button
               type="button"
               icon={
-                <Trash className="w-5 h-5 text-slate-500 dark:text-aa-400 purple:text-pt-400 transition hover:text-red-500 dark:hover:text-red-500 purple:hover:text-red-500" />
+                <Trash className="w-5 h-5 icon transition hover:text-red-500 dark:hover:stroke-red-500 purple:hover:stroke-red-500" />
               }
               variant="icon"
               onClick={() => setIsDelete(!isDelete)}
@@ -189,7 +189,7 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
         onConfirm={handleDelete}
-        icon={<Danger className="w-6 h-6 text-red-600" />}
+        icon={<Danger className="w-6 h-6 icon-red" />}
         title="Delete Team Member"
         description="Are you sure you want to delete this team member? This action cannot be undone."
         confirmText="Delete Member"

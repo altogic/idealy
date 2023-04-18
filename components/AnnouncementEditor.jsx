@@ -1,5 +1,7 @@
 /* eslint-disable no-param-reassign */
 import useDebounce from '@/hooks/useDebounce';
+import useUpdateEffect from '@/hooks/useUpdatedEffect';
+import { announcementActions } from '@/redux/announcement/announcementSlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import FileService from '@/services/file';
@@ -17,41 +19,38 @@ import {
   VideoBlot
 } from '@/utils/Blots';
 import { Block } from '@/utils/Blots/Blots';
-import {
-  Broom,
-  CaretLeft,
-  Code,
-  Image,
-  LightbulbFilament,
-  Link,
-  ListDashes,
-  ListNumbers,
-  MinusCircle,
-  PlusCircle,
-  Quotes,
-  TextB,
-  TextHOne,
-  TextHTwo,
-  TextItalic,
-  TextStrikethrough,
-  TextUnderline,
-  VideoCamera,
-  X
-} from '@phosphor-icons/react';
 import hljs from 'highlight.js';
+import _ from 'lodash';
+import { useRouter } from 'next/router';
 import Quill from 'quill';
 import QuillImageDropAndPaste from 'quill-image-drop-and-paste';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { announcementActions } from '@/redux/announcement/announcementSlice';
-import _ from 'lodash';
-import { useRouter } from 'next/router';
-import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import EditorSideBarButton from './EditorSideBarButton';
 import EmptyState from './EmptyState';
 import IdeaDetail from './Idea/IdeaDetail';
-import StatusBadge from './StatusBadge';
 import { Popover, PopoverContent, PopoverTrigger } from './Popover';
+import StatusBadge from './StatusBadge';
+import {
+  Bold,
+  ClearFormat,
+  Code,
+  HOne,
+  HTwo,
+  Italic,
+  Link,
+  List,
+  ListNumbers,
+  MinusCircle,
+  PlusCircle,
+  Quote,
+  Strikethrough,
+  Underline,
+  VideoCamera,
+  Feedback,
+  Close,
+  ChevronLeft
+} from './icons';
 
 const uploadImage = async (file) => {
   const { data } = await FileService.uploadFile(file, file.name);
@@ -425,60 +424,54 @@ export default function AnnouncementEditor({ onChange, value }) {
         className="hidden absolute bg-white dark:bg-aa-900 purple:bg-pt-900 border border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-md shadow py-2 px-3">
         <div className="space-x-3 transition ease-in-out duration-500" ref={tooltipButtons}>
           <button type="button" id="bold-button" onClick={() => handleFormat('bold', true)}>
-            <TextB size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
+            <Bold className="w-5 h-5 icon" />
           </button>
           <button type="button" id="italic-button" onClick={() => handleFormat('italic', true)}>
-            <TextItalic size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
+            <Italic className="w-5 h-5 icon" />
           </button>
           <button type="button" id="italic-button" onClick={() => handleFormat('underline', true)}>
-            <TextUnderline
-              size={20}
-              className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200"
-            />
+            <Underline className="w-5 h-5 icon" />
           </button>
           <button type="button" id="italic-button" onClick={() => handleFormat('strike', true)}>
-            <TextStrikethrough
-              size={20}
-              className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200"
-            />
+            <Strikethrough className="w-5 h-5 icon" />
           </button>
           <div className="flex w-px h-4 border-r border-slate-200 dark:border-aa-400 purple:border-pt-400" />
           <button type="button" id="link-button" onClick={addLink}>
-            <Link size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
+            <Link className="w-5 h-5 icon" />
           </button>
           <div className="flex w-px h-4 border-r border-slate-200 dark:border-aa-400 purple:border-pt-400" />
           <button
             type="button"
             id="link-button"
             onClick={() => handleFormat('list', 'bullet', true)}>
-            <ListDashes size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
+            <List className="w-5 h-5 icon" />
           </button>
           <button
             type="button"
             id="link-button"
             onClick={() => handleFormat('list', 'ordered', true)}>
-            <ListNumbers size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
+            <ListNumbers className="w-5 h-5 icon" />
           </button>
           <div className="flex w-px h-4 border-r border-slate-200 dark:border-aa-400 purple:border-pt-400" />
           <button
             type="button"
             id="blockquote-button"
             onClick={() => handleFormat('blockquote', true)}>
-            <Quotes size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
+            <Quote className="w-5 h-5 icon" />
           </button>
           <div className="flex w-px h-4 border-r border-slate-200 dark:border-aa-400 purple:border-pt-400" />
           <button type="button" id="header-1-button" onClick={() => handleFormat('header', 1)}>
-            <TextHOne size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
+            <HOne className="w-5 h-5 icon" />
           </button>
           <button type="button" id="header-2-button" onClick={() => handleFormat('header', 2)}>
-            <TextHTwo size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
+            <HTwo className="w-5 h-5 icon" />
           </button>
           <div className="flex w-px h-4 border-r border-slate-200 dark:border-aa-400 purple:border-pt-400" />
           <button type="button" id="divider-button" onClick={formatCode}>
-            <Code size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
+            <Code className="w-5 h-5 icon" />
           </button>
           <button type="button" id="divider-button" onClick={removeFormat}>
-            <Broom size={20} className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />
+            <ClearFormat className="w-5 h-5 icon" />
           </button>
         </div>
         <div ref={tooltipInput} className="hidden w-[244px] h-[22px]">
@@ -547,7 +540,7 @@ export default function AnnouncementEditor({ onChange, value }) {
                         })
                       );
                     }}
-                    Icon={LightbulbFilament}
+                    Icon={Feedback}
                     name="Idea"
                     description="Import an idea"
                   />
@@ -556,7 +549,7 @@ export default function AnnouncementEditor({ onChange, value }) {
                 <div className="w-full">
                   <div className="flex gap-2 relative p-3 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
                     <button type="button" onClick={closeAddIdea}>
-                      <CaretLeft size={24} weight="thin" />
+                      <ChevronLeft className="w-6 h-6 icon" />
                     </button>
                     <input
                       placeholder="Search idea"
@@ -566,7 +559,7 @@ export default function AnnouncementEditor({ onChange, value }) {
                     />
                     {ideaTitle && (
                       <button type="button" onClick={() => setIdeaTitle('')}>
-                        <X size={16} weight="thin" />
+                        <Close className="w-4 h-4 icon" />
                       </button>
                     )}
                   </div>

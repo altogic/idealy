@@ -4,13 +4,18 @@ function SvgHamburgerMenu(props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
+      className="hamburger-menu_svg__icon hamburger-menu_svg__icon-tabler hamburger-menu_svg__icon-tabler-menu-2"
       width="1em"
       height="1em"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="#2c3e50"
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       {...props}>
-      <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+      <path d="M0 0h24v24H0z" stroke="none" />
+      <path d="M4 6h16M4 12h16M4 18h16" />
     </svg>
   );
 }

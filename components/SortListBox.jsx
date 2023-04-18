@@ -30,8 +30,8 @@ export default function SortListBox({ size, type = 'default' }) {
   return (
     <BaseListBox
       value={sortSelected}
-      icon={<UpDown className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
-      label={type === 'icon' ? <UpDown className="w-5 h-5" /> : sortSelected?.name}
+      icon={<UpDown className="w-5 h-5 icon" />}
+      label={type === 'icon' ? <UpDown className="w-5 h-5 icon" /> : sortSelected?.name}
       type={type}
       onChange={handleSortChange}
       field="name"
