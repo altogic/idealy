@@ -393,7 +393,7 @@ html:has(:is(.modal, .drawer)) {
 #editor-container h2 {
   font-size: 26pt;
 }
-#editor-container hr {
+.ql-divider {
   color: #111;
   letter-spacing: 1em;
   text-align: center;
@@ -403,7 +403,7 @@ html:has(:is(.modal, .drawer)) {
   margin-top: 52px;
   margin-bottom: 42px;
 }
-#editor-container hr:before {
+.ql-divider:before {
   content: '...';
   --x-height-multiplier: 0.342;
   --baseline-multiplier: 0.22;
