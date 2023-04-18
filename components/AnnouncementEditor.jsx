@@ -49,7 +49,8 @@ import {
   VideoCamera,
   Feedback,
   Close,
-  ChevronLeft
+  ChevronLeft,
+  Photo
 } from './icons';
 
 const uploadImage = async (file) => {
@@ -491,11 +492,7 @@ export default function AnnouncementEditor({ onChange, value }) {
               id="show-controls"
               className="self-start"
               onClick={handleShowControl}>
-              <PlusCircle
-                size={32}
-                weight="thin"
-                className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200"
-              />
+              <PlusCircle className="w-8 h-8 icon" />
             </button>
           </PopoverTrigger>
 
@@ -508,7 +505,7 @@ export default function AnnouncementEditor({ onChange, value }) {
                   <EditorSideBarButton
                     id="image-button"
                     onClick={addImage}
-                    Icon={Image}
+                    Icon={Photo}
                     name="Image"
                     description="Upload an image"
                   />
