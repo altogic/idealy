@@ -42,13 +42,18 @@ export default function AnnouncementCard({ announcement, onPage }) {
           )}
           <div className="grow flex flex-col">
             <div className="flex justify-between items-center gap-2 divide-x divide-slate-200 dark:divide-aa-600 purple:divide-pt-600">
-              <Link href={`/announcements/${announcement?.slug}`}>
-                <a className="flex-1">
-                  <h2 className="flex-1 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left lg:truncate">
-                    {announcement?.title || 'Untitled'}
-                  </h2>
-                </a>
-              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  router.push(`/announcements/${announcement?.slug}`);
+                  dispatch(announcementActions.setAnnouncement(announcement));
+                }}
+                className="flex-1">
+                <h2 className="flex-1 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left lg:truncate">
+                  {announcement?.title || 'Untitled'}
+                </h2>
+              </button>
+
               {announcement?.publishDate && isGreaterThan(announcement?.publishDate, Date.now()) && (
                 <div className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-md text-left">
                   Will be published on{' '}
