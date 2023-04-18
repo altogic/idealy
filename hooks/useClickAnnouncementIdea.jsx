@@ -10,13 +10,17 @@ export default function useClickAnnouncementIdea(deps) {
         routeIdea(button.dataset.id);
       });
     });
+  }, [deps]);
 
-    return () => {
+  useEffect(
+    () => () => {
+      const buttons = document.querySelectorAll('#idea-button');
       buttons.forEach((button) => {
         button.removeEventListener('click', () => {
           routeIdea(button.dataset.id);
         });
       });
-    };
-  }, [deps]);
+    },
+    []
+  );
 }

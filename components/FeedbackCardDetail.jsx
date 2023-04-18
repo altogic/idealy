@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { DateTime } from 'luxon';
 import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
@@ -39,9 +40,12 @@ export default function FeedbackCardDetail({ setMentionCardStyle }) {
         className="flex items-center gap-2 my-4"
         onClick={(e) => {
           e.stopPropagation();
+          const commentCards = document.querySelectorAll('#comment-user-card');
+          commentCards.forEach((commentCard) => {
+            commentCard.style.display = 'none';
+          });
           const userCards = document.querySelectorAll('.idea-user-card');
           userCards.forEach((userCard) => {
-            // eslint-disable-next-line no-param-reassign
             userCard.style.display = 'none';
           });
           setUserCardStyle({

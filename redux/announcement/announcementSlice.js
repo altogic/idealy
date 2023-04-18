@@ -12,10 +12,7 @@ export const announcementSlice = createSlice({
     createAnnouncementLoading: false,
     updateAnnouncementLoading: false,
     error: null,
-    reactions: [],
-    title: '',
-    content: '',
-    categories: []
+    reactions: []
   },
   reducers: {
     createAnnouncement: (state) => {
@@ -44,7 +41,7 @@ export const announcementSlice = createSlice({
       state.announcements = state.announcements.map((announcement) =>
         announcement._id === action.payload._id ? action.payload : announcement
       );
-      state.announcement = action.payload;
+      // state.announcement = action.payload;
     },
     updateAnnouncementFailure: (state, action) => {
       state.updateAnnouncementLoading = false;
@@ -162,9 +159,6 @@ export const announcementSlice = createSlice({
     },
     setAnnouncement: (state, action) => {
       state.announcement = action.payload;
-      state.categories = action.payload.categories;
-      state.title = action.payload.title;
-      state.content = action.payload.content;
     },
     createAnnouncementReactionRealtimeSuccess: (state, action) => {
       state.announcements = state.announcements.map((announcement) =>
@@ -206,18 +200,6 @@ export const announcementSlice = createSlice({
     },
     resetAnnouncement: (state) => {
       state.announcement = null;
-      state.title = '';
-      state.content = '';
-      state.categories = [];
-    },
-    setTitle: (state, action) => {
-      state.title = action.payload;
-    },
-    setContent: (state, action) => {
-      state.content = action.payload;
-    },
-    setCategories: (state, action) => {
-      state.categories = action.payload;
     }
   },
   extraReducers: (builder) => {

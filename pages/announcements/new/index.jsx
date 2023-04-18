@@ -9,7 +9,7 @@ export default function NewAnnouncement() {
   const router = useRouter();
   const announcements = useSelector((state) => state.announcement.announcements);
   const onSuccess = (data) => {
-    router.push(`/announcements/edit/${data.slug}`);
+    router.push(`/announcements/edit/${data.slug}&focus=false`);
   };
   const handleSaveAnnouncements = (req) => {
     if (announcements.some((announcement) => announcement.slug === req.slug)) return;

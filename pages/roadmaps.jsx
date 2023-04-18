@@ -227,7 +227,7 @@ export default function RoadMapAdmin() {
   }, [searchText]);
 
   useEffect(() => {
-    if (roadmap && !roadmapIdeas) {
+    if (roadmap && _.isEmpty(roadmapIdeas)) {
       dispatch(
         ideaActions.getIdeasByRoadmap({
           filter: [
@@ -320,44 +320,42 @@ export default function RoadMapAdmin() {
                             </TooltipTrigger>
 
                             <TooltipContent>
-                              {roadmap?.isPublic
-                                ? 'Make this roadmap private'
-                                : 'Make this roadmap public'}
+                              Make this roadmap {roadmap?.isPublic ? 'private' : 'public'}
                             </TooltipContent>
                           </Tooltip>
                         )}
-
-                        <BaseListBox
-                          value={roadmap}
-                          label={roadmap?.name}
-                          field="name"
-                          options={filteredRoadmaps}
-                          size="xxl"
-                          className="flex-1"
-                          onChange={(value) => {
-                            setRoadmap(value);
-                            dispatch(ideaActions.setSelectedIdea(value));
-                            router.push({
-                              pathname: '/roadmaps',
-                              query: { roadmap: value._id }
-                            });
-                          }}
-                          type="create">
-                          <button
-                            type="button"
-                            className="inline-flex items-center gap-3 text-slate-400 py-2"
-                            onClick={() => setIsCreate(!isCreate)}>
-                            <Plus className="w-4 h-4 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-                            Add a new roadmap
-                          </button>
-                        </BaseListBox>
-                        <SearchInput
-                          searchText={searchText}
-                          onSearch={(e) => onSearchChange(e)}
-                          onClear={() => {
-                            setSearchText('');
-                          }}
-                        />
+                        <div className="flex flex-1 justify-between items-center">
+                          <BaseListBox
+                            value={roadmap}
+                            label={roadmap?.name}
+                            field="name"
+                            options={filteredRoadmaps}
+                            size="xs"
+                            onChange={(value) => {
+                              setRoadmap(value);
+                              dispatch(ideaActions.setSelectedIdea(value));
+                              router.push({
+                                pathname: '/roadmaps',
+                                query: { roadmap: value._id }
+                              });
+                            }}
+                            type="create">
+                            <button
+                              type="button"
+                              className="inline-flex items-center gap-3 text-slate-400 py-2"
+                              onClick={() => setIsCreate(!isCreate)}>
+                              <Plus className="w-4 h-4 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                              Add a new roadmap
+                            </button>
+                          </BaseListBox>
+                          <SearchInput
+                            searchText={searchText}
+                            onSearch={(e) => onSearchChange(e)}
+                            onClear={() => {
+                              setSearchText('');
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
                     <p className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
@@ -403,7 +401,11 @@ export default function RoadMapAdmin() {
                 {((!roadmap?.publicStatuses?.length && isGuest) || !company?.roadmaps?.length) && (
                   <EmptyState
                     title="No items to view"
-                    description="There is no public status for this roadmap."
+                    description={
+                      roadmap?.publicStatuses?.length
+                        ? 'There is no public status for this roadmap.'
+                        : 'here is no public roadmap for this company.'
+                    }
                   />
                 )}
               </div>

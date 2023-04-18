@@ -10,6 +10,12 @@ export default function useSaveGuestInformation(saveLocal = true) {
   const saveGuestInformation = ({ email, name, avatar, onSuccess }) => {
     if (saveLocal && !email) {
       addGuestInfoToLocalStorage({ name, avatar });
+      dispatch(
+        authActions.setGuestInfo({
+          name,
+          avatar
+        })
+      );
     }
 
     if (email) {
@@ -20,13 +26,13 @@ export default function useSaveGuestInformation(saveLocal = true) {
           email,
           avatar: avatar || guestInfo.avatar,
           onSuccess: (user) => {
-            if (onSuccess) onSuccess();
             addGuestInfoToLocalStorage(user);
             dispatch(
               authActions.setGuestInfo({
                 ...user
               })
             );
+            if (onSuccess) onSuccess(user);
           }
         })
       );

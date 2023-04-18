@@ -47,8 +47,8 @@ export default function ReplyCard({ reply, dashboard }) {
     <div
       id={reply._id}
       className={cn(
-        'group mt-2 rounded',
-        !dashboard && 'bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 sm:p-8 '
+        'group rounded',
+        !dashboard && 'bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 sm:px-8 py-3'
       )}>
       <div className="flex gap-2 sm:gap-5">
         {/* Name First Letter Icon */}
@@ -125,7 +125,7 @@ export default function ReplyCard({ reply, dashboard }) {
         confirmColor="red"
         canCancel
       />
-      {dashboard && <Divider className="my-8" />}
+      <Divider className="my-8" />
     </div>
   );
 }
