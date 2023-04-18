@@ -342,7 +342,7 @@ export default function RoadMapAdmin() {
                             type="create">
                             <button
                               type="button"
-                              className="inline-flex items-center gap-3 text-slate-400 py-2"
+                              className="inline-flex items-center gap-3 text-slate-400 py-2 whitespace-nowrap"
                               onClick={() => setIsCreate(!isCreate)}>
                               <Plus className="w-4 h-4 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
                               Add a new roadmap
@@ -404,7 +404,7 @@ export default function RoadMapAdmin() {
                     description={
                       roadmap?.publicStatuses?.length
                         ? 'There is no public status for this roadmap.'
-                        : 'here is no public roadmap for this company.'
+                        : 'There is no public roadmap for this company.'
                     }
                   />
                 )}
