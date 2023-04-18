@@ -76,6 +76,11 @@ export default function AdminDashboard() {
     });
   };
 
+  function hideUserCard() {
+    const userCard = document.querySelector('#comment-user-card');
+    userCard.style.display = 'none';
+  }
+
   useEffect(() => {
     if (sessionUser) {
       setUser(sessionUser);
@@ -99,8 +104,9 @@ export default function AdminDashboard() {
       const scrollIdea = document.getElementById(ideaId);
       if (scrollIdea) {
         scrollIdea.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        dispatch(ideaActions.setSelectedIdea(ideas.find((idea) => idea._id === ideaId)));
-        if (idea?.commentCount) dispatch(commentActions.getComments({ ideaId, page: 1 }));
+        const selectedIdea = ideas.find((idea) => idea._id === ideaId);
+        dispatch(ideaActions.setSelectedIdea(selectedIdea));
+        if (selectedIdea?.commentCount) dispatch(commentActions.getComments({ ideaId, page: 1 }));
       }
     }
   }, [router.query.feedback, ideas]);
@@ -131,7 +137,10 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
+
+    document.body.addEventListener('click', hideUserCard);
     return () => {
+      document.body.removeEventListener('click', hideUserCard);
       dispatch(ideaActions.setSelectedIdea(null));
       document.body.style.overflow = 'auto';
     };

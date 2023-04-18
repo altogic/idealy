@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+// eslint-disable-next-line no-param-reassign
 import useClickMention from '@/hooks/useClickMention';
 import useIdeaActionValidation from '@/hooks/useIdeaActionValidation';
 import { toggleDeleteCommentModal } from '@/redux/general/generalSlice';
@@ -36,17 +38,28 @@ export default function CommentCard({ comment, dashboard }) {
 
   const handleShowUserCard = (e) => {
     e.stopPropagation();
-    const userCards = document.querySelectorAll('.idea-user-card');
+
+    const userCards = document.querySelectorAll('#comment-user-card');
     userCards.forEach((userCard) => {
-      // eslint-disable-next-line no-param-reassign
       userCard.style.display = 'none';
     });
-    const top = e.target.offsetTop - 80;
-    const left = e.target.offsetLeft + 20;
+    const ideaCards = document.querySelectorAll('#idea-user-card');
+    ideaCards.forEach((ideaCard) => {
+      ideaCard.style.display = 'none';
+    });
+
+    const card =
+      e.currentTarget.id === 'avatar'
+        ? e.currentTarget.previousSibling
+        : e.currentTarget.parentElement.previousSibling.previousSibling;
+
+    card.style.display = 'flex';
+    card.classList.remove('hidden');
+    card.classList.add('flex');
+
     setUserCardStyle({
-      top,
-      left,
-      display: 'flex'
+      top: dashboard ? '-5rem' : '-3rem',
+      left: dashboard ? '1rem' : '4rem'
     });
     setUserCardInfo({
       profilePicture: comment?.user?.profilePicture || comment?.guestAvatar,
@@ -64,7 +77,7 @@ export default function CommentCard({ comment, dashboard }) {
     <div
       id={comment?._id}
       className={cn(
-        'group mt-2 rounded',
+        'group mt-2 rounded relative',
         !dashboard && 'bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 p-4 sm:p-8 '
       )}>
       {editComment ? (
@@ -76,12 +89,13 @@ export default function CommentCard({ comment, dashboard }) {
       ) : (
         <div className="flex gap-2 sm:gap-5">
           <UserCard
+            id="comment-user-card"
             profilePicture={userCardInfo?.profilePicture}
             name={userCardInfo?.name}
             email={userCardInfo?.email}
             style={userCardStyle}
           />
-          <button className="w-8 h-8" type="button" onClick={handleShowUserCard}>
+          <button className="w-8 h-8" id="avatar" type="button" onClick={handleShowUserCard}>
             <Avatar
               src={comment?.user?.profilePicture}
               alt={
@@ -96,7 +110,7 @@ export default function CommentCard({ comment, dashboard }) {
             />
           </button>
           <div className="w-full space-y-w">
-            <button type="button" onClick={handleShowUserCard}>
+            <button type="button" id="title" onClick={handleShowUserCard}>
               <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
                 {comment?.user
                   ? comment?.user.name
@@ -174,11 +188,9 @@ export default function CommentCard({ comment, dashboard }) {
                 {loading && page === 1 ? (
                   <CommentSkeleton dashboard={dashboard} />
                 ) : (
-                  <div className="space-y-6">
-                    {replies[comment?._id]?.map((reply) => (
-                      <ReplyCard reply={reply} key={reply?._id} dashboard={dashboard} />
-                    ))}
-                  </div>
+                  replies[comment?._id]?.map((reply) => (
+                    <ReplyCard reply={reply} key={reply?._id} dashboard={dashboard} />
+                  ))
                 )}
               </>
             )}
