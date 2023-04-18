@@ -38,7 +38,6 @@ export default function GuestFormModal({
     resolver: yupResolver(schema)
   });
   const submit = (data) => {
-    onSubmit(data);
     saveGuestInformation({
       email: data.guestEmail,
       name: data.guestName,
@@ -46,6 +45,7 @@ export default function GuestFormModal({
       onSuccess: () => {
         onClose();
         reset();
+        onSubmit(data);
       }
     });
   };
