@@ -51,6 +51,7 @@ import EditorSideBarButton from './EditorSideBarButton';
 import EmptyState from './EmptyState';
 import IdeaDetail from './Idea/IdeaDetail';
 import StatusBadge from './StatusBadge';
+import { Popover, PopoverContent, PopoverTrigger } from './Popover';
 
 const uploadImage = async (file) => {
   const { data } = await FileService.uploadFile(file, file.name);
@@ -200,12 +201,16 @@ export default function AnnouncementEditor({ onChange, value }) {
       if (range.length === 0) {
         tooltip.current.style.display = 'none';
         const [block] = quill.scroll.descendant(Block, range.index);
-        if (block != null && block.domNode.firstChild instanceof HTMLBRElement) {
+        if (
+          block != null &&
+          block.domNode.firstChild instanceof HTMLBRElement &&
+          block.domNode instanceof HTMLParagraphElement
+        ) {
           const lineBounds = quill.getBounds(range);
           sidebar.current.classList.remove('active');
           sidebar.current.style.display = 'block';
           sidebar.current.style.left = `${lineBounds.left - 50}px`;
-          sidebar.current.style.top = `${lineBounds.top - 2}px`;
+          sidebar.current.style.top = `${lineBounds.top - 6}px`;
         } else {
           tooltip.current.style.display = 'none';
           sidebar.current.style.display = 'none';
@@ -269,7 +274,7 @@ export default function AnnouncementEditor({ onChange, value }) {
 
   useEffect(() => {
     if (quillInstance && value && quillInstance.getLength() <= 1) {
-      quillInstance.clipboard.dangerouslyPasteHTML(0, value);
+      quillInstance.root.innerHTML = value;
       quillInstance.setSelection(quillInstance.getLength(), 0);
     }
   }, [value, quillInstance]);
@@ -348,6 +353,8 @@ export default function AnnouncementEditor({ onChange, value }) {
     quillInstance.insertEmbed(range.index, 'divider', true, Quill.sources.USER);
     quillInstance.setSelection(range.index + 1, Quill.sources.SILENT);
     sidebar.current.style.display = 'none';
+    const controls = document.querySelector('.controls');
+    controls.style.display = 'none';
   };
   const addImage = () => {
     const range = quillInstance.getSelection(true);
@@ -378,6 +385,8 @@ export default function AnnouncementEditor({ onChange, value }) {
       quillInstance.setSelection(range.index + 1, Quill.sources.SILENT);
     };
     sidebar.current.style.display = 'none';
+    const controls = document.querySelector('.controls');
+    controls.style.display = 'none';
   };
   const addVideo = (e) => {
     e.stopPropagation();
@@ -387,6 +396,8 @@ export default function AnnouncementEditor({ onChange, value }) {
     input.current.style.left = `${lineBounds.left - 15}px`;
     input.current.style.top = `${lineBounds.top - 3}px`;
     sidebar.current.style.display = 'none';
+    const controls = document.querySelector('.controls');
+    controls.style.display = 'none';
   };
   const handleShowControl = () => {
     sidebar.current.classList.toggle('active');
@@ -402,6 +413,8 @@ export default function AnnouncementEditor({ onChange, value }) {
     quillInstance.insertEmbed(range.index, 'idea', idea, Quill.sources.USER);
     quillInstance.setSelection(range.index + 1, Quill.sources.SILENT);
     sidebar.current.style.display = 'none';
+    const controls = document.querySelector('.controls');
+    controls.style.display = 'none';
   };
 
   return (
@@ -478,105 +491,118 @@ export default function AnnouncementEditor({ onChange, value }) {
       </div>
 
       <div ref={sidebar} id="sidebar-controls">
-        <button type="button" id="show-controls" className="self-start" onClick={handleShowControl}>
-          <PlusCircle
-            size={32}
-            weight="thin"
-            className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200"
-          />
-        </button>
-        <div className="controls flex-1 border border-slate-200 dark:border-aa-400 purple:border-pt-400 shadow-sm rounded bg-white min-w-[288px] w-  max-w-[384px] min-h-[300px]">
-          {!addNewIdea ? (
-            <ul className="flex w-full relative overflow-hidden overflow-y-auto flex-col space-y-3 p-2 ">
-              <EditorSideBarButton
-                id="image-button"
-                onClick={addImage}
-                Icon={Image}
-                name="Image"
-                description="Upload an image"
+        <Popover>
+          <PopoverTrigger>
+            <button
+              type="button"
+              id="show-controls"
+              className="self-start"
+              onClick={handleShowControl}>
+              <PlusCircle
+                size={32}
+                weight="thin"
+                className="fill-slate-500 dark:fill-aa-200 purple:fill-pt-200"
               />
-              <EditorSideBarButton
-                id="video-button"
-                onClick={addVideo}
-                Icon={VideoCamera}
-                name="Video"
-                description="Embed a video"
-              />
-              <EditorSideBarButton
-                id="divider-button"
-                onClick={addDivider}
-                Icon={MinusCircle}
-                name="Divider"
-                description="Add a Divider"
-              />
-              <EditorSideBarButton
-                id="idea-button"
-                onClick={() => {
-                  setAddNewIdea(true);
-                  dispatch(
-                    ideaActions.searchSimilarIdeas({
-                      title: ideaTitle,
-                      companyId: company._id,
-                      random: true,
-                      page: 1,
-                      limit: 5
-                    })
-                  );
-                }}
-                Icon={LightbulbFilament}
-                name="Idea"
-                description="Import an idea"
-              />
-            </ul>
-          ) : (
-            <div className="w-full">
-              <div className="flex gap-2 relative p-3 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
-                <button type="button" onClick={closeAddIdea}>
-                  <CaretLeft size={24} weight="thin" />
-                </button>
-                <input
-                  placeholder="Search idea"
-                  className="outline-none grow placeholder:text-sm text-sm text-slate-700 dark:text-aa-200 purple:text-pt-200"
-                  onChange={(e) => setIdeaTitle(e.target.value)}
-                  value={ideaTitle}
-                />
-                {ideaTitle && (
-                  <button type="button" onClick={() => setIdeaTitle('')}>
-                    <X size={16} weight="thin" />
-                  </button>
-                )}
-              </div>
-              <ul className="flex flex-col h-full space-y-2 max-h-60 overflow-y-auto p-3">
-                {ideas.length ? (
-                  ideas.map((idea) => (
-                    <li
-                      key={idea._id}
-                      className=" hover:bg-slate-50 dark:hover:bg-aa-800 purple:hover:bg-pt-900 px-3 py-2 rounded">
-                      <button
-                        type="button"
-                        onClick={() => handleAddIdea(idea)}
-                        className="flex gap-4 justify-between w-full">
-                        <p className=" text-sm text-slate-700 dark:text-aa-200 purple:text-pt-200 truncate">
-                          {idea?.title}
-                        </p>
-                        {idea?.status && (
-                          <StatusBadge name={idea?.status?.name} color={idea?.status?.color} />
-                        )}
-                      </button>
-                    </li>
-                  ))
-                ) : (
-                  <li className="m-auto">
-                    <EmptyState
-                      title="No ideas found"
-                      description="Your search did not match any idea. Please retry or try a new word."
+            </button>
+          </PopoverTrigger>
+
+          <PopoverContent>
+            <div className="controls flex-1 border border-slate-200 dark:border-aa-400 purple:border-pt-400 shadow-sm rounded bg-white min-w-[288px] w-  max-w-[384px] min-h-[300px]">
+              {!addNewIdea ? (
+                <ul
+                  id="sidebar-buttons"
+                  className="flex w-full relative overflow-hidden overflow-y-auto flex-col space-y-3 p-2 ">
+                  <EditorSideBarButton
+                    id="image-button"
+                    onClick={addImage}
+                    Icon={Image}
+                    name="Image"
+                    description="Upload an image"
+                  />
+                  <EditorSideBarButton
+                    id="video-button"
+                    onClick={addVideo}
+                    Icon={VideoCamera}
+                    name="Video"
+                    description="Embed a video"
+                  />
+                  <EditorSideBarButton
+                    id="divider-button"
+                    onClick={addDivider}
+                    Icon={MinusCircle}
+                    name="Divider"
+                    description="Add a Divider"
+                  />
+                  <EditorSideBarButton
+                    id="idea-button"
+                    onClick={() => {
+                      setAddNewIdea(true);
+                      dispatch(
+                        ideaActions.searchSimilarIdeas({
+                          title: ideaTitle,
+                          companyId: company._id,
+                          random: true,
+                          page: 1,
+                          limit: 5
+                        })
+                      );
+                    }}
+                    Icon={LightbulbFilament}
+                    name="Idea"
+                    description="Import an idea"
+                  />
+                </ul>
+              ) : (
+                <div className="w-full">
+                  <div className="flex gap-2 relative p-3 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
+                    <button type="button" onClick={closeAddIdea}>
+                      <CaretLeft size={24} weight="thin" />
+                    </button>
+                    <input
+                      placeholder="Search idea"
+                      className="outline-none grow placeholder:text-sm text-sm text-slate-700 dark:text-aa-200 purple:text-pt-200"
+                      onChange={(e) => setIdeaTitle(e.target.value)}
+                      value={ideaTitle}
                     />
-                  </li>
-                )}
-              </ul>
+                    {ideaTitle && (
+                      <button type="button" onClick={() => setIdeaTitle('')}>
+                        <X size={16} weight="thin" />
+                      </button>
+                    )}
+                  </div>
+                  <ul className="flex flex-col h-full space-y-2 max-h-60 overflow-y-auto p-3">
+                    {ideas.length ? (
+                      ideas.map((idea) => (
+                        <li
+                          key={idea._id}
+                          className=" hover:bg-slate-50 dark:hover:bg-aa-800 purple:hover:bg-pt-900 px-3 py-2 rounded">
+                          <button
+                            type="button"
+                            onClick={() => handleAddIdea(idea)}
+                            className="flex gap-4 justify-between w-full">
+                            <p className=" text-sm text-slate-700 dark:text-aa-200 purple:text-pt-200 truncate">
+                              {idea?.title}
+                            </p>
+                            {idea?.status && (
+                              <StatusBadge name={idea?.status?.name} color={idea?.status?.color} />
+                            )}
+                          </button>
+                        </li>
+                      ))
+                    ) : (
+                      <li className="m-auto">
+                        <EmptyState
+                          title="No ideas found"
+                          description="Your search did not match any idea. Please retry or try a new word."
+                        />
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </PopoverContent>
+        </Popover>
       </div>
       <div ref={editor} id="editor-container" className="relative bg-inherit" />
       <div ref={input} className="hidden absolute w-full">
