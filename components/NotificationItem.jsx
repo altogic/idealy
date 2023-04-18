@@ -13,7 +13,7 @@ export default function NotificationItem({ notification, dropdown = false }) {
       className="flex items-center gap-4 p-4 transition ease-linear duration-150 hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700 w-full">
       <Avatar
         src={notification?.user?.profilePicture || notification?.guest?.avatar}
-        alt={notification?.user?.name || notification?.guest?.name}
+        alt={notification?.user?.name || notification?.guest?.name || notification?.name}
         size="w-10 h-10"
       />
 
