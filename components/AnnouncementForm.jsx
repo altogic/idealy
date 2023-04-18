@@ -7,7 +7,7 @@ import useDebounce from '@/hooks/useDebounce';
 import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import { companyActions } from '@/redux/company/companySlice';
 import { realtime } from '@/utils/altogic';
-import { Plus, Sparkle } from '@phosphor-icons/react';
+import { CaretLeft, Plus, Sparkle } from '@phosphor-icons/react';
 import { DateTime } from 'luxon';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -19,6 +19,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
+import Link from 'next/link';
 import { compareDates, isGreaterThan } from '../utils';
 
 const AnnouncementEditor = dynamic(() => import('@/components/AnnouncementEditor'), {
@@ -137,10 +138,13 @@ export default function AnnouncementForm({ onSave, children }) {
       saveAnnouncement(true);
     }
   }, [date]);
+
   return (
     <>
-      <div className="h-[calc(100vh-93px)] px-9 lg:px-8 pt-8 pb-[72px] relative overflow-auto">
-        <div id="editor-scroll-container" className="w-full lg:px-0 grow max-w-screen-xl mx-auto">
+      <div
+        className="h-[calc(100vh-218px)] relative overflow-auto px-9 lg:px-8 pt-8 "
+        id="editor-scroll-container">
+        <div className="w-full lg:px-0 grow max-w-screen-xl mx-auto">
           <div className="h-6">{children}</div>
           <div className="h-full">
             <Input
@@ -235,7 +239,13 @@ export default function AnnouncementForm({ onSave, children }) {
         </div>
       </div>
       {announcement?.title && announcement?.content && (
-        <div className="animate__animated animate__fadeInUp bg-white dark:bg-aa-900 purple:bg-pt-1000  w-full mt-4 border-t border-slate-200 dark:border-aa-600 purple:border-pt-800 p-2 fixed bottom-0 py-8 px-5 md:px-10 space-y-4 flex justify-between">
+        <footer className="animate__animated animate__fadeInUp bg-white dark:bg-aa-900 purple:bg-pt-1000  w-full mt-4 border-t border-slate-200 dark:border-aa-600 purple:border-pt-800 p-2 fixed bottom-0 py-8 px-5 md:px-10 space-y-4 flex justify-between">
+          <Link href="/announcements">
+            <a className="text-slate-500 dark:text-aa-200 purple:text-pt-200 font-medium flex items-center gap-2 underline">
+              <CaretLeft size={16} />
+              Back to announcements
+            </a>
+          </Link>
           {isGreaterThan(date, Date.now()) && (
             <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200 mt-4">
               Will be published on{' '}
@@ -265,7 +275,7 @@ export default function AnnouncementForm({ onSave, children }) {
               onClick={publishAnnouncement()}
             />
           </div>
-        </div>
+        </footer>
       )}
       <CreateModal
         show={openCreateModal}
