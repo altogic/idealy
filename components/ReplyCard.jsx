@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import useIdeaActionValidation from '@/hooks/useIdeaActionValidation';
 import { repliesActions } from '@/redux/replies/repliesSlice';
 import { DateTime } from 'luxon';
@@ -12,6 +13,7 @@ import ReplyForm from './ReplyForm';
 import SanitizeHtml from './SanitizeHtml';
 import UserCard from './UserCard';
 import Divider from './Divider';
+import { hideAllUserCards } from '../utils';
 
 export default function ReplyCard({ reply, dashboard }) {
   const [isDelete, setIsDelete] = useState(false);
@@ -23,17 +25,20 @@ export default function ReplyCard({ reply, dashboard }) {
 
   const handleShowUserCard = (e) => {
     e.stopPropagation();
-    const userCards = document.querySelectorAll('.idea-user-card');
+    hideAllUserCards();
     const top = e.target.offsetTop - 80;
     const left = e.target.offsetLeft + 20;
-    userCards.forEach((userCard) => {
-      // eslint-disable-next-line no-param-reassign
-      userCard.style.display = 'none';
-    });
+    const card =
+      e.currentTarget.id === 'avatar'
+        ? e.currentTarget.previousSibling
+        : e.currentTarget.parentElement.previousSibling.previousSibling;
+
+    card.style.display = 'flex';
+    card.classList.remove('hidden');
+    card.classList.add('flex');
     setUserCardStyle({
       top,
-      left,
-      display: 'flex'
+      left
     });
     setUserCardInfo({
       profilePicture: reply?.user?.profilePicture,
@@ -47,7 +52,7 @@ export default function ReplyCard({ reply, dashboard }) {
     <div
       id={reply._id}
       className={cn(
-        'group rounded',
+        'group rounded relative',
         !dashboard && 'bg-gray-50 dark:bg-aa-800 purple:bg-pt-900 sm:px-8 py-3'
       )}>
       <div className="flex gap-2 sm:gap-5">
@@ -59,7 +64,7 @@ export default function ReplyCard({ reply, dashboard }) {
           email={userCardInfo?.email}
           style={userCardStyle}
         />
-        <button className="w-8 h-8 shrink-0" type="button" onClick={handleShowUserCard}>
+        <button id="avatar" className="w-8 h-8 shrink-0" type="button" onClick={handleShowUserCard}>
           <Avatar
             src={reply?.user?.profilePicture}
             alt={reply?.user?.name || reply.name}

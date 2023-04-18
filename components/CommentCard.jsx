@@ -18,6 +18,7 @@ import ReplyCard from './ReplyCard';
 import ReplyForm from './ReplyForm';
 import SanitizeHtml from './SanitizeHtml';
 import UserCard from './UserCard';
+import { hideAllUserCards } from '../utils';
 
 export default function CommentCard({ comment, dashboard }) {
   const [isReplying, setIsReplying] = useState(false);
@@ -38,15 +39,7 @@ export default function CommentCard({ comment, dashboard }) {
 
   const handleShowUserCard = (e) => {
     e.stopPropagation();
-
-    const userCards = document.querySelectorAll('#comment-user-card');
-    userCards.forEach((userCard) => {
-      userCard.style.display = 'none';
-    });
-    const ideaCards = document.querySelectorAll('#idea-user-card');
-    ideaCards.forEach((ideaCard) => {
-      ideaCard.style.display = 'none';
-    });
+    hideAllUserCards();
 
     const card =
       e.currentTarget.id === 'avatar'
