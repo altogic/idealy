@@ -12,9 +12,9 @@ import RoadmapCardSkeleton from './RoadmapCardSkeleton';
 
 function RoadmapVisibilityIcon({ isPrivate, disabled }) {
   return isPrivate ? (
-    <Eye className="w-5 h-5 icon-green" />
+    <Eye className={cn('w-5 h-5 icon-green', disabled && 'opacity-50')} />
   ) : (
-    <EyeSlash className="w-5 h-5 icon-red" />
+    <EyeSlash className={cn('w-5 h-5 icon-red', disabled && 'opacity-50')} />
   );
 }
 
