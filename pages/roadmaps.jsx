@@ -401,7 +401,11 @@ export default function RoadMapAdmin() {
                 {((!roadmap?.publicStatuses?.length && isGuest) || !company?.roadmaps?.length) && (
                   <EmptyState
                     title="No items to view"
-                    description="There is no public status for this roadmap."
+                    description={
+                      roadmap?.publicStatuses?.length
+                        ? 'There is no public status for this roadmap.'
+                        : 'here is no public roadmap for this company.'
+                    }
                   />
                 )}
               </div>
