@@ -493,7 +493,7 @@ export default function Realtime() {
             You have been removed from <b>{deletedCompanyName}</b>
           </span>
         }
-        icon={<Email className="w-6 h-6 text-indigo-600" />}
+        icon={<Email className="w-6 h-6 icon-indigo" />}
         description="Please contact your company admin for more information"
         onConfirm={handleDeleteMembership}
         confirmText="OK"

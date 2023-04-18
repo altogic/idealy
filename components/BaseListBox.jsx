@@ -1,9 +1,8 @@
 import { Listbox, Transition } from '@headlessui/react';
-import { CheckIcon, XIcon } from '@heroicons/react/outline';
 import cn from 'classnames';
 import { Fragment, useEffect, useState } from 'react';
 import Avatar from './Avatar';
-import { ChevronDown } from './icons';
+import { ChevronDown, Close, Check } from './icons';
 
 export default function BaseListBox({
   value,
@@ -109,14 +108,11 @@ export default function BaseListBox({
                       e.stopPropagation();
                       onReset();
                     }}>
-                    <XIcon className="w-5 h-5 text-gray-400 dark:text-aa-200 purple:text-pt-200" />
+                    <Close className="w-5 h-5 icon" />
                   </div>
                 )}
                 {(type !== 'create' || !multiple) && (
-                  <ChevronDown
-                    className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200"
-                    aria-hidden="true"
-                  />
+                  <ChevronDown className="w-5 h-5 icon" aria-hidden="true" />
                 )}
               </span>
             </>
@@ -186,10 +182,7 @@ export default function BaseListBox({
                           </span>
                         </div>
                         {selected && (
-                          <CheckIcon
-                            className="w-5 h-5 shrink-0 text-indigo-700 dark:text-aa-200 purple:text-pt-200"
-                            aria-hidden="true"
-                          />
+                          <Check className="w-5 h-5 shrink-0 icon-indigo" aria-hidden="true" />
                         )}
                       </>
                     )}

@@ -153,13 +153,13 @@ export default function FirstWizard() {
               inpSubdomain && (
                 <div className="flex items-center text-sm mt-2 text-green-500">
                   <span className="mr-1">
-                    <CircleCheck className="w-4 h-4" />
+                    <CircleCheck className="w-4 h-4 icon-green" />
                   </span>
                   <span>Subdomain is available</span>
                 </div>
               )}
             {isSubdomainExists && !subdomainLoading && !errors.subdomain && inpSubdomain && (
-              <div className="flex items-center text-sm mt-2 text-red-500">
+              <div className="flex items-center text-sm mt-2 icon-red">
                 <span className="mr-1">
                   <XCircle className="w-4 h-4" />
                 </span>

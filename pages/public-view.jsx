@@ -209,6 +209,7 @@ export default function PublicView() {
                         <Button
                           type="button"
                           text="Filters"
+                          icon={<Plus className="w-5 h-5 icon-slate" />}
                           variant="indigo"
                           size="sm"
                           mobileFullWidth="mobileFullWidth"
@@ -357,7 +358,7 @@ export default function PublicView() {
                 setOpenInfoModal(false);
               }}
               onClose={() => setOpenInfoModal(false)}
-              icon={<Email className="w-6 h-6 text-indigo-600" />}
+              icon={<Email className="w-6 h-6 icon-indigo" />}
               title="The idea you are try to view has been deleted."
               onConfirm={() => {
                 setOpenInfoModal(false);

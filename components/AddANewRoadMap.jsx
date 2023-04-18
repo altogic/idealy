@@ -77,15 +77,11 @@ export default function AddANewRoadMap({
   return (
     <Modal open={show} onClose={() => handleClose()} {...props}>
       <div className="absolute top-8 right-8">
-        <Button
-          variant="icon"
-          icon={<Close className="w-6 h-6 text-slate-500 dark:text-aa-300 purple:text-pt-300" />}
-          onClick={cancelOnClick}
-        />
+        <Button variant="icon" icon={<Close className="w-6 h-6 icon" />} onClick={cancelOnClick} />
       </div>
       <div className="mb-5">
         <span className="inline-flex items-center justify-center flex-shrink-0 w-12 h-12 bg-green-100 rounded-full ring-8 ring-green-50">
-          <ThreeStar className="w-6 h-6 text-green-600 dark:text-aa-300 purple:text-pt-300" />
+          <ThreeStar className="w-6 h-6 icon-green" />
         </span>
       </div>
       <div className="mb-5 space-y-2">

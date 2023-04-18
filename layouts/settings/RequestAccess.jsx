@@ -4,7 +4,6 @@ import EmptyState from '@/components/EmptyState';
 import SectionTitle from '@/components/SectionTitle';
 import useNotification from '@/hooks/useNotification';
 import { companyActions } from '@/redux/company/companySlice';
-import { CheckIcon, XIcon } from '@heroicons/react/outline';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function RequestAccess() {

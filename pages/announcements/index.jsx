@@ -196,9 +196,7 @@ export default function Announcements() {
                         onChange={handleFilterCategoriesChange}
                         field="name"
                         options={company?.categories}
-                        icon={
-                          <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
-                        }
+                        icon={<FilterHamburger className="w-5 h-5 icon" />}
                         label="Categories"
                         multiple
                         size="md"
@@ -220,7 +218,7 @@ export default function Announcements() {
                       <Button
                         type="button"
                         text="New"
-                        icon={<Plus className="w-5 h-5" />}
+                        icon={<Plus className="w-5 h-5 icon-slate" />}
                         variant="indigo"
                         size="sm"
                         mobileFullWidth="mobileFullWidth"

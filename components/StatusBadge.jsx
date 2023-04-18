@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { X } from '@phosphor-icons/react';
 import { shadeHexColor } from '../utils';
+import { Close as X } from './icons';
 
 export default function StatusBadge({ name, color, onClose, className }) {
   const company = useSelector((state) => state.company.company);
@@ -35,7 +35,7 @@ export default function StatusBadge({ name, color, onClose, className }) {
       {onClose && (
         <button className="ml-1.5" onClick={onClose} type="button">
           <span className="sr-only">Close</span>
-          <X size={12} />
+          <X className="w-3 h-3 icon"/>
         </button>
       )}
     </div>

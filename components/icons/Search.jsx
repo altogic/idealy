@@ -1,23 +1,21 @@
 import * as React from 'react';
 
 function SvgSearch(props) {
-  return (
-    <svg
-      width="1em"
-      height="1em"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}>
-      <path
-        d="m17.5 17.5-3.625-3.625m1.958-4.708a6.667 6.667 0 1 1-13.333 0 6.667 6.667 0 0 1 13.333 0Z"
-        stroke="currentColor"
-        strokeWidth={1.667}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
+  return <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="search_svg__icon search_svg__icon-tabler search_svg__icon-tabler-search"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="#2c3e50"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}>
+    <path d="M0 0h24v24H0z" stroke="none" />
+    <circle cx={10} cy={10} r={7} />
+    <path d="m21 21-6-6" />
+  </svg>
 }
-
 export default SvgSearch;

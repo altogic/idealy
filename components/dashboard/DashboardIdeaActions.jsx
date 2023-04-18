@@ -166,7 +166,7 @@ export default function DashboardIdeaActions() {
                     type="button"
                     onClick={copyToClipboard}
                     className="inline-flex h-full items-center gap-2  text-slate-700 text-sm font-medium tracking-sm ">
-                    <Copy className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+                    <Copy className="w-5 h-5 icon" />
                     <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200">Copy</span>
                   </button>
                 }
@@ -255,7 +255,7 @@ export default function DashboardIdeaActions() {
         onClose={() => setOpenCreateModal(false)}
         cancelOnClick={() => setOpenCreateModal(false)}
         createOnClick={modalInfo.createOnClick}
-        icon={<ThreeStar className="w-6 h-6 text-green-600" />}
+        icon={<ThreeStar className="w-6 h-6 icon-green" />}
         title={modalInfo.title}
         description={modalInfo.description}
         label={modalInfo.label}

@@ -1,4 +1,4 @@
-import { Ok } from '@/components/icons';
+import { Check } from '@/components/icons';
 import Head from 'next/head';
 import Link from 'next/link';
 
@@ -22,7 +22,7 @@ export default function ResetPasswordSuccessFull() {
             <div className="mx-auto w-full max-w-lg lg:w-[360px]">
               <div className="text-center">
                 <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-indigo-100 mb-6 ring-8 ring-indigo-50">
-                  <Ok className="w-7 h-7 text-indigo-600" />
+                  <Check className="w-7 h-7 icon-indigo" />
                 </span>
                 <h1 className="text-slate-800 mb-3 text-3xl font-semibold">Password Reset</h1>
                 <p className="text-slate-500 mb-11 text-base tracking-sm">

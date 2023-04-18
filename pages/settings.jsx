@@ -81,8 +81,8 @@ export default function Settings() {
             <button
               type="button"
               onClick={() => setOpenSidebar(!openSidebar)}
-              className="fixed top-[22px] left-4 inline-flex lg:hidden items-center justify-center text-white z-50">
-              <HamburgerMenu className="w-8 h-8" />
+              className="fixed top-[22px] left-4 inline-flex lg:hidden items-center justify-center z-50">
+              <HamburgerMenu className="w-8 h-8 icon-slate" />
             </button>
             <div className="lg:grid grid-cols-[250px,1fr] xl:grid-cols-[350px,1fr]">
               <Tab.Group selectedIndex={tabIndex}>
@@ -95,7 +95,7 @@ export default function Settings() {
                   )}>
                   <Close
                     onClick={() => setOpenSidebar(!openSidebar)}
-                    className="absolute top-3 right-3 lg:hidden w-6 h-6 text-slate-500"
+                    className="absolute top-3 right-3 lg:hidden w-6 h-6 icon"
                   />
                   <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 p-4 mt-3 lg:mt-10 xl:mt-16 mb-3 text-base font-medium tracking-sm border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
                     You

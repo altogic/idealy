@@ -7,7 +7,6 @@ import useDebounce from '@/hooks/useDebounce';
 import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import { companyActions } from '@/redux/company/companySlice';
 import { realtime } from '@/utils/altogic';
-import { CaretLeft, Plus, Sparkle } from '@phosphor-icons/react';
 import { DateTime } from 'luxon';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -21,6 +20,7 @@ import { useForm } from 'react-hook-form';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
 import Link from 'next/link';
 import { compareDates, isGreaterThan } from '../utils';
+import { Plus, ThreeStar, ChevronLeft } from './icons';
 
 const AnnouncementEditor = dynamic(() => import('@/components/AnnouncementEditor'), {
   ssr: false
@@ -188,7 +188,7 @@ export default function AnnouncementForm({ onSave, children }) {
               <BaseListBox
                 label={
                   <div className=" bg-gray-100 dark:bg-aa-700 purple:bg-pt-800 text-gray-700 dark:text-aa-200 purple:text-pt-200 inline-flex items-center text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full border border-transparent whitespace-nowrap">
-                    <Plus size={12} />
+                    <Plus className="w-3 h-3 icon" />
                     <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-xs">
                       Categories
                     </span>
@@ -217,7 +217,7 @@ export default function AnnouncementForm({ onSave, children }) {
                   type="button"
                   className="inline-flex items-center gap-3 text-slate-400 py-2"
                   onClick={() => setOpenCreateModal(!openCreateModal)}>
-                  <Plus size={16} />
+                  <Plus className="w-4 h-4 icon" />
                   Add a new category
                 </button>
               </BaseListBox>
@@ -242,7 +242,7 @@ export default function AnnouncementForm({ onSave, children }) {
         <footer className="animate__animated animate__fadeInUp bg-white dark:bg-aa-900 purple:bg-pt-1000  w-full mt-4 border-t border-slate-200 dark:border-aa-600 purple:border-pt-800 p-2 fixed bottom-0 py-8 px-5 md:px-10 space-y-4 flex justify-between">
           <Link href="/announcements">
             <a className="text-slate-500 dark:text-aa-200 purple:text-pt-200 font-medium flex items-center gap-2 underline">
-              <CaretLeft size={16} />
+              <ChevronLeft className="w-4 h-4 icon" />
               Back to announcements
             </a>
           </Link>
@@ -282,7 +282,7 @@ export default function AnnouncementForm({ onSave, children }) {
         onClose={() => setOpenCreateModal(false)}
         cancelOnClick={() => setOpenCreateModal(false)}
         createOnClick={(name) => addCompanySubList(name, 'categories')}
-        icon={<Sparkle size={20} className="fill-green-600" />}
+        icon={<ThreeStar className="w-5 h-5 icon-green" />}
         title="Create a new category"
         description="Create a new category to organize your announcements."
         label="Category name"

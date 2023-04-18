@@ -1,5 +1,4 @@
-import { Email } from '@/components/icons';
-import SvgError from '@/components/icons/Error';
+import { Email, Danger } from '@/components/icons';
 import { authActions } from '@/redux/auth/authSlice';
 import { companyActions } from '@/redux/company/companySlice';
 import AuthService from '@/services/auth';
@@ -64,7 +63,7 @@ export default function Invitation({ invitation, errors, companies }) {
               {!errors ? (
                 <div className="text-center">
                   <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-indigo-100 mb-6 ring-8 ring-indigo-50">
-                    <Email className="w-7 h-7 text-indigo-600" />
+                    <Email className="w-7 h-7 icon-indigo" />
                   </span>
                   <h1 className="text-slate-800 mb-3 text-3xl font-semibold">Invitation</h1>
                   <p className="text-slate-500 mb-6 text-base tracking-sm">
@@ -75,7 +74,7 @@ export default function Invitation({ invitation, errors, companies }) {
               ) : (
                 <div className="text-center">
                   <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-red-100 mb-6 ring-8 ring-red-50">
-                    <SvgError className="w-7 h-7 text-red-600" />
+                    <Danger className="w-7 h-7 icon-red" />
                   </span>
                   <h1 className="text-red-500 mb-3 text-3xl font-semibold">Invalid Invitation</h1>
                   <p className="text-slate-500 mb-6 text-base tracking-sm">

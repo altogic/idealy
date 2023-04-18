@@ -1,18 +1,21 @@
 import * as React from 'react';
 
 function SvgLink(props) {
-  return (
-    <svg viewBox="0 0 18 18" width="1em" height="1em" {...props}>
-      <path className="ql-stroke" d="m7 7 4 4" />
-      <path
-        className="ql-even ql-stroke"
-        d="M8.9 4.577a3.476 3.476 0 0 1 .36 4.679A3.476 3.476 0 0 1 4.577 8.9c-1.392-1.4-2.542-2.5-.36-4.683S7.5 3.185 8.9 4.577Z"
-      />
-      <path
-        className="ql-even ql-stroke"
-        d="M13.423 9.1a3.476 3.476 0 0 0-4.679-.36 3.476 3.476 0 0 0 .36 4.679c1.392 1.392 2.5 2.542 4.679.36s1.032-3.279-.36-4.679Z"
-      />
-    </svg>
-  );
+  return <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="link_svg__icon link_svg__icon-tabler link_svg__icon-tabler-link"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="#2c3e50"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}>
+    <path d="M0 0h24v24H0z" stroke="none" />
+    <path d="M10 14a3.5 3.5 0 0 0 5 0l4-4a3.5 3.5 0 0 0-5-5l-.5.5" />
+    <path d="M14 10a3.5 3.5 0 0 0-5 0l-4 4a3.5 3.5 0 0 0 5 5l.5-.5" />
+  </svg>
 }
 export default SvgLink;

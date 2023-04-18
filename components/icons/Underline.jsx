@@ -1,11 +1,20 @@
 import * as React from 'react';
 
 function SvgUnderline(props) {
-  return (
-    <svg viewBox="0 0 18 18" width="1em" height="1em" {...props}>
-      <path className="ql-stroke" d="M5 3v6a4.012 4.012 0 0 0 4 4 4.012 4.012 0 0 0 4-4V3" />
-      <rect className="ql-fill" height={1} rx={0.5} ry={0.5} width={12} x={3} y={15} />
-    </svg>
-  );
+  return <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="underline_svg__icon underline_svg__icon-tabler underline_svg__icon-tabler-underline"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="#2c3e50"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}>
+    <path d="M0 0h24v24H0z" stroke="none" />
+    <path d="M7 5v5a5 5 0 0 0 10 0V5M5 19h14" />
+  </svg>
 }
 export default SvgUnderline;

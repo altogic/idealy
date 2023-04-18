@@ -14,7 +14,7 @@ export default function IdeaAdminTab({ title, children }) {
             <ChevronUp
               className={`${
                 open ? 'rotate-180 transform' : ''
-              } h-5 w-5 text-slate-500 dark:text-aa-200 purple:text-pt-200`}
+              } h-5 w-5 icon`}
             />
           </Disclosure.Button>
           <Disclosure.Panel className="mt-2">{children}</Disclosure.Panel>
