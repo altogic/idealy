@@ -271,12 +271,10 @@ export default function RoadMapAdmin() {
 
   useEffect(() => {
     const { search } = router.query;
-    if (search) {
+    if (search && router.isReady && !_.isEmpty(roadmapIdeas) && !isFiltered.current) {
       setSearchText(search);
-      if (!_.isEmpty(roadmapIdeas) && !isFiltered.current) {
-        dispatch(ideaActions.searchRoadmapIdeas(search));
-        isFiltered.current = true;
-      }
+      dispatch(ideaActions.searchRoadmapIdeas(search));
+      isFiltered.current = true;
     }
   }, [router.query.search, roadmapIdeas]);
 
