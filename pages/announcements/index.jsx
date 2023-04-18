@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import AnnouncementCard from '@/components/AnnouncementCard';
 import BaseListBox from '@/components/BaseListBox';
 import Button from '@/components/Button';
@@ -17,11 +18,12 @@ import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
 import useOpenFeedbackModal from '@/hooks/useOpenFeedbackModal';
+import AnnouncementSkeleton from '@/components/AnnouncementSkeleton';
 
 export default function Announcements() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { announcements, countInfo } = useSelector((state) => state.announcement);
+  const { announcements, countInfo, isLoading } = useSelector((state) => state.announcement);
   const { company, isGuest } = useSelector((state) => state.company);
   const { user, guestInfo, userIp } = useSelector((state) => state.auth);
 
@@ -231,36 +233,40 @@ export default function Announcements() {
               </div>
             </div>
             <div className="h-[calc(100vh-233px)]">
-              <InfiniteScroll
-                items={announcements}
-                countInfo={countInfo}
-                endOfList={() => {
-                  const page = Number.isNaN(parseInt(router.query.page, 2) + 1)
-                    ? router.query.page
-                    : parseInt(router.query.page, 2) + 1;
-                  router.push({
-                    pathname: router.pathname,
-                    query: {
-                      ...router.query,
-                      page
-                    }
-                  });
-                }}>
-                {announcements?.length ? (
-                  announcements?.map((announcement) => (
-                    <AnnouncementCard
-                      key={announcement._id}
-                      announcement={announcement}
-                      isGuest={isGuest}
+              {isLoading && router.query.page === '1' ? (
+                <AnnouncementSkeleton />
+              ) : (
+                <InfiniteScroll
+                  items={announcements}
+                  countInfo={countInfo}
+                  endOfList={() => {
+                    const page = Number.isNaN(parseInt(router.query.page, 2) + 1)
+                      ? router.query.page
+                      : parseInt(router.query.page, 2) + 1;
+                    router.push({
+                      pathname: router.pathname,
+                      query: {
+                        ...router.query,
+                        page
+                      }
+                    });
+                  }}>
+                  {countInfo.count > 0 ? (
+                    announcements?.map((announcement) => (
+                      <AnnouncementCard
+                        key={announcement._id}
+                        announcement={announcement}
+                        isGuest={isGuest}
+                      />
+                    ))
+                  ) : (
+                    <EmptyState
+                      title="No announcements yet"
+                      description="Announcements will be posted here."
                     />
-                  ))
-                ) : (
-                  <EmptyState
-                    title="No announcements yet"
-                    description="Announcements will be posted here."
-                  />
-                )}
-              </InfiniteScroll>
+                  )}
+                </InfiniteScroll>
+              )}
             </div>
           </>
         )}

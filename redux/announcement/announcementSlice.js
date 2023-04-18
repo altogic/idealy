@@ -51,13 +51,13 @@ export const announcementSlice = createSlice({
       state.isLoading = true;
     },
     getAnnouncementsSuccess: (state, action) => {
-      state.isLoading = false;
       state.countInfo = action.payload.countInfo;
       if (action.payload.countInfo.currentPage === 1) {
         state.announcements = action.payload.result;
       } else {
         state.announcements = [...state.announcements, ...action.payload.result];
       }
+      state.isLoading = false;
     },
     getAnnouncementsFailure: (state, action) => {
       state.isLoading = false;
@@ -146,15 +146,11 @@ export const announcementSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    getAnnouncementReactions: (state) => {
-      state.isLoading = true;
-    },
+    getAnnouncementReactions: () => {},
     getAnnouncementReactionsSuccess: (state, action) => {
-      state.isLoading = false;
       state.reactions = action.payload;
     },
     getAnnouncementReactionsFailure: (state, action) => {
-      state.isLoading = false;
       state.error = action.payload;
     },
     setAnnouncement: (state, action) => {
