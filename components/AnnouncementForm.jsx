@@ -20,7 +20,7 @@ import { useForm } from 'react-hook-form';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
 import Link from 'next/link';
 import { compareDates, isGreaterThan } from '../utils';
-import { Plus, ThreeStar } from './icons';
+import { Plus, ThreeStar, ChevronLeft } from './icons';
 
 const AnnouncementEditor = dynamic(() => import('@/components/AnnouncementEditor'), {
   ssr: false
@@ -242,7 +242,7 @@ export default function AnnouncementForm({ onSave, children }) {
         <footer className="animate__animated animate__fadeInUp bg-white dark:bg-aa-900 purple:bg-pt-1000  w-full mt-4 border-t border-slate-200 dark:border-aa-600 purple:border-pt-800 p-2 fixed bottom-0 py-8 px-5 md:px-10 space-y-4 flex justify-between">
           <Link href="/announcements">
             <a className="text-slate-500 dark:text-aa-200 purple:text-pt-200 font-medium flex items-center gap-2 underline">
-              <CaretLeft size={16} />
+              <ChevronLeft className="w-4 h-4 icon" />
               Back to announcements
             </a>
           </Link>
