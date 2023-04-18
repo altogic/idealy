@@ -17,13 +17,19 @@ export default function ShareButtons({ url, title, summary, hashtags }) {
         </div>
       </FacebookShareButton>
       <TwitterShareButton url={url} title={title} hashtags={hashtags}>
-        <Twitter className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200 " />
+        <div className="w-8 h-8 flex justify-center items-center rounded-full duration-300 hover:text-white hover:bg-[#1DA1F2] dark:hover:bg-gray-700 dark:hover:text-[#1DA1F2] purple:hover:bg-gray-700 purple:hover:text-[#1DA1F2] text-gray-700 dark:text-aa-200 purple:text-pt-200">
+          <Twitter className="w-5 h-5  " />
+        </div>
       </TwitterShareButton>
       <LinkedinShareButton url={url} title={title} summary={summary} source={url}>
-        <LinkedIn className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200 " />
+        <div className="w-8 h-8 flex justify-center items-center rounded-full duration-300 hover:text-white hover:bg-[#0077B5] dark:hover:bg-gray-700 dark:hover:text-[#0077B5] purple:hover:bg-gray-700 purple:hover:text-[#0077B5] text-gray-700 dark:text-aa-200 purple:text-pt-200">
+          <LinkedIn className="w-5 h-5  " />
+        </div>
       </LinkedinShareButton>
       <button type="button" onClick={copyToClipboard}>
-        <Link className="w-5 h-5 icon" />
+        <div className="w-8 h-8 flex justify-center items-center group rounded-full duration-300  hover:bg-cyan-300 dark:hover:bg-gray-700 dark:hover:text-cyan-300 purple:hover:bg-gray-700 purple:hover:text-cyan-300 text-gray-700 dark:text-aa-200 purple:text-pt-200">
+          <Link className="w-5 h-5 group-hover:stroke-white" />
+        </div>
       </button>
     </div>
   );
