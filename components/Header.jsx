@@ -8,11 +8,10 @@ import { useSelector } from 'react-redux';
 import { generateUrl } from '../utils';
 import CompanyAvatar from './CompanyAvatar';
 import GuestDropdown from './Header/GuestDropdown';
-import UserDropdown from './Header/UserDropdown';
-import Notifications from './Notifications';
-import { Announcements, Close, Feedback, HamburgerMenu, People, Roadmap, Search } from './icons';
-import ThemeChanger from './ThemeChanger';
 import NotificationDropdown from './Header/NotificationDropdown';
+import UserDropdown from './Header/UserDropdown';
+import ThemeChanger from './ThemeChanger';
+import { Announcements, Close, Feedback, HamburgerMenu, People, Roadmap, Search } from './icons';
 
 export default function Header() {
   const router = useRouter();
@@ -231,9 +230,8 @@ export default function Header() {
                 )}
               </div>
             )}
-          {/* {process.env.NODE_ENV === 'development' && <ThemeChanger />} */}
+          {process.env.NODE_ENV === 'development' && <ThemeChanger />}
           {/* Notification */}
-          {isLoggedIn && <Notifications />}
           <button
             type="button"
             className="inline-flex items-center justify-center w-10 h-10 rounded-full"
