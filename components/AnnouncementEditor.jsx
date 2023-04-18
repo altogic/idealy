@@ -1,5 +1,7 @@
 /* eslint-disable no-param-reassign */
 import useDebounce from '@/hooks/useDebounce';
+import useUpdateEffect from '@/hooks/useUpdatedEffect';
+import { announcementActions } from '@/redux/announcement/announcementSlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import FileService from '@/services/file';
@@ -18,39 +20,36 @@ import {
 } from '@/utils/Blots';
 import { Block } from '@/utils/Blots/Blots';
 import hljs from 'highlight.js';
+import _ from 'lodash';
+import { useRouter } from 'next/router';
 import Quill from 'quill';
 import QuillImageDropAndPaste from 'quill-image-drop-and-paste';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { announcementActions } from '@/redux/announcement/announcementSlice';
-import _ from 'lodash';
-import { useRouter } from 'next/router';
-import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import EditorSideBarButton from './EditorSideBarButton';
 import EmptyState from './EmptyState';
 import IdeaDetail from './Idea/IdeaDetail';
-import StatusBadge from './StatusBadge';
 import { Popover, PopoverContent, PopoverTrigger } from './Popover';
+import StatusBadge from './StatusBadge';
 import {
   Bold,
+  ClearFormat,
+  Code,
+  HOne,
+  HTwo,
   Italic,
-  Underline,
-  Strikethrough,
   Link,
   List,
   ListNumbers,
-  HOne,
-  HTwo,
-  Code,
-  Photo,
-  ClearFormat,
-  VideoCamera,
   MinusCircle,
   PlusCircle,
+  Quote,
+  Strikethrough,
+  Underline,
+  VideoCamera,
   Feedback,
-  ChevronLeft,
   Close,
-  Quote
+  ChevronLeft
 } from './icons';
 
 const uploadImage = async (file) => {
@@ -541,7 +540,7 @@ export default function AnnouncementEditor({ onChange, value }) {
                         })
                       );
                     }}
-                    Icon={LightbulbFilament}
+                    Icon={Feedback}
                     name="Idea"
                     description="Import an idea"
                   />
@@ -550,7 +549,7 @@ export default function AnnouncementEditor({ onChange, value }) {
                 <div className="w-full">
                   <div className="flex gap-2 relative p-3 border-b border-slate-200 dark:border-aa-400 purple:border-pt-400">
                     <button type="button" onClick={closeAddIdea}>
-                      <CaretLeft size={24} weight="thin" />
+                      <ChevronLeft className="w-6 h-6 icon" />
                     </button>
                     <input
                       placeholder="Search idea"
@@ -560,7 +559,7 @@ export default function AnnouncementEditor({ onChange, value }) {
                     />
                     {ideaTitle && (
                       <button type="button" onClick={() => setIdeaTitle('')}>
-                        <X size={16} weight="thin" />
+                        <Close className="w-4 h-4 icon" />
                       </button>
                     )}
                   </div>
