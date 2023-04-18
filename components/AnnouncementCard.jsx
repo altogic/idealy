@@ -33,7 +33,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
           {onPage && (
             <div>
               <Link href="/announcements">
-                <a className="flex items-center  mt-4 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm font-medium tracking-md text-left">
+                <a className="flex items-center  mt-4 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm font-medium tracking-md text-left whitespace-nowrap">
                   <ChevronLeft className="w-4 h-4 icon" />
                   Back to Announcements
                 </a>
