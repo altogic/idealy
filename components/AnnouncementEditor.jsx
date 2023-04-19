@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 import useDebounce from '@/hooks/useDebounce';
-import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
@@ -33,8 +32,11 @@ import { Popover, PopoverContent, PopoverTrigger } from './Popover';
 import StatusBadge from './StatusBadge';
 import {
   Bold,
+  ChevronLeft,
   ClearFormat,
+  Close,
   Code,
+  Feedback,
   HOne,
   HTwo,
   Italic,
@@ -42,15 +44,12 @@ import {
   List,
   ListNumbers,
   MinusCircle,
+  Photo,
   PlusCircle,
   Quote,
   Strikethrough,
   Underline,
-  VideoCamera,
-  Feedback,
-  Close,
-  ChevronLeft,
-  Photo
+  VideoCamera
 } from './icons';
 
 const uploadImage = async (file) => {
@@ -251,7 +250,7 @@ export default function AnnouncementEditor({ onChange, value }) {
       if (range !== null && oldRange === null) {
         const title = document.querySelector('#title').value;
         if (_.isEmpty(value) && title && router.asPath.includes('new')) {
-          router.push(`/announcements/edit/${title.toLowerCase().replace(/ /g, '-')}&focus=true`);
+          router.push(`/announcements/edit/${title.toLowerCase().replace(/ /g, '-')}?focus=true`);
           dispatch(
             announcementActions.createAnnouncement({
               slug: title.toLowerCase().replace(/ /g, '-'),
@@ -264,13 +263,19 @@ export default function AnnouncementEditor({ onChange, value }) {
     });
   }, []);
 
-  useUpdateEffect(() => {
+  useEffect(() => {
+    console.log({
+      quillInstance,
+      isStateUpdated,
+      routerAsPath: router.asPath,
+      routerQueryFocus: router.query.focus
+    });
     if (quillInstance && !isStateUpdated && router.asPath.includes('edit') && router.query.focus) {
       quillInstance.getSelection();
       quillInstance.setSelection(quillInstance.getLength(), 0);
       setIsStateUpdated(true);
     }
-  }, [quillInstance]);
+  }, [quillInstance, router]);
 
   useEffect(() => {
     if (quillInstance && value && quillInstance.getLength() <= 1) {
