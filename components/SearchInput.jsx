@@ -20,7 +20,7 @@ export default function SearchInput({ searchText, onSearch, onClear }) {
       {searchText && (
         <Button
           variant="icon"
-          icon={<X className="w-5 h-5 fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />}
+          icon={<X className="w-5 h-5 icon" />}
           type="button"
           size="xs"
           className="absolute right-2 top-3"
