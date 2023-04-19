@@ -23,7 +23,11 @@ import AnnouncementSkeleton from '@/components/AnnouncementSkeleton';
 export default function Announcements() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { announcements, countInfo, isLoading } = useSelector((state) => state.announcement);
+  const {
+    announcements,
+    countInfo,
+    getAnnouncementLoading: isLoading
+  } = useSelector((state) => state.announcement);
   const { company, isGuest } = useSelector((state) => state.company);
   const { user, guestInfo, userIp } = useSelector((state) => state.auth);
 

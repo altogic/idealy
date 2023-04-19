@@ -14,7 +14,9 @@ import { useRouter } from 'next/router';
 
 export default function AnnouncementDetail({ slug }) {
   const dispatch = useDispatch();
-  const { announcement, isLoading } = useSelector((state) => state.announcement);
+  const { announcement, getAnnouncementLoading: isLoading } = useSelector(
+    (state) => state.announcement
+  );
   const { company } = useSelector((state) => state.company);
   const { selectedIdea } = useSelector((state) => state.idea);
   const router = useRouter();

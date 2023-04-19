@@ -11,6 +11,7 @@ export const announcementSlice = createSlice({
     isLoading: false,
     createAnnouncementLoading: false,
     updateAnnouncementLoading: false,
+    getAnnouncementLoading: false,
     error: null,
     reactions: []
   },
@@ -48,7 +49,7 @@ export const announcementSlice = createSlice({
       state.error = action.payload;
     },
     getAnnouncements: (state) => {
-      state.isLoading = true;
+      state.getAnnouncementLoading = true;
     },
     getAnnouncementsSuccess: (state, action) => {
       state.countInfo = action.payload.countInfo;
@@ -57,10 +58,10 @@ export const announcementSlice = createSlice({
       } else {
         state.announcements = [...state.announcements, ...action.payload.result];
       }
-      state.isLoading = false;
+      state.getAnnouncementLoading = false;
     },
     getAnnouncementsFailure: (state, action) => {
-      state.isLoading = false;
+      state.getAnnouncementLoading = false;
       state.error = action.payload;
     },
     deleteAnnouncement: (state) => {
@@ -77,17 +78,17 @@ export const announcementSlice = createSlice({
       state.error = action.payload;
     },
     getAnnouncement: (state) => {
-      state.isLoading = true;
+      state.getAnnouncementLoading = true;
     },
     getAnnouncementSuccess: (state, action) => {
-      state.isLoading = false;
+      state.getAnnouncementLoading = false;
       state.announcement = action.payload;
       state.categories = action.payload.categories;
       state.title = action.payload.title;
       state.content = action.payload.content;
     },
     getAnnouncementFailed: (state, action) => {
-      state.isLoading = false;
+      state.getAnnouncementLoading = false;
       state.error = action.payload;
     },
     createAnnouncementReaction: (state) => {
