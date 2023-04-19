@@ -196,7 +196,7 @@ export default function PublicView() {
                           <Button
                             type="button"
                             text="Submit Idea"
-                            icon={<Plus className="w-5 h-5" />}
+                            icon={<Plus className="w-5 h-5 icon-slate" />}
                             variant="indigo"
                             size="sm"
                             mobileFullWidth="mobileFullWidth"
