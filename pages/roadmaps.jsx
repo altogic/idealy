@@ -321,42 +321,42 @@ export default function RoadMapAdmin() {
                             </TooltipContent>
                           </Tooltip>
                         )}
-
-                        <BaseListBox
-                          value={roadmap}
-                          label={roadmap?.name}
-                          field="name"
-                          options={filteredRoadmaps}
-                          size="xxl"
-                          className="flex-1"
-                          onChange={(value) => {
-                            setRoadmap(value);
-                            dispatch(ideaActions.setSelectedIdea(value));
-                            router.push({
-                              pathname: '/roadmaps',
-                              query: { roadmap: value._id }
-                            });
-                          }}
-                          type="create">
-                          <button
-                            type="button"
-                            className="inline-flex items-center gap-3 text-slate-400 py-2 whitespace-nowrap"
-                            onClick={() => setIsCreate(!isCreate)}>
-                            <Plus className="w-4 h-4 icon" />
-                            Add a new roadmap
-                          </button>
-                        </BaseListBox>
-                        <SearchInput
-                          searchText={searchText}
-                          onSearch={(e) => onSearchChange(e)}
-                          onClear={() => {
-                            setSearchText('');
-                            router.push({
-                              pathname: router.pathname,
-                              query: { ...router.query, search: '' }
-                            });
-                          }}
-                        />
+                        <div className="flex flex-1 justify-between items-center">
+                          <BaseListBox
+                            value={roadmap}
+                            label={roadmap?.name}
+                            field="name"
+                            options={filteredRoadmaps}
+                            size="xxl"
+                            onChange={(value) => {
+                              setRoadmap(value);
+                              dispatch(ideaActions.setSelectedIdea(value));
+                              router.push({
+                                pathname: '/roadmaps',
+                                query: { roadmap: value._id }
+                              });
+                            }}
+                            type="create">
+                            <button
+                              type="button"
+                              className="inline-flex items-center gap-3 text-slate-400 py-2 whitespace-nowrap"
+                              onClick={() => setIsCreate(!isCreate)}>
+                              <Plus className="w-4 h-4 icon" />
+                              Add a new roadmap
+                            </button>
+                          </BaseListBox>
+                          <SearchInput
+                            searchText={searchText}
+                            onSearch={(e) => onSearchChange(e)}
+                            onClear={() => {
+                              setSearchText('');
+                              router.push({
+                                pathname: router.pathname,
+                                query: { ...router.query, search: '' }
+                              });
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
                     <p className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
