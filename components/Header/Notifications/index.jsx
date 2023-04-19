@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Indicator from './Indicator';
-import InfiniteScroll from './InfiniteScroll';
+import Indicator from '@/components/Indicator';
+import InfiniteScroll from '@/components/InfiniteScroll';
+import { Notification, Settings } from '@/components/icons';
 import NotificationItem from './NotificationItem';
-import { Notification, Settings } from './icons';
 
 export default function Notifications() {
   const dispatch = useDispatch();
