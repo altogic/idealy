@@ -78,7 +78,7 @@ export default function RequestAccess() {
                     <Button
                       type="button"
                       text="Request Access"
-                      icon={<Check className="w-5 h-5" />}
+                      icon={<Check className="w-5 h-5 icon" />}
                       variant="indigo"
                       size="sm"
                       mobileFullWidth="mobileFullWidth"

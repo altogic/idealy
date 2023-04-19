@@ -70,7 +70,7 @@ export default function Input({
         {error && type !== 'checkbox' && (
           <Exclamation
             className={cn(
-              'absolute top-1/2 -translate-y-1/2 w-6 h-6 pointer-events-none text-red-600 dark:text-red-500 purple:text-red-500 mr-2',
+              'absolute top-1/2 -translate-y-1/2 w-6 h-6 pointer-events-none icon-red dark:text-red-500 purple:text-red-500 mr-2',
               postfix ? 'right-28' : 'right-3.5'
             )}
           />

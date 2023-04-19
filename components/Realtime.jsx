@@ -163,7 +163,6 @@ export default function Realtime() {
     }
   }
   function updateSublistHandler(data) {
-    console.log(data);
     if (data.message.sender !== user?._id && company._id === data.message.companyId) {
       dispatch(companyActions.updateCompanySubListsRealtime(data.message));
     }
@@ -494,7 +493,7 @@ export default function Realtime() {
             You have been removed from <b>{deletedCompanyName}</b>
           </span>
         }
-        icon={<Email className="w-6 h-6 text-indigo-600" />}
+        icon={<Email className="w-6 h-6 icon-indigo" />}
         description="Please contact your company admin for more information"
         onConfirm={handleDeleteMembership}
         confirmText="OK"

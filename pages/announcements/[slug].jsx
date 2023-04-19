@@ -9,11 +9,14 @@ import useClickAnnouncementIdea from '@/hooks/useClickAnnouncementIdea';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
+import AnnouncementSkeleton from '@/components/AnnouncementSkeleton';
 import { useRouter } from 'next/router';
 
 export default function AnnouncementDetail({ slug }) {
   const dispatch = useDispatch();
-  const announcement = useSelector((state) => state.announcement.announcement);
+  const { announcement, getAnnouncementLoading: isLoading } = useSelector(
+    (state) => state.announcement
+  );
   const { company } = useSelector((state) => state.company);
   const { selectedIdea } = useSelector((state) => state.idea);
   const router = useRouter();
@@ -28,7 +31,11 @@ export default function AnnouncementDetail({ slug }) {
   return (
     <Layout>
       <div className="container w-full h-full m-auto pt-14 px-4">
-        <AnnouncementCard announcement={announcement} onPage />
+        {isLoading ? (
+          <AnnouncementSkeleton />
+        ) : (
+          <AnnouncementCard announcement={announcement} onPage />
+        )}
       </div>
       <IdeaDetail
         idea={selectedIdea}

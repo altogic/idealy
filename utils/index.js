@@ -185,7 +185,6 @@ export function calculatePriority(benefit, voteCount, cost) {
 }
 
 function calcMinAndMaxPriority() {
-  console.log(PRIORITY_VALUES[0].default, PRIORITY_VALUES[PRIORITY_VALUES.length - 1].default);
   const minValue = PRIORITY_VALUES[0].default;
   const maxValue = PRIORITY_VALUES[PRIORITY_VALUES.length - 1].default;
   const min = calculatePriority(minValue, 1, maxValue);
@@ -201,3 +200,12 @@ export function calculateNormalizedPriority(benefit, voteCount, cost) {
   const normalizedPriority = normalize(priority, min, max, 0, 100);
   return normalizedPriority > 100 ? 100 : normalizedPriority;
 }
+export const hideAllUserCards = () => {
+  const userCards = document.querySelectorAll('#idea-user-card');
+  const commentCards = document.querySelectorAll('#comment-user-card');
+  const replyCards = document.querySelectorAll('#reply-user-card');
+  const cards = [...userCards, ...commentCards, ...replyCards];
+  cards.forEach((card) => {
+    card.style.display = 'none';
+  });
+};

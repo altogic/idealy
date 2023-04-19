@@ -9,7 +9,7 @@ export default function EditorSideBarButton({ id, name, description, Icon, onCli
         onClick={onClick}
         className="w-full flex items-center space-x-5">
         <div className=" border border-slate-200 dark:border-aa-400 purple:border-pt-400 p-2 rounded-sm">
-          <Icon className="w-5 h-5 text-slate-700 dark:text-aa-200 purple:text-pt-200" />
+          <Icon className="w-5 h-5 icon" />
         </div>
         <div className="text-left">
           <h4 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-lg font-semibold tracking-sm">

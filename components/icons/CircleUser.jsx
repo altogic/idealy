@@ -1,23 +1,22 @@
 import * as React from 'react';
 
 function SvgCircleUser(props) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      width="1em"
-      height="1em"
-      {...props}>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"
-      />
-    </svg>
-  );
+  return <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="circle-user_svg__icon circle-user_svg__icon-tabler circle-user_svg__icon-tabler-user-circle"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="#2c3e50"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}>
+    <path d="M0 0h24v24H0z" stroke="none" />
+    <circle cx={12} cy={12} r={9} />
+    <circle cx={12} cy={10} r={3} />
+    <path d="M6.168 18.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855" />
+  </svg>
 }
-
 export default SvgCircleUser;

@@ -34,7 +34,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
             <div>
               <Link href="/announcements">
                 <a className="flex items-center  mt-4 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-sm font-medium tracking-md text-left whitespace-nowrap">
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="w-4 h-4 icon" />
                   Back to Announcements
                 </a>
               </Link>
@@ -42,13 +42,18 @@ export default function AnnouncementCard({ announcement, onPage }) {
           )}
           <div className="grow flex flex-col">
             <div className="flex justify-between items-center gap-2 divide-x divide-slate-200 dark:divide-aa-600 purple:divide-pt-600">
-              <Link href={`/announcements/${announcement?.slug}`}>
-                <a className="flex-1">
-                  <h2 className="flex-1 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left lg:truncate">
-                    {announcement?.title || 'Untitled'}
-                  </h2>
-                </a>
-              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  router.push(`/announcements/${announcement?.slug}`);
+                  dispatch(announcementActions.setAnnouncement(announcement));
+                }}
+                className="flex-1">
+                <h2 className="flex-1 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left lg:truncate">
+                  {announcement?.title || 'Untitled'}
+                </h2>
+              </button>
+
               {announcement?.publishDate && isGreaterThan(announcement?.publishDate, Date.now()) && (
                 <div className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-md text-left">
                   Will be published on{' '}
@@ -138,7 +143,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
             })
           );
         }}
-        icon={<Danger className="w-7 h-7 text-red-600" />}
+        icon={<Danger className="w-7 h-7 icon-red" />}
         title="Delete Announcement"
         description="Are you sure you want to delete this announcement? This action cannot be undone."
         confirmText="Delete Announcement"

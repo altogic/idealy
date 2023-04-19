@@ -54,7 +54,7 @@ export default function Drawer({ open, onClose, children, sidebar, position, siz
                       className="inline-flex items-center justify-center w-8 h-8 text-slate-500 rounded-md transition"
                       onClick={onClose}>
                       <span className="sr-only">Close panel</span>
-                      <Close className="w-6 h-6 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
+                      <Close className="w-6 h-6 icon" />
                     </button>
                   </div>
                   <div className="mt-2">{children}</div>

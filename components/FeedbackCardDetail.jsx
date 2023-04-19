@@ -2,10 +2,12 @@
 import { DateTime } from 'luxon';
 import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
+import _ from 'lodash';
 import Avatar from './Avatar';
 import IdeaBadges from './Idea/IdeaBadges';
 import SanitizeHtml from './SanitizeHtml';
 import UserCard from './UserCard';
+import { hideAllUserCards } from '../utils';
 
 export default function FeedbackCardDetail({ setMentionCardStyle }) {
   const idea = useSelector((state) => state.idea.selectedIdea);
@@ -40,14 +42,7 @@ export default function FeedbackCardDetail({ setMentionCardStyle }) {
         className="flex items-center gap-2 my-4"
         onClick={(e) => {
           e.stopPropagation();
-          const commentCards = document.querySelectorAll('#comment-user-card');
-          commentCards.forEach((commentCard) => {
-            commentCard.style.display = 'none';
-          });
-          const userCards = document.querySelectorAll('.idea-user-card');
-          userCards.forEach((userCard) => {
-            userCard.style.display = 'none';
-          });
+          hideAllUserCards();
           setUserCardStyle({
             top: '-1rem',
             left: '1rem',
@@ -68,7 +63,11 @@ export default function FeedbackCardDetail({ setMentionCardStyle }) {
           profilePicture={idea?.author?.profilePicture || idea?.guestAvatar}
           name={idea?.author ? idea?.author.name : idea?.guestName ? idea?.guestName : idea?.name}
           email={
-            idea?.author ? idea?.author.email : idea?.guestEmail ? idea?.guestEmail : idea?.email
+            _.isEmpty(idea?.author)
+              ? idea?.author.email
+              : idea?.guestEmail
+              ? idea?.guestEmail
+              : idea?.email
           }
           style={userCardStyle}
         />

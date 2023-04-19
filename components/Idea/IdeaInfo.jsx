@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
+import { hideAllUserCards } from '@/utils/index';
 import Avatar from '../Avatar';
 import UserCard from '../UserCard';
 
@@ -34,10 +35,7 @@ export default function IdeaInfo({ idea, detail }) {
         onClick={(e) => {
           e.stopPropagation();
 
-          const userCards = document.querySelectorAll('#idea-user-card');
-          userCards.forEach((userCard) => {
-            userCard.style.display = 'none';
-          });
+          hideAllUserCards();
           e.currentTarget.childNodes[1].style.display = 'flex';
           setUserCardStyle({
             top: detail ? '-6rem' : '3rem',

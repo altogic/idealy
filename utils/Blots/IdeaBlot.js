@@ -7,7 +7,6 @@ export default class IdeaBlot extends BlockEmbed {
   static create(value) {
     const node = super.create(value);
     const profilePicture = value?.author?.profilePicture || value?.guestAvatar;
-    console.log('value', value);
     const author = !_.isEmpty(value?.author)
       ? value?.author.name
       : value?.guestName

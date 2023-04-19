@@ -87,17 +87,15 @@ export default function ChangeEmail({ user }) {
         />
       </div>
       <form onSubmit={handleSubmit(formSubmit)} className="space-y-6">
-        <fieldset className="space-y-4" disabled>
-          <Input
-            label="Current Email"
-            type="text"
-            name="email"
-            id="email"
-            register={register('currentEmail')}
-            icon={<Email className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200" />}
-            disabled
-          />
-        </fieldset>
+        <Input
+          label="Current Email"
+          type="text"
+          name="email"
+          id="email"
+          value={user?.email}
+          icon={<Email className="w-5 h-5 icon" />}
+          disabled
+        />
         <Input
           label="New Email"
           type="text"
@@ -106,7 +104,7 @@ export default function ChangeEmail({ user }) {
           register={register('newEmail')}
           error={errors.newEmail}
           placeholder="Enter your new email"
-          icon={<Email className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200" />}
+          icon={<Email className="w-5 h-5 icon" />}
         />
         <Input
           label="Current Password"
@@ -115,7 +113,7 @@ export default function ChangeEmail({ user }) {
           id="password"
           register={register('password')}
           error={errors.password}
-          icon={<Key className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200" />}
+          icon={<Key className="w-5 h-5 icon" />}
           placeholder="Enter your current password"
         />
         <div className="flex items-center justify-end gap-3">

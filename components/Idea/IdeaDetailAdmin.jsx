@@ -27,7 +27,7 @@ export default function IdeaDetailAdmin({ adminOpen, setAdminOpen }) {
             onClick={() => setAdminOpen(false)}
             className="inline-flex lg:hidden items-center justify-center w-8 h-8 text-slate-500 rounded-md transition">
             <span className="sr-only">Close panel</span>
-            <Close className="w-6 h-6 text-slate-500 dark:text-aa-300 purple:text-pt-300" />
+            <Close className="w-6 h-6 icon" />
           </button>
         </div>
         <div className="flex flex-col flex-1 bg-slate-50 dark:bg-aa-800 purple:bg-pt-900 p-4 overflow-y-auto">

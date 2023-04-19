@@ -1,23 +1,21 @@
 import * as React from 'react';
 
 function SvgCopy(props) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      width="1em"
-      height="1em"
-      {...props}>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"
-      />
-    </svg>
-  );
+  return <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="copy_svg__icon copy_svg__icon-tabler copy_svg__icon-tabler-copy"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="#2c3e50"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}>
+    <path d="M0 0h24v24H0z" stroke="none" />
+    <rect x={8} y={8} width={12} height={12} rx={2} />
+    <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
+  </svg>
 }
-
 export default SvgCopy;

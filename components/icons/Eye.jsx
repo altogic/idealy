@@ -1,21 +1,21 @@
 import * as React from 'react';
 
 function SvgEye(props) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth="1.5"
-      stroke="currentColor"
-      {...props}>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-      />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-    </svg>
-  );
+  return <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="eye_svg__icon eye_svg__icon-tabler eye_svg__icon-tabler-eye"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="#2c3e50"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}>
+    <path d="M0 0h24v24H0z" stroke="none" />
+    <circle cx={12} cy={12} r={2} />
+    <path d="M22 12c-2.667 4.667-6 7-10 7s-7.333-2.333-10-7c2.667-4.667 6-7 10-7s7.333 2.333 10 7" />
+  </svg>
 }
 export default SvgEye;

@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import { Error, ChevronLeft } from '@/components/icons';
+import { Danger, ChevronLeft } from '@/components/icons';
 import Router from 'next/router';
 import { getCookie, deleteCookie } from 'cookies-next';
 import { generateUrl } from '../utils';
@@ -34,7 +34,7 @@ export default function CompanyNotFound() {
             <div className="mx-auto w-full max-w-lg lg:w-[360px]">
               <div className="text-center">
                 <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-red-100 mb-6 ring-8 ring-red-50">
-                  <Error className="w-7 h-7 text-red-600" />
+                  <Danger className="w-7 h-7 icon-red" />
                 </span>
                 <h1 className="text-red-500 mb-3 text-2xl font-semibold">Company Not Found</h1>
                 <p className="text-slate-500 mb-6 text-base tracking-sm">
@@ -44,7 +44,7 @@ export default function CompanyNotFound() {
                   type="button"
                   className="inline-flex items-center text-slate-500"
                   onClick={handleBack}>
-                  <ChevronLeft className="w-6 h-6" />
+                  <ChevronLeft className="w-6 h-6 icon" />
                   Back
                 </button>
               </div>

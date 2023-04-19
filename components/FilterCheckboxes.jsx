@@ -35,7 +35,7 @@ export default function FilterCheckboxes({ options, label, onChange, name, selec
             field="name"
             options={options}
             icon={
-              <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+              <FilterHamburger className="w-5 h-5 icon" />
             }
             label={label}
             valueField="name"

@@ -18,6 +18,7 @@ import ReplyCard from './ReplyCard';
 import ReplyForm from './ReplyForm';
 import SanitizeHtml from './SanitizeHtml';
 import UserCard from './UserCard';
+import { hideAllUserCards } from '../utils';
 
 export default function CommentCard({ comment, dashboard }) {
   const [isReplying, setIsReplying] = useState(false);
@@ -38,15 +39,7 @@ export default function CommentCard({ comment, dashboard }) {
 
   const handleShowUserCard = (e) => {
     e.stopPropagation();
-
-    const userCards = document.querySelectorAll('#comment-user-card');
-    userCards.forEach((userCard) => {
-      userCard.style.display = 'none';
-    });
-    const ideaCards = document.querySelectorAll('#idea-user-card');
-    ideaCards.forEach((ideaCard) => {
-      ideaCard.style.display = 'none';
-    });
+    hideAllUserCards();
 
     const card =
       e.currentTarget.id === 'avatar'
@@ -170,13 +163,13 @@ export default function CommentCard({ comment, dashboard }) {
                   <button
                     type="button"
                     onClick={() => setEditComment(true)}
-                    className="ml-2 w-8 h-8 flex items-center justify-center rounded-full text-slate-500 dark:text-aa-200 purple:text-pt-200 hover:text-blue-800 hover:bg-blue-100 dark:hover:bg-gray-700 dark:hover:text-blue-400 purple:hover:bg-gray-700 purple:hover:text-blue-400">
+                    className="ml-2 w-8 h-8 flex items-center justify-center rounded-full icon hover:stroke-blue-800 hover:bg-blue-100 dark:hover:bg-gray-700 dark:hover:stroke-blue-400 purple:hover:bg-gray-700 purple:hover:stroke-blue-400">
                     <Pen />
                   </button>
                   <button
                     type="button"
                     onClick={() => dispatch(toggleDeleteCommentModal())}
-                    className="w-8 h-8 flex items-center justify-center rounded-full text-slate-500 hover:text-red-600 dark:text-aa-200 purple:text-pt-200 hover:bg-red-100 dark:hover:bg-gray-700 dark:hover:text-red-400 purple:hover:bg-gray-700 purple:hover:text-red-400">
+                    className="w-8 h-8 flex items-center justify-center rounded-full icon hover:stroke-red-600  hover:bg-red-100 dark:hover:bg-gray-700 dark:hover:stroke-red-400 purple:hover:bg-gray-700 purple:hover:stroke-red-400">
                     <Trash />
                   </button>
                 </div>

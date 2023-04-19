@@ -11,6 +11,7 @@ export const announcementSlice = createSlice({
     isLoading: false,
     createAnnouncementLoading: false,
     updateAnnouncementLoading: false,
+    getAnnouncementLoading: false,
     error: null,
     reactions: []
   },
@@ -48,19 +49,19 @@ export const announcementSlice = createSlice({
       state.error = action.payload;
     },
     getAnnouncements: (state) => {
-      state.isLoading = true;
+      state.getAnnouncementLoading = true;
     },
     getAnnouncementsSuccess: (state, action) => {
-      state.isLoading = false;
       state.countInfo = action.payload.countInfo;
       if (action.payload.countInfo.currentPage === 1) {
         state.announcements = action.payload.result;
       } else {
         state.announcements = [...state.announcements, ...action.payload.result];
       }
+      state.getAnnouncementLoading = false;
     },
     getAnnouncementsFailure: (state, action) => {
-      state.isLoading = false;
+      state.getAnnouncementLoading = false;
       state.error = action.payload;
     },
     deleteAnnouncement: (state) => {
@@ -77,17 +78,17 @@ export const announcementSlice = createSlice({
       state.error = action.payload;
     },
     getAnnouncement: (state) => {
-      state.isLoading = true;
+      state.getAnnouncementLoading = true;
     },
     getAnnouncementSuccess: (state, action) => {
-      state.isLoading = false;
+      state.getAnnouncementLoading = false;
       state.announcement = action.payload;
       state.categories = action.payload.categories;
       state.title = action.payload.title;
       state.content = action.payload.content;
     },
     getAnnouncementFailed: (state, action) => {
-      state.isLoading = false;
+      state.getAnnouncementLoading = false;
       state.error = action.payload;
     },
     createAnnouncementReaction: (state) => {
@@ -146,15 +147,11 @@ export const announcementSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    getAnnouncementReactions: (state) => {
-      state.isLoading = true;
-    },
+    getAnnouncementReactions: () => {},
     getAnnouncementReactionsSuccess: (state, action) => {
-      state.isLoading = false;
       state.reactions = action.payload;
     },
     getAnnouncementReactionsFailure: (state, action) => {
-      state.isLoading = false;
       state.error = action.payload;
     },
     setAnnouncement: (state, action) => {

@@ -63,7 +63,7 @@ export default function MergeModal({ openMergeModal, setOpenMergeModal }) {
       <div>
         <div className="flex flex-col items-start gap-4 lg:gap-6 mb-8 lg:mb-4">
           <span className="inline-flex items-center justify-center flex-shrink-0 w-10 h-10 rounded-full ring-8 bg-gray-200 dark:bg-aa-200 purple:bg-pt-200 ring-gray-100 dark:ring-aa-50 purple:ring-pt-50">
-            <Merge className="w-5 h-5 text-gray-500 dark:text-aa-700 purple:text-pt-700" />
+            <Merge className="w-5 h-5 icon" />
           </span>
           <div className="text-center lg:text-left space-y-2">
             <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">

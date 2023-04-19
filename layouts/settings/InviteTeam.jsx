@@ -125,7 +125,7 @@ export default function InviteTeam() {
             <Button
               type="button"
               text="Invite team"
-              icon={<TwoPeople className="w-5 h-5" />}
+              icon={<TwoPeople className="w-5 h-5 icon" />}
               variant="indigo"
               size="base"
               onClick={() => setIsInvite(!isInvite)}
@@ -135,7 +135,7 @@ export default function InviteTeam() {
             <Button
               type="button"
               text="Invite team"
-              icon={<TwoPeople className="w-5 h-5" />}
+              icon={<TwoPeople className="w-5 h-5 icon" />}
               variant="indigo"
               size="base"
               fullWidth
@@ -147,14 +147,12 @@ export default function InviteTeam() {
               <div className="absolute top-8 right-8">
                 <Button
                   variant="icon"
-                  icon={
-                    <Close className="w-6 h-6 text-slate-500 dark:text-aa-400 purple:text-pt-400" />
-                  }
+                  icon={<Close className="w-6 h-6 indigo" />}
                   onClick={handleCloseDialog}
                 />
               </div>
               <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100 dark:bg-aa-300 purple:bg-pt-300 mb-8 ring-8 ring-indigo-50 dark:ring-aa-200 purple:ring-pt-200">
-                <PlusPeople className="w-7 h-7 text-indigo-600 dark:text-aa-600 purple:text-pt-600" />
+                <PlusPeople className="w-7 h-7 icon-indigo" />
               </span>
               <div className="mb-5">
                 <h2 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-lg font-medium tracking-sm">
@@ -175,9 +173,7 @@ export default function InviteTeam() {
                       placeholder="you@domain.com"
                       register={register('email')}
                       error={errors.email}
-                      icon={
-                        <Email className="w-5 h-5 text-gray-500 dark:text-aa-200 purple:text-pt-200" />
-                      }
+                      icon={<Email className="w-5 h-5 indigo" />}
                     />
                   </div>
                   <div>

@@ -64,7 +64,7 @@ export default function FilterIdea({
     <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4 justify-between md:w-full">
       <BaseListBox
         value={sortType}
-        icon={<UpDown className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />}
+        icon={<UpDown className="w-5 h-5 icon" />}
         label={sortType?.name}
         onChange={handleSortChange}
         field="name"
@@ -80,7 +80,7 @@ export default function FilterIdea({
           field="name"
           options={company?.topics}
           icon={
-            <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+            <FilterHamburger className="w-5 h-5 icon" />
           }
           label="Topics"
           valueField="name"
@@ -103,7 +103,7 @@ export default function FilterIdea({
           field="name"
           options={company?.statuses}
           icon={
-            <FilterHamburger className="w-5 h-5 text-slate-500 dark:text-aa-200 purple:text-pt-200" />
+            <FilterHamburger className="w-5 h-5 icon" />
           }
           label="Status"
           valueField="name"

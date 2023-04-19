@@ -9,8 +9,10 @@ export default function EmailChangedMessage() {
   const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    realtime.send(company._id, 'user-update', user);
-  }, []);
+    if (company) {
+      realtime.send(company._id, 'user-update', user);
+    }
+  }, [company]);
   return (
     <div className="relative h-screen">
       <div className="grid xl:grid-cols-2 h-full">
@@ -18,7 +20,7 @@ export default function EmailChangedMessage() {
           <div className="mx-auto w-full max-w-lg lg:w-[360px]">
             <div className="text-center">
               <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-indigo-100 mb-6 ring-8 ring-indigo-50">
-                <Email className="w-7 h-7 text-indigo-600" />
+                <Email className="w-7 h-7 icon-indigo" />
               </span>
               <h1 className="mb-4 text-3xl font-bold text-slate-800">Welcome Back!</h1>
               <p className="mb-6 text-base tracking-sm text-slate-500">
@@ -27,7 +29,7 @@ export default function EmailChangedMessage() {
               <div className="text-center mt-8">
                 <Link href="/">
                   <a className="inline-flex items-center gap-2 text-sm font-medium tracking-sm text-slate-500">
-                    <ArrowLeft className="w-5 h-5 text-slate-500" />
+                    <ArrowLeft className="w-5 h-5 icon" />
                     Back to Homepage
                   </a>
                 </Link>

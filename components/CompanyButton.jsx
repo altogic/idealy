@@ -11,7 +11,7 @@ export default function CompanyButton({ icon, company, label, ...props }) {
       <a className="group inline-flex flex-col items-center justify-center w-[88px] transform transition ease-linear duration-150">
         {label ? (
           <div className="inline-flex items-center justify-center w-[88px] h-[88px] mb-4 rounded-full overflow-hidden border-2 border-slate-100 transition ease-linear duration-150 group-hover:border-indigo-700">
-            <Plus className="w-6 h-6 text-slate-900" />
+            <Plus className="w-6 h-6 stroke-slate-900" />
           </div>
         ) : (
           <div className="inline-flex items-center justify-center w-[88px] h-[88px] mb-4 rounded-lg overflow-hidden transition ease-linear duration-150 group-hover:border-indigo-700">

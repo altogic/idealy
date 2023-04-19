@@ -34,7 +34,7 @@ export default function TextArea({ id, label, error, register, rows, inlineSubmi
         {error && (
           <Exclamation
             className={cn(
-              'absolute top-1/2 right-0 w-6 h-6 pointer-events-none text-red-600 mr-2',
+              'absolute top-1/2 right-0 w-6 h-6 pointer-events-none icon-red mr-2',
               inlineSubmit ? 'translate-y-1/2' : '-translate-y-1/2'
             )}
           />

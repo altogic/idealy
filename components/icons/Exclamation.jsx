@@ -4,20 +4,20 @@ function SvgExclamation(props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
+      className="exclamation_svg__icon exclamation_svg__icon-tabler exclamation_svg__icon-tabler-alert-circle"
       width="1em"
       height="1em"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="#ff4500"
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       {...props}>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0zm-9 3.75h.008v.008H12v-.008z"
-      />
+      <path d="M0 0h24v24H0z" stroke="none" />
+      <circle cx={12} cy={12} r={9} />
+      <path d="M12 8v4M12 16h.01" />
     </svg>
   );
 }
-
 export default SvgExclamation;

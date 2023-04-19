@@ -71,7 +71,7 @@ export default function AuthRedirect({ error, session, user, companies }) {
               <div className="mx-auto w-full max-w-lg lg:w-[360px]">
                 <div className="text-center">
                   <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-red-100 mb-6 ring-8 ring-red-50">
-                    <Danger className="w-8 h-8 text-red-600" />
+                    <Danger className="w-8 h-8 icon-red" />
                   </span>
                   <h1 className="text-slate-800 mb-3 text-3xl font-semibold">Error</h1>
                   <p className="text-slate-500 text-lg"> {router.query.error}</p>

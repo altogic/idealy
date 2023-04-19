@@ -12,19 +12,9 @@ import RoadmapCardSkeleton from './RoadmapCardSkeleton';
 
 function RoadmapVisibilityIcon({ isPrivate, disabled }) {
   return isPrivate ? (
-    <Eye
-      className={cn(
-        'w-5 h-5 text-green-500 dark:text-green-600 purple:text-green-600',
-        disabled && 'opacity-50'
-      )}
-    />
+    <Eye className={cn('w-5 h-5 icon-green', disabled && 'opacity-50')} />
   ) : (
-    <EyeSlash
-      className={cn(
-        'w-5 h-5 text-red-500 dark:text-red-600 purple:text-red-600',
-        disabled && 'opacity-50'
-      )}
-    />
+    <EyeSlash className={cn('w-5 h-5 icon-red', disabled && 'opacity-50')} />
   );
 }
 
@@ -61,8 +51,8 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, ...re
             <circle cx={4} cy={4} r={3} />
           </svg>
 
-          <div className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-base font-medium tracking-sm flex items-center justify-between flex-1">
-            {status?.name || 'No Status'}{' '}
+          <div className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-base font-medium tracking-sm flex items-center justify-between flex-1 ">
+            <span className="truncate max-w-[16rem] block">{status?.name || 'No Status'} </span>
             <div className="rounded-md border border-slate-200 dark:border-aa-1000 purple:border-pt-1000 px-2 bg-slate-50 dark:bg-aa-600 purple:bg-pt-800 ">
               <span className="font-normal">{ideas?.length || 0}</span>
             </div>

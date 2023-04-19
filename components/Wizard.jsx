@@ -122,7 +122,7 @@ export default function Wizard({ children, activePageIndex, setActivePageIndex, 
             type="button"
             className="inline-flex items-center text-slate-500"
             onClick={handleCancel}>
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-6 h-6 icon" />
             Cancel
           </button>
         ) : null}
@@ -132,7 +132,7 @@ export default function Wizard({ children, activePageIndex, setActivePageIndex, 
             className="inline-flex items-center text-slate-500"
             onClick={prevPage}
             disabled={_.isNil(companyWillBeCreated)}>
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-6 h-6 icon" />
             Back
           </button>
         ) : null}
