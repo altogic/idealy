@@ -156,7 +156,6 @@ export default function AnnouncementForm({ onSave, children }) {
               onChange={(e) =>
                 dispatch(
                   announcementActions.setAnnouncement({
-                    ...announcement,
                     title: e.target.value
                   })
                 )
@@ -177,7 +176,6 @@ export default function AnnouncementForm({ onSave, children }) {
                       setCategories(categories.filter((cat) => cat._id !== category._id));
                       dispatch(
                         announcementActions.setAnnouncement({
-                          ...announcement,
                           categories: announcement?.categories.filter((cat) => cat !== category._id)
                         })
                       );
@@ -204,7 +202,6 @@ export default function AnnouncementForm({ onSave, children }) {
                     setCategories(value);
                     dispatch(
                       announcementActions.setAnnouncement({
-                        ...announcement,
                         categories
                       })
                     );
@@ -224,14 +221,13 @@ export default function AnnouncementForm({ onSave, children }) {
             </div>
             <div className="mt-4 w-11/12">
               <AnnouncementEditor
-                onChange={(content) =>
+                onChange={(content) => {
                   dispatch(
                     announcementActions.setAnnouncement({
-                      ...announcement,
                       content
                     })
-                  )
-                }
+                  );
+                }}
                 value={announcement?.content}
               />
             </div>
