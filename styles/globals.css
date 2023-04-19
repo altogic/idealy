@@ -532,3 +532,6 @@ html:has(:is(.modal, .drawer)) {
 .icon-slate {
   @apply stroke-slate-100 dark:stroke-aa-200 purple:stroke-pt-200;
 }
+svg {
+  stroke: inherit;
+}
