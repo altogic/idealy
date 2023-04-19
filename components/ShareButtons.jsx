@@ -28,7 +28,7 @@ export default function ShareButtons({ url, title, summary, hashtags }) {
       </LinkedinShareButton>
       <button type="button" onClick={copyToClipboard}>
         <div className="w-8 h-8 flex justify-center items-center group rounded-full duration-300  hover:bg-cyan-300 dark:hover:bg-gray-700 dark:hover:text-cyan-300 purple:hover:bg-gray-700 purple:hover:text-cyan-300 text-gray-700 dark:text-aa-200 purple:text-pt-200">
-          <Link className="w-5 h-5 group-hover:stroke-white" />
+          <Link className="w-5 h-5 group-hover:stroke-white icon" />
         </div>
       </button>
     </div>
