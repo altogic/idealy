@@ -1,5 +1,5 @@
 import cx from 'classnames';
-import Emoji from './Emoji';
+import Emoji from '../Emoji';
 
 export default function AnnouncementButton({ symbol, label, active, disabled, ...props }) {
   return (

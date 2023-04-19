@@ -10,6 +10,7 @@ import {
 } from 'constants';
 import { deleteCookie, setCookie as nextCookie } from 'cookies-next';
 import { DateTime } from 'luxon';
+import FileService from '@/services/file';
 import localStorageUtil from './localStorageUtil';
 /* eslint-disable no-bitwise */
 export function randomInt(min, max) {
@@ -208,4 +209,8 @@ export const hideAllUserCards = () => {
   cards.forEach((card) => {
     card.style.display = 'none';
   });
+};
+export const uploadImage = async (file) => {
+  const { data } = await FileService.uploadFile(file, file.name);
+  return data.publicPath;
 };

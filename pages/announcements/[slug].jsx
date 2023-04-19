@@ -1,4 +1,4 @@
-import AnnouncementCard from '@/components/AnnouncementCard';
+import AnnouncementCard from '@/components/Announcement/AnnouncementCard';
 import Layout from '@/components/Layout';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
 import { useEffect } from 'react';
@@ -9,7 +9,7 @@ import useClickAnnouncementIdea from '@/hooks/useClickAnnouncementIdea';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
-import AnnouncementSkeleton from '@/components/AnnouncementSkeleton';
+import AnnouncementSkeleton from '@/components/Announcement/AnnouncementSkeleton';
 import { useRouter } from 'next/router';
 
 export default function AnnouncementDetail({ slug }) {

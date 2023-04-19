@@ -3,26 +3,26 @@ import Button from '@/components/Button';
 import CreateModal from '@/components/CreateModal';
 import Input from '@/components/Input';
 import StatusBadge from '@/components/StatusBadge';
+import { ChevronLeft, Plus, ThreeStar } from '@/components/icons';
 import useDebounce from '@/hooks/useDebounce';
 import useUpdateEffect from '@/hooks/useUpdatedEffect';
+import { announcementActions } from '@/redux/announcement/announcementSlice';
 import { companyActions } from '@/redux/company/companySlice';
+import { compareDates, isGreaterThan } from '@/utils/index';
 import { realtime } from '@/utils/altogic';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { DateTime } from 'luxon';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
-import { announcementActions } from '@/redux/announcement/announcementSlice';
-import Link from 'next/link';
-import { compareDates, isGreaterThan } from '../utils';
-import { Plus, ThreeStar, ChevronLeft } from './icons';
 
-const AnnouncementEditor = dynamic(() => import('@/components/AnnouncementEditor'), {
+const AnnouncementEditor = dynamic(() => import('@/components/Announcement/Editor'), {
   ssr: false
 });
 const DatePickerButton = forwardRef(({ onClick }, ref) => (
