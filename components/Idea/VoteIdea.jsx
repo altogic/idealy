@@ -26,17 +26,12 @@ export default function VoteIdea({ voteCount, idea }) {
   const voteGuestAuth = useGuestValidation('voteIdea');
   const saveGuestInfo = useSaveGuestInformation();
   const sendNotification = useNotification();
+
   const downVote = () => {
     setVoteCountState((prev) => prev - 1);
     setVoted(false);
-    dispatch(
-      ideaActions.downVoteIdea({
-        ideaId: idea._id,
-        ...(!user && { ip: userIp }),
-        ...(voteGuestAuthentication && { email: guestInfo.email }),
-        userId: user?._id
-      })
-    );
+    const voteId = ideaVotes.find((v) => v.ideaId === idea._id)._id;
+    dispatch(ideaActions.downVoteIdea(voteId));
   };
 
   const upVote = () => {
@@ -126,7 +121,7 @@ export default function VoteIdea({ voteCount, idea }) {
   useEffect(() => {
     setVoteCountState(voteCount);
     setVoted(handleVoted());
-  }, [voteCount, ideaVotes]);
+  }, [voteCount, ideaVotes, voteGuestAuth]);
 
   return (
     <div
