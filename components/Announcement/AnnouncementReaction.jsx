@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import cx from 'classnames';
-import { REACTION_TYPES } from '@/constants';
+import { REACTION_TYPES } from '@/constants/index';
 import { FaceHappy } from '@/components/icons';
 import GuestFormModal from '@/components/GuestFormModal';
 import AnnouncementButton from '@/components/Announcement/AnnouncementButton';
