@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { useCallback, useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-export default function InfiniteScroll({ items, countInfo, children, endOfList }) {
+export default function InfiniteScroll({ items, countInfo, children, className, endOfList }) {
   const { ref: inViewRef, inView } = useInView();
   const ref = useRef();
   const handleEndOfList = () => {
@@ -21,7 +21,7 @@ export default function InfiniteScroll({ items, countInfo, children, endOfList }
     if (inView) handleEndOfList();
   }, [inView]);
   return (
-    <div id="infinite-scroll">
+    <div id="infinite-scroll" className={className}>
       {children}
       <div ref={setRefs} />
     </div>

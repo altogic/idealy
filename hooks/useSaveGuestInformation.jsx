@@ -1,6 +1,7 @@
 import { authActions } from '@/redux/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
+import { realtime } from '@/utils/altogic';
 import { addGuestInfoToLocalStorage } from '../utils';
 
 export default function useSaveGuestInformation(saveLocal = true) {
@@ -27,6 +28,7 @@ export default function useSaveGuestInformation(saveLocal = true) {
           avatar: avatar || guestInfo.avatar,
           onSuccess: (user) => {
             addGuestInfoToLocalStorage(user);
+            realtime.join(email);
             dispatch(
               authActions.setGuestInfo({
                 ...user

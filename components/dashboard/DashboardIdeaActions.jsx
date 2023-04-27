@@ -109,14 +109,15 @@ export default function DashboardIdeaActions() {
         label: member.name
       }));
     }
-    const { data: companyUsers } = await companyService.getCompanyUsers(company._id);
-    return companyUsers.map((member) => ({
+    const { data: companyUsers } = await companyService.getCompanyUsers({
+      filter: `this.companyId == '${company._id}'`
+    });
+    return companyUsers.result.map((member) => ({
       value: {
         _id: member._id,
         name: member.name,
         profilePicture: member.profilePicture,
-        email: member.email,
-        isRegistered: !!member.provider
+        email: member.email
       },
       label: member.name
     }));

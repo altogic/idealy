@@ -32,9 +32,7 @@ export default function RoadmapFilter({ roadmap, setRoadmap, roadmaps }) {
       dispatch(ideaActions.searchRoadmapIdeas(searchText));
     }
   });
-  function onSearchChange(e) {
-    setSearchText(e.target.value);
-  }
+
   useUpdateEffect(() => {
     if (!searchText) {
       router.push({
@@ -109,7 +107,7 @@ export default function RoadmapFilter({ roadmap, setRoadmap, roadmaps }) {
           </BaseListBox>
           <SearchInput
             searchText={searchText}
-            onSearch={(e) => onSearchChange(e)}
+            onSearch={setSearchText}
             onClear={() => {
               setSearchText('');
               router.push({

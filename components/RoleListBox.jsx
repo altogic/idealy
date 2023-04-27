@@ -2,9 +2,10 @@ import React from 'react';
 import { ROLE } from 'constants';
 import BaseListBox from './BaseListBox';
 
-export default function RoleListBox({ roleSelected, setRoleSelected }) {
+export default function RoleListBox({ roleSelected, setRoleSelected, onRoleChange }) {
   const onChange = (selected) => {
     setRoleSelected(selected.name);
+    if (onRoleChange) onRoleChange(selected.name);
   };
   return (
     <BaseListBox

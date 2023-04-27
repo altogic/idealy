@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useNotification from '@/hooks/useNotification';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
+import { authActions } from '@/redux/auth/authSlice';
 import { generateUrl } from '../utils';
 import { Email } from './icons';
 import InfoModal from './InfoModal';
@@ -179,6 +180,13 @@ export default function Realtime() {
       isStatusesMatch
     ) {
       dispatch(ideaActions.createIdeaSuccess(message));
+      dispatch(
+        companyActions.updateCompanyUserCounts({
+          email: message?.guestEmail,
+          userId: message?.userId,
+          property: 'ideaCount'
+        })
+      );
     }
   }
   function updateIdeaHandler({ message }) {
@@ -213,6 +221,13 @@ export default function Realtime() {
       (!user && !userIp && !guestInfoState.current.email)
     ) {
       dispatch(ideaActions.upVoteIdeaRealtime(message.ideaId));
+      dispatch(
+        companyActions.updateCompanyUserCounts({
+          email: message?.guestEmail,
+          userId: message?.userId,
+          property: 'voteCount'
+        })
+      );
     }
   }
   function downVoteIdeaHandler({ message }) {
@@ -231,6 +246,15 @@ export default function Realtime() {
       dispatch(commentActions.addCommentSuccess(message));
     }
     dispatch(ideaActions.addedNewComment(message.ideaId));
+    if (!isGuest) {
+      dispatch(
+        companyActions.updateCompanyUserCounts({
+          email: message?.guestEmail,
+          userId: message?.userId,
+          property: 'commentCount'
+        })
+      );
+    }
   }
 
   function updateCommentHandler({ message }) {
@@ -320,15 +344,29 @@ export default function Realtime() {
       dispatch(announcementActions.deleteAnnouncementReactionRealtimeSuccess(message));
     }
   }
+
+  function deleteCompanyUser({ message }) {
+    setDeletedCompanyName(message.companyName);
+    setDeletedCompany(message.companyId);
+    setDeleteDialog(true);
+    dispatch(authActions.setGuestInfo({}));
+  }
+  function createNewCompanyUserHandler({ message }) {
+    if (user?._id !== message.sender) {
+      dispatch(companyActions.addNewCompanyUser(message));
+    }
+  }
   useEffect(() => {
     if (user && company) {
       realtime.join(user._id);
+      realtime.join(user.email);
       realtime.on('delete-membership', deleteMembershipHandler);
       realtime.on('update-role', updateRoleHandler);
       realtime.on('new-invitation', newInvitationHandler);
       realtime.on('user-notification', userNotificationHandler);
       realtime.on('approve-access', approveAccessHandler);
       realtime.on('reject-access', rejectAccessHandler);
+      realtime.on('delete-company-user', deleteCompanyUser);
     }
 
     if (companies && companies.length > 0) {
@@ -371,6 +409,7 @@ export default function Realtime() {
       realtime.on('delete-announcement-reaction', deleteAnnouncementReaction);
       realtime.on('publish-announcement', publishAnnouncementHandler);
       realtime.on('update-sublist', updateSublistHandler);
+      realtime.on('create-new-company-user', createNewCompanyUserHandler);
     }
     return () => {
       realtime.off('delete-membership', deleteMembershipHandler);
@@ -410,8 +449,20 @@ export default function Realtime() {
       realtime.off('create-announcement-reaction', createAnnouncementReaction);
       realtime.off('delete-announcement-reaction', deleteAnnouncementReaction);
       realtime.off('publish-announcement', publishAnnouncementHandler);
+      realtime.off('delete-company-user', deleteCompanyUser);
+      realtime.off('create-new-company-user', createNewCompanyUserHandler);
     };
   }, [user, companies, company]);
+
+  useEffect(() => {
+    if (guestInfo.email) {
+      realtime.join(guestInfo.email);
+      realtime.on('delete-company-user', deleteCompanyUser);
+    }
+    return () => {
+      realtime.off('delete-company-user', deleteCompanyUser);
+    };
+  }, [guestInfo]);
 
   const handleAcceptInvitation = () => {
     dispatch(
@@ -479,8 +530,10 @@ export default function Realtime() {
         router.push(generateUrl('dashboard', companies[0].subdomain));
       } else if (companies.length > 1) {
         router.push(generateUrl('select-company'));
-      } else {
+      } else if (user) {
         router.push(generateUrl('create-new-company'));
+      } else {
+        router.push('/login');
       }
     }
   };

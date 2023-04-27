@@ -48,9 +48,9 @@ export default function Announcements() {
     }
   });
 
-  function onSearchChange(e) {
-    setSearchText(e.target.value);
-    if (!e.target.value) {
+  function onSearchChange(value) {
+    setSearchText(value);
+    if (!value) {
       delete router.query.search;
       router.push({
         pathname: router.pathname,
@@ -186,7 +186,7 @@ export default function Announcements() {
                   <div className="flex gap-4 items-center ">
                     <SearchInput
                       searchText={searchText}
-                      onSearch={(e, text) => onSearchChange(e, text)}
+                      onSearch={(value) => onSearchChange(value)}
                       onClear={() => {
                         setSearchText('');
                         router.push({

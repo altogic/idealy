@@ -706,6 +706,54 @@ export const companySlice = createSlice({
     getCompanyUsersFailed(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    updateCompanyUser(state) {
+      state.isLoading = true;
+    },
+    updateCompanyUserSuccess(state, action) {
+      state.isLoading = false;
+      state.companyUsers.result = state.companyUsers.result.map((user) => {
+        if (user._id === action.payload._id) {
+          return {
+            ...action.payload,
+            segment: state.company.find((c) => c._id === action.payload.segment)
+          };
+        }
+        return user;
+      });
+    },
+    updateCompanyUserFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    deleteCompanyUser(state) {
+      state.isLoading = true;
+    },
+    deleteCompanyUserSuccess(state, action) {
+      state.isLoading = false;
+
+      state.companyUsers.result = state.companyUsers.result.filter(
+        (user) => user._id !== action.payload
+      );
+    },
+    deleteCompanyUserFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    addNewCompanyUser(state, action) {
+      if (!state.companyUsers.result.some((u) => u._id === action.payload._id))
+        state.companyUsers.result = [...state.companyUsers.result, action.payload];
+    },
+    updateCompanyUserCounts(state, action) {
+      state.companyUsers.result = state.companyUsers.result.map((user) => {
+        if (user.userId === action.payload.userId || user.email === action.payload.email) {
+          return {
+            ...user,
+            [action.payload.property]: user[action.payload.property] + 1
+          };
+        }
+        return user;
+      });
     }
   },
 

@@ -17,11 +17,8 @@ const companyService = {
   inviteTeamMember: (req) => endpoint.post('/company/invite', req),
   getUnregisteredCompanyMembers: (companyId) =>
     db.model('unregisteredCompanyMembers').filter(`companyId == '${companyId}'`).get(),
-  updateMemberStatus: ({ userId, companyId, status }) =>
-    db
-      .model('companyMembers')
-      .filter(`user == '${userId}' && companyId == '${companyId}'`)
-      .updateFields([{ field: 'status', updateType: 'set', value: status }]),
+  updateMemberStatus: ({ userId, companyId, status, email }) =>
+    endpoint.put('/member/status', { userId, companyId, status, email }),
   updateCompany: (company) => db.model('company').object(company._id).update(company),
   registerTeamMember: (req) => endpoint.post('/company/member', req),
   addItemToCompanySubLists: ({ fieldName, value, companyId }) =>
@@ -81,6 +78,9 @@ const companyService = {
       .get(),
   approveCompanyAccessRequest: (req) => endpoint.post('/company/access-request/approve', req),
   rejectCompanyAccessRequest: (req) => endpoint.post(`/company/access-request/reject/`, req),
-  getCompanyUsers: (companyId) => endpoint.get('/company/users', { companyId })
+  getCompanyUsers: ({ page = 1, limit = 10, filter, sort }) =>
+    endpoint.get('/company/users', { page, limit, filter, sort }),
+  updateCompanyUser: (req) => db.model('companyUsers').object(req._id).update(req),
+  deleteCompanyUser: (req) => endpoint.delete('/company/user', req)
 };
 export default companyService;

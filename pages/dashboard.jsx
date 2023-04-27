@@ -113,7 +113,6 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (company) {
-      dispatch(companyActions.getCompanyUsers(company._id));
       if (!(company?.role && company?.role !== 'Guest')) {
         setError({
           title: 'You are not allowed to see this page',

@@ -72,7 +72,7 @@ export default function RoadMapAdmin() {
       dispatch(ideaActions.setSelectedRoadmap(roadmap));
     }
   }, [sortedRoadmaps, router]);
-  console.log('roadmap', roadmap);
+
   useEffect(() => {
     if (roadmap && _.isEmpty(roadmapIdeas)) {
       dispatch(
