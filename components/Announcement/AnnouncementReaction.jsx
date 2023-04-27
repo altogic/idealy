@@ -7,10 +7,10 @@ import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import cx from 'classnames';
-import { REACTION_TYPES } from '../constants';
-import AnnouncementButton from './AnnouncementButton';
-import GuestFormModal from './GuestFormModal';
-import { FaceHappy } from './icons';
+import { REACTION_TYPES } from '@/constants/index';
+import { FaceHappy } from '@/components/icons';
+import GuestFormModal from '@/components/GuestFormModal';
+import AnnouncementButton from '@/components/Announcement/AnnouncementButton';
 
 export default function AnnouncementReaction({ announcementId, reactionCount }) {
   const dispatch = useDispatch();

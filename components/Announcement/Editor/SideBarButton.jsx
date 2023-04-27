@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function EditorSideBarButton({ id, name, description, Icon, onClick }) {
+export default function SideBarButton({ id, name, description, Icon, onClick }) {
   return (
     <li className="rounded-sm px-3 py-2 hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700">
       <button

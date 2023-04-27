@@ -9,7 +9,7 @@ import StatusBadge from './StatusBadge';
 import TopicBadges from './TopicBadges';
 import IdeaBadges from './Idea/IdeaBadges';
 
-export default function DashboardIdeaCard({ idea, selected, id }) {
+export default function DashboardIdeaCard({ idea, selected, id, onClick }) {
   const dispatch = useDispatch();
   const routeIdea = useRouteIdea();
 
@@ -18,7 +18,7 @@ export default function DashboardIdeaCard({ idea, selected, id }) {
       id={id}
       type="button"
       className={cn(
-        'w-full px-8 py-6 text-left  border-transparent transition',
+        'w-full p-4 xl:px-8 xl:py-6 text-left border-transparent transition',
         selected
           ? 'border border-indigo-700 dark:border-aa-100 purple:border-pt-100 bg-indigo-50 dark:bg-aa-800 purple:bg-pt-900'
           : 'hover:bg-slate-50 dark:hover:bg-aa-800 purple:hover:bg-pt-900'
@@ -27,6 +27,7 @@ export default function DashboardIdeaCard({ idea, selected, id }) {
         dispatch(ideaActions.setSelectedIdea(idea));
         dispatch(commentActions.getComments({ ideaId: idea?._id, page: 1 }));
         routeIdea(idea?._id);
+        if (onClick) onClick();
       }}>
       {idea &&
         (idea?.isPrivate ||
@@ -35,7 +36,7 @@ export default function DashboardIdeaCard({ idea, selected, id }) {
           idea?.isPinned ||
           idea?.isMerged ||
           !idea?.isApproved) && <IdeaBadges idea={idea} />}
-      <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 mb-2 text-base font-medium tracking-sm max-w-[420px] lg:truncate mt-4">
+      <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 mb-2 text-base font-medium tracking-sm max-w-[420px] lg:truncate">
         {idea?.title}
       </h6>
       <SanitizeHtml

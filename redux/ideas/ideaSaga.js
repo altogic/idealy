@@ -56,9 +56,9 @@ function* voteIdeaSaga({ payload }) {
     yield put(ideaActions.voteIdeaFailure(error));
   }
 }
-function* downVoteIdeaSaga({ payload }) {
+function* downVoteIdeaSaga({ payload: voteId }) {
   try {
-    const { data, errors } = yield call(ideaService.downVoteIdea, payload);
+    const { data, errors } = yield call(ideaService.downVoteIdea, voteId);
     if (errors) {
       throw new Error(errors);
     }

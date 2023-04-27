@@ -1,4 +1,4 @@
-import AnnouncementForm from '@/components/AnnouncementForm';
+import AnnouncementForm from '@/components/Announcement/AnnouncementForm';
 import Layout from '@/components/Layout';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
 import _ from 'lodash';

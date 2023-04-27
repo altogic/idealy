@@ -1,13 +1,11 @@
-import React, { useDeferredValue } from 'react';
+import cn from 'classnames';
+import Button from './Button';
 import Input from './Input';
 import { Search, Close as X } from './icons';
-import Button from './Button';
 
-export default function SearchInput({ searchText, onSearch, onClear }) {
-  const deferredSearch = useDeferredValue(searchText);
-
+export default function SearchInput({ searchText, onSearch, onClear, className }) {
   return (
-    <div className="relative">
+    <div className={cn('relative w-full sm:w-auto', className)}>
       <Input
         type="text"
         name="search"
@@ -15,12 +13,12 @@ export default function SearchInput({ searchText, onSearch, onClear }) {
         icon={<Search className="w-5 h-5 icon" />}
         placeholder="Search"
         value={searchText}
-        onChange={(e) => onSearch(e, deferredSearch)}
+        onChange={(e) => onSearch(e.target.value)}
       />
       {searchText && (
         <Button
           variant="icon"
-          icon={<X className="w-5 h-5 fill-slate-500 dark:fill-aa-200 purple:fill-pt-200" />}
+          icon={<X className="w-5 h-5 icon" />}
           type="button"
           size="xs"
           className="absolute right-2 top-3"

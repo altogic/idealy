@@ -41,7 +41,7 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, ...re
   });
   return (
     <div
-      className="flex-shrink-0 w-[384px] p-6 border border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-lg"
+      className="flex-shrink-0 w-[300px] md:w-[384px] p-6 border border-slate-200 dark:border-aa-600 purple:border-pt-800 rounded-lg"
       ref={!isGuest ? provided.innerRef : null}
       {...provided.droppableProps}
       {...rest}>

@@ -9,11 +9,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { generateUrl, isGreaterThan } from '../utils';
-import AnnouncementReaction from './AnnouncementReaction';
-import IdeaActionButton from './Idea/admin/IdeaActionButton';
-import InfoModal from './InfoModal';
-import ShareButtons from './ShareButtons';
+import { generateUrl, isGreaterThan } from '@/utils/index';
+import AnnouncementReaction from '@/components/Announcement/AnnouncementReaction';
+import IdeaActionButton from '@/components/Idea/admin/IdeaActionButton';
+import InfoModal from '@/components/InfoModal';
+import ShareButtons from '@/components/ShareButtons';
 
 export default function AnnouncementCard({ announcement, onPage }) {
   const router = useRouter();

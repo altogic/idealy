@@ -4,13 +4,13 @@ const ideaService = {
   getIdeasByCompany: (params) => endpoint.get('/idea', params),
   createIdea: (req) => endpoint.post('/idea', req),
   voteIdea: (req) => endpoint.post('/idea/vote', req),
-  downVoteIdea: (req) => endpoint.delete(`/idea/downVote`, req),
+  downVoteIdea: (voteId) => endpoint.delete(`/idea/downVote/${voteId}`),
   getUserVotes: ({ filter }) =>
     endpoint.get(`/ideaVote`, {
       filter
     }),
   updateIdea: (req) => endpoint.put('/idea', req),
-  deleteIdea: (id) => db.model('ideas').object(id).delete(),
+  deleteIdea: (id) => endpoint.delete(`/idea/${id}`),
   searchSimilarIdeas: ({ title, companyId, random = false, page = 1, limit = 3 }) =>
     endpoint.get('/idea/search', { title, companyId, random, page, limit }),
   deleteIdeaCoverImage: (id) =>

@@ -1,6 +1,6 @@
 import EmptyState from '@/components/EmptyState';
 import InfiniteScroll from '@/components/InfiniteScroll';
-import NotificationItem from '@/components/NotificationItem';
+import NotificationItem from '@/components/Header/Notifications/NotificationItem';
 import SectionTitle from '@/components/SectionTitle';
 import { notificationActions } from '@/redux/notification/notificationSlice';
 import { Tab } from '@headlessui/react';

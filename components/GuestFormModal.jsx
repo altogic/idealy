@@ -86,7 +86,7 @@ export default function GuestFormModal({
 
       <form onSubmit={handleSubmit(submit)} className="px-8">
         <GuestForm register={register} errors={errors} checkBoxName="privacyPolicyVote" vertical />
-        <div className="flex justify-end gap-2 my-8">
+        <div className="flex justify-center gap-2 my-8">
           <Button
             type="button"
             text="Cancel"

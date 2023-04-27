@@ -53,14 +53,15 @@ export default function InviteTeam() {
         companyName: company.name,
         canCreateCompany: company.whiteLabel.canCreateCompany,
         companySubdomain: company.subdomain,
-        onSuccess: (userId, token) => {
+        onSuccess: (userId, token, memberId) => {
           setIsInvite(false);
           setRoleSelected(ROLE[0].name);
           if (userId) {
             realtime.send(userId, 'new-invitation', {
               role: roleSelected,
               userId,
-              company
+              company,
+              memberId
             });
             sendNotification({
               message: `You have been invited to join <b>${company?.name}</b>`,

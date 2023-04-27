@@ -160,7 +160,7 @@ function* inviteTeamMemberSaga({ payload }) {
       throw new Error(errors);
     }
     yield put(companyActions.inviteTeamMemberSuccess(data.member));
-    payload.onSuccess(data?.member.user?._id, data.invitation.token);
+    payload.onSuccess(data?.member.user?._id, data.invitation.token, data.member._id);
     realtime.send(payload.companyId, 'invite-team-member', {
       sender: user._id,
       ...data.member
@@ -175,6 +175,7 @@ function* updateMemberStatusSaga({ payload }) {
     const { error } = yield call(companyService.updateMemberStatus, {
       userId: user._id,
       companyId: payload.companyId,
+      email: user.email,
       status: payload.status ? payload.status : 'Active'
     });
     if (error) {
@@ -557,9 +558,9 @@ function* rejectCompanyAccessRequestSaga({ payload: { body, message, onSuccess }
     yield put(companyActions.rejectCompanyAccessRequestFailed(error));
   }
 }
-function* getCompanyUsersSaga({ payload: companyId }) {
+function* getCompanyUsersSaga({ payload }) {
   try {
-    const { data, error } = yield call(companyService.getCompanyUsers, companyId);
+    const { data, error } = yield call(companyService.getCompanyUsers, payload);
     if (error) {
       throw error;
     }
@@ -568,6 +569,31 @@ function* getCompanyUsersSaga({ payload: companyId }) {
     yield put(companyActions.getCompanyUsersFailed(error));
   }
 }
+function* updateCompanyUserSaga({ payload }) {
+  try {
+    const { data, error } = yield call(companyService.updateCompanyUser, payload);
+    if (error) {
+      throw error;
+    }
+    yield put(companyActions.updateCompanyUserSuccess(data));
+  } catch (error) {
+    yield put(companyActions.updateCompanyUserFailed(error));
+  }
+}
+
+function* deleteCompanyUserSaga({ payload }) {
+  try {
+    const { data, error } = yield call(companyService.deleteCompanyUser, payload);
+    if (error) {
+      throw error;
+    }
+    yield put(companyActions.deleteCompanyUserSuccess(data));
+  } catch (error) {
+    console.log(error);
+    yield put(companyActions.deleteCompanyUserFailed(error));
+  }
+}
+
 export default function* companySaga() {
   yield all([
     takeEvery(companyActions.setCompanyWillBeCreated.type, setCreatedCompanySaga),
@@ -606,6 +632,8 @@ export default function* companySaga() {
     takeEvery(companyActions.getAccessRequestsByCompany, getAccessRequestsByCompanySaga),
     takeEvery(companyActions.approveCompanyAccessRequest, approveCompanyAccessRequestSaga),
     takeEvery(companyActions.rejectCompanyAccessRequest, rejectCompanyAccessRequestSaga),
-    takeEvery(companyActions.getCompanyUsers, getCompanyUsersSaga)
+    takeEvery(companyActions.getCompanyUsers, getCompanyUsersSaga),
+    takeEvery(companyActions.updateCompanyUser, updateCompanyUserSaga),
+    takeEvery(companyActions.deleteCompanyUser, deleteCompanyUserSaga)
   ]);
 }

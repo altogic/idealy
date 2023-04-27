@@ -1,8 +1,8 @@
 import React from 'react';
 import { DateTime } from 'luxon';
 import { useRouter } from 'next/router';
-import Avatar from './Avatar';
-import SanitizeHtml from './SanitizeHtml';
+import Avatar from '@/components/Avatar';
+import SanitizeHtml from '@/components/SanitizeHtml';
 
 export default function NotificationItem({ notification, dropdown = false }) {
   const router = useRouter();

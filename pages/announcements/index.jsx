@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import AnnouncementCard from '@/components/AnnouncementCard';
+import AnnouncementCard from '@/components/Announcement/AnnouncementCard';
 import BaseListBox from '@/components/BaseListBox';
 import Button from '@/components/Button';
 import Divider from '@/components/Divider';
@@ -18,7 +18,7 @@ import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
 import useOpenFeedbackModal from '@/hooks/useOpenFeedbackModal';
-import AnnouncementSkeleton from '@/components/AnnouncementSkeleton';
+import AnnouncementSkeleton from '@/components/Announcement/AnnouncementSkeleton';
 
 export default function Announcements() {
   const router = useRouter();
@@ -48,14 +48,14 @@ export default function Announcements() {
     }
   });
 
-  function onSearchChange(e) {
-    setSearchText(e.target.value);
-    if (!e.target.value) {
+  function onSearchChange(value) {
+    setSearchText(value);
+    if (!value) {
+      delete router.query.search;
       router.push({
         pathname: router.pathname,
         query: {
-          ...router.query,
-          search: searchText
+          ...router.query
         }
       });
     }
@@ -186,7 +186,7 @@ export default function Announcements() {
                   <div className="flex gap-4 items-center ">
                     <SearchInput
                       searchText={searchText}
-                      onSearch={(e, text) => onSearchChange(e, text)}
+                      onSearch={(value) => onSearchChange(value)}
                       onClear={() => {
                         setSearchText('');
                         router.push({
