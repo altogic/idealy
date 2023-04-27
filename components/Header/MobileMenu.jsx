@@ -1,12 +1,15 @@
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
 import useNavbarItems from '@/hooks/useNavbarItems';
-import { Close, HamburgerMenu } from '@/components/icons';
+import { Close, HamburgerMenu, Settings } from '@/components/icons';
 import { useSelector } from 'react-redux';
 import NavItem from './NavItem';
 import CompanyAvatar from '../CompanyAvatar';
 
 export default function MobileMenu() {
+  const router = useRouter();
   const [openHamburgerMenu, setOpenHamburgerMenu] = useState(false);
   const selectedCompany = useSelector((state) => state.company.company);
   const navbar = useNavbarItems();
@@ -69,6 +72,30 @@ export default function MobileMenu() {
                               active={item.active}
                             />
                           ))}
+                          {selectedCompany?.role &&
+                            selectedCompany?.role !== 'Guest' &&
+                            (router.asPath.includes('dashboard') ||
+                              router.asPath.includes('public-view')) && (
+                              <div>
+                                {router.asPath.includes('dashboard') ? (
+                                  <div className="flex items-center justify-center rounded-md transition bg-indigo-700 dark:bg-aa-600 purple:bg-pt-900 hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
+                                    <Link href="/public-view">
+                                      <a className="inline-flex items-center justify-center text-white px-3 py-2.5 text-sm tracking-sm">
+                                        Public View
+                                      </a>
+                                    </Link>
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center justify-center rounded-md transition bg-indigo-700 dark:bg-aa-600 purple:bg-pt-900 hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
+                                    <Link href="/dashboard">
+                                      <a className="inline-flex items-center justify-center text-white px-3 py-2.5 text-sm tracking-sm">
+                                        Admin View
+                                      </a>
+                                    </Link>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                         </ul>
                       </nav>
                     </div>

@@ -15,7 +15,7 @@ export default function NavItem({ icon, title, href = '/', active }) {
           : 'hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900'
       )}>
       <Link href={href}>
-        <a className="inline-flex items-center justify-center text-white dark:text-aa-200 purple:text-pt-200 font-medium tracking-sm">
+        <a className="inline-flex items-center justify-center gap-3 text-white dark:text-aa-200 purple:text-pt-200 font-medium tracking-sm">
           {icon}
           {title}
         </a>

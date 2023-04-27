@@ -57,8 +57,8 @@ export default function DashboardIdeaDetail() {
     }
   }, [idea, router]);
   return (
-    <div className="grid 2xl:grid-cols-[1fr,348px]">
-      <div className="relative border-r border-slate-200 dark:border-aa-600 purple:border-pt-800 h-[calc(100vh-242px)]">
+    <div className="flex items-center">
+      <div className="relative border-r border-slate-200 dark:border-aa-600 purple:border-pt-800 h-[calc(100vh-192px)]">
         <div
           id="dashboard-idea-detail"
           className={cn('p-10 overflow-y-auto', isEditorFocus ? 'max-h-[84%]' : 'max-h-[97%]')}>
