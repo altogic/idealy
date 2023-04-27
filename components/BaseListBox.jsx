@@ -75,7 +75,7 @@ export default function BaseListBox({
                     className={cn(
                       'dark:text-aa-200 purple:text-pt-200 flex gap-2',
                       type === 'create'
-                        ? 'text-slate-800 text-3xl font-semibold'
+                        ? 'text-slate-800 text-xl lg:text-3xl font-semibold'
                         : 'text-slate-500 text-sm tracking-sm'
                     )}>
                     <div
