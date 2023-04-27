@@ -71,6 +71,31 @@ export default function Header() {
         <Navbar />
       </div>
       <div className="flex items-center gap-4">
+        <div className="hidden lg:block">
+          {selectedCompany?.role &&
+            selectedCompany?.role !== 'Guest' &&
+            (router.asPath.includes('dashboard') || router.asPath.includes('public-view')) && (
+              <div>
+                {router.asPath.includes('dashboard') ? (
+                  <div className="flex items-center justify-center rounded-md transition bg-indigo-700 dark:bg-aa-600 purple:bg-pt-900 hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
+                    <Link href="/public-view">
+                      <a className="inline-flex items-center justify-center text-white px-3 py-2.5 text-sm tracking-sm">
+                        Public View
+                      </a>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center rounded-md transition bg-indigo-700 dark:bg-aa-600 purple:bg-pt-900 hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
+                    <Link href="/dashboard">
+                      <a className="inline-flex items-center justify-center text-white px-3 py-2.5 text-sm tracking-sm">
+                        Admin View
+                      </a>
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
+        </div>
         {process.env.NODE_ENV === 'development' && <ThemeChanger />}
         {isLoggedIn ? (
           <>
