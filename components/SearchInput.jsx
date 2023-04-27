@@ -7,7 +7,7 @@ export default function SearchInput({ searchText, onSearch, onClear }) {
   const deferredSearch = useDeferredValue(searchText);
 
   return (
-    <div className="relative">
+    <div className="relative w-full sm:w-auto">
       <Input
         type="text"
         name="search"

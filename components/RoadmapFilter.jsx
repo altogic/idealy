@@ -56,34 +56,34 @@ export default function RoadmapFilter({ roadmap, setRoadmap, roadmaps }) {
   return (
     <>
       <div className="flex items-center gap-2 flex-1">
-        {isGuest ? (
-          <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
-        ) : (
-          <Tooltip>
-            <TooltipTrigger
-              onClick={() => {
-                dispatch(
-                  companyActions.updateCompanySubLists({
-                    id: roadmap._id,
-                    property: 'roadmaps',
-                    update: { isPublic: !roadmap?.isPublic },
-                    role: company?.role
-                  })
-                );
-                setRoadmap((roadmap) => ({
-                  ...roadmap,
-                  isPublic: !roadmap?.isPublic
-                }));
-              }}>
-              <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
-            </TooltipTrigger>
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center flex-1 gap-4">
+          {isGuest ? (
+            <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
+          ) : (
+            <Tooltip>
+              <TooltipTrigger
+                onClick={() => {
+                  dispatch(
+                    companyActions.updateCompanySubLists({
+                      id: roadmap._id,
+                      property: 'roadmaps',
+                      update: { isPublic: !roadmap?.isPublic },
+                      role: company?.role
+                    })
+                  );
+                  setRoadmap((roadmap) => ({
+                    ...roadmap,
+                    isPublic: !roadmap?.isPublic
+                  }));
+                }}>
+                <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
+              </TooltipTrigger>
 
-            <TooltipContent>
-              Make this roadmap {roadmap?.isPublic ? 'private' : 'public'}
-            </TooltipContent>
-          </Tooltip>
-        )}
-        <div className="flex flex-1 justify-between items-center">
+              <TooltipContent>
+                Make this roadmap {roadmap?.isPublic ? 'private' : 'public'}
+              </TooltipContent>
+            </Tooltip>
+          )}
           <BaseListBox
             value={roadmap}
             label={roadmap?.name}
