@@ -1,6 +1,5 @@
-import FilterSave from '@/components/dashboard/FilterSave';
-import IdeaFilter from '@/components/dashboard/IdeaFilter';
 import DashboardIdeaCard from '@/components/DashboardIdeaCard';
+import DashboardIdeaCardSkeleton from '@/components/DashboardIdeaCardSkeleton';
 import Divider from '@/components/Divider';
 import Drawer from '@/components/Drawer';
 import EmptyState from '@/components/EmptyState';
@@ -10,10 +9,11 @@ import SubmitIdea from '@/components/Idea/SubmitIdea';
 import InfiniteScroll from '@/components/InfiniteScroll';
 import Layout from '@/components/Layout';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/Tooltip';
+import FilterSave from '@/components/dashboard/FilterSave';
+import IdeaFilter from '@/components/dashboard/IdeaFilter';
 import useFilterIdea from '@/hooks/useFilterIdea';
 import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import { commentActions } from '@/redux/comments/commentsSlice';
-import { companyActions } from '@/redux/company/companySlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import _ from 'lodash';
 import dynamic from 'next/dynamic';
@@ -21,7 +21,6 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import DashboardIdeaCardSkeleton from '@/components/DashboardIdeaCardSkeleton';
 
 const DashboardIdeaDetail = dynamic(() => import('@/components/dashboard/DashboardIdeaDetail'), {
   ssr: false
