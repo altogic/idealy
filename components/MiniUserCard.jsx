@@ -9,7 +9,7 @@ export default function MiniUserCard({ image, name, checked, onClick, active, pr
         'inline-flex items-center gap-4 px-6 py-4 border transition w-full ',
         active
           ? 'bg-indigo-50 dark:bg-aa-800 purple:bg-pt-900 border-indigo-700 dark:border-aa-200 purple:border-pt-200'
-          : 'bg-slate-50 border-transparent hover:bg-slate-50 hover:border-indigo-700 dark:hover:border-aa-200 purple:hover:border-pt-200'
+          : 'bg-slate-50 dark:bg-aa-900 purple:bg-pt-900 border-transparent hover:bg-slate-50 hover:border-indigo-700 dark:hover:border-aa-200 purple:hover:border-pt-200'
       )}
       onClick={onClick}
       {...props}>
@@ -17,7 +17,7 @@ export default function MiniUserCard({ image, name, checked, onClick, active, pr
         <Avatar className="w-10 h-10 " size="w-10 h-10" src={image} alt={name} />
         {checked && (
           <svg
-            className="absolute bottom-0 right-0 w-3 h-3"
+            className="absolute bottom-0 right-0 w-4 h-4"
             viewBox="0 0 12 12"
             fill="none"
             xmlns="http://www.w3.org/2000/svg">
