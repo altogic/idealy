@@ -14,6 +14,7 @@ export default function Users() {
   const router = useRouter();
   const {
     company,
+    isGuest,
     companyUsers: { result: users }
   } = useSelector((state) => state.company);
   const { selectedIdea } = useSelector((state) => state.idea);
@@ -37,7 +38,7 @@ export default function Users() {
         })
       );
     }
-  }, [company, router.query.sort, router.query.page, router.query.q, router.segment]);
+  }, [company, router.query.sort, router.query.page, router.query.q, router.query.segment]);
 
   function handleCloseIdea() {
     const temp = router.query;
@@ -108,6 +109,12 @@ export default function Users() {
       setSelectedUser(users?.[0]);
     }
   }, [users]);
+
+  useEffect(() => {
+    if (isGuest) {
+      router.push('/login');
+    }
+  }, [isGuest]);
 
   return (
     <Layout>

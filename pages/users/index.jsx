@@ -8,10 +8,10 @@ import UserPage from '@/components/UserPage';
 export default function Index() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { company } = useSelector((state) => state.company);
+  const { company, isGuest } = useSelector((state) => state.company);
 
   useEffect(() => {
-    if (company) {
+    if (company && !isGuest) {
       dispatch(
         companyActions.getCompanyUsers({
           page: 1,
