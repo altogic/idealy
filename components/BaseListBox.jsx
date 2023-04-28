@@ -147,7 +147,7 @@ export default function BaseListBox({
                 )}>
                 {_options?.map((item) => (
                   <Listbox.Option
-                    key={item.id || item._id || item[valueField] || item[field] || item}
+                    key={item?._id || item?.[valueField] || item?.[field] || item}
                     className={({ active }) =>
                       `relative flex items-center justify-between select-none w-[calc(w-full-w-3.5)] py-2 px-3.5 transition cursor-pointer hover:text-slate-900 dark:hover:text-aa-200 purple:hover:text-pt-200 overflow-hidden ${
                         active
