@@ -77,7 +77,7 @@ export default function AdminDashboard() {
 
   function hideUserCard() {
     const userCard = document.querySelector('#comment-user-card');
-    userCard.style.display = 'none';
+    if (userCard) userCard.style.display = 'none';
   }
 
   useEffect(() => {
