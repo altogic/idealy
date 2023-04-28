@@ -17,7 +17,7 @@ export default function Layout({ children }) {
   const company = useSelector((state) => state.company.company);
   const companies = useSelector((state) => state.company.companies);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const { loading } = useSelector((state) => state.company);
+  const { getCompanyLoading: loading } = useSelector((state) => state.company);
   const dispatch = useDispatch();
 
   useEffect(() => {
