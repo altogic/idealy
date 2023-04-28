@@ -37,6 +37,7 @@ const initialState = {
   accessRequest: {},
   accessRequests: [],
   getAccessRequestLoading: false,
+  getCompanyUsersLoading: false,
   isGuest: false
 };
 
@@ -697,14 +698,14 @@ export const companySlice = createSlice({
       }
     },
     getCompanyUsers(state) {
-      state.isLoading = true;
+      state.getCompanyUsersLoading = true;
     },
     getCompanyUsersSuccess(state, action) {
-      state.isLoading = false;
+      state.getCompanyUsersLoading = false;
       state.companyUsers = action.payload;
     },
     getCompanyUsersFailed(state, action) {
-      state.isLoading = false;
+      state.getCompanyUsersLoading = false;
       state.error = action.payload;
     },
     updateCompanyUser() {},

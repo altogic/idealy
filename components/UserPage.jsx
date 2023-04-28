@@ -21,7 +21,7 @@ export default function UserPage({ selectedUser, setSelectedUser, getIdeas }) {
   const dispatch = useDispatch();
   const {
     company,
-    isLoading,
+    getCompanyUsersLoading: isLoading,
     companyUsers: { result: users, countInfo }
   } = useSelector((state) => state.company);
   const { ideas, getIdeaLoading, countInfo: ideaCountInfo } = useSelector((state) => state.idea);
