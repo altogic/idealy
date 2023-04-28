@@ -94,7 +94,7 @@ export default function UserDetail({ user }) {
               field="name"
               type="status"
               options={company?.userSegments}
-              size="xl"
+              size="xxl"
               onReset={() => {
                 setSegments(null);
                 dispatch(
