@@ -3,14 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
 import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
+import UserPage from '@/components/UserPage';
 
 export default function Index() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const {
-    company,
-    companyUsers: { result: users }
-  } = useSelector((state) => state.company);
+  const { company } = useSelector((state) => state.company);
 
   useEffect(() => {
     if (company) {
@@ -19,20 +17,23 @@ export default function Index() {
           page: 1,
           limit: 10,
           filter: `this.companyId == '${company._id}'`,
-          sort: 'createdAt:desc'
+          sort: 'createdAt:desc',
+          onSuccess: (users) => {
+            if (users?.length > 0) {
+              router.push({
+                pathname: `/users/${users[0]._id}`,
+                query: router.query
+              });
+            }
+          }
         })
       );
     }
   }, [company]);
 
-  useEffect(() => {
-    if (users?.length) {
-      router.push({
-        pathname: `/users/${users?.[0]?._id}`,
-        query: { ...router.query }
-      });
-    }
-  }, [users]);
-
-  return <Layout />;
+  return (
+    <Layout>
+      <UserPage />
+    </Layout>
+  );
 }
