@@ -564,6 +564,9 @@ function* getCompanyUsersSaga({ payload }) {
     if (error) {
       throw error;
     }
+    if (payload.onSuccess) {
+      payload.onSuccess(data.result);
+    }
     yield put(companyActions.getCompanyUsersSuccess(data));
   } catch (error) {
     yield put(companyActions.getCompanyUsersFailed(error));
