@@ -39,6 +39,7 @@ export default function AnnouncementForm({ onSave, children }) {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [date, setDate] = useState(Date.now());
   const [categories, setCategories] = useState([]);
+
   const { updateAnnouncementLoading: loading, announcement } = useSelector(
     (state) => state.announcement
   );
@@ -81,16 +82,18 @@ export default function AnnouncementForm({ onSave, children }) {
   };
 
   function saveAnnouncement(isPublished = false) {
-    onSave({
-      title: announcement?.title,
-      content: announcement?.content,
-      ...(announcement?._id && { _id: announcement?._id }),
-      ...(announcement?.title && { slug: announcement?.title.toLowerCase().replace(/ /g, '-') }),
-      categories: categories.map((category) => category._id),
-      company: company._id,
-      isPublished: isPublished || isGreaterThan(date, Date.now()),
-      publishDate: date
-    });
+    if (company) {
+      onSave({
+        title: announcement?.title,
+        content: announcement?.content,
+        ...(announcement?._id && { _id: announcement?._id }),
+        ...(announcement?.title && { slug: announcement?.title.toLowerCase().replace(/ /g, '-') }),
+        categories: categories.map((category) => category._id),
+        company: company._id,
+        isPublished: isPublished || isGreaterThan(date, Date.now()),
+        publishDate: date
+      });
+    }
   }
 
   function publishAnnouncement() {
