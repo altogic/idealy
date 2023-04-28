@@ -3,7 +3,7 @@ import Layout from '@/components/Layout';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
 import _ from 'lodash';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useClickAnnouncementIdea from '@/hooks/useClickAnnouncementIdea';
 import useOpenFeedbackModal from '@/hooks/useOpenFeedbackModal';
@@ -11,28 +11,41 @@ import useOpenFeedbackModal from '@/hooks/useOpenFeedbackModal';
 export default function EditAnnouncements({ slug }) {
   const router = useRouter();
   const announcement = useSelector((state) => state.announcement.announcement);
+  const session = useSelector((state) => state.auth.session);
   const loading = useSelector((state) => state.announcement.updateAnnouncementLoading);
   const dispatch = useDispatch();
+  const [webworker, setWebworker] = useState();
 
-  const handleUpdateAnnouncement = (req) => {
-    dispatch(
-      announcementActions.updateAnnouncement({
-        ...req,
-        onSuccess: (data) => {
+  const handleUpdateAnnouncement = useCallback(
+    (req) => {
+      if (webworker) {
+        webworker.postMessage({
+          announcement: req,
+          session
+        });
+        webworker.onmessage = (e) => {
+          const { data } = e.data;
           if (router.query.slug !== data.slug) {
             router.push(`/announcements/edit/${data.slug}`);
           }
-        }
-      })
-    );
-  };
+        };
+      }
+    },
+    [webworker]
+  );
+
   useClickAnnouncementIdea(announcement);
   useOpenFeedbackModal();
+
   useEffect(() => {
     if (_.isEmpty(announcement)) {
       dispatch(announcementActions.getAnnouncement(slug));
     }
   }, [announcement]);
+
+  useEffect(() => {
+    setWebworker(new Worker(new URL('@/utils/worker', import.meta.url)));
+  }, []);
 
   return (
     <Layout>
