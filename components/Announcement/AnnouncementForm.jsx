@@ -156,7 +156,7 @@ export default function AnnouncementForm({ onSave, children }) {
               type="text"
               name="title"
               id="title"
-              className="block text-slate-500 dark:text-aa-200 purple:text-pt-200 px-0 py-4 w-full text-3xl font-medium border-0 placeholder-slate-500 focus:outline-none focus:ring-0 placeholder:text-2xl bg-inherit"
+              className="block text-slate-500 dark:text-aa-200 purple:text-pt-200 px-0 py-4 w-full text-3xl font-medium border-0 placeholder:text-slate-500 dark:placeholder-aa-200 purple:placeholder-pt-200 focus:outline-none focus:ring-0 placeholder:text-2xl bg-inherit"
               placeholder="Share with your audience what you are shipping for."
               onChange={(e) =>
                 dispatch(
