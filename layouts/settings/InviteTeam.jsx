@@ -126,7 +126,7 @@ export default function InviteTeam() {
             <Button
               type="button"
               text="Invite team"
-              icon={<TwoPeople className="w-5 h-5 icon" />}
+              icon={<TwoPeople className="w-5 h-5 icon-slate" />}
               variant="indigo"
               size="base"
               onClick={() => setIsInvite(!isInvite)}
@@ -174,7 +174,7 @@ export default function InviteTeam() {
                       placeholder="you@domain.com"
                       register={register('email')}
                       error={errors.email}
-                      icon={<Email className="w-5 h-5 indigo" />}
+                      icon={<Email className="w-5 h-5 icon" />}
                     />
                   </div>
                   <div>
