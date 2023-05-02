@@ -21,6 +21,7 @@ export default function BaseListBox({
   onReset,
   children,
   className,
+  disabled,
   ...props
 }) {
   const [_options, setOptions] = useState([]);
@@ -35,7 +36,7 @@ export default function BaseListBox({
   }, [options]);
 
   return (
-    <Listbox value={value} onChange={onChange} multiple={multiple} {...props}>
+    <Listbox value={value} onChange={onChange} multiple={multiple} disabled={disabled} {...props}>
       <div className={cn('relative', className)}>
         <Listbox.Button
           className={cn(
@@ -50,7 +51,8 @@ export default function BaseListBox({
               ' dark:bg-aa-800 purple:bg-pt-800  py-3.5 px-2 md:px-[14px] ',
             type === 'icon' && 'text-slate-700 p-3',
             type !== 'create' &&
-              'justify-between border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800 bg-white dark:bg-aa-700 purple:bg-pt-700 focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300'
+              'justify-between border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800 bg-white dark:bg-aa-700 purple:bg-pt-700 focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300',
+            disabled && 'opacity-50 cursor-not-allowed'
           )}>
           {type !== 'icon' && (
             <>
