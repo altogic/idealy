@@ -123,47 +123,50 @@ export default function RoadMapAdmin() {
         <meta name="description" content="Altogic Canny Alternative Roadmap Admin Page" />
       </Head>
       <Layout>
-        <div className="h-[calc(100vh-93px)] w-full px-4 lg:px-8">
-          {error ? (
-            <Errors title={error?.title} message={error?.message} />
-          ) : (
-            <div className="flex flex-col h-full">
-              {!!company?.roadmaps?.length && (
-                <>
-                  <div className="space-y-2 my-14">
-                    <div className="flex items-center justify-between gap-2">
-                      <RoadmapFilter
-                        roadmap={roadmap}
-                        setRoadmap={setRoadmap}
-                        roadmaps={sortedRoadmaps}
-                      />
+        <div className="overflow-auto max-w-full">
+          <div className="h-[calc(100vh-93px)] w-full px-4 lg:px-8">
+            {error ? (
+              <Errors title={error?.title} message={error?.message} />
+            ) : (
+              <div className="flex flex-col h-full  ">
+                {!!company?.roadmaps?.length && (
+                  <>
+                    <div className="space-y-2 my-14">
+                      <div className="flex items-center gap-2">
+                        <RoadmapFilter
+                          roadmap={roadmap}
+                          setRoadmap={setRoadmap}
+                          roadmaps={sortedRoadmaps}
+                        />
+                      </div>
+                      <p className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
+                        {roadmap?.description}
+                      </p>
                     </div>
-                    <p className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
-                      {roadmap?.description}
-                    </p>
-                  </div>
-                  {!!roadmapStatuses.length && (
-                    <RoadmapBoard roadmap={roadmap} roadmapStatuses={roadmapStatuses} />
-                  )}
-                </>
-              )}
-              <div className="m-auto">
-                {((!roadmap?.publicStatuses?.length && isGuest) || !company?.roadmaps?.length) && (
-                  <EmptyState
-                    title="No items to view"
-                    description={
-                      roadmap?.publicStatuses?.length
-                        ? 'There is no public status for this roadmap.'
-                        : 'There is no public roadmap for this company.'
-                    }
-                  />
+                    {!!roadmapStatuses.length && (
+                      <RoadmapBoard roadmap={roadmap} roadmapStatuses={roadmapStatuses} />
+                    )}
+                  </>
                 )}
+                <div className="m-auto">
+                  {((!roadmap?.publicStatuses?.length && isGuest) ||
+                    !company?.roadmaps?.length) && (
+                    <EmptyState
+                      title="No items to view"
+                      description={
+                        roadmap?.publicStatuses?.length
+                          ? 'There is no public status for this roadmap.'
+                          : 'There is no public roadmap for this company.'
+                      }
+                    />
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
+          <IdeaDetail idea={selectedIdea} company={company} onClose={() => handleCloseIdea()} />
+          {!isGuest && <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />}
         </div>
-        <IdeaDetail idea={selectedIdea} company={company} onClose={() => handleCloseIdea()} />
-        {!isGuest && <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />}
       </Layout>
     </>
   );
