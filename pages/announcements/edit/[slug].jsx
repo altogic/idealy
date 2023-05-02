@@ -25,8 +25,8 @@ export default function EditAnnouncements({ slug }) {
         });
         webworker.onmessage = (e) => {
           const { data } = e.data;
-          if (router.query.slug !== data.slug) {
-            router.push(`/announcements/edit/${data.slug}`);
+          if (router.query.slug !== data?.slug) {
+            router.replace(`/announcements/edit/${data?.slug}`);
           }
         };
       }
@@ -44,7 +44,10 @@ export default function EditAnnouncements({ slug }) {
   }, [announcement]);
 
   useEffect(() => {
-    setWebworker(new Worker(new URL('@/utils/worker', import.meta.url)));
+    if ('Worker' in window) {
+      const worker = new Worker(new URL('@/workers/announcement.js', import.meta.url));
+      setWebworker(worker);
+    }
   }, []);
 
   return (

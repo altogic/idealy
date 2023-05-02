@@ -40,9 +40,11 @@ export default function AnnouncementForm({ onSave, children }) {
   const [date, setDate] = useState(Date.now());
   const [categories, setCategories] = useState([]);
 
-  const { updateAnnouncementLoading: loading, announcement } = useSelector(
-    (state) => state.announcement
-  );
+  const {
+    updateAnnouncementLoading: loading,
+    createAnnouncementLoading,
+    announcement
+  } = useSelector((state) => state.announcement);
   const router = useRouter();
   const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
@@ -167,6 +169,7 @@ export default function AnnouncementForm({ onSave, children }) {
               register={register('title')}
               error={errors.title}
               autoFocus={!!announcement?.title && !announcement?.content}
+              disabled={loading || createAnnouncementLoading}
             />
             <div className="flex items-center">
               <div className="my-auto">
