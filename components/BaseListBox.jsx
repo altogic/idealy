@@ -43,7 +43,7 @@ export default function BaseListBox({
             'relative flex items-center gap-2 w-full rounded-lg text-left cursor-pointer focus:outline-none  sm:text-sm',
             size === 'xs' && '',
             size === 'sm' && 'h-11 items-center',
-            size === 'md' && 'min-w-[auto] md:min-w-[160px]',
+            size === 'md' && 'min-w-[auto] md:min-w-[160px] ',
             size === 'lg' && 'min-w-[auto] md:min-w-[195px]',
             size === 'xl' && 'min-w-[auto] md:min-w-[250px]',
             size === 'xxl' && 'min-w-[auto] md:min-w-[275px]',
@@ -82,7 +82,7 @@ export default function BaseListBox({
                     )}>
                     <div
                       className={cn(
-                        hidden === 'mobile' && 'inline-flex items-center justify-center'
+                        hidden === 'mobile' && 'inline-flex items-center justify-center truncate'
                       )}>
                       {' '}
                       {label}
@@ -129,10 +129,10 @@ export default function BaseListBox({
           <Listbox.Options
             className={cn(
               'absolute top-[50px]  mt-1 max-h-64 overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50 border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800',
-              size === 'sm' && 'min-w-[120px] max-w-[180px]',
-              size === 'md' && 'min-w-[160px] max-w-[215px]',
-              size === 'lg' && 'min-w-[195px] max-w-[270px] max-h-60',
-              size === 'xl' && 'min-w-[250px] max-w-[320px]',
+              size === 'sm' && 'min-w-[120px] max-w-[200px]',
+              size === 'md' && 'min-w-[160px] max-w-[230px]',
+              size === 'lg' && 'min-w-[195px] max-w-[290px] max-h-60',
+              size === 'xl' && 'min-w-[250px] max-w-[350px]',
               size === 'xxl' && 'min-w-[300px] max-w-full',
               size === 'full' && 'w-full',
               type === 'icon' && 'w-[195px]',
