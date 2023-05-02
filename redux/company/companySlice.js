@@ -470,6 +470,20 @@ export const companySlice = createSlice({
           }
           return member;
         });
+        if (state.companyUsers.length) {
+          state.companyUsers.result = state.companyUsers.result.map((user) => {
+            if (user?.member?._id === action.payload.id) {
+              return {
+                ...user,
+                member: {
+                  ...user.member,
+                  role: action.payload.role
+                }
+              };
+            }
+            return user;
+          });
+        }
       } else {
         state.unregisteredCompanyMembers = state.unregisteredCompanyMembers.map((member) => {
           if (member._id === action.payload.id) {
