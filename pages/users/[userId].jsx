@@ -4,7 +4,6 @@ import UserPage from '@/components/UserPage';
 import { companyActions } from '@/redux/company/companySlice';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import _ from 'lodash';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -98,17 +97,9 @@ export default function Users() {
   useEffect(() => {
     if (router.isReady && router.query.userId) {
       const user = users?.find((user) => user._id === router.query.userId);
-      if (user && user?._id !== router.query.userId) {
-        setSelectedUser(user);
-      }
+      setSelectedUser(user);
     }
   }, [router.isReady, router.query.userId, users]);
-
-  useEffect(() => {
-    if (_.isNil(selectedUser) && users?.length) {
-      setSelectedUser(users?.[0]);
-    }
-  }, [users]);
 
   useEffect(() => {
     if (isGuest) {
