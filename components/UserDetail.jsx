@@ -55,6 +55,7 @@ export default function UserDetail({ user }) {
               <RoleListBox
                 roleSelected={selected}
                 setRoleSelected={setSelected}
+                size="full"
                 onRoleChange={(role) => {
                   dispatch(
                     companyActions.updateCompanyMemberRole({
@@ -72,6 +73,7 @@ export default function UserDetail({ user }) {
                     companyId: company._id
                   });
                 }}
+                disabled={user?.member?.role === 'Owner' || company.role === 'Moderator'}
               />
             </div>
           )}
@@ -94,7 +96,7 @@ export default function UserDetail({ user }) {
               field="name"
               type="status"
               options={company?.userSegments}
-              size="xxl"
+              size="full"
               onReset={() => {
                 setSegments(null);
                 dispatch(
