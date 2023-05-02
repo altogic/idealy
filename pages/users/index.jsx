@@ -20,8 +20,12 @@ export default function Index() {
           sort: 'createdAt:desc',
           onSuccess: (users) => {
             if (users?.length > 0) {
+              const userId = router.query?.email
+                ? users.find((user) => user.email === router.query.email)?._id
+                : users[0]._id;
+              delete router.query?.email;
               router.push({
-                pathname: `/users/${users[0]._id}`,
+                pathname: `/users/${userId}`,
                 query: router.query
               });
             }
