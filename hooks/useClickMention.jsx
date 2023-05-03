@@ -37,7 +37,7 @@ export default function useClickMention(id, dashboard) {
       });
       if (!dashboard) {
         const ideaDetail = document.querySelector('.drawer-body');
-        ideaDetail.addEventListener('click', hideUserCard);
+        ideaDetail?.addEventListener('click', hideUserCard);
       }
     }
 
