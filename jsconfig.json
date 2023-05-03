@@ -10,7 +10,8 @@
       "@/features/*": ["features/*"],
       "@/redux/*": ["redux/*"],
       "@/hooks/*": ["hooks/*"],
-      "@/constants/*": ["constants/*"]
+      "@/constants/*": ["constants/*"],
+      "@/workers/*": ["workers/*"]
     }
   }
 }

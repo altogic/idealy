@@ -19,6 +19,7 @@ import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
 import useOpenFeedbackModal from '@/hooks/useOpenFeedbackModal';
 import AnnouncementSkeleton from '@/components/Announcement/AnnouncementSkeleton';
+import Head from 'next/head';
 
 export default function Announcements() {
   const router = useRouter();
@@ -48,9 +49,9 @@ export default function Announcements() {
     }
   });
 
-  function onSearchChange(e) {
-    setSearchText(e.target.value);
-    if (!e.target.value) {
+  function onSearchChange(value) {
+    setSearchText(value);
+    if (!value) {
       delete router.query.search;
       router.push({
         pathname: router.pathname,
@@ -171,122 +172,131 @@ export default function Announcements() {
   }, [company]);
 
   return (
-    <Layout>
-      <div className="h-[calc(100vh-93px)] max-w-[800px] bg-white dark:bg-aa-900 purple:bg-pt-1000 mx-auto my-12 space-y-8">
-        {error ? (
-          <Errors title={error?.title} message={error?.message} />
-        ) : (
-          <>
-            <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-8">
-              <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
-                Announcements
-              </h1>
-              <div className="flex gap-4 items-center ">
-                <SearchInput
-                  searchText={searchText}
-                  onSearch={(e, text) => onSearchChange(e, text)}
-                  onClear={() => {
-                    setSearchText('');
-                    router.push({
-                      pathname: router.pathname,
-                      query: { ...router.query, search: '' }
-                    });
-                  }}
-                />
+    <>
+      <Head>
+        <title>{company?.name} - Announcements</title>
+      </Head>
+      <Layout>
+        <div className="bg-white dark:bg-aa-900 purple:bg-pt-1000 h-[calc(100vh-93px)] space-y-8">
+          {error ? (
+            <Errors title={error?.title} message={error?.message} />
+          ) : (
+            <>
+              <div className="pt-14 px-4">
+                <div className="mx-auto w-8/12">
+                  <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-8">
+                    <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
+                      Announcements
+                    </h1>
+                    <div className="flex gap-4 items-center ">
+                      <SearchInput
+                        searchText={searchText}
+                        onSearch={(value) => onSearchChange(value)}
+                        onClear={() => {
+                          setSearchText('');
+                          router.push({
+                            pathname: router.pathname,
+                            query: { ...router.query, search: '' }
+                          });
+                        }}
+                      />
 
-                {!!company?.categories.length && (
-                  <BaseListBox
-                    value={filterCategories}
-                    onChange={handleFilterCategoriesChange}
-                    field="name"
-                    options={company?.categories}
-                    icon={<FilterHamburger className="w-5 h-5 icon" />}
-                    label="Categories"
-                    multiple
-                    size="md"
-                    align="right"
-                    hidden="mobile"
-                    type="status"
-                    onReset={() => {
-                      delete router.query.categories;
+                      {!!company?.categories.length && (
+                        <BaseListBox
+                          value={filterCategories}
+                          onChange={handleFilterCategoriesChange}
+                          field="name"
+                          options={company?.categories}
+                          icon={<FilterHamburger className="w-5 h-5 icon" />}
+                          label="Categories"
+                          multiple
+                          size="md"
+                          align="right"
+                          hidden="mobile"
+                          type="status"
+                          onReset={() => {
+                            delete router.query.categories;
+                            router.push({
+                              pathname: router.pathname,
+                              query: {
+                                ...router.query
+                              }
+                            });
+                          }}
+                        />
+                      )}
+                      {!isGuest && (
+                        <Button
+                          type="button"
+                          text="New"
+                          icon={<Plus className="w-5 h-5 icon-slate" />}
+                          variant="indigo"
+                          size="sm"
+                          mobileFullWidth="mobileFullWidth"
+                          onClick={() => router.push('/announcements/new')}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <Divider />
+                </div>
+              </div>
+              <div className="h-[calc(100vh-233px)]">
+                {isLoading && router.query.page === '1' ? (
+                  <AnnouncementSkeleton />
+                ) : (
+                  <InfiniteScroll
+                    items={announcements}
+                    countInfo={countInfo}
+                    endOfList={() => {
+                      const page = Number.isNaN(parseInt(router.query.page, 2) + 1)
+                        ? router.query.page
+                        : parseInt(router.query.page, 2) + 1;
                       router.push({
                         pathname: router.pathname,
                         query: {
-                          ...router.query
+                          ...router.query,
+                          page
                         }
                       });
-                    }}
-                  />
-                )}
-                {!isGuest && (
-                  <Button
-                    type="button"
-                    text="New"
-                    icon={<Plus className="w-5 h-5 icon-slate" />}
-                    variant="indigo"
-                    size="sm"
-                    mobileFullWidth="mobileFullWidth"
-                    onClick={() => router.push('/announcements/new')}
-                  />
+                    }}>
+                    {countInfo.count > 0 ? (
+                      announcements?.map((announcement) => (
+                        <AnnouncementCard
+                          key={announcement._id}
+                          announcement={announcement}
+                          isGuest={isGuest}
+                        />
+                      ))
+                    ) : (
+                      <EmptyState
+                        title="No announcements yet"
+                        description="Announcements will be posted here."
+                      />
+                    )}
+                  </InfiniteScroll>
                 )}
               </div>
-            </div>
-            <Divider />
-            <div className="">
-              {isLoading && router.query.page === '1' ? (
-                <AnnouncementSkeleton />
-              ) : (
-                <InfiniteScroll
-                  items={announcements}
-                  countInfo={countInfo}
-                  endOfList={() => {
-                    const page = Number.isNaN(parseInt(router.query.page, 2) + 1)
-                      ? router.query.page
-                      : parseInt(router.query.page, 2) + 1;
-                    router.push({
-                      pathname: router.pathname,
-                      query: {
-                        ...router.query,
-                        page
-                      }
-                    });
-                  }}>
-                  {countInfo.count > 0 ? (
-                    announcements?.map((announcement) => (
-                      <AnnouncementCard
-                        key={announcement._id}
-                        announcement={announcement}
-                        isGuest={isGuest}
-                      />
-                    ))
-                  ) : (
-                    <EmptyState
-                      title="No announcements yet"
-                      description="Announcements will be posted here."
-                    />
-                  )}
-                </InfiniteScroll>
-              )}
-            </div>
-          </>
-        )}
-      </div>
-      <IdeaDetail
-        idea={selectedIdea}
-        company={company}
-        onClose={() => {
-          dispatch(ideaActions.setSelectedIdea(null));
-          dispatch(toggleFeedBackDetailModal());
-          router.push(
-            {
-              pathname: router.pathname,
-              query: { ...router.query, feedback: undefined }
-            },
-            undefined,
-            { scroll: false }
-          );
-        }}
-      />
-    </Layout>
+            </>
+          )}
+        </div>
+        <IdeaDetail
+          idea={selectedIdea}
+          company={company}
+          onClose={() => {
+            dispatch(ideaActions.setSelectedIdea(null));
+            dispatch(toggleFeedBackDetailModal());
+            router.push(
+              {
+                pathname: router.pathname,
+                query: { ...router.query, feedback: undefined }
+              },
+              undefined,
+              { scroll: false }
+            );
+          }}
+        />
+      </Layout>
+    </>
   );
 }

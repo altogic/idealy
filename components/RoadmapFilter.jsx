@@ -32,9 +32,7 @@ export default function RoadmapFilter({ roadmap, setRoadmap, roadmaps }) {
       dispatch(ideaActions.searchRoadmapIdeas(searchText));
     }
   });
-  function onSearchChange(e) {
-    setSearchText(e.target.value);
-  }
+
   useUpdateEffect(() => {
     if (!searchText) {
       router.push({
@@ -55,61 +53,63 @@ export default function RoadmapFilter({ roadmap, setRoadmap, roadmaps }) {
   }, [router.query.search, roadmapIdeas]);
   return (
     <>
-      <div className="flex items-center gap-2 flex-1">
+      <div className="flex items-center  gap-2 flex-1">
         <div className="flex flex-col sm:flex-row justify-between sm:items-center flex-1 gap-4">
-          {isGuest ? (
-            <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
-          ) : (
-            <Tooltip>
-              <TooltipTrigger
-                onClick={() => {
-                  dispatch(
-                    companyActions.updateCompanySubLists({
-                      id: roadmap._id,
-                      property: 'roadmaps',
-                      update: { isPublic: !roadmap?.isPublic },
-                      role: company?.role
-                    })
-                  );
-                  setRoadmap((roadmap) => ({
-                    ...roadmap,
-                    isPublic: !roadmap?.isPublic
-                  }));
-                }}>
-                <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
-              </TooltipTrigger>
+          <div className="flex gap-2">
+            {isGuest ? (
+              <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
+            ) : (
+              <Tooltip>
+                <TooltipTrigger
+                  onClick={() => {
+                    dispatch(
+                      companyActions.updateCompanySubLists({
+                        id: roadmap._id,
+                        property: 'roadmaps',
+                        update: { isPublic: !roadmap?.isPublic },
+                        role: company?.role
+                      })
+                    );
+                    setRoadmap((roadmap) => ({
+                      ...roadmap,
+                      isPublic: !roadmap?.isPublic
+                    }));
+                  }}>
+                  <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
+                </TooltipTrigger>
 
-              <TooltipContent>
-                Make this roadmap {roadmap?.isPublic ? 'private' : 'public'}
-              </TooltipContent>
-            </Tooltip>
-          )}
-          <BaseListBox
-            value={roadmap}
-            label={roadmap?.name}
-            field="name"
-            options={roadmaps}
-            size="xxl"
-            onChange={(value) => {
-              setRoadmap(value);
-              dispatch(ideaActions.setSelectedIdea(value));
-              router.push({
-                pathname: '/roadmaps',
-                query: { roadmap: value._id }
-              });
-            }}
-            type="create">
-            <button
-              type="button"
-              className="inline-flex items-center gap-3 text-slate-400 py-2 whitespace-nowrap"
-              onClick={() => setIsCreate(!isCreate)}>
-              <Plus className="w-4 h-4 icon" />
-              Add a new roadmap
-            </button>
-          </BaseListBox>
+                <TooltipContent>
+                  Make this roadmap {roadmap?.isPublic ? 'private' : 'public'}
+                </TooltipContent>
+              </Tooltip>
+            )}
+            <BaseListBox
+              value={roadmap}
+              label={roadmap?.name}
+              field="name"
+              options={roadmaps}
+              size="xxl"
+              onChange={(value) => {
+                setRoadmap(value);
+                dispatch(ideaActions.setSelectedIdea(value));
+                router.push({
+                  pathname: '/roadmaps',
+                  query: { roadmap: value._id }
+                });
+              }}
+              type="create">
+              <button
+                type="button"
+                className="inline-flex items-center gap-3 text-slate-400 py-2 whitespace-nowrap"
+                onClick={() => setIsCreate(!isCreate)}>
+                <Plus className="w-4 h-4 icon" />
+                Add a new roadmap
+              </button>
+            </BaseListBox>
+          </div>
           <SearchInput
             searchText={searchText}
-            onSearch={(e) => onSearchChange(e)}
+            onSearch={setSearchText}
             onClear={() => {
               setSearchText('');
               router.push({

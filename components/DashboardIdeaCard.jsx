@@ -9,7 +9,7 @@ import StatusBadge from './StatusBadge';
 import TopicBadges from './TopicBadges';
 import IdeaBadges from './Idea/IdeaBadges';
 
-export default function DashboardIdeaCard({ idea, selected, id }) {
+export default function DashboardIdeaCard({ idea, selected, id, onClick }) {
   const dispatch = useDispatch();
   const routeIdea = useRouteIdea();
 
@@ -27,6 +27,7 @@ export default function DashboardIdeaCard({ idea, selected, id }) {
         dispatch(ideaActions.setSelectedIdea(idea));
         dispatch(commentActions.getComments({ ideaId: idea?._id, page: 1 }));
         routeIdea(idea?._id);
+        if (onClick) onClick();
       }}>
       {idea &&
         (idea?.isPrivate ||

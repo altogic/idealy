@@ -53,14 +53,15 @@ export default function InviteTeam() {
         companyName: company.name,
         canCreateCompany: company.whiteLabel.canCreateCompany,
         companySubdomain: company.subdomain,
-        onSuccess: (userId, token) => {
+        onSuccess: (userId, token, memberId) => {
           setIsInvite(false);
           setRoleSelected(ROLE[0].name);
           if (userId) {
             realtime.send(userId, 'new-invitation', {
               role: roleSelected,
               userId,
-              company
+              company,
+              memberId
             });
             sendNotification({
               message: `You have been invited to join <b>${company?.name}</b>`,
@@ -125,7 +126,7 @@ export default function InviteTeam() {
             <Button
               type="button"
               text="Invite team"
-              icon={<TwoPeople className="w-5 h-5 icon" />}
+              icon={<TwoPeople className="w-5 h-5 icon-slate" />}
               variant="indigo"
               size="base"
               onClick={() => setIsInvite(!isInvite)}
@@ -173,7 +174,7 @@ export default function InviteTeam() {
                       placeholder="you@domain.com"
                       register={register('email')}
                       error={errors.email}
-                      icon={<Email className="w-5 h-5 indigo" />}
+                      icon={<Email className="w-5 h-5 icon" />}
                     />
                   </div>
                   <div>

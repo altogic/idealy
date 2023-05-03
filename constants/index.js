@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/prefer-default-export
-import { Archive, Bug, CircleCheck, Eye, Merge, Thumbtack } from '@/components/icons';
+import { Archive, Bug, CircleCheck, Eye, Merge, Pin } from '@/components/icons';
 import { compareDates } from '../utils';
 
 export const BREAKPOINT = {
@@ -113,7 +113,7 @@ export const PRIORITY_SCALE = 6;
 export const IDEA_BADGES = [
   {
     name: 'Pinned',
-    icon: Thumbtack,
+    icon: Pin,
     color: 'green',
     field: 'isPinned'
   },
@@ -318,5 +318,48 @@ export const REACTION_TYPES = [
     id: 5,
     type: 'sad',
     symbol: '😢'
+  }
+];
+
+export const USERS_SORT_OPTIONS = [
+  {
+    value: 'createdAt:desc',
+    label: 'Newest'
+  },
+  {
+    value: 'createdAt:asc',
+    label: 'Oldest'
+  },
+  {
+    value: 'lastActivityAt:desc',
+    label: 'Most Active'
+  },
+  {
+    value: 'lastActivityAt:asc',
+    label: 'Least Active'
+  },
+  {
+    value: 'ideaCount:desc',
+    label: 'Least Contributors'
+  },
+  {
+    value: 'ideaCount:asc',
+    label: 'Top Contributors'
+  },
+  {
+    value: 'commentCount:desc',
+    label: 'Top Commenters'
+  },
+  {
+    value: 'commentCount:asc',
+    label: ' Least Commenters'
+  },
+  {
+    value: 'voteCount:desc',
+    label: 'Top Voters'
+  },
+  {
+    value: 'voteCount:asc',
+    label: 'Least Voters'
   }
 ];

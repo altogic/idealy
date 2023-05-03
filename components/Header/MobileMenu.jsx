@@ -1,12 +1,12 @@
+import { Close, HamburgerMenu } from '@/components/icons';
+import useNavbarItems from '@/hooks/useNavbarItems';
+import { Dialog, Transition } from '@headlessui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
-import useNavbarItems from '@/hooks/useNavbarItems';
-import { Close, HamburgerMenu, Settings } from '@/components/icons';
 import { useSelector } from 'react-redux';
-import NavItem from './NavItem';
 import CompanyAvatar from '../CompanyAvatar';
+import NavItem from './NavItem';
 
 export default function MobileMenu() {
   const router = useRouter();

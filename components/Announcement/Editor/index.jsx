@@ -17,6 +17,7 @@ export default function AnnouncementEditor({ onChange, value }) {
   const { selectedIdea } = useSelector((state) => state.idea);
   const [isStateUpdated, setIsStateUpdated] = useState(false);
   const editor = useRef();
+  const valueRef = useRef(false);
 
   const { quill, tooltip, sidebar, input, tooltipInput, tooltipButtons, insertVideo } = useQuill(
     onChange,
@@ -33,9 +34,18 @@ export default function AnnouncementEditor({ onChange, value }) {
   useEffect(() => {
     if (quill && value && quill.getLength() <= 1) {
       quill.root.innerHTML = value;
-      quill.setSelection(quill.getLength(), 0);
+      console.log('getSelection', quill.getSelection());
+      valueRef.current = true;
     }
   }, [value, quill]);
+
+  useEffect(() => {
+    if (quill && valueRef.current) {
+      valueRef.current = false;
+      quill.setSelection(quill.getLength(), 0);
+      console.log('set selection', quill.getLength(), 'getSelection2', quill.getSelection());
+    }
+  }, [valueRef.current, quill]);
 
   const handleAddVideo = (e) => {
     const { value } = e.target;

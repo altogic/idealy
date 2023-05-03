@@ -29,7 +29,7 @@ export default function Header() {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    if (companies.length > 0 && selectedCompany) {
+    if (companies?.length > 0 && selectedCompany) {
       if (!selectedCompany?.role) {
         setUserCompanies(companies);
       } else {

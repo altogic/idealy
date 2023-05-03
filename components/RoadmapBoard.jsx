@@ -120,7 +120,7 @@ export default function RoadmapBoard({ roadmap, roadmapStatuses }) {
   }, [roadmapIdeas]);
 
   return (
-    <div className="flex-1 flex flex-nowrap items-start gap-8 overflow-auto max-w-full">
+    <div className="flex-1 flex flex-nowrap items-start gap-8">
       <DragDropContext onDragEnd={onDragEnd}>
         {!isGuest && (
           <Droppable droppableId="undefined" index={0} isCombineEnabled>

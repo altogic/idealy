@@ -1,13 +1,23 @@
-export default function MiniUserCard({ image, name, checked }) {
+import cn from 'classnames';
+import Avatar from './Avatar';
+
+export default function MiniUserCard({ image, name, checked, onClick, active, props }) {
   return (
     <button
       type="button"
-      className="inline-flex items-center gap-4 px-6 py-4 border-2 border-transparent transition hover:bg-slate-50 hover:border-indigo-700">
-      <span className="inline-block relative">
-        <img className="w-10 h-10 rounded-full ring-2 ring-white" src={image} alt={name} />
+      className={cn(
+        'inline-flex items-center gap-4 px-6 py-4 border transition w-full ',
+        active
+          ? 'bg-indigo-50 dark:bg-aa-800 purple:bg-pt-900 border-indigo-700 dark:border-aa-200 purple:border-pt-200'
+          : 'bg-slate-50 dark:bg-aa-900 purple:bg-pt-900 border-transparent hover:bg-slate-50 hover:border-indigo-700 dark:hover:border-aa-200 purple:hover:border-pt-200'
+      )}
+      onClick={onClick}
+      {...props}>
+      <div className="inline-block relative">
+        <Avatar className="w-10 h-10 " size="w-10 h-10" src={image} alt={name} />
         {checked && (
           <svg
-            className="absolute bottom-0 right-0 w-3 h-3"
+            className="absolute bottom-0 right-0 w-4 h-4"
             viewBox="0 0 12 12"
             fill="none"
             xmlns="http://www.w3.org/2000/svg">
@@ -35,8 +45,10 @@ export default function MiniUserCard({ image, name, checked }) {
             </defs>
           </svg>
         )}
+      </div>
+      <span className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-base tracking-sm">
+        {name}
       </span>
-      <span className="text-slate-700 text-base tracking-sm">{name}</span>
     </button>
   );
 }

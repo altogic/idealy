@@ -26,7 +26,7 @@ export default function useNavbarItems() {
       icon: <People className="w-6 h-6 icon-slate mr-3" />,
       title: 'Users',
       href: '/users',
-      active: router.pathname === '/users'
+      active: router.pathname.includes('/users')
     }
   ];
 }

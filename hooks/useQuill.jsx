@@ -194,7 +194,9 @@ export default function useQuill(onChange, value) {
       if (range !== null && oldRange === null) {
         const title = document.querySelector('#title').value;
         if (_.isEmpty(value) && title && router.asPath.includes('new')) {
-          router.push(`/announcements/edit/${title.toLowerCase().replace(/ /g, '-')}?focus=true`);
+          router.replace(
+            `/announcements/edit/${title.toLowerCase().replace(/ /g, '-')}?focus=true`
+          );
           dispatch(
             announcementActions.createAnnouncement({
               slug: title.toLowerCase().replace(/ /g, '-'),

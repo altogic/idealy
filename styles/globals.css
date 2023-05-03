@@ -247,6 +247,7 @@ html:has(:is(.modal, .drawer)) {
   @apply border border-slate-300 dark:border-aa-600 purple:border-pt-800 !important;
   @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 !important;
 }
+
 .rdrDayDisabled {
   @apply bg-inherit !important;
 }
@@ -266,8 +267,9 @@ html:has(:is(.modal, .drawer)) {
 .rdrDaySelected {
   @apply border-indigo-500 dark:border-aa-200 purple:border-pt-200 !important;
 }
-.rdrDayNumber span {
-  @apply text-slate-500 dark:text-aa-200 purple:text-aa-200 !important;
+
+.rdrDayHovered .rdrDayNumber span {
+  @apply text-slate-700 dark:text-aa-200 purple:text-pt-200 !important;
 }
 .rdrStartEdge,
 .rdrEndEdge {
@@ -307,7 +309,9 @@ html:has(:is(.modal, .drawer)) {
 .rdrStaticRange:focus .rdrStaticRangeLabel {
   @apply bg-slate-100 dark:bg-aa-600 purple:bg-pt-600 !important;
 }
-.rdrInRange + .rdrDayNumber span {
+.rdrInRange + .rdrDayNumber span,
+.rdrStartEdge + .rdrDayNumber span,
+.rdrEndEdge + .rdrDayNumber span {
   @apply text-slate-100 !important;
 }
 .rdrDayDisabled .rdrInRange + .rdrDayNumber span {

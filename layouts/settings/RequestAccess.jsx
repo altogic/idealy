@@ -5,6 +5,7 @@ import SectionTitle from '@/components/SectionTitle';
 import useNotification from '@/hooks/useNotification';
 import { companyActions } from '@/redux/company/companySlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { Check, Close } from '@/components/icons';
 
 export default function RequestAccess() {
   const dispatch = useDispatch();
@@ -44,9 +45,7 @@ export default function RequestAccess() {
                   <Button
                     type="button"
                     text="Approve"
-                    icon={
-                      <CheckIcon className="w-4 h-4 text-slate-100 dark:text-aa-200 purple:text-pt-200" />
-                    }
+                    icon={<Check className="w-4 h-4 icon-slate" />}
                     variant="indigo"
                     size="sm"
                     height="8"
@@ -73,9 +72,7 @@ export default function RequestAccess() {
                   <Button
                     type="button"
                     text="Reject"
-                    icon={
-                      <XIcon className="w-4 h-4 text-slate-100 dark:text-aa-200 purple:text-pt-200" />
-                    }
+                    icon={<Close className="w-4 h-4 icon-slate" />}
                     variant="red"
                     size="sm"
                     height="8"

@@ -37,6 +37,7 @@ const initialState = {
   accessRequest: {},
   accessRequests: [],
   getAccessRequestLoading: false,
+  getCompanyUsersLoading: false,
   isGuest: false
 };
 
@@ -87,10 +88,9 @@ export const companySlice = createSlice({
       state.companyTopics = state.companyTopics.filter((topic) => topic._id !== action.payload);
     },
     createCompany(state) {
-      state.isLoading = true;
+      state.getCompanyLoading = true;
     },
     createCompanySuccess(state, action) {
-      state.isLoading = false;
       state.company = action.payload;
       state.companies = [...state.companies, action.payload];
       state.companyTopics = [];
@@ -101,9 +101,10 @@ export const companySlice = createSlice({
       state.ideaDescription = null;
       state.ideaStatus = null;
       state.error = null;
+      state.getCompanyLoading = false;
     },
     createCompanyFailed(state, action) {
-      state.isLoading = false;
+      state.getCompanyLoading = false;
       state.error = action.payload;
     },
     getCompanyMembers(state) {
@@ -469,6 +470,20 @@ export const companySlice = createSlice({
           }
           return member;
         });
+        if (state.companyUsers.length) {
+          state.companyUsers.result = state.companyUsers.result.map((user) => {
+            if (user?.member?._id === action.payload.id) {
+              return {
+                ...user,
+                member: {
+                  ...user.member,
+                  role: action.payload.role
+                }
+              };
+            }
+            return user;
+          });
+        }
       } else {
         state.unregisteredCompanyMembers = state.unregisteredCompanyMembers.map((member) => {
           if (member._id === action.payload.id) {
@@ -697,15 +712,61 @@ export const companySlice = createSlice({
       }
     },
     getCompanyUsers(state) {
-      state.isLoading = true;
+      state.getCompanyUsersLoading = true;
     },
     getCompanyUsersSuccess(state, action) {
-      state.isLoading = false;
+      state.getCompanyUsersLoading = false;
       state.companyUsers = action.payload;
     },
     getCompanyUsersFailed(state, action) {
+      state.getCompanyUsersLoading = false;
+      state.error = action.payload;
+    },
+    updateCompanyUser() {},
+    updateCompanyUserSuccess(state, action) {
+      state.companyUsers.result = state.companyUsers.result.map((user) => {
+        if (user._id === action.payload._id) {
+          return {
+            ...action.payload,
+            segment: state.company.find((c) => c._id === action.payload.segment)
+          };
+        }
+        return user;
+      });
+    },
+    updateCompanyUserFailed(state, action) {
+      state.error = action.payload;
+    },
+    deleteCompanyUser(state) {
+      state.isLoading = true;
+    },
+    deleteCompanyUserSuccess(state, action) {
+      state.isLoading = false;
+      state.companyUsers.result = state.companyUsers.result.filter(
+        (user) => user._id !== action.payload
+      );
+    },
+    deleteCompanyUserFailed(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+    },
+    addNewCompanyUser(state, action) {
+      if (!state.companyUsers.result.some((u) => u._id === action.payload._id))
+        state.companyUsers.result = [...state.companyUsers.result, action.payload];
+    },
+    updateCompanyUserCounts(state, action) {
+      if (state.company.result) {
+        state.companyUsers.result = state.companyUsers.result.map((user) => {
+          if (user.userId === action.payload.userId || user.email === action.payload.email) {
+            return {
+              ...user,
+              [action.payload.property]: user[action.payload.property] + 1,
+              lastActivityAt: new Date().toISOString()
+            };
+          }
+          return user;
+        });
+      }
     }
   },
 

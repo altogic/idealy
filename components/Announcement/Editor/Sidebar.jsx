@@ -96,7 +96,7 @@ const Sidebar = forwardRef(({ quill, inputRef }, ref) => {
             {!addNewIdea ? (
               <ul
                 id="sidebar-buttons"
-                className="flex w-full relative overflow-hidden overflow-y-auto flex-col space-y-3 p-2 ">
+                className="flex w-full relative overflow-hidden overflow-y-auto flex-col space-y-3 p-2 bg-white dark:bg-aa-900 purple:bg-pt-900">
                 <SideBarButton
                   id="image-button"
                   onClick={addImage}

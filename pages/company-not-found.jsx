@@ -1,8 +1,7 @@
-import React from 'react';
+import { ChevronLeft, Danger } from '@/components/icons';
+import { deleteCookie, getCookie } from 'cookies-next';
 import Head from 'next/head';
-import { Danger, ChevronLeft } from '@/components/icons';
 import Router from 'next/router';
-import { getCookie, deleteCookie } from 'cookies-next';
 import { generateUrl } from '../utils';
 
 export default function CompanyNotFound() {
@@ -18,8 +17,7 @@ export default function CompanyNotFound() {
   return (
     <div>
       <Head>
-        <title>Altogic Canny Alternative Mail Verification</title>
-        <meta name="description" content="Altogic Canny Alternative Mail Verification" />
+        <title>Idealy - Mail Verification</title>
       </Head>
       <div className="relative h-screen">
         <a

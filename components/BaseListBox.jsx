@@ -21,6 +21,7 @@ export default function BaseListBox({
   onReset,
   children,
   className,
+  disabled,
   ...props
 }) {
   const [_options, setOptions] = useState([]);
@@ -35,14 +36,14 @@ export default function BaseListBox({
   }, [options]);
 
   return (
-    <Listbox value={value} onChange={onChange} multiple={multiple} {...props}>
+    <Listbox value={value} onChange={onChange} multiple={multiple} disabled={disabled} {...props}>
       <div className={cn('relative', className)}>
         <Listbox.Button
           className={cn(
             'relative flex items-center gap-2 w-full rounded-lg text-left cursor-pointer focus:outline-none  sm:text-sm',
             size === 'xs' && '',
             size === 'sm' && 'h-11 items-center',
-            size === 'md' && 'min-w-[auto] md:min-w-[160px]',
+            size === 'md' && 'min-w-[auto] md:min-w-[160px] ',
             size === 'lg' && 'min-w-[auto] md:min-w-[195px]',
             size === 'xl' && 'min-w-[auto] md:min-w-[250px]',
             size === 'xxl' && 'min-w-[auto] md:min-w-[275px]',
@@ -50,7 +51,8 @@ export default function BaseListBox({
               ' dark:bg-aa-800 purple:bg-pt-800  py-3.5 px-2 md:px-[14px] ',
             type === 'icon' && 'text-slate-700 p-3',
             type !== 'create' &&
-              'justify-between border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800 bg-white dark:bg-aa-700 purple:bg-pt-700 focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300'
+              'justify-between border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800 bg-white dark:bg-aa-700 purple:bg-pt-700 focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300',
+            disabled && 'opacity-50 cursor-not-allowed'
           )}>
           {type !== 'icon' && (
             <>
@@ -80,7 +82,7 @@ export default function BaseListBox({
                     )}>
                     <div
                       className={cn(
-                        hidden === 'mobile' && 'inline-flex items-center justify-center'
+                        hidden === 'mobile' && 'inline-flex items-center justify-center truncate'
                       )}>
                       {' '}
                       {label}
@@ -127,10 +129,10 @@ export default function BaseListBox({
           <Listbox.Options
             className={cn(
               'absolute top-[50px]  mt-1 max-h-64 overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50 border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800',
-              size === 'sm' && 'min-w-[120px] max-w-[160px]',
-              size === 'md' && 'min-w-[160px] max-w-[215px]',
-              size === 'lg' && 'min-w-[195px] max-w-[270px] max-h-60',
-              size === 'xl' && 'min-w-[250px] max-w-[320px]',
+              size === 'sm' && 'min-w-[120px] max-w-[200px]',
+              size === 'md' && 'min-w-[160px] max-w-[230px]',
+              size === 'lg' && 'min-w-[195px] max-w-[290px] max-h-60',
+              size === 'xl' && 'min-w-[250px] max-w-[350px]',
               size === 'xxl' && 'min-w-[300px] max-w-full',
               size === 'full' && 'w-full',
               type === 'icon' && 'w-[195px]',
@@ -147,7 +149,7 @@ export default function BaseListBox({
                 )}>
                 {_options?.map((item) => (
                   <Listbox.Option
-                    key={item.id || item._id || item[valueField] || item[field] || item}
+                    key={item?._id || item?.[valueField] || item?.[field] || item}
                     className={({ active }) =>
                       `relative flex items-center justify-between select-none w-[calc(w-full-w-3.5)] py-2 px-3.5 transition cursor-pointer hover:text-slate-900 dark:hover:text-aa-200 purple:hover:text-pt-200 overflow-hidden ${
                         active

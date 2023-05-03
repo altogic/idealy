@@ -39,9 +39,12 @@ export default function AnnouncementForm({ onSave, children }) {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [date, setDate] = useState(Date.now());
   const [categories, setCategories] = useState([]);
-  const { updateAnnouncementLoading: loading, announcement } = useSelector(
-    (state) => state.announcement
-  );
+
+  const {
+    updateAnnouncementLoading: loading,
+    createAnnouncementLoading,
+    announcement
+  } = useSelector((state) => state.announcement);
   const router = useRouter();
   const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
@@ -81,16 +84,18 @@ export default function AnnouncementForm({ onSave, children }) {
   };
 
   function saveAnnouncement(isPublished = false) {
-    onSave({
-      title: announcement?.title,
-      content: announcement?.content,
-      ...(announcement?._id && { _id: announcement?._id }),
-      ...(announcement?.title && { slug: announcement?.title.toLowerCase().replace(/ /g, '-') }),
-      categories: categories.map((category) => category._id),
-      company: company._id,
-      isPublished: isPublished || isGreaterThan(date, Date.now()),
-      publishDate: date
-    });
+    if (company) {
+      onSave({
+        title: announcement?.title,
+        content: announcement?.content,
+        ...(announcement?._id && { _id: announcement?._id }),
+        ...(announcement?.title && { slug: announcement?.title.toLowerCase().replace(/ /g, '-') }),
+        categories: categories.map((category) => category._id),
+        company: company._id,
+        isPublished: isPublished || isGreaterThan(date, Date.now()),
+        publishDate: date
+      });
+    }
   }
 
   function publishAnnouncement() {
@@ -151,7 +156,7 @@ export default function AnnouncementForm({ onSave, children }) {
               type="text"
               name="title"
               id="title"
-              className="block text-slate-500 dark:text-aa-200 purple:text-pt-200 px-0 py-4 w-full text-3xl font-medium border-0 placeholder-slate-500 focus:outline-none focus:ring-0 placeholder:text-2xl bg-inherit"
+              className="block text-slate-500 dark:text-aa-200 purple:text-pt-200 px-0 py-4 w-full text-3xl font-medium border-0 placeholder:text-slate-500 dark:placeholder-aa-200 purple:placeholder-pt-200 focus:outline-none focus:ring-0 placeholder:text-2xl bg-inherit"
               placeholder="Share with your audience what you are shipping for."
               onChange={(e) =>
                 dispatch(
@@ -164,6 +169,7 @@ export default function AnnouncementForm({ onSave, children }) {
               register={register('title')}
               error={errors.title}
               autoFocus={!!announcement?.title && !announcement?.content}
+              disabled={loading || createAnnouncementLoading}
             />
             <div className="flex items-center">
               <div className="my-auto">
