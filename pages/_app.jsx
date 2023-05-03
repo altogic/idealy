@@ -125,7 +125,7 @@ function MyApp({ Component, pageProps }) {
 
         <meta property="og:type" content="website" />
         <meta property="og:url" content="http://idealy.io" />
-        <meta property="og:title" content={company.name} />
+        <meta property="og:title" content={company?.name} />
         <meta property="og:image" content="https://www.idealy.io/og-idealy.png" />
         <meta
           property="og:description"
@@ -139,7 +139,7 @@ function MyApp({ Component, pageProps }) {
         <meta name="twitter:site" content="@altogic" />
         <meta name="twitter:creator" content="@enesmozer" />
         <meta name="twitter:url" content="https://twitter.com/Altogic" />
-        <meta name="twitter:title" content={company.name} />
+        <meta name="twitter:title" content={company?.name} />
         <meta
           name="twitter:description"
           content="Gather, organize, and prioritize customer feedback, create product roadmaps, and announce product updates for free using our customer feedback management tool."
