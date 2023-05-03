@@ -253,7 +253,7 @@ html:has(:is(.modal, .drawer)) {
 }
 
 .rdrDayDisabled .rdrInRange {
-  @apply bg-gray-200 dark:bg-aa-300 purple:bg-pt-300 bg-opacity-90 dark:bg-opacity-20 purple:bg-opacity-20  !important;
+  @apply bg-gray-400 dark:bg-aa-600 purple:bg-pt-600 bg-opacity-90 dark:bg-opacity-20 purple:bg-opacity-20  !important;
 }
 .rdrDayToday .rdrDayNumber span:after {
   @apply bg-indigo-500 dark:bg-aa-200 purple:bg-pt-200 !important;

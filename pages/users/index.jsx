@@ -25,7 +25,7 @@ export default function Index() {
                 : users[0]._id;
               delete router.query?.email;
               router.push({
-                pathname: `/users/${userId}`,
+                pathname: `/users/${userId ?? users[0]._id}`,
                 query: router.query
               });
             }
