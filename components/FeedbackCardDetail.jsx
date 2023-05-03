@@ -64,7 +64,7 @@ export default function FeedbackCardDetail({ setMentionCardStyle }) {
           name={idea?.author ? idea?.author.name : idea?.guestName ? idea?.guestName : idea?.name}
           email={
             _.isEmpty(idea?.author)
-              ? idea?.author.email
+              ? idea?.author?.email
               : idea?.guestEmail
               ? idea?.guestEmail
               : idea?.email
