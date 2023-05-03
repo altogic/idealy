@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux';
 import cn from 'classnames';
 
 export default function NavItem({ icon, title, href = '/', active }) {
-  const { selectedCompany, isGuest } = useSelector((state) => state.company);
+  const { company, isGuest } = useSelector((state) => state.company);
 
-  return selectedCompany?.siteNavigation[title?.toLowerCase()] || !isGuest ? (
+  return company?.siteNavigation[title?.toLowerCase()] || !isGuest ? (
     <li
       className={cn(
         `inline-flex items-center justify-center font-medium tracking-sm p-3 rounded-md transition `,

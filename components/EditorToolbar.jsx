@@ -11,23 +11,15 @@ async function suggestPeople(searchTerm) {
     searchTerm,
     user?._id || guest?._id
   );
-  const { users, members } = data;
+
   return [
-    ...members.map((member) => ({
+    ...data.map((member) => ({
       id: `${member._id}-true`,
       value: member.name,
-      isRegistered: true,
       name: member.name,
       email: member.email,
-      profilePicture: member.profilePicture
-    })),
-    ...users.map((user) => ({
-      id: `${user._id}-false`,
-      value: user.name,
-      isRegistered: false,
-      name: user.name,
-      email: user.email,
-      profilePicture: user.avatar
+      profilePicture: member.profilePicture,
+      isRegistered: !!member.userId
     }))
   ];
 }

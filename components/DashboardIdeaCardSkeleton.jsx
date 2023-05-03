@@ -11,7 +11,6 @@ export default function DashboardIdeaCardSkeleton() {
             <div className="w-64 h-2.5 bg-gray-300 rounded-full" />
             <div className="w-32 h-2.5 bg-gray-300 rounded-full" />
           </div>
-
           {/* <div className="h-2.5 bg-gray-300 rounded-full w-24" /> */}
         </div>
         {/* <div className="h-2.5 bg-gray-300 rounded-full w-12" /> */}
@@ -24,7 +23,6 @@ export default function DashboardIdeaCardSkeleton() {
             <div className="w-64 h-2.5 bg-gray-300 rounded-full" />
             <div className="w-32 h-2.5 bg-gray-300 rounded-full" />
           </div>
-
           {/* <div className="h-2.5 bg-gray-300 rounded-full w-24" /> */}
         </div>
         {/* <div className="h-2.5 bg-gray-300 rounded-full w-12" /> */}
