@@ -174,7 +174,7 @@ export default function Announcements() {
   return (
     <>
       <Head>
-        <title>{company?.name} - Announcements</title>
+        <title>Idealy - Announcements</title>
       </Head>
       <Layout>
         <div className="bg-white dark:bg-aa-900 purple:bg-pt-1000 h-[calc(100vh-93px)] space-y-8">

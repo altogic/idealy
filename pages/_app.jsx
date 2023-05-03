@@ -89,6 +89,7 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <title>Idealy -Free Customer Feedback, Roadmap, and Announcements Tool</title>
         <meta
           name="description"
           content="Gather, organize, and prioritize customer feedback, create product roadmaps, and announce product updates for free using our customer feedback management tool."
@@ -123,15 +124,21 @@ function MyApp({ Component, pageProps }) {
         <meta name="theme-color" content="#ffffff" />
         <link rel="canonical" href="http://idealy.io" />
 
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content="article" />
         <meta property="og:url" content="http://idealy.io" />
-        <meta property="og:title" content={company?.name} />
+        <meta
+          property="og:title"
+          content="Idealy -Free Customer Feedback, Roadmap, and Announcements Tool"
+        />
         <meta property="og:image" content="https://www.idealy.io/og-idealy.png" />
         <meta
           property="og:description"
           content="Gather, organize, and prioritize customer feedback, create product roadmaps, and announce product updates for free using our customer feedback management tool."
         />
-        <meta property="og:site_name" content="Idealy" />
+        <meta
+          property="og:site_name"
+          content="Idealy -Free Customer Feedback, Roadmap, and Announcements Tool"
+        />
         <meta property="og:locale" content="en_US" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -139,7 +146,7 @@ function MyApp({ Component, pageProps }) {
         <meta name="twitter:site" content="@altogic" />
         <meta name="twitter:creator" content="@enesmozer" />
         <meta name="twitter:url" content="https://twitter.com/Altogic" />
-        <meta name="twitter:title" content={company?.name} />
+        <meta name="twitter:title" content="Idealy" />
         <meta
           name="twitter:description"
           content="Gather, organize, and prioritize customer feedback, create product roadmaps, and announce product updates for free using our customer feedback management tool."

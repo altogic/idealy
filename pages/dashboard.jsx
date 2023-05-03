@@ -147,7 +147,7 @@ export default function AdminDashboard() {
   return (
     <>
       <Head>
-        <title>{company?.name} - Dashboard</title>
+        <title>Idealy - Dashboard</title>
       </Head>
       <Layout>
         {error ? (
