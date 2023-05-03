@@ -79,9 +79,7 @@ export default function FilterIdea({
           onChange={handleFilterTopicsChange}
           field="name"
           options={company?.topics}
-          icon={
-            <FilterHamburger className="w-5 h-5 icon" />
-          }
+          icon={<FilterHamburger className="w-5 h-5 icon" />}
           label="Topics"
           valueField="name"
           multiple
@@ -102,9 +100,7 @@ export default function FilterIdea({
           onChange={handleFilterStatusChange}
           field="name"
           options={company?.statuses}
-          icon={
-            <FilterHamburger className="w-5 h-5 icon" />
-          }
+          icon={<FilterHamburger className="w-5 h-5 icon" />}
           label="Status"
           valueField="name"
           multiple
