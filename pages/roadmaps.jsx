@@ -119,8 +119,7 @@ export default function RoadMapAdmin() {
   return (
     <>
       <Head>
-        <title>Altogic Canny Alternative Roadmap Admin Page</title>
-        <meta name="description" content="Altogic Canny Alternative Roadmap Admin Page" />
+        <title>{company?.name} - Roadmap</title>
       </Head>
       <Layout>
         <div className="overflow-auto max-w-full">

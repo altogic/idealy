@@ -25,8 +25,7 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>Altogic Canny Select your Company</title>
-        <meta name="description" content="Altogic Canny Select your Company" />
+        <title>Idealy - Select your Company</title>
       </Head>
       {companies.length > 0 && (
         <div className="my-10 md:my-0">

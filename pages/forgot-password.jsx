@@ -47,8 +47,7 @@ export default function ForgotPassword() {
   return (
     <div>
       <Head>
-        <title>Altogic Canny Alternative Forgot Password</title>
-        <meta name="description" content="Altogic Canny Alternative Forgot Password" />
+        <title>Idealy Forgot Password</title>
       </Head>
       <div className="relative h-screen">
         <a

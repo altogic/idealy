@@ -45,9 +45,8 @@ export default function Invitation({ invitation, errors, companies }) {
   return (
     <div>
       <Head>
-        <title>Altogic Canny Alternative Mail Verification</title>
-        <meta name="description" content="Altogic Canny Alternative Mail Verification" />
-        <link rel="icon" href="/favicon.ico" />
+        <title>Idealy - Mail Verification</title>
+        <meta name="description" content="Idealy - Mail Verification" />
       </Head>
       <div className="relative h-screen">
         <a

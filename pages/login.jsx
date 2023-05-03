@@ -112,8 +112,8 @@ export default function Login({ invitation, clearSession, isInvited }) {
   return (
     <div>
       <Head>
-        <title>Altogic Canny Alternative Login</title>
-        <meta name="description" content="Altogic Canny Alternative Login" />
+        <title>Idealy - Login</title>
+        <meta name="description" content="Idealy - Login" />
       </Head>
       <div className="relative h-screen">
         <a

@@ -147,8 +147,7 @@ export default function AdminDashboard() {
   return (
     <>
       <Head>
-        <title>Altogic Canny Alternative Admin Dashboard</title>
-        <meta name="description" content="Altogic Canny Alternative Admin Dashboard" />
+        <title>{company?.name} - Dashboard</title>
       </Head>
       <Layout>
         {error ? (

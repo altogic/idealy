@@ -96,8 +96,7 @@ export default function CreateAnAccount({ company, invitation, isInvited }) {
   return (
     <div>
       <Head>
-        <title>Altogic Canny Alternative Create an Account</title>
-        <meta name="description" content="Altogic Canny Alternative Create an Account" />
+        <title>Idealy - Create an Account</title>
       </Head>
       <div className="relative h-screen">
         <a
