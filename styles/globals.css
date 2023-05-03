@@ -183,16 +183,13 @@ html:has(:is(.modal, .drawer)) {
   overflow: hidden !important;
 }
 .ql-mention-list-container {
-  @apply bg-transparent border-gray-200 dark:border-aa-600 purple:border-pt-800 shadow-none z-40 !important;
+  @apply bg-white border-slate-200 dark:border-aa-600 purple:border-pt-800 shadow-lg z-40 !important;
   @apply overflow-hidden !important;
 }
 .ql-mention-list-item {
-  @apply text-sm tracking-sm p-4 !important;
+  @apply text-sm px-0 tracking-sm !important;
   @apply bg-slate-50 dark:bg-aa-800 purple:bg-pt-800 !important;
   @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 !important;
-}
-.ql-mention-list-item:hover {
-  @apply bg-slate-100 dark:bg-aa-700 purple:bg-pt-700 !important;
 }
 .ql-mention-list-item.selected {
   @apply bg-gray-50 dark:bg-aa-600 purple:bg-pt-600 !important;
@@ -201,10 +198,10 @@ html:has(:is(.modal, .drawer)) {
   @apply text-blue-700 dark:text-aa-200 purple:text-pt-200 bg-transparent cursor-pointer select-none p-0 m-0 !important;
 }
 .mention-suggestion {
-  @apply flex items-center gap-2 text-slate-500 tracking-[-0.4px] cursor-pointer;
+  @apply flex items-center gap-2 text-slate-500 p-4 tracking-[-0.4px] cursor-pointer hover:bg-slate-100 hover:dark:bg-aa-700 hover:purple:bg-pt-700;
 }
 .mention-avatar {
-  @apply rounded-full object-cover w-full h-full;
+  @apply w-7 h-7 rounded-full object-cover;
 }
 .mention-default-avatar {
   @apply relative inline-flex items-center justify-center cursor-pointer overflow-hidden bg-gray-200 rounded-full dark:bg-gray-600  purple:bg-pt-300 w-7 h-7;

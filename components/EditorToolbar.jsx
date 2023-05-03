@@ -58,7 +58,7 @@ export const modules = {
           : name &&
             `<div class="mention-default-avatar">
               <span class="mention-avatar-name">
-                ${name[0]?.charAt(0).toUpperCase()} 
+                ${name[0]?.charAt(0).toUpperCase()}
                 ${name.length > 1 ? name[name.length - 1]?.charAt(0).toUpperCase() : ''}
               </span>
             </div>`
@@ -66,7 +66,7 @@ export const modules = {
       <span class="mention-name">
         ${item.name}
       </span>
-      
+
     </div>
       `;
     }
