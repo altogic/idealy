@@ -119,7 +119,7 @@ export default function RoadMapAdmin() {
   return (
     <>
       <Head>
-        <title>{company?.name} - Roadmap</title>
+        <title>Idealy - Roadmap</title>
       </Head>
       <Layout>
         <div className="overflow-auto max-w-full">

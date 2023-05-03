@@ -175,7 +175,7 @@ export default function PublicView() {
   return (
     <>
       <Head>
-        <title>{company?.name} - Public View</title>
+        <title>Idealy - Public View</title>
       </Head>
       <Layout>
         {company && (
