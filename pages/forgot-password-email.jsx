@@ -11,8 +11,7 @@ export default function ForgotPasswordEmail() {
   return (
     <div>
       <Head>
-        <title>Altogic Canny Alternative Forgot Password Email</title>
-        <meta name="description" content="Altogic Canny Alternative Forgot Password Email" />
+        <title>Idealy Forgot Password Email</title>
       </Head>
       <div className="relative h-screen">
         <a

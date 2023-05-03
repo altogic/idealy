@@ -29,8 +29,7 @@ export default function CreateNewCompany({ userIp }) {
   return (
     <div>
       <Head>
-        <title>Altogic Canny Create New Company</title>
-        <meta name="description" content="Altogic Canny Create New Company" />
+        <title>Idealy - Create New Company</title>
       </Head>
       <div className="w-full h-screen">
         <div className="md:h-[92px] bg-slate-50 px-4 py-8 mb-8 md:mb-0">

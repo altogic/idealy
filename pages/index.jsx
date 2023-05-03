@@ -14,7 +14,7 @@ export default function Index() {
   return (
     <>
       <Head>
-        <title>Altogic Canny Alternative Public View</title>
+        <title>Idealy Public View</title>
         <meta name="description" content="Altogic Canny Alternative Public View" />
       </Head>
       <Layout />

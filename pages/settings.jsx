@@ -72,8 +72,7 @@ export default function Settings() {
   return (
     <>
       <Head>
-        <title>Altogic Canny Alternative Settings</title>
-        <meta name="description" content="Altogic Canny Alternative Settings" />
+        <title>Idealy - Settings</title>
       </Head>
       <Layout>
         {!loading && (

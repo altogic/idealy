@@ -175,8 +175,7 @@ export default function PublicView() {
   return (
     <>
       <Head>
-        <title>Altogic Canny Alternative Public View</title>
-        <meta name="description" content="Altogic Canny Alternative Public View" />
+        <title>{company?.name} - Public View</title>
       </Head>
       <Layout>
         {company && (

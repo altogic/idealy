@@ -6,8 +6,7 @@ export default function ResetPasswordSuccessFull() {
   return (
     <div>
       <Head>
-        <title>Altogic Canny Alternative Reset Password Successfull</title>
-        <meta name="description" content="Altogic Canny Alternative Reset Password Successfull" />
+        <title>Idealy - Reset Password Successfully</title>
       </Head>
       <div className="relative h-screen">
         <a

@@ -11,6 +11,7 @@ import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
 import AnnouncementSkeleton from '@/components/Announcement/AnnouncementSkeleton';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 export default function AnnouncementDetail({ slug }) {
   const dispatch = useDispatch();
@@ -29,31 +30,37 @@ export default function AnnouncementDetail({ slug }) {
   }, [announcement]);
 
   return (
-    <Layout>
-      <div className="container w-full h-full m-auto pt-14 px-4">
-        {isLoading ? (
-          <AnnouncementSkeleton />
-        ) : (
-          <AnnouncementCard announcement={announcement} onPage />
-        )}
-      </div>
-      <IdeaDetail
-        idea={selectedIdea}
-        company={company}
-        onClose={() => {
-          dispatch(ideaActions.setSelectedIdea(null));
-          dispatch(toggleFeedBackDetailModal());
-          router.push(
-            {
-              pathname: router.pathname,
-              query: { ...router.query, feedback: undefined }
-            },
-            undefined,
-            { scroll: false }
-          );
-        }}
-      />
-    </Layout>
+    <>
+      <Head>
+        <title>{announcement?.title}</title>
+        <meta name="description" content={announcement?.content} />
+      </Head>
+      <Layout>
+        <div className="container w-full h-full m-auto pt-14 px-4">
+          {isLoading ? (
+            <AnnouncementSkeleton />
+          ) : (
+            <AnnouncementCard announcement={announcement} onPage />
+          )}
+        </div>
+        <IdeaDetail
+          idea={selectedIdea}
+          company={company}
+          onClose={() => {
+            dispatch(ideaActions.setSelectedIdea(null));
+            dispatch(toggleFeedBackDetailModal());
+            router.push(
+              {
+                pathname: router.pathname,
+                query: { ...router.query, feedback: undefined }
+              },
+              undefined,
+              { scroll: false }
+            );
+          }}
+        />
+      </Layout>
+    </>
   );
 }
 export async function getServerSideProps({ params }) {

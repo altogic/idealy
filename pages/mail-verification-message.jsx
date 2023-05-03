@@ -12,8 +12,7 @@ export default function MailVerification() {
   return (
     <div>
       <Head>
-        <title>Altogic Canny Alternative Mail Verification</title>
-        <meta name="description" content="Altogic Canny Alternative Mail Verification" />
+        <title>Idealy - Mail Verification</title>
       </Head>
       <div className="relative h-screen">
         <a
