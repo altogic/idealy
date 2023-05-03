@@ -172,71 +172,67 @@ export default function Announcements() {
 
   return (
     <Layout>
-      <div className="bg-white dark:bg-aa-900 purple:bg-pt-1000 h-[calc(100vh-93px)] space-y-8">
+      <div className="h-[calc(100vh-93px)] max-w-[800px] bg-white dark:bg-aa-900 purple:bg-pt-1000 mx-auto my-12 space-y-8">
         {error ? (
           <Errors title={error?.title} message={error?.message} />
         ) : (
           <>
-            <div className="pt-14 px-4">
-              <div className="mx-auto w-8/12">
-                <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-8">
-                  <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
-                    Announcements
-                  </h1>
-                  <div className="flex gap-4 items-center ">
-                    <SearchInput
-                      searchText={searchText}
-                      onSearch={(e, text) => onSearchChange(e, text)}
-                      onClear={() => {
-                        setSearchText('');
-                        router.push({
-                          pathname: router.pathname,
-                          query: { ...router.query, search: '' }
-                        });
-                      }}
-                    />
+            <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-8">
+              <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
+                Announcements
+              </h1>
+              <div className="flex gap-4 items-center ">
+                <SearchInput
+                  searchText={searchText}
+                  onSearch={(e, text) => onSearchChange(e, text)}
+                  onClear={() => {
+                    setSearchText('');
+                    router.push({
+                      pathname: router.pathname,
+                      query: { ...router.query, search: '' }
+                    });
+                  }}
+                />
 
-                    {!!company?.categories.length && (
-                      <BaseListBox
-                        value={filterCategories}
-                        onChange={handleFilterCategoriesChange}
-                        field="name"
-                        options={company?.categories}
-                        icon={<FilterHamburger className="w-5 h-5 icon" />}
-                        label="Categories"
-                        multiple
-                        size="md"
-                        align="right"
-                        hidden="mobile"
-                        type="status"
-                        onReset={() => {
-                          delete router.query.categories;
-                          router.push({
-                            pathname: router.pathname,
-                            query: {
-                              ...router.query
-                            }
-                          });
-                        }}
-                      />
-                    )}
-                    {!isGuest && (
-                      <Button
-                        type="button"
-                        text="New"
-                        icon={<Plus className="w-5 h-5 icon-slate" />}
-                        variant="indigo"
-                        size="sm"
-                        mobileFullWidth="mobileFullWidth"
-                        onClick={() => router.push('/announcements/new')}
-                      />
-                    )}
-                  </div>
-                </div>
-                <Divider />
+                {!!company?.categories.length && (
+                  <BaseListBox
+                    value={filterCategories}
+                    onChange={handleFilterCategoriesChange}
+                    field="name"
+                    options={company?.categories}
+                    icon={<FilterHamburger className="w-5 h-5 icon" />}
+                    label="Categories"
+                    multiple
+                    size="md"
+                    align="right"
+                    hidden="mobile"
+                    type="status"
+                    onReset={() => {
+                      delete router.query.categories;
+                      router.push({
+                        pathname: router.pathname,
+                        query: {
+                          ...router.query
+                        }
+                      });
+                    }}
+                  />
+                )}
+                {!isGuest && (
+                  <Button
+                    type="button"
+                    text="New"
+                    icon={<Plus className="w-5 h-5 icon-slate" />}
+                    variant="indigo"
+                    size="sm"
+                    mobileFullWidth="mobileFullWidth"
+                    onClick={() => router.push('/announcements/new')}
+                  />
+                )}
               </div>
             </div>
-            <div className="h-[calc(100vh-233px)]">
+            <Divider />
+            <div className="">
               {isLoading && router.query.page === '1' ? (
                 <AnnouncementSkeleton />
               ) : (

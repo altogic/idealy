@@ -82,7 +82,7 @@ export default function Layout({ children }) {
           </Head>
           <div className="flex flex-col min-h-screen relative">
             <Header />
-            <main className="grow pt-[77px] lg:pt-[93px]">
+            <main className="grow pt-[77px] lg:pt-[97px]">
               {children}
               <Realtime />
             </main>
