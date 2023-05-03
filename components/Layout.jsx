@@ -5,7 +5,7 @@ import _ from 'lodash';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateUrl, setCookie } from '../utils';
 import Header from './Header';
@@ -18,8 +18,8 @@ export default function Layout({ children }) {
   const companies = useSelector((state) => state.company.companies);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const { getCompanyLoading: loading } = useSelector((state) => state.company);
+  const load = useRef(true);
   const dispatch = useDispatch();
-
   useEffect(() => {
     const invitation = JSON.parse(getCookie('invitation-token') || null);
     if (invitation) {
@@ -65,10 +65,15 @@ export default function Layout({ children }) {
       );
     }
   }, []);
+  useEffect(() => {
+    if (load.current && !loading) {
+      load.current = false;
+    }
+  }, [loading]);
 
   return (
     <div className="bg-white dark:bg-aa-900 purple:bg-pt-1000">
-      {loading ? (
+      {loading || load.current ? (
         <div className="flex flex-col gap-y-4 justify-center items-center h-screen">
           <Spinner size={24} />
           <div className="text-base text-gray-500 dark:text-aa-400 purple:text-pt-400">

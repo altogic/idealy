@@ -101,7 +101,7 @@ export const companySlice = createSlice({
       state.ideaDescription = null;
       state.ideaStatus = null;
       state.error = null;
-      // state.getCompanyLoading = false;
+      state.getCompanyLoading = false;
     },
     createCompanyFailed(state, action) {
       state.getCompanyLoading = false;
