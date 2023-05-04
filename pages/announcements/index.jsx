@@ -256,7 +256,7 @@ export default function Announcements() {
                         }
                       });
                     }}>
-                    {countInfo.count > 0 ? (
+                    {announcements.length > 0 ? (
                       announcements?.map((announcement) => (
                         <AnnouncementCard
                           key={announcement._id}
