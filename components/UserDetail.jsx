@@ -30,7 +30,8 @@ export default function UserDetail({ user }) {
   useEffect(() => {
     if (user && !!user.userId) {
       const role = ROLE.find((role) => role.name === user?.member?.role);
-      setSelected(role.name);
+
+      setSelected(role?.name || 'Owner');
     }
   }, [user]);
 

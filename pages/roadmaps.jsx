@@ -81,7 +81,7 @@ export default function RoadMapAdmin() {
             `this.roadmap._id == '${roadmap._id}'`,
             isGuest &&
               'this.showOnRoadMap == true && this.isPrivate == false && this.isArchived == false && this.isApproved == true',
-            'this.isMerged== false',
+            'this.isMerged == false',
             isGuest &&
               roadmap.publicStatuses?.length &&
               `(${roadmap.publicStatuses
@@ -123,7 +123,7 @@ export default function RoadMapAdmin() {
       </Head>
       <Layout>
         <div className="overflow-auto max-w-full">
-          <div className="h-[calc(100vh-93px)] w-full px-4 lg:px-8">
+          <div className="h-[calc(100vh-97px)] w-full px-4 lg:px-8">
             {error ? (
               <Errors title={error?.title} message={error?.message} />
             ) : (

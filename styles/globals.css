@@ -265,9 +265,6 @@ html:has(:is(.modal, .drawer)) {
   @apply border-indigo-500 dark:border-aa-200 purple:border-pt-200 !important;
 }
 
-.rdrDayHovered .rdrDayNumber span {
-  @apply text-slate-700 dark:text-aa-200 purple:text-pt-200 !important;
-}
 .rdrStartEdge,
 .rdrEndEdge {
   @apply bg-indigo-500 dark:bg-aa-600 purple:bg-pt-600 !important;
@@ -316,6 +313,10 @@ html:has(:is(.modal, .drawer)) {
 }
 .rdrDayPassive .rdrInRange + .rdrDayNumber span {
   @apply text-slate-500  !important;
+}
+.rdrDay.rdrDayDisabled .rdrDayNumber span,
+.rdrDay.rdrDayPassive .rdrDayNumber span {
+  @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 !important;
 }
 
 @layer components {

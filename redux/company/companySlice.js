@@ -93,14 +93,14 @@ export const companySlice = createSlice({
     createCompanySuccess(state, action) {
       state.company = action.payload;
       state.companies = [...state.companies, action.payload];
-      state.companyTopics = [];
-      state.companyStatuses = [];
-      state.companyWillBeCreated = null;
-      state.companyCategories = [];
-      state.idea = null;
-      state.ideaDescription = null;
-      state.ideaStatus = null;
-      state.error = null;
+      // state.companyTopics = [];
+      // state.companyStatuses = [];
+      // state.companyWillBeCreated = null;
+      // state.companyCategories = [];
+      // state.idea = null;
+      // state.ideaDescription = null;
+      // state.ideaStatus = null;
+      // state.error = null;
       state.getCompanyLoading = false;
     },
     createCompanyFailed(state, action) {
@@ -751,7 +751,10 @@ export const companySlice = createSlice({
       state.error = action.payload;
     },
     addNewCompanyUser(state, action) {
-      if (!state.companyUsers.result.some((u) => u._id === action.payload._id))
+      if (
+        !state.companyUsers?.result?.length &&
+        state.companyUsers?.result?.some((u) => u._id === action.payload._id)
+      )
         state.companyUsers.result = [...state.companyUsers.result, action.payload];
     },
     updateCompanyUserCounts(state, action) {

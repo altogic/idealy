@@ -55,7 +55,7 @@ export default function RoadmapFilter({ roadmap, setRoadmap, roadmaps }) {
     <>
       <div className="flex items-center  gap-2 flex-1">
         <div className="flex flex-col sm:flex-row justify-between sm:items-center flex-1 gap-4">
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             {isGuest ? (
               <RoadmapVisibilityIcon isPublic={!roadmap?.isPublic} />
             ) : (
@@ -98,13 +98,15 @@ export default function RoadmapFilter({ roadmap, setRoadmap, roadmaps }) {
                 });
               }}
               type="create">
-              <button
-                type="button"
-                className="inline-flex items-center gap-3 text-slate-400 py-2 whitespace-nowrap"
-                onClick={() => setIsCreate(!isCreate)}>
-                <Plus className="w-4 h-4 icon" />
-                Add a new roadmap
-              </button>
+              {!isGuest && (
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-3 text-slate-400 py-2 whitespace-nowrap"
+                  onClick={() => setIsCreate(!isCreate)}>
+                  <Plus className="w-4 h-4 icon" />
+                  Add a new roadmap
+                </button>
+              )}
             </BaseListBox>
           </div>
           <SearchInput

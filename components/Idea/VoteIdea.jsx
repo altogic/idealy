@@ -94,7 +94,7 @@ export default function VoteIdea({ voteCount, idea }) {
         userId: user?._id,
         onSuccess: () => {
           sendNotification({
-            message: `${user?.name || data.guestName}  voted for  ${idea.title}`,
+            message: `<b>${user?.name || data.guestName}</b>  voted for  <b>${idea.title}</b>`,
             targetUser: idea?.author._id,
             type: 'vote',
             url: `/public-view?feedback=${idea._id}`

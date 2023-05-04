@@ -22,16 +22,17 @@ function* getIdeasByCompanySaga({ payload: { limit, page, sort, filter } }) {
   }
 }
 
-function* createIdeaSaga({ payload: { idea, onSuccess } }) {
+export function* createIdeaSaga({ payload }) {
   try {
+    console.log(payload);
     const company = yield select((state) => state.company.company);
-    const { data, errors } = yield call(ideaService.createIdea, idea);
+    const { data, errors } = yield call(ideaService.createIdea, payload.idea);
     if (errors) {
       throw errors.items;
     }
     yield put(ideaActions.createIdeaSuccess(data));
     realtime.send(company._id, 'create-idea', data);
-    onSuccess(data);
+    if (payload.onSuccess) payload.onSuccess(data);
   } catch (error) {
     yield put(ideaActions.createIdeaFailure(error));
   }

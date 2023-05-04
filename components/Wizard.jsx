@@ -17,6 +17,8 @@ export default function Wizard({ children, activePageIndex, setActivePageIndex, 
   const companyNameLoading = useSelector((state) => state.company.companyNameLoading);
   const subdomainLoading = useSelector((state) => state.company.subdomainLoading);
   const error = useSelector((state) => state.company.error);
+  const { getCompanyLoading } = useSelector((state) => state.company);
+  const ideaLoading = useSelector((state) => state.idea.isLoading);
   const idea = useSelector((state) => state.company.idea);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
@@ -77,7 +79,7 @@ export default function Wizard({ children, activePageIndex, setActivePageIndex, 
       (activePageIndex === 1 && idea) ||
       activePageIndex > 1
     ) {
-      setActivePageIndex((index) => (index === 5 ? 5 : index + 1));
+      setActivePageIndex((index) => (index === 3 ? 3 : index + 1));
     }
 
     if (activePageIndex >= 3) {
@@ -103,12 +105,12 @@ export default function Wizard({ children, activePageIndex, setActivePageIndex, 
         {activePageIndex >= 0 ? (
           <Button
             type="button"
-            loading={loading}
             className={cn(
               `flex items-center justify-center w-full bg-indigo-700 text-white px-4 py-3 my-6 text-base font-medium tracking-sm border border-indigo-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2`
             )}
             onClick={nextPage}
             text={activePageIndex >= 3 ? `Submit` : `Continue`}
+            loading={loading || ideaLoading || getCompanyLoading}
           />
         ) : null}
       </div>

@@ -1,13 +1,12 @@
 import AuthService from '@/services/auth';
 import companyService from '@/services/company';
-import ideaService from '@/services/idea';
 import { realtime } from '@/utils/altogic';
 import ToastMessage from '@/utils/toast';
 import { SUBDOMAIN_REGEX } from 'constants';
 import _ from 'lodash';
-import { all, call, put, select, takeEvery } from 'redux-saga/effects';
-import { PRIORITY_VALUES } from '@/constants/index';
+import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
 import { authActions } from '../auth/authSlice';
+import { createIdeaSaga } from '../ideas/ideaSaga';
 import { ideaActions } from '../ideas/ideaSlice';
 import { companyActions } from './companySlice';
 
@@ -90,16 +89,18 @@ function* createCompanySaga({ payload: { userId, onSuccess } }) {
     yield put(authActions.loginSuccess(user));
     yield call(AuthService.setUser, user);
     if (selectedTopics.length || status) {
-      yield call(ideaService.createIdea, {
-        title: yield select((state) => state.company.idea),
-        topics: selectedTopics.map((topic) => topic.name),
-        content: yield select((state) => state.company.ideaDescription),
-        status: data.company.statuses.find((st) => st.name === status.name)._id,
-        author: sessionUser._id,
-        company: data.company._id,
-        isApproved: !data.company?.privacy?.ideaApproval,
-        costFactor: PRIORITY_VALUES[data.company?.priorityType][0],
-        benefitFactor: PRIORITY_VALUES[data.company?.priorityType][0]
+      yield fork(createIdeaSaga, {
+        payload: {
+          idea: {
+            title: yield select((state) => state.company.idea),
+            topics: selectedTopics.map((topic) => topic.name),
+            content: yield select((state) => state.company.ideaDescription),
+            status: data.company.statuses.find((st) => st.name === status.name)._id,
+            author: sessionUser._id,
+            company: data.company._id,
+            isApproved: !data.company?.privacy?.ideaApproval
+          }
+        }
       });
     }
     onSuccess(companyData);

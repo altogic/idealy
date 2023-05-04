@@ -83,7 +83,7 @@ export default function AnnouncementForm({ onSave, children }) {
     );
   };
 
-  function saveAnnouncement(isPublished = false) {
+  function saveAnnouncement() {
     if (company) {
       onSave({
         title: announcement?.title,
@@ -92,7 +92,6 @@ export default function AnnouncementForm({ onSave, children }) {
         ...(announcement?.title && { slug: announcement?.title.toLowerCase().replace(/ /g, '-') }),
         categories: categories.map((category) => category._id),
         company: company._id,
-        isPublished: isPublished || isGreaterThan(date, Date.now()),
         publishDate: date
       });
     }
@@ -101,7 +100,13 @@ export default function AnnouncementForm({ onSave, children }) {
   function publishAnnouncement() {
     return () => {
       if (announcement?.title) {
-        saveAnnouncement(true);
+        dispatch(
+          announcementActions.updateAnnouncement({
+            ...announcement,
+            isPublished: true,
+            onSuccess: () => router.push('/announcements')
+          })
+        );
         if (!isGreaterThan(date, Date.now())) {
           realtime.send(company._id, 'publish-announcement', {
             ...announcement,

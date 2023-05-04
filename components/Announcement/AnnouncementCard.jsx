@@ -86,6 +86,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
                   .filter((category) => announcement?.categories.includes(category._id))
                   .map((cat) => cat.name)}
                 summary={announcement?.content}
+                isPublished={announcement?.isPublished}
               />
             </div>
 

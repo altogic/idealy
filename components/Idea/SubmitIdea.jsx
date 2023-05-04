@@ -106,7 +106,7 @@ export default function SubmitIdea({ idea }) {
     dispatch(ideaActions.setEditedIdea(null));
   };
   const sendMentionNotification = useSendMentionNotification('idea');
-  const submitOnSuccess = (guestEmail, guestName, submittedIdea) => {
+  const submitOnSuccess = async (guestEmail, guestName, submittedIdea) => {
     if (guestEmail && guestName) {
       saveGuestInformation({ email: guestEmail, name: guestName });
     }
@@ -151,8 +151,8 @@ export default function SubmitIdea({ idea }) {
       dispatch(
         ideaActions.createIdea({
           idea: reqData,
-          onSuccess: (submittedIdea) => {
-            submitOnSuccess(data.guestEmail, data.guestName, submittedIdea);
+          onSuccess: async (submittedIdea) => {
+            await submitOnSuccess(data.guestEmail, data.guestName, submittedIdea);
             if (member && member?._id !== user._id && member?.provider) {
               sendNotification({
                 message: `<b>${company.name}</b> submit an idea for you`,
