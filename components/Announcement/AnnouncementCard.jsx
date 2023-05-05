@@ -44,7 +44,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
             <button
               type="button"
               onClick={() => {
-                router.push(`/announcements/${announcement?.slug}`);
+                router.push(`/announcements/${announcement?._id}`);
                 dispatch(announcementActions.setAnnouncement(announcement));
               }}
               className="flex-1">
@@ -80,7 +80,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
 
             <div className="pl-2">
               <ShareButtons
-                url={generateUrl(`/announcements/${announcement?.slug}`, company?.subdomain)}
+                url={generateUrl(`/announcements/${announcement?._id}`, company?.subdomain)}
                 title={announcement?.title}
                 hashtags={company?.categories
                   .filter((category) => announcement?.categories.includes(category._id))
@@ -98,7 +98,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
                   Icon={Pen}
                   onClick={() => {
                     dispatch(announcementActions.setAnnouncement(announcement));
-                    router.push(`/announcements/edit/${announcement?.slug}`);
+                    router.push(`/announcements/edit/${announcement?._id}`);
                   }}
                 />
                 <IdeaActionButton

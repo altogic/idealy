@@ -13,7 +13,7 @@ import AnnouncementSkeleton from '@/components/Announcement/AnnouncementSkeleton
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-export default function AnnouncementDetail({ slug }) {
+export default function AnnouncementDetail({ id }) {
   const dispatch = useDispatch();
   const { announcement, getAnnouncementLoading: isLoading } = useSelector(
     (state) => state.announcement
@@ -25,7 +25,7 @@ export default function AnnouncementDetail({ slug }) {
   useOpenFeedbackModal();
   useEffect(() => {
     if (_.isEmpty(announcement)) {
-      dispatch(announcementActions.getAnnouncement(slug));
+      dispatch(announcementActions.getAnnouncement(id));
     }
   }, [announcement]);
 
@@ -66,7 +66,7 @@ export default function AnnouncementDetail({ slug }) {
 export async function getServerSideProps({ params }) {
   return {
     props: {
-      slug: params.slug
+      id: params.id
     }
   };
 }

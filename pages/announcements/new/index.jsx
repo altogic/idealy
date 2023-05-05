@@ -9,10 +9,10 @@ export default function NewAnnouncement() {
   const router = useRouter();
   const announcements = useSelector((state) => state.announcement.announcements);
   const onSuccess = (data) => {
-    router.replace(`/announcements/edit/${data.slug}&focus=false`);
+    router.replace(`/announcements/edit/${data._id}&focus=false`);
   };
   const handleSaveAnnouncements = (req) => {
-    if (announcements.some((announcement) => announcement.slug === req.slug)) return;
+    if (announcements.some((announcement) => announcement._id === req._id)) return;
     dispatch(
       announcementActions.createAnnouncement({
         ...req,

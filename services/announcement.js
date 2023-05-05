@@ -4,8 +4,8 @@ const AnnouncementService = {
   getAnnouncements({ page = 1, limit = 10, sort = 'createdAt:desc', filter, search } = {}) {
     return endpoint.get('/announcement', { page, limit, filter, sort, search });
   },
-  getAnnouncement(slug) {
-    return endpoint.get('/announcement/slug', { slug });
+  getAnnouncement(id) {
+    return endpoint.get(`/announcement/${id}`);
   },
   createAnnouncement(announcement) {
     return db.model('announcements').create(announcement);

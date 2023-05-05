@@ -89,7 +89,6 @@ export default function AnnouncementForm({ onSave, children }) {
         title: announcement?.title,
         content: announcement?.content,
         ...(announcement?._id && { _id: announcement?._id }),
-        ...(announcement?.title && { slug: announcement?.title.toLowerCase().replace(/ /g, '-') }),
         categories: categories.map((category) => category._id),
         company: company._id,
         publishDate: date
@@ -113,9 +112,6 @@ export default function AnnouncementForm({ onSave, children }) {
             title: announcement?.title,
             content: announcement?.content,
             ...(announcement?._id && { _id: announcement?._id }),
-            ...(announcement?.title && {
-              slug: announcement?.title.toLowerCase().replace(/ /g, '-')
-            }),
             categories: categories.map((category) => category._id),
             company: company._id,
             isPublished: true,
