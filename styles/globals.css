@@ -223,6 +223,10 @@ html:has(:is(.modal, .drawer)) {
   width: 100% !important;
   @apply border-none !important;
 }
+.rdrDayNumber span {
+  @apply dark:text-aa-200 purple:text-pt-200 !important;
+}
+
 .rdrStaticRanges {
   display: grid !important;
   grid-template-columns: repeat(3, 1fr) !important;
@@ -239,8 +243,7 @@ html:has(:is(.modal, .drawer)) {
 .rdrStaticRange {
   @apply bg-white dark:bg-aa-900 purple:bg-pt-1000 !important;
 }
-.rdrStaticRange,
-.rdrDay {
+.rdrStaticRange {
   @apply border border-slate-300 dark:border-aa-600 purple:border-pt-800 !important;
   @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 !important;
 }
@@ -308,6 +311,7 @@ html:has(:is(.modal, .drawer)) {
 .rdrEndEdge + .rdrDayNumber span {
   @apply text-slate-100 !important;
 }
+
 .rdrDayDisabled .rdrInRange + .rdrDayNumber span {
   @apply text-slate-500 dark:text-aa-200 purple:text-pt-200 !important;
 }
