@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 import { hideAllUserCards } from '../utils';
 
 export default function useClickMention(id, dashboard) {
-  const router = useRouter();
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   const idea = useSelector((state) => state.idea.selectedIdea);
   const [userCardStyle, setUserCardStyle] = useState({ top: 0, left: 0 });
@@ -21,8 +19,6 @@ export default function useClickMention(id, dashboard) {
       : e.target.parentElement;
     if (mention.parentElement.parentElement.id !== id) return;
     hideAllUserCards();
-    const userId = mention.dataset.id.split('-')[0];
-    router.push(`/users/${userId}`);
     setUserCardStyle({ top, left, display: 'flex' });
     setUserCardInfo({
       name: mention.dataset.value,
