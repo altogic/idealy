@@ -1,4 +1,3 @@
-import CommentCard from '@/components/CommentCard';
 import ImageList from '@/components/ImageList';
 import StatusBadge from '@/components/StatusBadge';
 import TopicBadges from '@/components/TopicBadges';
@@ -9,10 +8,10 @@ import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { commentActions } from '@/redux/comments/commentsSlice';
 import { toggleDeleteFeedBackModal, toggleFeedBackSubmitModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import CommentForm from '../CommentForm';
 import CommentSkeleton from '../CommentSkeleton';
 import Drawer from '../Drawer';
 import EmptyState from '../EmptyState';
@@ -20,12 +19,15 @@ import InfiniteScroll from '../InfiniteScroll';
 import SanitizeHtml from '../SanitizeHtml';
 import SimilarIdeas from '../SimilarIdeas';
 import UserCard from '../UserCard';
-import { Pen, Archive, Trash } from '../icons';
+import { Archive, Pen, Trash } from '../icons';
 import IdeaBadges from './IdeaBadges';
 import IdeaDetailAdmin from './IdeaDetailAdmin';
 import IdeaInfo from './IdeaInfo';
 import VoteIdea from './VoteIdea';
 import IdeaActionButton from './admin/IdeaActionButton';
+
+const CommentForm = dynamic(() => import('../CommentForm'), { ssr: false });
+const CommentCard = dynamic(() => import('@/components/CommentCard'), { ssr: false });
 
 export default function IdeaDetail({ idea, company, onClose }) {
   const dispatch = useDispatch();
