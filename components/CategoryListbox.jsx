@@ -10,7 +10,7 @@ export default function CategoryListbox({ size }) {
   const [category, setCategory] = useState();
 
   function handleReset() {
-    updateIdea({ category: null });
+    updateIdea({ category: null, message: `The category of ${idea.title} cleared` });
     setCategory(null);
   }
   useEffect(() => {
@@ -24,7 +24,10 @@ export default function CategoryListbox({ size }) {
       label={category?.name}
       onChange={(value) => {
         setCategory(value);
-        updateIdea({ category: value._id });
+        updateIdea({
+          category: value._id,
+          message: `The category of <b>${idea.title}</b> changed to <b>${value.name}</b>`
+        });
       }}
       field="name"
       options={company?.categories}
