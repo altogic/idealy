@@ -5,6 +5,8 @@ import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import IdeaDetail from '@/components/Idea/IdeaDetail';
+import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 
 export default function Users() {
   const dispatch = useDispatch();
@@ -14,7 +16,7 @@ export default function Users() {
     isGuest,
     companyUsers: { result: users }
   } = useSelector((state) => state.company);
-  // const { selectedIdea } = useSelector((state) => state.idea);
+  const { selectedIdea } = useSelector((state) => state.idea);
   const [selectedUser, setSelectedUser] = useState();
 
   const getCompanyUsers = useCallback(() => {
@@ -37,20 +39,20 @@ export default function Users() {
     }
   }, [company, router.query.sort, router.query.page, router.query.q, router.query.segment]);
 
-  // function handleCloseIdea() {
-  //   const temp = router.query;
-  //   delete temp?.feedback;
-  //   dispatch(ideaActions.setSelectedIdea(null));
-  //   dispatch(toggleFeedBackDetailModal());
-  //   router.push(
-  //     {
-  //       pathname: router.pathname,
-  //       query: temp
-  //     },
-  //     undefined,
-  //     { scroll: false }
-  //   );
-  // }
+  function handleCloseIdea() {
+    const temp = router.query;
+    delete temp?.feedback;
+    dispatch(ideaActions.setSelectedIdea(null));
+    dispatch(toggleFeedBackDetailModal());
+    router.push(
+      {
+        pathname: router.pathname,
+        query: temp
+      },
+      undefined,
+      { scroll: false }
+    );
+  }
 
   useEffect(() => {
     if (!users?.length || Object.keys(router.query).length > 1) {
@@ -108,7 +110,7 @@ export default function Users() {
   return (
     <Layout>
       <UserPage selectedUser={selectedUser} setSelectedUser={setSelectedUser} getIdeas={getIdeas} />
-      {/* <IdeaDetail idea={selectedIdea} company={company} onClose={() => handleCloseIdea()} /> */}
+      <IdeaDetail idea={selectedIdea} company={company} onClose={() => handleCloseIdea()} />
     </Layout>
   );
 }
