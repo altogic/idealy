@@ -1,16 +1,16 @@
 /* eslint-disable no-param-reassign */
 
+import FileService from '@/services/file';
 import {
+  PRIORITY_SCALE,
+  PRIORITY_VALUES,
   SESSION_COOKIE_OPTIONS,
   WEIGHT_BENEFIT,
   WEIGHT_COST,
-  WEIGHT_VOTE,
-  PRIORITY_SCALE,
-  PRIORITY_VALUES
+  WEIGHT_VOTE
 } from 'constants';
 import { deleteCookie, setCookie as nextCookie } from 'cookies-next';
 import { DateTime } from 'luxon';
-import FileService from '@/services/file';
 import localStorageUtil from './localStorageUtil';
 /* eslint-disable no-bitwise */
 export function randomInt(min, max) {
