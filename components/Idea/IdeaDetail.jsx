@@ -154,7 +154,10 @@ export default function IdeaDetail({ idea, company, onClose }) {
                       onClick={() =>
                         updateIdea({
                           _id: idea._id,
-                          isPinned: !idea.isPinned
+                          isPinned: !idea.isPinned,
+                          message: `<b>${idea.title}</b> has been <b>${
+                            idea.isPinned ? 'unpinned' : 'pinned'
+                          }</b>`
                         })
                       }
                       Icon={Archive}
