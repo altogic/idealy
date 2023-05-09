@@ -40,7 +40,7 @@ export default function IdeaVisibility({ listBoxSize }) {
   };
   useEffect(() => {
     if (coverImage && file) {
-      updateIdea({ coverImage });
+      updateIdea({ coverImage, message: `The cover image of <b>${idea.title}</b> changed` });
     }
   }, [coverImage]);
   useEffect(() => {
@@ -56,7 +56,10 @@ export default function IdeaVisibility({ listBoxSize }) {
         checked={isPrivate}
         onChange={() => {
           updateIdea({
-            isPrivate: !idea?.isPrivate
+            isPrivate: !idea?.isPrivate,
+            message: `The visibility of <b>${idea.title}</b> changed to <b>${
+              !idea?.isPrivate ? 'Private' : 'Public'
+            }</b>`
           });
           setIsPrivate(!isPrivate);
         }}
@@ -66,7 +69,10 @@ export default function IdeaVisibility({ listBoxSize }) {
         checked={showOnRoadMap}
         onChange={() => {
           updateIdea({
-            showOnRoadMap: !idea?.showOnRoadMap
+            showOnRoadMap: !idea?.showOnRoadMap,
+            message: `<b>${idea.title}</b>  <b>${
+              !idea?.showOnRoadMap ? 'showed' : 'removed'
+            }</b> on roadmap`
           });
           setShowOnRoadMap(!showOnRoadMap);
         }}
@@ -98,14 +104,17 @@ export default function IdeaVisibility({ listBoxSize }) {
             label={roadMap?.name}
             onChange={(value) => {
               setRoadMap(value);
-              updateIdea({ roadmap: value._id });
+              updateIdea({
+                roadmap: value._id,
+                message: `The roadmap of ${idea.title} changed to ${value.name}`
+              });
             }}
             field="name"
             options={company?.roadmaps}
             size={listBoxSize}
             onReset={() => {
               setRoadMap(null);
-              updateIdea({ roadmap: null });
+              updateIdea({ roadmap: null, message: `The roadmap of ${idea.title} removed` });
             }}
           />
         </div>

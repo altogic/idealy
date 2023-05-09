@@ -155,7 +155,7 @@ export default function SubmitIdea({ idea }) {
             await submitOnSuccess(data.guestEmail, data.guestName, submittedIdea);
             if (member && member?._id !== user._id && member?.provider) {
               sendNotification({
-                message: `<b>${company.name}</b> submit an idea for you`,
+                message: `<b>${company.name}</b> submitted an idea for you`,
                 targetUser: submittedIdea?.author._id,
                 type: 'adminAddIdea',
                 url: `/public-view?feedback=${submittedIdea._id}`
@@ -165,7 +165,7 @@ export default function SubmitIdea({ idea }) {
               userId: submittedIdea.author?._id,
               message: `<b>${
                 submittedIdea.author?.name ?? submittedIdea.guestName
-              }</b> submit an idea at <b>${company.name}</b>`,
+              }</b> submitted an idea at <b>${company.name}</b>`,
               type: 'submitIdea',
               url: `/public-view?feedback=${submittedIdea._id}`
             });

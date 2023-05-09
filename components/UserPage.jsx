@@ -66,7 +66,7 @@ export default function UserPage({ selectedUser, setSelectedUser, getIdeas }) {
   }, [router.isReady, router.query]);
 
   return (
-    <div className="grid grid-cols-[1fr,3fr,1fr] h-[calc(100vh-88px)] divide-x divide-slate-200 dark:divide-aa-600 purple:divide-pt-800">
+    <div className="grid grid-cols-[1fr,2fr,1fr] h-[calc(100vh-88px)] divide-x divide-slate-200 dark:divide-aa-600 purple:divide-pt-800">
       <div>
         <div className="bg-white dark:bg-aa-900 purple:bg-pt-1000 flex items-center gap-2 p-3 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800 ">
           <SearchInput

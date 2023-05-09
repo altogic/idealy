@@ -32,10 +32,12 @@ export default function IdeaPriority() {
     const costIndex = PRIORITY_VALUES.find(
       (value) => value[company?.priorityType] === costFactor
     ).default;
+    const priorityScore = calculateNormalizedPriority(benefitIndex, idea?.voteCount, costIndex);
     updateIdea({
       benefitFactor,
       costFactor,
-      priorityScore: calculateNormalizedPriority(benefitIndex, idea?.voteCount, costIndex)
+      priorityScore,
+      message: `The priority of <b>${idea.title}</b> changed to <b>${priorityScore}</b>`
     });
   };
 

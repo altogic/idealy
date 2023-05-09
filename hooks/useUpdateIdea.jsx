@@ -1,27 +1,24 @@
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import _ from 'lodash';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import useNotification from './useNotification';
 
 export default function useUpdateIdea(idea) {
   const dispatch = useDispatch();
   const sendNotification = useNotification();
-  const company = useSelector((state) => state.company.company);
   const user = useSelector((state) => state.auth.user);
   const updateIdea = (req, onSuccess) => {
+    const { message, ...rest } = req;
     dispatch(
       ideaActions.updateIdea({
         idea: {
           _id: idea._id,
-          ...req
+          ...rest
         },
         onSuccess: (data) => {
-          if (!_.has(req, 'status') && !_.has(req, 'isApproved')) {
+          if (message) {
             sendNotification({
               targetUser: idea?.author?._id,
-              message: `<b>${idea.title}</b> has been updated by <b>${
-                idea.author?._id === user._id ? idea?.author?.name : company?.name
-              }</b>`,
+              message,
               ...(idea.author?._id === user._id && { targetUser: idea?.author?._id }),
               type: 'adminEditIdea',
               url: `/public-view?feedback=${idea._id}`

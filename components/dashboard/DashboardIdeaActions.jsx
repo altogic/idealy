@@ -87,7 +87,10 @@ export default function DashboardIdeaActions() {
 
   const updateIdeaTopics = (topics) => {
     updateIdea({
-      topics
+      topics,
+      message: `<b>${idea.title}</b> topics updated to <b>${
+        topics.length ? topics.join(',') : 'cleared'
+      }</b>`
     });
   };
   const filterMembers = async (inputValue) => {

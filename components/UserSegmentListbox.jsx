@@ -11,7 +11,7 @@ export default function UserSegmentListbox({ size, onChange, value }) {
 
   function handleReset() {
     if (onChange) onChange(null);
-    else updateIdea({ userSegment: null });
+    else updateIdea({ userSegment: null, message: `The user segment of ${idea.title} cleared` });
     setSegments(null);
   }
   useEffect(() => {
@@ -26,7 +26,11 @@ export default function UserSegmentListbox({ size, onChange, value }) {
       onChange={(value) => {
         setSegments(value);
         if (onChange) onChange(value);
-        else updateIdea({ userSegment: value._id });
+        else
+          updateIdea({
+            userSegment: value._id,
+            message: `The user segment of ${idea.title} changed to ${value.name}`
+          });
       }}
       field="name"
       type="status"

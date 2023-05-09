@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 export default function IdeaApproval() {
   const idea = useSelector((state) => state.idea.selectedIdea);
   const loading = useSelector((state) => state.idea.isLoading);
-  const company = useSelector((state) => state.company.company);
   const updateIdea = useUpdateIdea(idea);
   const dispatch = useDispatch();
   const sendNotification = useNotification();
@@ -19,7 +18,7 @@ export default function IdeaApproval() {
       },
       () => {
         sendNotification({
-          message: `Your idea <b>${idea.title}</b> has been approved by <b>${company?.name}</b>`,
+          message: `Your idea <b>${idea.title}</b> has been approved`,
           targetUser: idea?.author?._id,
           type: 'ideaApproved',
           url: `/public-view?feedback=${idea._id}`

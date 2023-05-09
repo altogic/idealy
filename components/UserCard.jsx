@@ -1,9 +1,14 @@
-import Link from 'next/link';
-import { useSelector } from 'react-redux';
+import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
+import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
 import Avatar from './Avatar';
+import Button from './Button';
 
 export default function UserCard({ name, profilePicture, email, className, style, id }) {
+  const router = useRouter();
+  const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
+  const feedbackDetailModal = useSelector((state) => state.general.feedbackDetailModal);
   return (
     <div
       id={id}
@@ -16,11 +21,15 @@ export default function UserCard({ name, profilePicture, email, className, style
       </div>
 
       {company?.role && company?.role !== 'Guest' && email && (
-        <Link href={`/users?email=${email}`}>
-          <a className="text-sm inline-flex items-center justify-center gap-2 tracking-sm border rounded-md transition ease-linear duration-200 focus:outline-none h-8 py-2.5 px-4 bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white dark:text-aa-200 purple:text-pt-200 border-transparent dark:border-aa-600 purple:border-pt-800 hover:bg-indigo-600 dark:hover:bg-aa-500 purple:hover:bg-pt-600">
-            <span className="whitespace-nowrap">View Profile</span>
-          </a>
-        </Link>
+        <Button
+          text="View Profile"
+          variant="indigo"
+          size="xs"
+          onClick={() => {
+            if (feedbackDetailModal) dispatch(toggleFeedBackDetailModal());
+            router.push(`/users?email=${email}`);
+          }}
+        />
       )}
     </div>
   );
