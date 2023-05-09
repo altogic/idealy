@@ -199,7 +199,6 @@ export default function useQuill(onChange, value) {
           );
           dispatch(
             announcementActions.createAnnouncement({
-              slug: title.toLowerCase().replace(/ /g, '-'),
               title,
               content: quill.root.innerHTML
             })

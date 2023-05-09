@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import useClickAnnouncementIdea from '@/hooks/useClickAnnouncementIdea';
 import useOpenFeedbackModal from '@/hooks/useOpenFeedbackModal';
 
-export default function EditAnnouncements({ slug }) {
+export default function EditAnnouncements({ id }) {
   const router = useRouter();
   const announcement = useSelector((state) => state.announcement.announcement);
   const session = useSelector((state) => state.auth.session);
@@ -25,9 +25,7 @@ export default function EditAnnouncements({ slug }) {
         });
         webworker.onmessage = (e) => {
           const { data } = e.data;
-          if (router.query.slug !== data?.slug) {
-            router.replace(`/announcements/edit/${data?.slug}`);
-          }
+          router.replace(`/announcements/edit/${data?._id}`);
         };
       }
     },
@@ -39,7 +37,7 @@ export default function EditAnnouncements({ slug }) {
 
   useEffect(() => {
     if (_.isEmpty(announcement)) {
-      dispatch(announcementActions.getAnnouncement(slug));
+      dispatch(announcementActions.getAnnouncement(id));
     }
   }, [announcement]);
 
@@ -67,7 +65,7 @@ export default function EditAnnouncements({ slug }) {
 export async function getServerSideProps({ params }) {
   return {
     props: {
-      slug: params.slug
+      id: params.id
     }
   };
 }

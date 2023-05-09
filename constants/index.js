@@ -178,8 +178,8 @@ export const DATE_RANGES = [
   {
     label: 'Today',
     range: () => ({
-      startDate: new Date(),
-      endDate: new Date()
+      startDate: new Date(new Date().setHours(0, 0, 0, 0)),
+      endDate: new Date(new Date().setHours(23, 59, 59, 999))
     }),
     isSelected(dateRange) {
       return (

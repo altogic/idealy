@@ -11,7 +11,7 @@ export default function DatePicker({ onChange, value }) {
       <i>{label}</i>
     </span>
   );
-
+  console.log('value', value);
   return (
     <Popover>
       {({ open }) => (

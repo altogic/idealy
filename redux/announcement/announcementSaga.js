@@ -59,7 +59,7 @@ function* deleteAnnouncement({ payload }) {
     yield put(announcementActions.deleteAnnouncementFailure(error));
   }
 }
-function* getAnnouncementBySlug({ payload }) {
+function* getAnnouncementById({ payload }) {
   try {
     const { data, errors } = yield call(AnnouncementService.getAnnouncement, payload);
     if (errors) {
@@ -120,7 +120,7 @@ export default function* announcementSaga() {
   yield takeEvery(announcementActions.updateAnnouncement.type, updateAnnouncement);
   yield takeEvery(announcementActions.getAnnouncements.type, getAnnouncements);
   yield takeEvery(announcementActions.deleteAnnouncement.type, deleteAnnouncement);
-  yield takeEvery(announcementActions.getAnnouncement.type, getAnnouncementBySlug);
+  yield takeEvery(announcementActions.getAnnouncement.type, getAnnouncementById);
   yield takeEvery(announcementActions.createAnnouncementReaction.type, createAnnouncementReaction);
   yield takeEvery(announcementActions.deleteAnnouncementReaction.type, deleteAnnouncementReaction);
   yield takeEvery(announcementActions.getAnnouncementReactions.type, getAnnouncementReactions);
