@@ -17,21 +17,35 @@ export default function IdeaActions({ dashboard }) {
   const ideaActionButtons = [
     {
       type: 'Pin',
-      onClick: () => updateIdea({ isPinned: !idea?.isPinned }),
+      onClick: () =>
+        updateIdea({
+          isPinned: !idea?.isPinned,
+          message: `${idea?.title} has been ${!idea?.isPinned ? 'pinned' : 'unpinned'}`
+        }),
       Icon: Pin,
       color: 'green',
       control: idea?.isPinned
     },
     {
       type: 'Archive',
-      onClick: () => updateIdea({ isArchived: !idea?.isArchived }),
+      onClick: () =>
+        updateIdea({
+          isArchived: !idea?.isArchived,
+          message: `${idea?.title} ${!idea?.isArchived ? 'has been archived' : 'unarchived'}`
+        }),
       Icon: Archive,
       color: 'yellow',
       control: idea?.isArchived
     },
     {
       type: 'Bug',
-      onClick: () => updateIdea({ isBug: !idea?.isBug }),
+      onClick: () =>
+        updateIdea({
+          isBug: !idea?.isBug,
+          message: `${idea?.title} has been ${
+            !idea?.isBug ? 'marked as a bug' : 'remove bug badge'
+          }`
+        }),
       Icon: Bug,
       color: 'rose',
       control: idea?.isBug
