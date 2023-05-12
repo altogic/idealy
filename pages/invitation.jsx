@@ -1,4 +1,5 @@
-import { Email, Danger } from '@/components/icons';
+import { Danger, Email } from '@/components/icons';
+import useNotification from '@/hooks/useNotification';
 import { authActions } from '@/redux/auth/authSlice';
 import { companyActions } from '@/redux/company/companySlice';
 import AuthService from '@/services/auth';
@@ -8,14 +9,12 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import useNotification from '@/hooks/useNotification';
+import { useDispatch } from 'react-redux';
 import { generateUrl } from '../utils';
 
-export default function Invitation({ invitation, errors, companies }) {
+export default function Invitation({ invitation, errors, companies, user }) {
   const router = useRouter();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
   const sendNotification = useNotification();
   useEffect(() => {
     if (errors && !router.asPath.includes('invalid-or-expired-token')) {
@@ -129,7 +128,8 @@ export async function getServerSideProps({ req, res, query }) {
     return {
       props: {
         invitation: data,
-        companies
+        companies,
+        user: user[0]
       }
     };
   }
@@ -138,7 +138,8 @@ export async function getServerSideProps({ req, res, query }) {
     props: {
       token,
       invitation: null,
-      errors
+      errors,
+      user: user[0]
     }
   };
 }
