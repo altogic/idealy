@@ -81,7 +81,6 @@ export default function RoadMapAdmin() {
             `this.roadmap._id == '${roadmap._id}'`,
             isGuest &&
               'this.showOnRoadMap == true && this.isPrivate == false && this.isArchived == false && this.isApproved == true',
-            'this.isMerged == false',
             isGuest &&
               roadmap.publicStatuses?.length &&
               `(${roadmap.publicStatuses
