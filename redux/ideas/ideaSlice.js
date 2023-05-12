@@ -483,6 +483,11 @@ export const ideaSlice = createSlice({
     },
     clearSearch(state) {
       state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
+    },
+    clearIdeas: (state) => {
+      state.ideas = [];
+      state.roadmapIdeas = {};
+      state.selectedIdea = null;
     }
   },
 
