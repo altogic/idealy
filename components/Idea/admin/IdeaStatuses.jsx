@@ -13,19 +13,19 @@ export default function IdeaStatuses() {
         {company?.statuses?.length > 0 && (
           <div>
             <Label label="Status" />
-            <StatusListbox size="xl" />
+            <StatusListbox size="md" />
           </div>
         )}
         {company?.categories?.length > 0 && (
           <div>
             <Label label="Category" />
-            <CategoryListbox size="xl" />
+            <CategoryListbox size="md" />
           </div>
         )}
         {company?.userSegments?.length > 0 && (
           <div>
             <Label label="User Segment" />
-            <UserSegmentListbox size="xl" />
+            <UserSegmentListbox size="md" />
           </div>
         )}
       </div>
