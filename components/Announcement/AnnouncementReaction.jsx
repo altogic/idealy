@@ -23,7 +23,7 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
   const { error, reactions, isLoading } = useSelector((state) => state.announcement);
   const [reacted, setReacted] = useState([]);
   const [count, setCount] = useState(reactionCount);
-
+  const isGuest = useSelector((state) => state.company.isGuest);
   function deleteReaction(type) {
     setCount((prev) => ({
       ...prev,
@@ -64,7 +64,7 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
             type
           })
         );
-        if (!user && !guestAuth && !guestInfo.name) {
+        if ((!user && !guestAuth && !guestInfo.name) || isGuest) {
           saveGuestInfo({
             name: generateRandomName()
           });

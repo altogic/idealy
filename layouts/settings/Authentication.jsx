@@ -63,14 +63,14 @@ export default function Authentication() {
     }
   };
   useEffect(() => {
-    if (company) {
+    if (company?.authentication) {
       setAuthenticationSelected(company.authentication.type);
       setSubmitIdeasSelected(company.authentication.submitIdeas);
       setCommentsSelected(company.authentication.commentIdea);
       setVotingSelected(company.authentication.voteIdea);
       setAnnouncementsReactionsSelected(company.authentication.announcementReaction);
     }
-  }, [company]);
+  }, [company?.authentication]);
   return (
     <div>
       <div className="pb-4 mb-10 lg:mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">

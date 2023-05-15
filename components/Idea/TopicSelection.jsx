@@ -6,11 +6,11 @@ export default function TopicSelection({ topics, setTopics, update, errors }) {
   const { company } = useSelector((state) => state.company);
   const [topicsOptions, setTopicsOptions] = useState([]);
   useEffect(() => {
-    if (company) {
+    if (company?.topics) {
       const _topics = [...company.topics];
       setTopicsOptions(_topics.sort((a, b) => a.order - b.order));
     }
-  }, [company]);
+  }, [company?.topics]);
   return (
     <div>
       <span className="inline-block text-slate-600 dark:text-aa-300 purple:text-pt-300 mb-4 text-sm tracking-sm">

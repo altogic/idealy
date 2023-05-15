@@ -48,10 +48,10 @@ export default function Settings() {
     }
   }, [router, company]);
   useEffect(() => {
-    if (company) {
+    if (company?._id) {
       dispatch(companyActions.getAccessRequestsByCompany(company._id));
     }
-  }, [company]);
+  }, [company?._id]);
 
   useEffect(() => {
     if (PROFILE_TABS) {
@@ -80,7 +80,7 @@ export default function Settings() {
             <button
               type="button"
               onClick={() => setOpenSidebar(!openSidebar)}
-              className="fixed top-[22px] left-4 inline-flex lg:hidden items-center justify-center z-50">
+              className="fixed top-[22px] left-4 inline-flex lg:hidden items-center justify-center z-[51]">
               <HamburgerMenu className="w-8 h-8 icon-slate" />
             </button>
             <div className="lg:grid grid-cols-[250px,1fr] xl:grid-cols-[350px,1fr]">
@@ -140,7 +140,7 @@ export default function Settings() {
                             setOpenSidebar(!openSidebar);
                           }}>
                           {tab.name}
-                          {tab.name === 'Access Requests' && !!accessRequests.length && (
+                          {tab.name === 'Access Requests' && !!accessRequests?.length && (
                             <Indicator count={accessRequests.length} />
                           )}
                         </Tab>
@@ -166,12 +166,12 @@ export default function Settings() {
                       <GeneralSettings />
                     </Tab.Panel>
                   )}
-                  {company?.role === 'Owner' && (
+                  {/* {company?.role === 'Owner' && (
                     <>
                       <Tab.Panel>Billing</Tab.Panel>
                       <Tab.Panel>Upgrade</Tab.Panel>
                     </>
-                  )}
+                  )} */}
                   {company?.role !== 'Moderator' && (
                     <>
                       <Tab.Panel>

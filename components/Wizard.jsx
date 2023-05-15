@@ -4,7 +4,7 @@ import cn from 'classnames';
 import { SUBDOMAIN_REGEX } from 'constants';
 import _ from 'lodash';
 import Router from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateUrl } from '../utils';
 import Button from './Button';
@@ -24,7 +24,7 @@ export default function Wizard({ children, activePageIndex, setActivePageIndex, 
   const user = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.company.isLoading);
   const companies = useSelector((state) => state.company.companies);
-
+  const [delayLoading, setDelayLoading] = useState(false);
   const submitCompany = () => {
     if (error.length || subdomainLoading || companyNameLoading) {
       return;
@@ -33,7 +33,12 @@ export default function Wizard({ children, activePageIndex, setActivePageIndex, 
       companyActions.createCompany({
         userId: user?._id,
         userIp,
-        onSuccess: (company) => Router.push(generateUrl('public-view', company.subdomain))
+        onSuccess: (company) => {
+          setDelayLoading(true);
+          setTimeout(() => {
+            Router.push(generateUrl('public-view', company.subdomain));
+          }, 1000);
+        }
       })
     );
   };
@@ -110,7 +115,7 @@ export default function Wizard({ children, activePageIndex, setActivePageIndex, 
             )}
             onClick={nextPage}
             text={activePageIndex >= 3 ? `Submit` : `Continue`}
-            loading={loading || ideaLoading || getCompanyLoading}
+            loading={loading || ideaLoading || getCompanyLoading || delayLoading}
           />
         ) : null}
       </div>

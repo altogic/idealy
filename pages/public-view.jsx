@@ -75,7 +75,7 @@ export default function PublicView() {
       }
       dispatch(ideaActions.getIdeasByCompany(req));
     }
-  }, [page, sort, filter, company]);
+  }, [page, sort, filter, company?._id]);
 
   const showFeedbackDetail = (feedbackId) => {
     const ideaDetail = ideas.find((i) => i._id === feedbackId);
@@ -163,7 +163,7 @@ export default function PublicView() {
         setError(null);
       }
     }
-  }, [company]);
+  }, [company?.privacy, company?.siteNavigation, company?.role]);
 
   useEffect(
     () => () => {

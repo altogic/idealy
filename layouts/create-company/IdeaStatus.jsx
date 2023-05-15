@@ -21,7 +21,7 @@ export default function FourthWizard() {
       setStatus(statuses[0]);
     }
   }, [statuses]);
-
+  console.log('status', status);
   return (
     <>
       <div className="max-w-[444px] mx-auto mb-8 md:mb-16 text-center">

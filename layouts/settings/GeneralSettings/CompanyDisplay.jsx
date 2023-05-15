@@ -22,7 +22,7 @@ export default function CompanyDisplay() {
   };
   useEffect(() => {
     setDisplaySelected(DISPLAY_COMPANY_ASSETS[company.showCompanyName ? 0 : 1]);
-  }, [company]);
+  }, [company?.showCompanyName]);
 
   return (
     <>

@@ -12,7 +12,10 @@ import EmptyState from '@/components/EmptyState';
 
 export default function UserSegments() {
   const createUserSegmentName = new yup.ObjectSchema({
-    segmentName: yup.string().required('User segment name is required')
+    segmentName: yup
+      .string()
+      .max(50, 'User Segment name must be less than 50 characters')
+      .required('User segment name is required')
   });
   const dispatch = useDispatch();
   const error = useSelector((state) => state.company.companyTopicsError);

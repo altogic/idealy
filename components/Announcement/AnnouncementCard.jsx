@@ -25,7 +25,11 @@ export default function AnnouncementCard({ announcement, onPage }) {
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   useClickAnnouncementIdea(announcement);
-
+  console.log({
+    query: canReact && !company.disableAnnouncementReactions,
+    canReact,
+    company: company.miscellaneous.disableAnnouncementReactions
+  });
   return (
     <>
       <div className="w-full odd:bg-white dark:odd:bg-aa-900 odd:purple:bg-pt-1000 even:bg-slate-100 dark:even:bg-aa-800 purple:even:bg-pt-900">
@@ -122,7 +126,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
           <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-200 purple:prose-p:text-pt-200 prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm prose-headings:m-0 prose-headings:p-0 max-w-full mb-4">
             <SanitizeHtml id="idea-detail" html={announcement?.content} />
           </div>
-          {canReact && (
+          {canReact && !company.miscellaneous.disableAnnouncementReactions && (
             <AnnouncementReaction
               announcementId={announcement?._id}
               reactionCount={announcement?.reactionCount}

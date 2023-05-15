@@ -91,22 +91,24 @@ export default function UserPage({ selectedUser, setSelectedUser, getIdeas }) {
             size="sm"
             hidden="mobile"
           />
-          <BaseListBox
-            value={segmentSelected?.name}
-            icon={<Filter className="w-5 h-5 icon" />}
-            type="icon"
-            onChange={(val) => {
-              setSegmentSelected(val);
-              router.push({
-                pathname: router.pathname,
-                query: { ...router.query, segment: val._id }
-              });
-            }}
-            field="name"
-            options={company?.userSegments}
-            size="sm"
-            hidden="mobile"
-          />
+          {!!company?.userSegments.length && (
+            <BaseListBox
+              value={segmentSelected?.name}
+              icon={<Filter className="w-5 h-5 icon" />}
+              type="icon"
+              onChange={(val) => {
+                setSegmentSelected(val);
+                router.push({
+                  pathname: router.pathname,
+                  query: { ...router.query, segment: val._id }
+                });
+              }}
+              field="name"
+              options={company?.userSegments}
+              size="sm"
+              hidden="mobile"
+            />
+          )}
         </div>
         <div className="overflow-y-auto h-full">
           {isLoading ? (

@@ -43,7 +43,7 @@ export default function RoadMapAdmin() {
   }
 
   const roadmapStatuses = useMemo(() => {
-    if (company && roadmap) {
+    if (company?.statuses && roadmap) {
       const temp = structuredClone(company?.statuses);
       const statuses = temp.sort((a, b) => a.order - b.order);
       if (statuses && isGuest) {
@@ -52,16 +52,16 @@ export default function RoadMapAdmin() {
       return statuses;
     }
     return [];
-  }, [company, roadmap, isGuest]);
+  }, [company?.statuses, roadmap, isGuest]);
 
   const sortedRoadmaps = useMemo(() => {
-    if (company) {
+    if (company?.roadmaps) {
       const temp = structuredClone(company?.roadmaps);
       const roadmaps = temp.sort((a, b) => a.order - b.order);
       return roadmaps;
     }
     return [];
-  }, [company]);
+  }, [company?.roadmaps]);
 
   useEffect(() => {
     if (router.isReady && sortedRoadmaps) {
@@ -81,7 +81,6 @@ export default function RoadMapAdmin() {
             `this.roadmap._id == '${roadmap._id}'`,
             isGuest &&
               'this.showOnRoadMap == true && this.isPrivate == false && this.isArchived == false && this.isApproved == true',
-            'this.isMerged == false',
             isGuest &&
               roadmap.publicStatuses?.length &&
               `(${roadmap.publicStatuses
@@ -107,14 +106,14 @@ export default function RoadMapAdmin() {
         setError(null);
       }
     }
-  }, [company]);
+  }, [company?.siteNavigation, company?.role]);
 
   useUpdateEffect(() => {
-    if (company && roadmap) {
+    if (company?.roadmaps && roadmap) {
       const selectedRoadmap = company?.roadmaps.find((r) => r._id === roadmap._id);
       setRoadmap(selectedRoadmap);
     }
-  }, [company]);
+  }, [company?.roadmaps]);
 
   return (
     <>

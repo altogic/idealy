@@ -3,10 +3,14 @@ import Link from 'next/link';
 import { generateUrl } from '../utils';
 import CompanyAvatar from './CompanyAvatar';
 
-export default function CompanyButton({ icon, company, label, ...props }) {
+export default function CompanyButton({ icon, company, label, isGuest, ...props }) {
   return (
     <Link
-      href={company ? generateUrl('dashboard', company.subdomain) : '/create-new-company'}
+      href={
+        company
+          ? generateUrl(isGuest ? 'public-view' : 'dashboard', company.subdomain)
+          : '/create-new-company'
+      }
       {...props}>
       <a className="group inline-flex flex-col items-center justify-center w-[88px] transform transition ease-linear duration-150">
         {label ? (

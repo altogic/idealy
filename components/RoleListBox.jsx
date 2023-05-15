@@ -14,13 +14,14 @@ export default function RoleListBox({
     setRoleSelected(selected.name);
     if (onRoleChange) onRoleChange(selected.name);
   };
+  console.log('roleSelected', roleSelected);
   return (
     <BaseListBox
       value={roleSelected}
       label={roleSelected}
       onChange={onChange}
       field="name"
-      options={roleSelected.isGuest ? ROLE : ROLE.filter((role) => !role.isGuest)}
+      options={roleSelected?.isGuest ? ROLE : ROLE.filter((role) => !role.isGuest)}
       size={size}
       disabled={disabled}
       {...props}

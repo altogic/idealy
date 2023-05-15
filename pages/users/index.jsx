@@ -4,6 +4,7 @@ import { companyActions } from '@/redux/company/companySlice';
 import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
 import UserPage from '@/components/UserPage';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
 
 export default function Index() {
   const dispatch = useDispatch();
@@ -11,7 +12,7 @@ export default function Index() {
   const { company, isGuest } = useSelector((state) => state.company);
 
   useEffect(() => {
-    if (company && !isGuest) {
+    if (company._id && !isGuest) {
       dispatch(
         companyActions.getCompanyUsers({
           page: 1,
@@ -33,7 +34,11 @@ export default function Index() {
         })
       );
     }
-  }, [company]);
+  }, [company?._id]);
+
+  useEffect(() => {
+    dispatch(ideaActions.clearIdeas());
+  }, []);
 
   return (
     <Layout>

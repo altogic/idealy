@@ -8,6 +8,7 @@ export default function useSaveGuestInformation(saveLocal = true) {
   const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
   const guestInfo = useSelector((state) => state.auth.guestInfo);
+  const user = useSelector((state) => state.auth.user);
   const saveGuestInformation = ({ email, name, avatar, onSuccess }) => {
     if (saveLocal && !email) {
       addGuestInfoToLocalStorage({ name, avatar });
@@ -19,13 +20,14 @@ export default function useSaveGuestInformation(saveLocal = true) {
       );
     }
 
-    if (email) {
+    if (email || user) {
       dispatch(
         companyActions.createCompanyUser({
           companyId: company._id,
           name,
-          email,
-          avatar: avatar || guestInfo.avatar,
+          email: email || user?.email,
+          avatar: avatar || guestInfo?.avatar,
+          user: user?._id,
           onSuccess: (user) => {
             addGuestInfoToLocalStorage(user);
             realtime.join(email);

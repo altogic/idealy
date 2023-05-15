@@ -11,10 +11,10 @@ export default function Theme() {
   const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
   useEffect(() => {
-    if (company) {
+    if (company?.theme) {
       selectedTheme.current = company.theme;
     }
-  }, [selectedTheme, company]);
+  }, [selectedTheme, company?.theme]);
 
   const handleThemeChange = (theme) => {
     selectedTheme.current = theme;

@@ -43,10 +43,10 @@ export default function BaseListBox({
             'relative flex items-center gap-2 w-full rounded-lg text-left cursor-pointer focus:outline-none  sm:text-sm',
             size === 'xs' && '',
             size === 'sm' && 'h-11 items-center',
-            size === 'md' && 'min-w-[auto] md:min-w-[160px] ',
-            size === 'lg' && 'min-w-[auto] md:min-w-[195px]',
-            size === 'xl' && 'min-w-[auto] md:min-w-[250px]',
-            size === 'xxl' && 'min-w-[auto] md:min-w-[275px]',
+            size === 'md' && 'min-w-[auto] md:min-w-[160px] max-w-[255px]',
+            size === 'lg' && 'min-w-[auto] md:min-w-[195px] max-w-[270px]',
+            size === 'xl' && 'min-w-[auto] md:min-w-[250px] max-w-[325px]',
+            size === 'xxl' && 'min-w-[auto] md:min-w-[275px] max-w-full',
             (type === 'default' || type === 'status' || type === 'user') &&
               ' dark:bg-aa-800 purple:bg-pt-800  py-3.5 px-2 md:px-[14px] ',
             type === 'icon' && 'text-slate-700 p-3',
@@ -57,7 +57,7 @@ export default function BaseListBox({
           {type !== 'icon' && (
             <>
               {label || labelIcon ? (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-11/12">
                   {icon && icon}
                   {labelIcon && labelIcon}
                   {type === 'status' && !multiple && (
@@ -75,18 +75,12 @@ export default function BaseListBox({
                   )}
                   <div
                     className={cn(
-                      'dark:text-aa-200 purple:text-pt-200 flex gap-2',
+                      'dark:text-aa-200 purple:text-pt-200 flex gap-2 w-full',
                       type === 'create'
                         ? 'text-slate-800 text-xl lg:text-3xl font-semibold'
                         : 'text-slate-500 text-sm tracking-sm'
                     )}>
-                    <div
-                      className={cn(
-                        hidden === 'mobile' && 'inline-flex items-center justify-center truncate'
-                      )}>
-                      {' '}
-                      {label}
-                    </div>
+                    <div className={cn('truncate max-w-full')}>{label}</div>
                     {multiple && !!value?.length && (type === 'default' || type === 'status') && (
                       <span className="inline-flex items-center justify-center w-5 h-5 bg-indigo-700 dark:bg-aa-600 purple:bg-pt-600 text-white dark:text-aa-200 rounded-full">
                         {value?.length}
@@ -129,10 +123,10 @@ export default function BaseListBox({
           <Listbox.Options
             className={cn(
               'absolute top-[50px]  mt-1 max-h-64 overflow-auto rounded-md bg-white dark:bg-aa-800 purple:bg-pt-900 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50 border border-b border-slate-200 dark:border-aa-600 purple:border-pt-800',
-              size === 'sm' && 'min-w-[120px] max-w-[200px]',
-              size === 'md' && 'min-w-[230px] max-w-[230px]',
-              size === 'lg' && 'min-w-[195px] max-w-[290px] max-h-60',
-              size === 'xl' && 'min-w-[250px] max-w-[350px]',
+              size === 'sm' && 'min-w-[120px] max-w-[180px]',
+              size === 'md' && 'min-w-[160px] max-w-[255px]',
+              size === 'lg' && 'min-w-[195px] max-w-[270px] max-h-60',
+              size === 'xl' && 'min-w-[250px] max-w-[325px]',
               size === 'xxl' && 'min-w-[300px] max-w-full',
               size === 'full' && 'w-full',
               type === 'icon' && 'w-[195px]',

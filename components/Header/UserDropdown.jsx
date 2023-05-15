@@ -13,6 +13,7 @@ export default function UserDropdown({ companies }) {
   const dispatch = useDispatch();
   const [selectedCompany, setSelectedCompany] = useState();
   const user = useSelector((state) => state.auth.user);
+  const isGuest = useSelector((state) => state.company.isGuest);
 
   const handleLogout = () => {
     dispatch(
@@ -83,7 +84,8 @@ export default function UserDropdown({ companies }) {
                   className="w-full text-left"
                   key={company._id}
                   onClick={() => {
-                    Router.push(generateUrl('dashboard', company.subdomain));
+                    if (isGuest) Router.push(generateUrl('public-view', company.subdomain));
+                    else Router.push(generateUrl('dashboard', company.subdomain));
                   }}>
                   <span className="flex items-center justify-between gap-3 text-slate-500 dark:text-aa-200 purple:text-pt-200 p-4 text-sm hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700">
                     <div className="inline-flex items-center gap-3">

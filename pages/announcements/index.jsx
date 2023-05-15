@@ -116,7 +116,7 @@ export default function Announcements() {
       company?.categories.filter((category) => categories?.includes(category.name))
     );
     setSearchText(search || '');
-  }, [router.query.categories, company]);
+  }, [router.query.categories, company?.categories]);
 
   useEffect(() => {
     if (company) {
@@ -169,7 +169,7 @@ export default function Announcements() {
         setError(null);
       }
     }
-  }, [company]);
+  }, [company?.siteNavigation]);
 
   return (
     <>

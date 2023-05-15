@@ -1,4 +1,5 @@
-import { Email, Danger } from '@/components/icons';
+import { Danger, Email } from '@/components/icons';
+import useNotification from '@/hooks/useNotification';
 import { authActions } from '@/redux/auth/authSlice';
 import { companyActions } from '@/redux/company/companySlice';
 import AuthService from '@/services/auth';
@@ -8,39 +9,56 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import useNotification from '@/hooks/useNotification';
+import { useDispatch } from 'react-redux';
+import { realtime } from '@/utils/altogic';
 import { generateUrl } from '../utils';
 
-export default function Invitation({ invitation, errors, companies }) {
+export default function Invitation({ invitation, errors, companies, user }) {
   const router = useRouter();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
   const sendNotification = useNotification();
   useEffect(() => {
     if (errors && !router.asPath.includes('invalid-or-expired-token')) {
-      router.push('/invitation', { shallow: true, query: { token: 'invalid-or-expired-token' } });
+      router.replace('/invitation', {
+        shallow: true,
+        query: { token: 'invalid-or-expired-token' }
+      });
     }
   }, [errors]);
 
   useEffect(() => {
-    if (!errors) {
-      if (user?.email !== invitation?.email) {
+    const sessionUser = AuthService.getUser();
+    if (sessionUser && !errors) {
+      if (sessionUser?.email !== invitation?.email) {
+        console.log(
+          'sessionUser?.email !== invitation?.email',
+          sessionUser?.email,
+          invitation?.email
+        );
         dispatch(authActions.logout());
-      } else {
-        const company = companies.find((c) => c._id === invitation.companyId);
-        dispatch(companyActions.updateMemberStatus({ companyId: invitation.companyId }));
+      } else if (invitation) {
         sendNotification({
           message: `<b>${user?.name}</b> accepted your invitation to join <b>${invitation.companyName}</b>`,
           type: 'acceptInvitation',
           url: '/settings?tab=invite%20team',
           companyId: invitation.companyId
         });
-        router.push(generateUrl('public-view', company?.subdomain));
+        realtime.send(invitation.companyId, 'new-member', {
+          ...invitation,
+          userId: user._id,
+
+          isAccepted: true
+        });
+        dispatch(
+          companyActions.updateMemberStatus({
+            companyId: invitation.companyId,
+            onSuccess: () => router.push(generateUrl('public-view', invitation?.companySubdomain))
+          })
+        );
         deleteCookie('invitation');
       }
     }
-  }, [user, companies]);
+  }, [user, companies, invitation]);
 
   return (
     <div>
@@ -116,7 +134,7 @@ export async function getServerSideProps({ req, res, query }) {
   const { data: user } = await AuthService.getUserFromDbByEmail(data?.email);
 
   const { data: companies } = await companyService.getUserCompanies(user[0]?._id);
-
+  console.log('companies', errors, token);
   if (data) {
     setCookie('invitation-token', data, {
       req,
@@ -129,7 +147,8 @@ export async function getServerSideProps({ req, res, query }) {
     return {
       props: {
         invitation: data,
-        companies
+        companies,
+        ...(user.length > 0 && { user: user[0] })
       }
     };
   }
@@ -138,7 +157,8 @@ export async function getServerSideProps({ req, res, query }) {
     props: {
       token,
       invitation: null,
-      errors
+      errors,
+      ...(user.length > 0 && { user: user[0] })
     }
   };
 }

@@ -6,13 +6,13 @@ export default function useGuestValidation(fieldName) {
   const user = useSelector((state) => state.auth.user);
   const company = useSelector((state) => state.company.company);
   useEffect(() => {
-    if (company) {
+    if (company?.authentication.type) {
       setGuestValidation(
         company?.authentication.type === 'Guest Authentication' ||
           (company.authentication.type === 'Custom' &&
             company.authentication[fieldName] === 'Guest Authentication')
       );
     }
-  }, [company]);
+  }, [company?.authentication.type]);
   return !user && guestValidation;
 }

@@ -14,7 +14,10 @@ import * as yup from 'yup';
 
 export default function Statuses() {
   const createStatusName = new yup.ObjectSchema({
-    statusesName: yup.string().required('Status name is required')
+    statusesName: yup
+      .string()
+      .max(50, 'Status name must be less than 50 characters')
+      .required('Status name is required')
   });
 
   const dispatch = useDispatch();
@@ -34,9 +37,9 @@ export default function Statuses() {
     resolver: yupResolver(createStatusName)
   });
   useEffect(() => {
-    const status = company.statuses.find((s) => s.isCompletedStatus);
+    const status = company?.statuses.find((s) => s.isCompletedStatus);
     setStatus(status || { _id: 0, name: 'Select Status' });
-  }, [company]);
+  }, [company?.statuses]);
 
   useEffect(() => {
     if (Symbol.iterator in Object(error)) {
@@ -88,7 +91,7 @@ export default function Statuses() {
   useEffect(() => {
     const temp = [...company.statuses];
     setStatuses(temp.sort((a, b) => a.order - b.order));
-  }, [company]);
+  }, [company?.statuses]);
 
   return (
     <>

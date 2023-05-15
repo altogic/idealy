@@ -32,8 +32,8 @@ export const PROFILE_TABS = [
 ];
 export const COMPANY_TABS = [
   { id: 1, name: 'General Settings', roles: ['Owner', 'Admin'] },
-  { id: 2, name: 'Billing', roles: ['Owner'] },
-  { id: 3, name: 'Upgrade', roles: ['Owner'] },
+  // { id: 2, name: 'Billing', roles: ['Owner'] },
+  // { id: 3, name: 'Upgrade', roles: ['Owner'] },
   { id: 4, name: 'Themes', roles: ['Owner', 'Admin'] },
   { id: 5, name: 'Invite Team', roles: ['Owner', 'Admin'] },
   { id: 6, name: 'Topics', roles: ['Owner', 'Admin'] },

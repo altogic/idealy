@@ -11,7 +11,7 @@ export default function CompanyNotFound() {
       deleteCookie('subdomain', {
         domain: process.env.NEXT_PUBLIC_DOMAIN
       });
-      Router.push(generateUrl('dashboard', subdomain));
+      Router.push(generateUrl('public-view', subdomain));
     }
   };
   return (
