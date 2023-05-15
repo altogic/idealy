@@ -95,13 +95,15 @@ export default function AuthRedirect({ error, session, user, companies }) {
 
 export const getServerSideProps = async ({ query, req, res }) => {
   try {
+    console.log('query.action', query.action);
     const { user, errors, session } = await AuthService.getAuthGrant(query.access_token);
     const invitation = JSON.parse(getCookie('invitation-token', { req, res }) || null);
     const props = {
       action: query.action,
       error: null,
       user,
-      session
+      session,
+      invitation
     };
     if (query.error) {
       return {
@@ -111,7 +113,6 @@ export const getServerSideProps = async ({ query, req, res }) => {
         }
       };
     }
-
     if (invitation) {
       if (query.action === 'oauth-signup') {
         const { data } = await companyService.registerTeamMember({
@@ -121,18 +122,19 @@ export const getServerSideProps = async ({ query, req, res }) => {
           status: 'Active'
         });
         AuthService.updateUserCanCreateCompany(user._id, invitation.canCreateCompany);
-        realtime.send(data.companyId, 'accept-invitation', {
-          sender: data.user._id,
+        realtime.send(invitation.companyId, 'accept-invitation', {
+          sender: user._id,
           payload: data
         });
       } else if (query.action === 'oauth-signin') {
         await companyService.updateMemberStatus({
           userId: user._id,
-          companyId: invitation.companyId
+          companyId: invitation.companyId,
+          status: 'Active',
+          email: user.email
         });
       }
     }
-
     if (query.action !== 'reset-pwd' && query.action !== 'change-email') {
       const { data } = await companyService.getUserCompanies(user?._id);
       props.companies = data;
@@ -151,6 +153,7 @@ export const getServerSideProps = async ({ query, req, res }) => {
       }
     };
   } catch (error) {
+    console.log('error', error);
     setCookie('error', error, {
       req,
       res,

@@ -24,6 +24,7 @@ export default function CommentForm({ editedComment, setEditComment, setIsFetche
   const idea = useSelector((state) => state.idea.selectedIdea);
   const feedBackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
   const error = useSelector((state) => state.comments.error);
+  const isGuest = useSelector((state) => state.company.isGuest);
   const [comment, setComment] = useState('');
   const guestValidation = useGuestValidation('commentIdea');
   const saveGuestInfo = useSaveGuestInformation();
@@ -102,13 +103,14 @@ export default function CommentForm({ editedComment, setEditComment, setIsFetche
           ideaId: idea._id,
           text: comment,
           user: user?._id,
+          companyId: idea.company,
           ...(!user && guestValidation && { guestName: data.guestName || guestName }),
           ...(!user && !data.guestEmail && { ip: userIp }),
           onSuccess: () => {
-            if (data.guestEmail) {
+            if (data.guestEmail || isGuest) {
               saveGuestInfo({
-                name: data.guestName,
-                email: data.guestEmail
+                name: data?.guestName,
+                email: data?.guestEmail
               });
             }
             if (idea.author?._id) {

@@ -19,6 +19,7 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
   const { userIp: ip, user, guestInfo } = useSelector((state) => state.auth);
   const { createReplyLoading, updateReplyLoading } = useSelector((state) => state.replies);
   const idea = useSelector((state) => state.idea.selectedIdea);
+  const isGuest = useSelector((state) => state.company.isGuest);
   const [inpReply, setInpReply] = useState(false);
   const isLoading = useRef(false);
   const saveGuestInfo = useSaveGuestInformation();
@@ -64,7 +65,7 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
           ...(!user && { ip, name: guestInfo.name || name }),
           user: user?._id,
           onSuccess: () => {
-            if (!user && !guestInfo.name) {
+            if ((!user && !guestInfo.name) || isGuest) {
               saveGuestInfo({
                 name
               });

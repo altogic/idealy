@@ -59,7 +59,9 @@ export default function Layout({ children }) {
           onSuccess: (subdomain) => {
             setCookie('subdomain', subdomain);
           },
-          onFail: () => {}
+          onFail: () => {
+            router.push(generateUrl('company-not-found'));
+          }
         })
       );
     }

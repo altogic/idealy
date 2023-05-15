@@ -29,7 +29,7 @@ export default function RequestAccess() {
     if (company?.role) {
       Router.push(generateUrl('public-view', company.subdomain));
     }
-    if (user && company) {
+    if (user && company?._id) {
       dispatch(
         companyActions.getAccessRequest({
           companyId: company._id,
@@ -37,13 +37,13 @@ export default function RequestAccess() {
         })
       );
     }
-  }, [user, company]);
+  }, [user, company?._id, company?.role]);
 
   useEffect(() => {
-    if (company) {
+    if (company?.privacy) {
       setUserApproval(company.privacy.userApproval);
     }
-  }, [company]);
+  }, [company?.privacy]);
 
   return (
     <Layout>

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import useNotification from './useNotification';
 
 export default function useSendMentionNotification(type) {
@@ -16,28 +17,27 @@ export default function useSendMentionNotification(type) {
     }
   };
   return ({ content, title, ideaId, name }) => {
-    try {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(content, 'text/html');
-      const mentions = doc.querySelectorAll('.mention');
-      if (mentions.length) {
-        const mentionsArray = Array.from(mentions);
-        const mentionsIds = mentionsArray.map((mention) => mention.dataset.id);
-        const uniqueMentions = [...new Set(mentionsIds)];
-        uniqueMentions.forEach((id) => {
-          const isRegistered = JSON.parse(id.split('-')[1]);
-          if (isRegistered) {
-            sendNotification({
-              message: handleNotificationMessage(name, title),
-              targetUser: id.split('-')[0],
-              type: 'mention',
-              url: `/public-view?feedback=${ideaId}`
-            });
-          }
-        });
-      }
-    } catch (error) {
-      console.log(error);
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, 'text/html');
+    const mentions = doc.querySelectorAll('.mention');
+    if (mentions.length) {
+      const mentionsArray = Array.from(mentions);
+      const mentionsIds = mentionsArray.map((mention) => ({
+        id: mention.dataset.id,
+        isRegistered: mention.dataset.isRegistered,
+        userId: mention.dataset.userId
+      }));
+      const uniqueMentions = _.uniqBy(mentionsIds, 'id');
+      uniqueMentions.forEach((m) => {
+        if (m.isRegistered) {
+          sendNotification({
+            message: handleNotificationMessage(name, title),
+            targetUser: m.userId,
+            type: 'mention',
+            url: `/public-view?feedback=${ideaId}`
+          });
+        }
+      });
     }
   };
 }

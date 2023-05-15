@@ -22,7 +22,7 @@ export default function Privacy() {
     setCompanySelected(COMPANY_VISIBILITY[company.privacy.isPublic ? 0 : 1]);
     setUserApproval(company.privacy.userApproval);
     setIdeaApproval(company.privacy.ideaApproval);
-  }, [company]);
+  }, [company?.privacy]);
   const updateCompanyPrivacy = (fieldName, value) => {
     dispatch(
       companyActions.updateCompany({

@@ -53,7 +53,7 @@ export default function AdminDashboard() {
 
   const getIdeasByCompany = useCallback(
     (page, limit) => {
-      if (company) {
+      if (company?._id) {
         dispatch(
           ideaActions.getIdeasByCompany({
             limit,
@@ -65,7 +65,7 @@ export default function AdminDashboard() {
         );
       }
     },
-    [company, sort, filter]
+    [company?._id, sort, filter]
   );
 
   const handlePageChange = () => {
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
         setError(null);
       }
     }
-  }, [company]);
+  }, [company?.siteNavigation, company?.role]);
 
   useEffect(() => {
     if (router.isReady && !router.query.page && !router.query.feedback && !_.isEmpty(ideas)) {

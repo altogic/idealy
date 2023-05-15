@@ -36,7 +36,11 @@ export default function Home() {
             <div className="max-w-sm sm:max-w-lg lg:max-w-xl">
               <div className="flex flex-wrap justify-center gap-x-16 gap-y-8 md:gap-16 lg:gap-24">
                 {companies.map((company) => (
-                  <CompanyButton key={company._id} company={company} />
+                  <CompanyButton
+                    key={company._id}
+                    company={company}
+                    isGuest={company.role === 'Guest' || !company.role}
+                  />
                 ))}
                 {user?.canCreateCompany && <CompanyButton label="Create company" isCreateCompany />}
               </div>

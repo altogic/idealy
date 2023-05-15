@@ -40,7 +40,7 @@ function MyApp({ Component, pageProps }) {
       localStorageUtil.set('theme', company.theme);
       localStorageUtil.set('companyId', company._id);
     }
-  }, [company]);
+  }, [company?.name, company?.theme]);
 
   useEffect(() => {
     const userFromCookie = JSON.parse(getCookie('user') || null);
@@ -52,7 +52,7 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   useEffect(() => {
-    if (user && company) {
+    if (user && company?._id) {
       dispatch(
         notificationActions.getNotifications({
           userId: user?._id,
@@ -63,10 +63,10 @@ function MyApp({ Component, pageProps }) {
         })
       );
     }
-  }, [user, company]);
+  }, [user, company?._id, company?.role]);
 
   useEffect(() => {
-    if (company) {
+    if (company?._id) {
       dispatch(
         ideaActions.getUserVotes({
           filter: [
@@ -82,7 +82,7 @@ function MyApp({ Component, pageProps }) {
         })
       );
     }
-  }, [company, user, guestInfo, userIp]);
+  }, [company?._id, user, guestInfo, userIp]);
 
   return (
     <>

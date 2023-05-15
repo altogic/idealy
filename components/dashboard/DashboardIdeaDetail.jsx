@@ -141,7 +141,8 @@ export default function DashboardIdeaDetail() {
                         commentActions.addComment({
                           ideaId: idea?._id,
                           text: content,
-                          user: user?._id
+                          user: user?._id,
+                          companyId: idea?.company
                         })
                       );
                       setContent('');

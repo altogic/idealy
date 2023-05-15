@@ -107,7 +107,7 @@ export default function SubmitIdea({ idea }) {
   };
   const sendMentionNotification = useSendMentionNotification('idea');
   const submitOnSuccess = async (guestEmail, guestName, submittedIdea) => {
-    if (guestEmail && guestName) {
+    if ((guestEmail && guestName) || isGuest) {
       saveGuestInformation({ email: guestEmail, name: guestName });
     }
     sendMentionNotification({
@@ -284,11 +284,11 @@ export default function SubmitIdea({ idea }) {
   }, [error, setError]);
 
   useEffect(() => {
-    if (company) {
+    if (company?.topics) {
       const _topics = [...company.topics];
       setTopicsOptions(_topics.sort((a, b) => a.order - b.order));
     }
-  }, [company]);
+  }, [company?.topics]);
 
   return (
     <Drawer

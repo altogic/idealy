@@ -160,13 +160,14 @@ function* inviteTeamMemberSaga({ payload }) {
       payload.onError(errors.items[0]);
       throw new Error(errors);
     }
-    yield put(companyActions.inviteTeamMemberSuccess(data.member));
-    payload.onSuccess(data?.member.user?._id, data.invitation.token, data.member._id);
+    yield put(companyActions.inviteTeamMemberSuccess(data.member ?? data));
+    payload.onSuccess(data?.member?.user?._id, data?.invitation?.token, data?.member?._id);
     realtime.send(payload.companyId, 'invite-team-member', {
       sender: user._id,
       ...data.member
     });
   } catch (error) {
+    console.log(error);
     yield put(companyActions.inviteTeamMemberFailed(error));
   }
 }

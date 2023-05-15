@@ -15,7 +15,7 @@ export default function VoteIdea({ voteCount, idea }) {
   const dispatch = useDispatch();
   const canVote = useRegisteredUserValidation('voteIdea');
   const { userIp, user, guestInfo } = useSelector((state) => state.auth);
-  const company = useSelector((state) => state.company.company);
+  const { company, isGuest } = useSelector((state) => state.company);
   const voteGuestAuthentication = useGuestValidation('voteIdea');
   const error = useSelector((state) => state.idea.error);
   const [voteCountState, setVoteCountState] = useState();
@@ -52,7 +52,7 @@ export default function VoteIdea({ voteCount, idea }) {
             companyId: company._id,
             userId: user?._id,
             onSuccess: () => {
-              if (!user && !voteGuestAuthentication && !guestInfo.name) {
+              if ((!user && !voteGuestAuthentication && !guestInfo.name) || isGuest) {
                 saveGuestInfo({
                   name: generateRandomName()
                 });

@@ -13,7 +13,10 @@ import EmptyState from '@/components/EmptyState';
 
 export default function Topics() {
   const createTopicsName = new yup.ObjectSchema({
-    topicsName: yup.string().required('Topics name is required')
+    topicsName: yup
+      .string()
+      .max(50, 'Topic name must be less than 50 characters')
+      .required('Topic name is required')
   });
   const dispatch = useDispatch();
   const error = useSelector((state) => state.company.companyTopicsError);

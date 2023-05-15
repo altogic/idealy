@@ -9,19 +9,18 @@ async function suggestPeople(searchTerm) {
   const { data } = await ideaService.searchCompanyMembers(
     localStorageUtil.get('companyId'),
     searchTerm,
-    user?._id || guest?._id
+    user?.email || guest?.email
   );
 
-  return [
-    ...data.map((member) => ({
-      id: `${member._id}-true`,
-      value: member.name,
-      name: member.name,
-      email: member.email,
-      profilePicture: member.profilePicture,
-      isRegistered: !!member.userId
-    }))
-  ];
+  return data.map((member) => ({
+    id: `${member._id}`,
+    value: member.name,
+    name: member.name,
+    email: member.email,
+    profilePicture: member.profilePicture,
+    isRegistered: !!member.userId,
+    userId: member.userId
+  }));
 }
 
 export const modules = {

@@ -20,7 +20,7 @@ export default function Users() {
   const [selectedUser, setSelectedUser] = useState();
 
   const getCompanyUsers = useCallback(() => {
-    if (company && router.isReady) {
+    if (company?._id && router.isReady) {
       dispatch(
         companyActions.getCompanyUsers({
           limit: 10,
@@ -37,7 +37,7 @@ export default function Users() {
         })
       );
     }
-  }, [company, router.query.sort, router.query.page, router.query.q, router.query.segment]);
+  }, [company?._id, router.query.sort, router.query.page, router.query.q, router.query.segment]);
 
   function handleCloseIdea() {
     const temp = router.query;

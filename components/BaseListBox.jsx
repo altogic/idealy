@@ -57,7 +57,7 @@ export default function BaseListBox({
           {type !== 'icon' && (
             <>
               {label || labelIcon ? (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-11/12">
                   {icon && icon}
                   {labelIcon && labelIcon}
                   {type === 'status' && !multiple && (
@@ -75,12 +75,12 @@ export default function BaseListBox({
                   )}
                   <div
                     className={cn(
-                      'dark:text-aa-200 purple:text-pt-200 flex gap-2',
+                      'dark:text-aa-200 purple:text-pt-200 flex gap-2 w-full',
                       type === 'create'
                         ? 'text-slate-800 text-xl lg:text-3xl font-semibold'
                         : 'text-slate-500 text-sm tracking-sm'
                     )}>
-                    <div className={cn('truncate max-w-[150px]')}>{label}</div>
+                    <div className={cn('truncate max-w-full')}>{label}</div>
                     {multiple && !!value?.length && (type === 'default' || type === 'status') && (
                       <span className="inline-flex items-center justify-center w-5 h-5 bg-indigo-700 dark:bg-aa-600 purple:bg-pt-600 text-white dark:text-aa-200 rounded-full">
                         {value?.length}

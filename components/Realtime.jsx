@@ -76,7 +76,7 @@ export default function Realtime() {
       dispatch(
         companyActions.updateMemberStatusRealtime({
           userId: data.message.userId,
-          company: data.message.company._id
+          company: data.message.company._id ?? data.message.companyId
         })
       );
     } else {

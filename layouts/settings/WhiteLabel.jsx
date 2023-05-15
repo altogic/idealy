@@ -11,11 +11,11 @@ export default function WhiteLabel() {
   const [canCreateCompany, setCanCreateCompany] = useState();
   const [isHideBanner, setIsHideBanner] = useState();
   useEffect(() => {
-    if (company) {
+    if (company?.whiteLabel) {
       setCanCreateCompany(company.whiteLabel.canCreateCompany);
       setIsHideBanner(company.whiteLabel.isHideBanner);
     }
-  }, [company]);
+  }, [company?.whiteLabel]);
 
   const updateCompanyWhiteLabel = (fieldName, value) => {
     dispatch(

@@ -22,7 +22,7 @@ export default function CompanyPriority() {
   };
   useEffect(() => {
     setPrioritySelected(PRIORITY_TYPES.find((type) => type.value === company.priorityType));
-  }, [company]);
+  }, [company?.priorityType]);
   return (
     <>
       <div className="pb-4 mb-8 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">

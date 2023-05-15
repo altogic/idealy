@@ -12,7 +12,10 @@ import EmptyState from '@/components/EmptyState';
 
 export default function Categories() {
   const createCategoriesNameSchema = new yup.ObjectSchema({
-    categoriesName: yup.string().required('Categories name is required')
+    categoriesName: yup
+      .string()
+      .max(50, 'Category name must be less than 50 characters')
+      .required('Categories name is required')
   });
 
   const dispatch = useDispatch();

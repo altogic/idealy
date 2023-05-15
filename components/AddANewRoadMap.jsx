@@ -23,7 +23,10 @@ export default function AddANewRoadMap({
   const company = useSelector((state) => state.company.company);
   const [isPublic, setIsPublic] = useState(false);
   const createRoadMapSchema = new yup.ObjectSchema({
-    name: yup.string().required('Roadmap name is required'),
+    name: yup
+      .string()
+      .max(50, 'Roadmap name must be less than 50 characters')
+      .required('Roadmap name is required'),
     description: yup.string(),
     isPublic: yup.boolean()
   });
