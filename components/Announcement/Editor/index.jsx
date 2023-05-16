@@ -34,7 +34,6 @@ export default function AnnouncementEditor({ onChange, value }) {
   useEffect(() => {
     if (quill && value && quill.getLength() <= 1) {
       quill.root.innerHTML = value;
-      console.log('getSelection', quill.getSelection());
       valueRef.current = true;
     }
   }, [value, quill]);
@@ -43,7 +42,6 @@ export default function AnnouncementEditor({ onChange, value }) {
     if (quill && valueRef.current) {
       valueRef.current = false;
       quill.setSelection(quill.getLength(), 0);
-      console.log('set selection', quill.getLength(), 'getSelection2', quill.getSelection());
     }
   }, [valueRef.current, quill]);
 

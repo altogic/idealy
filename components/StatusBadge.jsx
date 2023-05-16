@@ -6,7 +6,6 @@ import { Close as X } from './icons';
 export default function StatusBadge({ name, color, onClose, className }) {
   const company = useSelector((state) => state.company.company);
   const [bgColor, setBgColor] = useState();
-  console.log('company', color, bgColor);
   useEffect(() => {
     if (color) {
       switch (company?.theme) {
@@ -36,7 +35,7 @@ export default function StatusBadge({ name, color, onClose, className }) {
       <svg className="-ml-1 mr-1.5 h-2 w-2" fill={color} viewBox="0 0 8 8">
         <circle cx={4} cy={4} r={3} />
       </svg>
-      <p>{name.length > 10 ? `${name.substring(0, 20)}...` : name}</p>
+      <p>{name?.length > 10 ? `${name.substring(0, 20)}...` : name}</p>
       {onClose && (
         <button className="ml-1.5" onClick={onClose} type="button">
           <span className="sr-only">Close</span>

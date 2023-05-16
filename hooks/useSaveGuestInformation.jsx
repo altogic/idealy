@@ -27,15 +27,17 @@ export default function useSaveGuestInformation(saveLocal = true) {
           name,
           email: email || user?.email,
           avatar: avatar || guestInfo?.avatar,
-          user: user?._id,
+          ...(!email && user && { user: user?._id }),
           onSuccess: (user) => {
-            addGuestInfoToLocalStorage(user);
-            realtime.join(email);
-            dispatch(
-              authActions.setGuestInfo({
-                ...user
-              })
-            );
+            if (!user) {
+              realtime.join(email);
+              addGuestInfoToLocalStorage(user);
+              dispatch(
+                authActions.setGuestInfo({
+                  ...user
+                })
+              );
+            }
             if (onSuccess) onSuccess(user);
           }
         })

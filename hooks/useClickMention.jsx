@@ -36,16 +36,19 @@ export default function useClickMention(id, dashboard) {
     setUserCardStyle({ display: 'none' });
   }
   useEffect(() => {
-    if (feedBackDetailModal || dashboard) {
-      const mentions = document.querySelectorAll('.mention');
-      mentions.forEach((mention) => {
-        mention.addEventListener('click', handleClickMention);
-      });
-      if (!dashboard) {
-        const ideaDetail = document.querySelector('.drawer-body');
-        ideaDetail?.addEventListener('click', hideUserCard);
+    setTimeout(() => {
+      if ((feedBackDetailModal || dashboard) && idea) {
+        const mentions = document.querySelectorAll('span.mention');
+
+        mentions.forEach((mention) => {
+          mention.addEventListener('click', handleClickMention);
+        });
+        if (!dashboard) {
+          const ideaDetail = document.querySelector('.drawer-body');
+          ideaDetail?.addEventListener('click', hideUserCard);
+        }
       }
-    }
+    }, 1);
 
     return () => {
       hideUserCard();

@@ -117,6 +117,12 @@ export default function IdeaDetail({ idea, company, onClose }) {
         </svg>
       </button>
       <div className="flex gap-6 relative">
+        <UserCard
+          profilePicture={userCardInfo?.profilePicture}
+          name={userCardInfo?.name}
+          email={userCardInfo?.email}
+          style={userCardStyle}
+        />
         <VoteIdea voteCount={idea?.voteCount} idea={idea} />
         <div className="flex-1 relative">
           <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold break-all mb-8">
@@ -132,6 +138,7 @@ export default function IdeaDetail({ idea, company, onClose }) {
               <IdeaBadges idea={idea} />
             </div>
           )}
+
           <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-200 purple:prose-p:text-pt-200 prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full mb-8 break-all">
             <SanitizeHtml id="idea-detail" html={idea?.content} />
           </div>
@@ -208,12 +215,6 @@ export default function IdeaDetail({ idea, company, onClose }) {
 
           <ImageList images={idea?.images} isPreview />
         </div>
-        <UserCard
-          profilePicture={userCardInfo?.profilePicture}
-          name={userCardInfo?.name}
-          email={userCardInfo?.email}
-          style={userCardStyle}
-        />
       </div>
       {!!idea?.mergedIdeasDetail?.length && (
         <SimilarIdeas ideas={idea?.mergedIdeasDetail} title="Merged Ideas" />

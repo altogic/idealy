@@ -10,15 +10,14 @@ import AddANewRoadMap from '../AddANewRoadMap';
 import AsyncListbox from '../AsyncListbox';
 import CategoryListbox from '../CategoryListbox';
 import CreateModal from '../CreateModal';
-import { Copy, ThreeStar } from '../icons';
-import IdeaActions from '../Idea/admin/IdeaActions';
 import IdeaPriority from '../Idea/IdeaPriority';
 import IdeaVisibility from '../Idea/IdeaVisibility';
 import TopicSelection from '../Idea/TopicSelection';
+import IdeaActions from '../Idea/admin/IdeaActions';
 import IdeaApproval from '../IdeaApproval';
 import Input from '../Input';
 import StatusListbox from '../StatusListbox';
-import UserSegmentListbox from '../UserSegmentListbox';
+import { Copy, ThreeStar } from '../icons';
 import IdeaActionItem from './IdeaActionItem';
 
 const formatOptionLabel = ({ label, value }) => {
@@ -194,12 +193,7 @@ export default function DashboardIdeaActions() {
             openModal={() => openModal('Category', 'categoryName', 'categories')}>
             <CategoryListbox size="xxl" />
           </IdeaActionItem>
-          <IdeaActionItem
-            label="User Segments"
-            name="user segments"
-            openModal={() => openModal('User Segment', 'userSegmentName', 'userSegments')}>
-            <UserSegmentListbox size="xxl" />
-          </IdeaActionItem>
+
           <IdeaActionItem label="Owner" name="owner">
             <AsyncListbox
               loadOptions={filterMembers}

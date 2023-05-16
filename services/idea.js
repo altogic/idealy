@@ -1,7 +1,7 @@
 import { db, endpoint } from '@/utils/altogic';
 
 const ideaService = {
-  getIdeasByCompany: (params) => endpoint.get('/idea', params),
+  getIdeasByCompany: (params) => endpoint.get('/ideas', params),
   createIdea: (req) => endpoint.post('/idea', req),
   voteIdea: (req) => endpoint.post('/idea/vote', req),
   downVoteIdea: (voteId) => endpoint.delete(`/idea/downVote/${voteId}`),
@@ -27,7 +27,7 @@ const ideaService = {
       .updateFields([{ field: 'isApproved', updateType: 'set', value: true }]),
   mergeIdeas: (baseIdea, mergedIdea) => endpoint.post('/idea/merge', { baseIdea, mergedIdea }),
   getMergedIdeas: (filter) => endpoint.get('/idea/merge', { filter }),
-  getIdea: (id) => endpoint.get(`/ideas/${id}`),
+  getIdea: (filter) => endpoint.get('/idea/', { filter }),
   getIdeasByRoadmap: (filter) => endpoint.get('/idea/roadmap', { filter }),
   updateIdeasOrder: (ideas) => endpoint.put('/idea/roadmap', ideas)
 };

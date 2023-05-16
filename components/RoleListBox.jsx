@@ -14,7 +14,6 @@ export default function RoleListBox({
     setRoleSelected(selected.name);
     if (onRoleChange) onRoleChange(selected.name);
   };
-  console.log('roleSelected', roleSelected);
   return (
     <BaseListBox
       value={roleSelected}

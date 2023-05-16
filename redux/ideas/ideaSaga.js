@@ -24,7 +24,6 @@ function* getIdeasByCompanySaga({ payload: { limit, page, sort, filter } }) {
 
 export function* createIdeaSaga({ payload }) {
   try {
-    console.log(payload);
     const company = yield select((state) => state.company.company);
     const { data, errors } = yield call(ideaService.createIdea, payload.idea);
     if (errors) {
@@ -219,9 +218,9 @@ function* searchIdeasSaga({ payload: searchText }) {
     yield put(ideaActions.searchIdeasFailure(error));
   }
 }
-function* getIdeaByIdSaga({ payload: { id, onSuccess, onError } }) {
+function* getIdeaByIdSaga({ payload: { filter, onSuccess, onError } }) {
   try {
-    const { data, errors } = yield call(ideaService.getIdea, id);
+    const { data, errors } = yield call(ideaService.getIdea, filter);
     if (errors) {
       throw errors;
     }

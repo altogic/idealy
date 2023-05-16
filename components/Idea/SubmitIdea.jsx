@@ -203,8 +203,8 @@ export default function SubmitIdea({ idea }) {
     <Suggestion item={item} profilePicture={idea?.author?.profilePicture} />
   );
 
-  const createNewUser = () => {
-    setMember(user);
+  const createNewUser = (data) => {
+    setMember(data);
     setInpTitle('');
   };
   useEffect(() => {

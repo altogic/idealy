@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import BaseListBox from '../BaseListBox';
 import Label from '../Label';
 import IdeaSwitch from '../Switch';
+import AddANewRoadMap from '../AddANewRoadMap';
+import { Plus } from '../icons';
 
 export default function IdeaVisibility({ listBoxSize }) {
   const dispatch = useDispatch();
@@ -19,6 +21,7 @@ export default function IdeaVisibility({ listBoxSize }) {
   const [showOnRoadMap, setShowOnRoadMap] = useState();
   const [isPrivate, setIsPrivate] = useState();
   const [roadMap, setRoadMap] = useState();
+  const [openCreateRoadmapModal, setOpenCreateRoadmapModal] = useState(false);
   const updateIdea = useUpdateIdea(idea);
   const handleAddCoverImage = () => {
     const input = document.createElement('input');
@@ -119,6 +122,16 @@ export default function IdeaVisibility({ listBoxSize }) {
           />
         </div>
       )}
+      <Button
+        variant="text"
+        text="Add Roadmap"
+        icon={<Plus className="w-4 h-4 icon" />}
+        onClick={() => setOpenCreateRoadmapModal(true)}
+      />
+      <AddANewRoadMap
+        show={openCreateRoadmapModal}
+        cancelOnClick={() => setOpenCreateRoadmapModal(false)}
+      />
     </div>
   );
 }

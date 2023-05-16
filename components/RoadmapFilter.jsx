@@ -91,7 +91,6 @@ export default function RoadmapFilter({ roadmap, setRoadmap, roadmaps }) {
               size="xxl"
               onChange={(value) => {
                 setRoadmap(value);
-                dispatch(ideaActions.setSelectedIdea(value));
                 router.push({
                   pathname: '/roadmaps',
                   query: { roadmap: value._id }

@@ -12,7 +12,7 @@ export default function Index() {
   const { company, isGuest } = useSelector((state) => state.company);
 
   useEffect(() => {
-    if (company._id && !isGuest) {
+    if (company?._id && !isGuest) {
       dispatch(
         companyActions.getCompanyUsers({
           page: 1,
