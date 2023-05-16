@@ -8,7 +8,7 @@ export default function TextArea({ id, label, error, register, rows, inlineSubmi
         <label
           htmlFor={id}
           className={cn(
-            'inline-block text-slate-700 mb-1.5 text-sm font-medium',
+            'inline-block text-slate-700 dark:text-aa-200 purple:text-pt-200 mb-1.5 text-sm font-medium',
             error && 'text-red-600'
           )}>
           {label}
