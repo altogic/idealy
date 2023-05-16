@@ -85,7 +85,7 @@ export default function Header() {
                     </Link>
                   </div>
                 ) : (
-                  <div className="flex items-center justify-center rounded-md transition bg-indigo-700 dark:bg-aa-600 purple:bg-pt-900 hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
+                  <div className="flex items-center justify-center rounded-md transition bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 hover:bg-indigo-800 dark:hover:bg-aa-700 purple:hover:bg-pt-900">
                     <Link href="/dashboard">
                       <a className="inline-flex items-center justify-center text-white px-3 py-2.5 text-sm tracking-sm">
                         Admin View
