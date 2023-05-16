@@ -27,7 +27,7 @@ export default function AddANewRoadMap({
       .string()
       .max(50, 'Roadmap name must be less than 50 characters')
       .required('Roadmap name is required'),
-    description: yup.string(),
+    description: yup.string().max(250, 'Description must be less than 500 characters'),
     isPublic: yup.boolean()
   });
   const {
@@ -88,8 +88,12 @@ export default function AddANewRoadMap({
         </span>
       </div>
       <div className="mb-5 space-y-2">
-        <h2 className="text-slate-800 text-lg font-medium tracking-sm">Create new roadmap</h2>
-        <p className="text-slate-500 text-sm tracking-sm">Please enter a name for this roadmap.</p>
+        <h2 className="text-slate-800 dark:text-aa-200 purple:text-pt-200 text-lg font-medium tracking-sm">
+          Create new roadmap
+        </h2>
+        <p className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
+          Please enter a name for this roadmap.
+        </p>
       </div>
       <form onSubmit={handleSubmit(addRoadmap)}>
         <div className="mb-8 space-y-5">
