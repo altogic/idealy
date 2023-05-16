@@ -6,7 +6,6 @@ import ToastMessage from '@/utils/toast';
 import copy from 'copy-to-clipboard';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import AddANewRoadMap from '../AddANewRoadMap';
 import AsyncListbox from '../AsyncListbox';
 import CategoryListbox from '../CategoryListbox';
 import CreateModal from '../CreateModal';
@@ -52,7 +51,6 @@ export default function DashboardIdeaActions() {
   const idea = useSelector((state) => state.idea.selectedIdea);
   const [copyText, setCopyText] = useState('');
   const [topics, setTopics] = useState(idea?.topics);
-  const [openRoadmapCreateModal, setOpenRoadmapCreateModal] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
   const [ideaOwner, setIdeaOwner] = useState();
@@ -239,7 +237,7 @@ export default function DashboardIdeaActions() {
             openModal={() => openModal('Topic', 'topicName', 'topics')}>
             <TopicSelection topics={topics} setTopics={setTopics} update={updateIdeaTopics} />
           </IdeaActionItem>
-          <IdeaActionItem name="roadmap" openModal={() => setOpenRoadmapCreateModal(true)}>
+          <IdeaActionItem name="roadmap">
             <IdeaVisibility listBoxSize="xxl" />
           </IdeaActionItem>
           <IdeaActionItem name="priority">
@@ -258,13 +256,6 @@ export default function DashboardIdeaActions() {
         description={modalInfo.description}
         label={modalInfo.label}
         id={modalInfo.id}
-      />
-      <AddANewRoadMap
-        show={openRoadmapCreateModal}
-        onClose={() => setOpenRoadmapCreateModal(!openRoadmapCreateModal)}
-        cancelOnClick={() => setOpenRoadmapCreateModal(!openRoadmapCreateModal)}
-        title="Create new roadmap"
-        description="Please enter a name for this roadmap."
       />
     </div>
   );
