@@ -27,7 +27,7 @@ export default function AddANewRoadMap({
       .string()
       .max(50, 'Roadmap name must be less than 50 characters')
       .required('Roadmap name is required'),
-    description: yup.string().max(250, 'Description must be less than 500 characters'),
+    description: yup.string(),
     isPublic: yup.boolean()
   });
   const {
