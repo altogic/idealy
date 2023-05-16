@@ -25,7 +25,7 @@ export default function UserDetail({ user }) {
   const dispatch = useDispatch();
   const [selected, setSelected] = useState(ROLE?.[0].name);
   const [isDelete, setIsDelete] = useState(false);
-  const [segments, setSegments] = useState(null);
+
   const [openModal, setOpenModal] = useState(false);
   const company = useSelector((state) => state.company.company);
 
@@ -47,12 +47,6 @@ export default function UserDetail({ user }) {
       const role = ROLE.find((role) => role.name === user?.member?.role);
 
       setSelected(role?.name || 'Owner');
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (user) {
-      setSegments(user?.segment);
     }
   }, [user]);
 
@@ -97,21 +91,7 @@ export default function UserDetail({ user }) {
             <span className="block text-slate-900 mb-1.5  dark:text-aa-200 purple:text-pt-200">
               User Segment
             </span>
-            {!!company?.userSegments.length && (
-              <UserSegmentListbox
-                size="full"
-                value={segments}
-                onChange={(value) => {
-                  setSegments(value);
-                  dispatch(
-                    companyActions.updateCompanyUser({
-                      _id: user?._id,
-                      segment: value?._id
-                    })
-                  );
-                }}
-              />
-            )}
+            {!!company?.userSegments.length && <UserSegmentListbox size="full" user={user} />}
             <Button
               variant="text"
               text="Add Segment"

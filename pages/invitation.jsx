@@ -30,11 +30,6 @@ export default function Invitation({ invitation, errors, companies, user }) {
     const sessionUser = AuthService.getUser();
     if (sessionUser && !errors) {
       if (sessionUser?.email !== invitation?.email) {
-        console.log(
-          'sessionUser?.email !== invitation?.email',
-          sessionUser?.email,
-          invitation?.email
-        );
         dispatch(authActions.logout());
       } else if (invitation) {
         sendNotification({
@@ -134,7 +129,6 @@ export async function getServerSideProps({ req, res, query }) {
   const { data: user } = await AuthService.getUserFromDbByEmail(data?.email);
 
   const { data: companies } = await companyService.getUserCompanies(user[0]?._id);
-  console.log('companies', errors, token);
   if (data) {
     setCookie('invitation-token', data, {
       req,

@@ -95,7 +95,6 @@ export default function AuthRedirect({ error, session, user, companies }) {
 
 export const getServerSideProps = async ({ query, req, res }) => {
   try {
-    console.log('query.action', query.action);
     const { user, errors, session } = await AuthService.getAuthGrant(query.access_token);
     const invitation = JSON.parse(getCookie('invitation-token', { req, res }) || null);
     const props = {
@@ -153,7 +152,6 @@ export const getServerSideProps = async ({ query, req, res }) => {
       }
     };
   } catch (error) {
-    console.log('error', error);
     setCookie('error', error, {
       req,
       res,

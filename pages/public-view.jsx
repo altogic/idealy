@@ -61,9 +61,8 @@ export default function PublicView() {
         companyId: company?._id,
         limit: 10,
         filter: [
-          filter,
           'this.isArchived == false && this.isPrivate == false && this.isCompleted == false',
-          `this.isMerged == false && this.company == '${company._id}'`
+          filter
         ]
           .filter(Boolean)
           .join(' && '),
@@ -85,7 +84,9 @@ export default function PublicView() {
     } else {
       dispatch(
         ideaActions.getIdeaById({
-          id: feedbackId,
+          filter: isGuest
+            ? `this.isApproved == true && this.isArchived == false && this.isPrivate == false && this.isCompleted == false && this.isMerged == false && this.isDeleted == false && this._id == ${feedbackId}`
+            : `this._id == ${feedbackId} && this.isCompleted == false && this.isMerged == false`,
           onSuccess: () => {
             if (!feedBackDetailModal) dispatch(toggleFeedBackDetailModal());
           },
@@ -132,7 +133,7 @@ export default function PublicView() {
   }
 
   useEffect(() => {
-    if (router) {
+    if (router.isReady && company?._id) {
       const { topics, status, sort, feedback } = router.query;
       if (sort) setSortType(IDEA_SORT_TYPES.find((s) => s.url === sort));
       else setSortType(IDEA_SORT_TYPES[2]);
@@ -140,7 +141,7 @@ export default function PublicView() {
       if (status) setFilterStatus(status.split(','));
       if (feedback && !feedBackDetailModal) showFeedbackDetail(feedback);
     }
-  }, [router, ideas]);
+  }, [router, ideas, company?._id]);
 
   useEffect(() => {
     getIdeasByCompany();
@@ -358,7 +359,7 @@ export default function PublicView() {
               }}
               onClose={() => setOpenInfoModal(false)}
               icon={<Email className="w-6 h-6 icon-indigo" />}
-              title="The idea you are try to view has been deleted."
+              title="The idea you are trying to access is private or does not exist"
               onConfirm={() => {
                 setOpenInfoModal(false);
               }}

@@ -1,3 +1,5 @@
+import AddANewRoadMap from '@/components/AddANewRoadMap';
+import Button from '@/components/Button';
 import EmptyState from '@/components/EmptyState';
 import Errors from '@/components/Errors';
 import IdeaDetail from '@/components/Idea/IdeaDetail';
@@ -5,10 +7,10 @@ import SubmitIdea from '@/components/Idea/SubmitIdea';
 import Layout from '@/components/Layout';
 import RoadmapBoard from '@/components/RoadmapBoard';
 import RoadmapFilter from '@/components/RoadmapFilter';
+import { Plus } from '@/components/icons';
 import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import _ from 'lodash';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
@@ -17,9 +19,8 @@ import { useDispatch, useSelector } from 'react-redux';
 export default function RoadMapAdmin() {
   const router = useRouter();
   const { company, isGuest } = useSelector((state) => state.company);
-  const { roadmapIdeas } = useSelector((state) => state.idea);
   const [roadmap, setRoadmap] = useState(company?.roadmaps?.[0]);
-
+  const [openCreateRoadmapModal, setOpenCreateRoadmapModal] = useState(false);
   const [error, setError] = useState();
 
   const selectedIdea = useSelector((state) => state.idea.selectedIdea);
@@ -74,7 +75,7 @@ export default function RoadMapAdmin() {
   }, [sortedRoadmaps, router]);
 
   useEffect(() => {
-    if (roadmap && _.isEmpty(roadmapIdeas)) {
+    if (roadmap) {
       dispatch(
         ideaActions.getIdeasByRoadmap({
           filter: [
@@ -146,7 +147,7 @@ export default function RoadMapAdmin() {
                     )}
                   </>
                 )}
-                <div className="m-auto">
+                <div className="m-auto flex flex-col justify-center">
                   {((!roadmap?.publicStatuses?.length && isGuest) ||
                     !company?.roadmaps?.length) && (
                     <EmptyState
@@ -158,12 +159,24 @@ export default function RoadMapAdmin() {
                       }
                     />
                   )}
+                  {!company?.roadmaps?.length && !isGuest && (
+                    <Button
+                      variant="text"
+                      text="Add Roadmap"
+                      icon={<Plus className="w-4 h-4 icon" />}
+                      onClick={() => setOpenCreateRoadmapModal(true)}
+                    />
+                  )}
                 </div>
               </div>
             )}
           </div>
           <IdeaDetail idea={selectedIdea} company={company} onClose={() => handleCloseIdea()} />
           {!isGuest && <SubmitIdea open={feedbackSubmitModal} idea={selectedIdea} />}
+          <AddANewRoadMap
+            show={openCreateRoadmapModal}
+            cancelOnClick={() => setOpenCreateRoadmapModal(false)}
+          />
         </div>
       </Layout>
     </>

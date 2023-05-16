@@ -142,15 +142,15 @@ export default function Realtime() {
   }
   function updateCompanyHandler({ message }) {
     if (message.company._id === company._id && message.sender !== user?._id) {
-      const { company } = message;
+      const { company: msgCompany } = message;
       localStorageUtil.set('theme', message.company.theme);
-      if (company.roadmaps?.length > 0 && isGuest) {
-        company.roadmaps = company.roadmaps.filter((r) => r.isPublic);
+      if (msgCompany.roadmaps?.length > 0 && isGuest) {
+        msgCompany.roadmaps = msgCompany.roadmaps.filter((r) => r.isPublic);
       }
       dispatch(
         companyActions.updateCompanySuccess({
-          ...company,
-          role: company?.role
+          ...msgCompany,
+          role: company?.owner === user?._id ? 'Owner' : company?.role
         })
       );
     }

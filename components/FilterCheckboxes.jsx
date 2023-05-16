@@ -34,13 +34,11 @@ export default function FilterCheckboxes({ options, label, onChange, name, selec
             onChange={onChange}
             field="name"
             options={options}
-            icon={
-              <FilterHamburger className="w-5 h-5 icon" />
-            }
+            icon={<FilterHamburger className="w-5 h-5 icon" />}
             label={label}
             valueField="name"
             multiple
-            size="xl"
+            size="lg"
             hidden="mobile"
             type={label !== 'Topics' ? 'status' : 'default'}
             onReset={handleReset}

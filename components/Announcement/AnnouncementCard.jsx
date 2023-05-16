@@ -25,11 +25,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   useClickAnnouncementIdea(announcement);
-  console.log({
-    query: canReact && !company.disableAnnouncementReactions,
-    canReact,
-    company: company.miscellaneous.disableAnnouncementReactions
-  });
+
   return (
     <>
       <div className="w-full odd:bg-white dark:odd:bg-aa-900 odd:purple:bg-pt-1000 even:bg-slate-100 dark:even:bg-aa-800 purple:even:bg-pt-900">

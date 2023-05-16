@@ -167,7 +167,6 @@ function* inviteTeamMemberSaga({ payload }) {
       ...data.member
     });
   } catch (error) {
-    console.log(error);
     yield put(companyActions.inviteTeamMemberFailed(error));
   }
 }
@@ -594,7 +593,6 @@ function* deleteCompanyUserSaga({ payload }) {
     }
     yield put(companyActions.deleteCompanyUserSuccess(data));
   } catch (error) {
-    console.log(error);
     yield put(companyActions.deleteCompanyUserFailed(error));
   }
 }

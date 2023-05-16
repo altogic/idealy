@@ -63,7 +63,7 @@ export default function CommentForm({ editedComment, setEditComment, setIsFetche
   });
   const sendMentionNotification = useSendMentionNotification('comment');
   const submitComment = (data) => {
-    if (comment.trim() === '') {
+    if (comment.trim() === '' || comment.trim() === '<p><br></p>') {
       return;
     }
     const guestName = generateRandomName();
@@ -211,6 +211,7 @@ export default function CommentForm({ editedComment, setEditComment, setIsFetche
           size="sm"
           height="10"
           loading={editedComment ? updateCommentLoading : isLoading}
+          disabled={comment.trim() === '' || comment.trim() === '<p><br></p>'}
         />
       </div>
     </form>

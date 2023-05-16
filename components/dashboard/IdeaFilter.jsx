@@ -13,13 +13,15 @@ export default function IdeaFilter({ isFilterSlide, setIsFilterSlide }) {
   const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push({
-        pathname: router.pathname,
-        query: { ...router.query, search: searchText }
-      });
-    }, 500);
-
+    let timer;
+    if (searchText) {
+      timer = setTimeout(() => {
+        router.push({
+          pathname: router.pathname,
+          query: { ...router.query, search: searchText }
+        });
+      }, 500);
+    }
     return () => {
       clearTimeout(timer);
     };

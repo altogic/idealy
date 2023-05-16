@@ -89,11 +89,12 @@ export default function AdminDashboard() {
   useUpdateEffect(() => {
     const limit = _.isEmpty(ideas) && router.query.page ? 10 * router.query.page : 10;
     const { page } = router.query;
+
     if (page > 1) getIdeasByCompany(page, limit);
   }, [router.query.page]);
 
-  useUpdateEffect(() => {
-    const page = _.isEmpty(ideas) ? 1 : router.query.page;
+  useEffect(() => {
+    const page = router.query.page ?? 1;
     getIdeasByCompany(1, 10 * page);
   }, [sort, filter]);
 

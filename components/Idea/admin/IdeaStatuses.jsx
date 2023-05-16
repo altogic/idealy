@@ -1,7 +1,6 @@
 import CategoryListbox from '@/components/CategoryListbox';
 import Label from '@/components/Label';
 import StatusListbox from '@/components/StatusListbox';
-import UserSegmentListbox from '@/components/UserSegmentListbox';
 import { useSelector } from 'react-redux';
 import IdeaAdminTab from './IdeaAdminTab';
 
@@ -20,12 +19,6 @@ export default function IdeaStatuses() {
           <div>
             <Label label="Category" />
             <CategoryListbox size="md" />
-          </div>
-        )}
-        {company?.userSegments?.length > 0 && (
-          <div>
-            <Label label="User Segment" />
-            <UserSegmentListbox size="md" />
           </div>
         )}
       </div>

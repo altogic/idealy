@@ -122,14 +122,14 @@ export default function useFilterIdea() {
   return {
     sort: sortType,
     filter: [
+      `this.isMerged == false && this.company == '${company?._id}'`,
       topicsFilter,
       statusFilter,
       categoryFilter,
       dateFilter,
       segmentFilter,
       searchFilter,
-      propertyFilter,
-      `this.isMerged== false && this.company == '${company?._id}'`
+      propertyFilter
     ]
       .filter(Boolean)
       .join(' && ')
