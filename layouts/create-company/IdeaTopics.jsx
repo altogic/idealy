@@ -3,12 +3,11 @@ import TopicBadges from '@/components/TopicBadges';
 import { useSelector, useDispatch } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
 import { differenceWith, isEqual } from 'lodash';
+import IdeaPreview from '@/components/IdeaPreview';
 
 export default function ThirdWizard() {
   const dispatch = useDispatch();
   const [topicList, setTopicList] = useState([]);
-  const idea = useSelector((state) => state.company.idea);
-  const ideaDescription = useSelector((state) => state.company.ideaDescription);
   const companyTopics = useSelector((state) => state.company.companyTopics);
   const topics = useSelector((state) => state.topic.topics);
 
@@ -50,23 +49,7 @@ export default function ThirdWizard() {
             </button>
           ))}
         </div>
-        <div className="bg-white py-8 px-6 border border-slate-200 rounded-lg">
-          <h2 className="text-slate-800 mb-2 text-base font-semibold tracking-sm">{idea}</h2>
-          <p className="text-slate-500 mb-5 text-sm tracking-sm">{ideaDescription}</p>
-          <div className="flex flex-wrap items-center gap-4">
-            {companyTopics?.map((topic) => (
-              <button
-                type="button"
-                key={topic._id}
-                onClick={() => {
-                  dispatch(companyActions.removeTopic(topic));
-                  setTopicList([...topicList, topic]);
-                }}>
-                <TopicBadges badgeName={topic.name} />
-              </button>
-            ))}
-          </div>
-        </div>
+        <IdeaPreview isTopic topicList={topicList} setTopicList={setTopicList} />
       </div>
     </>
   );
