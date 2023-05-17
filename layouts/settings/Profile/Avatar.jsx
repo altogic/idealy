@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fileActions } from '@/redux/file/fileSlice';
-import { authActions } from '@/redux/auth/authSlice';
-import { ClipLoader } from 'react-spinners';
-import SectionTitle from '@/components/SectionTitle';
-import Button from '@/components/Button';
 import Avatar from '@/components/Avatar';
+import Button from '@/components/Button';
+import SectionTitle from '@/components/SectionTitle';
+import { authActions } from '@/redux/auth/authSlice';
+import { fileActions } from '@/redux/file/fileSlice';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function AvatarLayout({ user }) {
   const userAvatarLink = useSelector((state) => state.file.fileLink);
@@ -73,19 +72,19 @@ export default function AvatarLayout({ user }) {
         />
       </div>
       <div className="flex gap-6 mb-6">
-        {loading || updatePhotoLoading ? (
-          <div className="flex items-center justify-center">
-            <ClipLoader loading={loading || updatePhotoLoading} color="#312E81" size={30} />
-          </div>
-        ) : (
-          <Avatar src={fileLink || user?.profilePicture} alt={user?.name} />
-        )}
+        <Avatar src={fileLink || user?.profilePicture} alt={user?.name} />
       </div>
       <div className="flex items-center gap-3">
         {user?.profilePicture && (
           <Button onClick={deletePhotoHandler} type="button" text="Delete" variant="red" />
         )}
-        <Button onClick={uploadPhotoHandler} type="button" text="Upload" variant="indigo" />
+        <Button
+          onClick={uploadPhotoHandler}
+          type="button"
+          text="Upload"
+          variant="indigo"
+          loading={loading || updatePhotoLoading}
+        />
       </div>
     </>
   );
