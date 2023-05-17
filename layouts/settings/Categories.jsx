@@ -96,6 +96,7 @@ export default function Categories() {
                 text="Add Category"
                 variant="indigo"
                 height="44"
+                size="sm"
               />
             </div>
           </form>

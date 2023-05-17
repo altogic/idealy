@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fileActions } from '@/redux/file/fileSlice';
-import { companyActions } from '@/redux/company/companySlice';
-import { ClipLoader } from 'react-spinners';
-import SectionTitle from '@/components/SectionTitle';
 import Button from '@/components/Button';
 import CompanyAvatar from '@/components/CompanyAvatar';
+import SectionTitle from '@/components/SectionTitle';
+import { companyActions } from '@/redux/company/companySlice';
+import { fileActions } from '@/redux/file/fileSlice';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function CompanyLogo() {
   const companyLogoLink = useSelector((state) => state.file.fileLink);
@@ -65,24 +64,24 @@ export default function CompanyLogo() {
       </div>
 
       <div className="flex gap-6 mb-6">
-        {loading || loadingCompany ? (
-          <div className="flex items-center justify-center">
-            <ClipLoader loading={loading || loadingCompany} color="#312E81" size={30} />
-          </div>
-        ) : (
-          <CompanyAvatar
-            logoUrl={logoUrl || company.logoUrl}
-            name={company?.name}
-            className="w-11 h-11 text-xl"
-          />
-        )}
+        <CompanyAvatar
+          logoUrl={logoUrl || company.logoUrl}
+          name={company?.name}
+          className="w-11 h-11 text-xl"
+        />
       </div>
 
       <div className="flex items-center gap-3">
         {company?.logoUrl && (
           <Button onClick={deletePhotoHandler} type="button" text="Delete" variant="red" />
         )}
-        <Button onClick={uploadPhotoHandler} type="button" text="Upload" variant="indigo" />
+        <Button
+          onClick={uploadPhotoHandler}
+          type="button"
+          text="Upload"
+          variant="indigo"
+          loading={loading || loadingCompany}
+        />
       </div>
     </>
   );
