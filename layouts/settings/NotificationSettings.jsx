@@ -12,18 +12,18 @@ export default function NotificationSettings() {
   const [notification, setNotification] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     {
-      dailyDigest: false,
-      weeklyDigest: false,
-      vote: false,
-      comment: false,
-      reply: false,
-      mention: false,
-      adminEditIdea: false,
-      ideaApproved: false,
-      ideaRejected: false,
-      adminAddIdea: false,
-      accountApproval: false,
-      statusChange: false
+      dailyDigest: true,
+      weeklyDigest: true,
+      vote: true,
+      comment: true,
+      reply: true,
+      mention: true,
+      adminEditIdea: true,
+      ideaApproved: true,
+      ideaRejected: true,
+      adminAddIdea: true,
+      accountApproval: true,
+      statusChange: true
     }
   );
   const [disableAll, setDisableAll] = useState();
