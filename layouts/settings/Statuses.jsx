@@ -114,13 +114,13 @@ export default function Statuses() {
                 error={errors.statusesName}
                 placeholder="Enter status name"
               />
-
               <Button
                 type="submit"
                 loading={updateStatusesLoading}
                 text="Add Status"
                 variant="indigo"
                 height="44"
+                size="sm"
               />
             </div>
           </form>

@@ -96,6 +96,7 @@ export default function Topics() {
                 text="Add topic"
                 variant="indigo"
                 height="44"
+                size="sm"
               />
             </div>
           </form>

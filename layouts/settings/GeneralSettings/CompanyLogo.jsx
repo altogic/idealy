@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fileActions } from '@/redux/file/fileSlice';
-import { companyActions } from '@/redux/company/companySlice';
-import { ClipLoader } from 'react-spinners';
-import SectionTitle from '@/components/SectionTitle';
 import Button from '@/components/Button';
 import CompanyAvatar from '@/components/CompanyAvatar';
+import SectionTitle from '@/components/SectionTitle';
+import { companyActions } from '@/redux/company/companySlice';
+import { fileActions } from '@/redux/file/fileSlice';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function CompanyLogo() {
   const companyLogoLink = useSelector((state) => state.file.fileLink);
