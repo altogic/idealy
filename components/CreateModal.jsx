@@ -69,6 +69,15 @@ export default function CreateModal({
             placeholder={placeholder}
             error={error}
             autoFocus
+            onChange={(e) => {
+              if (e.target.value.length > 50) {
+                setError({
+                  message: `Please enter a ${label.toLowerCase()} less than 50 characters.`
+                });
+              } else {
+                setError(null);
+              }
+            }}
           />
         </div>
         <div className="grid grid-cols-2 gap-3">

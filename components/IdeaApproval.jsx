@@ -3,20 +3,23 @@ import useNotification from '@/hooks/useNotification';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { toggleDeleteFeedBackModal } from '@/redux/general/generalSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
 
 export default function IdeaApproval() {
   const idea = useSelector((state) => state.idea.selectedIdea);
-  const loading = useSelector((state) => state.idea.isLoading);
+  const [loading, setLoading] = useState(false);
   const updateIdea = useUpdateIdea(idea);
   const dispatch = useDispatch();
   const sendNotification = useNotification();
 
   function handleApprove(isApproved) {
+    setLoading(true);
     updateIdea(
       {
         isApproved
       },
       () => {
+        setLoading(false);
         sendNotification({
           message: `Your idea <b>${idea.title}</b> has been approved`,
           targetUser: idea?.author?._id,

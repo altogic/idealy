@@ -47,6 +47,7 @@ export const fileSlice = createSlice({
     },
     clearFileLink(state) {
       state.fileLink = null;
+      state.fileLinks = [];
     },
     deleteFile() {},
     deleteFileSuccess(state, action) {

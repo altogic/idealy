@@ -70,6 +70,7 @@ export default function RoadmapFilter({ roadmap, setRoadmap, roadmaps }) {
                         role: company?.role
                       })
                     );
+
                     setRoadmap((roadmap) => ({
                       ...roadmap,
                       isPublic: !roadmap?.isPublic

@@ -27,6 +27,7 @@ export default function FilterIdea({
     });
   };
   const handleFilterStatusChange = (value) => {
+    console.log(value);
     if (value.length) {
       router.query.status = value.join(',');
       router.push({
@@ -35,6 +36,7 @@ export default function FilterIdea({
       });
       setFilterStatus(value);
     } else {
+      delete router.query.status;
       router.push({
         pathname: router.pathname,
         query: router.query

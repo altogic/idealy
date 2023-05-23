@@ -9,7 +9,6 @@ import RoadmapBoard from '@/components/RoadmapBoard';
 import RoadmapFilter from '@/components/RoadmapFilter';
 import { Plus } from '@/components/icons';
 import useCheckCompanyPrivacy from '@/hooks/useCheckCompanyPrivacy';
-import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import Head from 'next/head';
@@ -20,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 export default function RoadMapAdmin() {
   const router = useRouter();
   const { company, isGuest } = useSelector((state) => state.company);
-  const [roadmap, setRoadmap] = useState(company?.roadmaps?.[0]);
+  const [roadmap, setRoadmap] = useState();
   const [openCreateRoadmapModal, setOpenCreateRoadmapModal] = useState(false);
   const [error, setError] = useState();
 
@@ -110,12 +109,14 @@ export default function RoadMapAdmin() {
     }
   }, [company?.siteNavigation, company?.role]);
 
-  useUpdateEffect(() => {
-    if (company?.roadmaps && roadmap) {
-      const selectedRoadmap = company?.roadmaps.find((r) => r._id === roadmap._id);
-      setRoadmap(selectedRoadmap);
-    }
-  }, [company?.roadmaps]);
+  useEffect(
+    () => () => {
+      dispatch(ideaActions.setSelectedRoadmap(null));
+      dispatch(ideaActions.setSelectedIdea(null));
+      dispatch(ideaActions.clearIdeas());
+    },
+    []
+  );
 
   return (
     <>

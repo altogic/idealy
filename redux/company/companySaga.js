@@ -108,7 +108,7 @@ function* createCompanySaga({ payload: { userId, onSuccess } }) {
     yield put(companyActions.createCompanyFailed(error));
   }
 }
-function* updateCompanySaga({ payload: company }) {
+function* updateCompanySaga({ payload: company, onSuccess }) {
   try {
     const { data, errors } = yield call(companyService.updateCompany, company);
     if (errors) {
@@ -127,6 +127,9 @@ function* updateCompanySaga({ payload: company }) {
       company: data,
       sender: user._id
     });
+    if (onSuccess) {
+      onSuccess();
+    }
   } catch (error) {
     yield put(companyActions.updateCompanyFailed(error));
   }

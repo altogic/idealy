@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fileActions } from '@/redux/file/fileSlice';
-import { companyActions } from '@/redux/company/companySlice';
-import { ClipLoader } from 'react-spinners';
-import SectionTitle from '@/components/SectionTitle';
-import Button from '@/components/Button';
 import Avatar from '@/components/Avatar';
+import Button from '@/components/Button';
+import SectionTitle from '@/components/SectionTitle';
+import { companyActions } from '@/redux/company/companySlice';
+import { fileActions } from '@/redux/file/fileSlice';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function CompanyFavicon() {
   const companyFaviconLink = useSelector((state) => state.file.faviconFile);
@@ -66,14 +65,8 @@ export default function CompanyFavicon() {
       </div>
 
       <div className="flex gap-6 mb-6">
-        {loading ? (
-          <div className="flex items-center justify-center">
-            <ClipLoader loading={loading} color="#312E81" size={30} />
-          </div>
-        ) : (
-          company?.favicon && (
-            <Avatar src={file ? URL.createObjectURL(file) : company.favicon} alt={company?.name} />
-          )
+        {company?.favicon && (
+          <Avatar src={file ? URL.createObjectURL(file) : company.favicon} alt={company?.name} />
         )}
       </div>
 
@@ -81,7 +74,13 @@ export default function CompanyFavicon() {
         {company?.favicon ? (
           <Button onClick={deleteFaviconHandler} type="button" text="Delete" variant="red" />
         ) : null}
-        <Button onClick={uploadFaviconHandler} type="button" text="Upload" variant="indigo" />
+        <Button
+          onClick={uploadFaviconHandler}
+          type="button"
+          text="Upload"
+          variant="indigo"
+          loading={loading}
+        />
       </div>
     </>
   );

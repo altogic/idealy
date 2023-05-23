@@ -43,7 +43,6 @@ export default function AvatarLayout({ user }) {
 
   useEffect(() => {
     if (didMount && userAvatarLink) {
-      setUpdatePhotoLoading(true);
       dispatch(
         authActions.updateUserProfile({
           _id: user._id,
@@ -52,6 +51,13 @@ export default function AvatarLayout({ user }) {
       );
     }
   }, [userAvatarLink]);
+
+  useEffect(() => {
+    if (user?.profilePicture) {
+      dispatch(fileActions.clearFileLink());
+      setUpdatePhotoLoading(false);
+    }
+  }, [user?.profilePicture]);
 
   useEffect(() => {
     setDidMount(true);

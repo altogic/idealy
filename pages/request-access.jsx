@@ -1,13 +1,13 @@
 import Button from '@/components/Button';
-import { Check } from '@/components/icons';
 import Layout from '@/components/Layout';
+import Spinner from '@/components/Spinner';
+import { Check } from '@/components/icons';
 import useNotification from '@/hooks/useNotification';
 import { companyActions } from '@/redux/company/companySlice';
 import Link from 'next/link';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ClipLoader } from 'react-spinners';
 import { generateUrl } from '../utils';
 
 export default function RequestAccess() {
@@ -26,7 +26,10 @@ export default function RequestAccess() {
   }, [sessionUser]);
 
   useEffect(() => {
-    if (company?._id && companies.some((c) => c._id === company._id)) {
+    if (
+      (company?._id && companies.some((c) => c._id === company._id)) ||
+      company?.privacy?.isPublic
+    ) {
       Router.push(generateUrl('public-view', company.subdomain));
     }
     if (user && company?._id) {
@@ -37,7 +40,7 @@ export default function RequestAccess() {
         })
       );
     }
-  }, [user, company?._id, companies]);
+  }, [user, company?._id, companies, company?.privacy?.isPublic]);
 
   useEffect(() => {
     if (company?.privacy) {
@@ -50,7 +53,7 @@ export default function RequestAccess() {
       <div className="relative max-w-screen-xl mx-auto request-access">
         <div className="flex flex-col lg:flex-row items-center justify-center gap-11 h-full">
           {isLoading || companyLoading ? (
-            <ClipLoader color="#312E81" size={100} loading={isLoading || companyLoading} />
+            <Spinner size={24} />
           ) : (
             <>
               <div className="text-center lg:text-left">

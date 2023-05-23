@@ -4,16 +4,11 @@ import { useSelector } from 'react-redux';
 
 export default function useCheckCompanyPrivacy() {
   const router = useRouter();
-  const { company, companies } = useSelector((state) => state.company);
+  const { company } = useSelector((state) => state.company);
 
   useEffect(() => {
-    if (
-      company &&
-      companies.length &&
-      (!company.privacy.isPublic || company.privacy.userApproval) &&
-      !companies.some((c) => c._id === company._id)
-    ) {
+    if (company && (!company.privacy.isPublic || company.privacy.userApproval) && !company.role) {
       router.push('/request-access');
     }
-  }, [company?.privacy, companies]);
+  }, [company?.privacy]);
 }
