@@ -54,6 +54,10 @@ export default function CompanyLogo() {
   }, [companyLogoLink]);
 
   useEffect(() => {
+    if (company?.logoUrl) dispatch(fileActions.clearFileLink());
+  }, [company?.logoUrl]);
+
+  useEffect(() => {
     setDidMount(true);
   }, []);
 

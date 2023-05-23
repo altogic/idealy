@@ -6,7 +6,6 @@ import {
   shift,
   useDismiss,
   useFloating,
-  useFocus,
   useHover,
   useInteractions,
   useMergeRefs,
@@ -50,12 +49,10 @@ export function useTooltip({
     move: false,
     enabled: controlledOpen == null
   });
-  const focus = useFocus(context, {
-    enabled: controlledOpen == null
-  });
+
   const dismiss = useDismiss(context);
   const role = useRole(context, { role: 'tooltip' });
-  const interactions = useInteractions([hover, focus, dismiss, role]);
+  const interactions = useInteractions([hover, dismiss, role]);
   return useMemo(
     () => ({
       open,

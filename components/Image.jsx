@@ -12,7 +12,7 @@ export default function Image({ isPreview, src, alt, loading, onRemove, removabl
         <button
           className={`${
             isPreview ? 'cursor-pointer' : 'cursor-default'
-          } flex items-center justify-center`}
+          } flex items-center justify-center w-full h-full`}
           type="button"
           onClick={() => {
             if (isPreview) {
@@ -22,7 +22,10 @@ export default function Image({ isPreview, src, alt, loading, onRemove, removabl
           <img
             src={src}
             alt={alt || 'image'}
-            className={cn('object-contain rounded min-h-[3rem] p-1', loading && 'filter blur-sm')}
+            className={cn(
+              'object-cover rounded  w-full h-full min-h-[3rem] p-1',
+              loading && 'filter blur-sm'
+            )}
           />
           {loading && (
             <ClipLoader className="absolute" loading={loading} size={20} color="#312e81" />

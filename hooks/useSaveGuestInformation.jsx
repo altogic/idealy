@@ -29,7 +29,7 @@ export default function useSaveGuestInformation(saveLocal = true) {
           avatar: avatar || guestInfo?.avatar,
           ...(!email && user && { user: user?._id }),
           onSuccess: (user) => {
-            if (!user) {
+            if (!user.user) {
               realtime.join(email);
               addGuestInfoToLocalStorage(user);
               dispatch(

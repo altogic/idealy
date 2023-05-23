@@ -79,6 +79,15 @@ export default function Wizard({ children, activePageIndex, setActivePageIndex, 
       dispatch(companyActions.setCompanyError({ field: 'idea', message: 'Idea is required' }));
       return;
     }
+    if (activePageIndex === 1 && idea.length > 140) {
+      dispatch(
+        companyActions.setCompanyError({
+          field: 'idea',
+          message: 'Title must be under 140 character'
+        })
+      );
+      return;
+    }
     if (
       (activePageIndex === 0 && companyWillBeCreated && subdomain) ||
       (activePageIndex === 1 && idea) ||

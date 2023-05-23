@@ -315,7 +315,12 @@ export default function PublicView() {
                     <InfiniteScroll
                       items={ideas}
                       countInfo={countInfo}
-                      endOfList={() => setPage((page) => page + 1)}>
+                      endOfList={() =>
+                        setPage((page) => {
+                          if (ideas.length < countInfo?.total) return page + 1;
+                          return page;
+                        })
+                      }>
                       {ideas?.length > 0 ? (
                         ideas?.map((idea, index) => (
                           <div key={idea._id}>

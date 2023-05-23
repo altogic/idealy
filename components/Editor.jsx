@@ -23,7 +23,7 @@ export default function Editor({ content, setContent, errors, children, dashboar
             ? 'editor border border-gray-300 dark:border-aa-600 purple:border-pt-600 focus:border-blue-300'
             : 'dashboard-editor',
           !dashboard && errors?.message ? 'border-red-300 focus:border-red-300' : '',
-          !dashboard && isEditorFocus ? 'border-2 border-indigo-500' : ''
+          !dashboard && isEditorFocus ? 'border border-indigo-500' : ''
         )}
         onFocus={() => setIsEditorFocus(true)}
         onBlur={() => setIsEditorFocus(false)}

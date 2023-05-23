@@ -15,7 +15,7 @@ export default function SecondWizard() {
   const error = useSelector((state) => state.company.error);
 
   const schema = yup.object().shape({
-    idea: yup.string().required('Idea is required'),
+    idea: yup.string().max(140, 'Title must be under 140 character').required('Idea is required'),
     ideaDescription: yup.string()
   });
   const {
@@ -25,7 +25,7 @@ export default function SecondWizard() {
     setError
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onBlur'
+    mode: 'all'
   });
   const handleIdeaChange = (e) => {
     dispatch(companyActions.setIdea(e.target.value));

@@ -2,35 +2,36 @@
 // eslint-disable-next-line no-param-reassign
 import useClickMention from '@/hooks/useClickMention';
 import useIdeaActionValidation from '@/hooks/useIdeaActionValidation';
-import { toggleDeleteCommentModal } from '@/redux/general/generalSlice';
 import { repliesActions } from '@/redux/replies/repliesSlice';
+import cn from 'classnames';
 import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import cn from 'classnames';
+import { commentActions } from '@/redux/comments/commentsSlice';
+import { hideAllUserCards } from '../utils';
 import Avatar from './Avatar';
 import CommentForm from './CommentForm';
 import CommentSkeleton from './CommentSkeleton';
 import Divider from './Divider';
-import { Pen, Trash } from './icons';
-import CommentDeleteModal from './Idea/CommentDeleteModal';
 import ReplyCard from './ReplyCard';
 import ReplyForm from './ReplyForm';
 import SanitizeHtml from './SanitizeHtml';
 import UserCard from './UserCard';
-import { hideAllUserCards } from '../utils';
+import { Pen, Trash, Danger } from './icons';
+import InfoModal from './InfoModal';
 
 export default function CommentCard({ comment, dashboard }) {
   const [isReplying, setIsReplying] = useState(false);
   const [editComment, setEditComment] = useState();
   const [showReplies, setShowReplies] = useState(false);
-
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [page, setPage] = useState();
   const dispatch = useDispatch();
 
   const replies = useSelector((state) => state.replies.replies);
   const countInfo = useSelector((state) => state.replies.countInfo);
   const loading = useSelector((state) => state.replies.isLoading);
+  const idea = useSelector((state) => state.idea.selectedIdea);
   const canEdit = useIdeaActionValidation(comment, 'commentIdea');
   const { userCardStyle, userCardInfo, setUserCardInfo, setUserCardStyle } = useClickMention(
     'comment',
@@ -168,7 +169,7 @@ export default function CommentCard({ comment, dashboard }) {
                   </button>
                   <button
                     type="button"
-                    onClick={() => dispatch(toggleDeleteCommentModal())}
+                    onClick={() => setOpenDeleteModal(true)}
                     className="w-8 h-8 flex items-center justify-center rounded-full icon hover:stroke-red-600  hover:bg-red-100 dark:hover:bg-gray-700 dark:hover:stroke-red-400 purple:hover:bg-gray-700 purple:hover:stroke-red-400">
                     <Trash />
                   </button>
@@ -212,9 +213,20 @@ export default function CommentCard({ comment, dashboard }) {
           </div>
         </div>
       )}
-      <CommentDeleteModal
-        commentId={comment?._id}
-        onClose={() => dispatch(toggleDeleteCommentModal())}
+      <InfoModal
+        show={openDeleteModal}
+        onClose={() => setOpenDeleteModal(false)}
+        cancelOnClick={() => setOpenDeleteModal(false)}
+        onConfirm={() => {
+          dispatch(commentActions.deleteComment({ commentId: comment._id, ideaId: idea._id }));
+          setOpenDeleteModal(false);
+        }}
+        icon={<Danger className="w-6 h-6 icon-red" />}
+        title="Delete Comment"
+        description="Are you sure you want to delete this comment? This action cannot be undone."
+        confirmText="Delete Comment"
+        confirmColor="red"
+        canCancel
       />
       {dashboard && <Divider className="my-8" />}
     </div>

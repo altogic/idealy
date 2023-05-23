@@ -54,7 +54,7 @@ export default function RoadmapSection({ status, ideas, provided, roadmap, ...re
           <div className="text-slate-700 dark:text-aa-200 purple:text-pt-200 text-base font-medium tracking-sm flex items-center justify-between flex-1 ">
             <span className="truncate max-w-[16rem] block">{status?.name || 'No Status'} </span>
             <div className="rounded-md border border-slate-200 dark:border-aa-1000 purple:border-pt-1000 px-2 bg-slate-50 dark:bg-aa-600 purple:bg-pt-800 ">
-              <span className="font-normal">{ideas?.length || 0}</span>
+              <span className="font-normal">{(ideas?.length && !loading) || 0}</span>
             </div>
           </div>
         </div>

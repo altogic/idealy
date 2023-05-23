@@ -20,6 +20,7 @@ import InfiniteScroll from '../InfiniteScroll';
 import SimilarIdeas from '../SimilarIdeas';
 import UserCard from '../UserCard';
 import DashboardIdeaActions from './DashboardIdeaActions';
+import ImageList from '../ImageList';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 const EditorToolbar = dynamic(() => import('../EditorToolbar'), { ssr: false });
@@ -66,6 +67,7 @@ export default function DashboardIdeaDetail() {
           {!!idea?.mergedIdeasDetail?.length && (
             <SimilarIdeas ideas={idea?.mergedIdeasDetail} title="Merged Ideas" />
           )}
+          <ImageList images={idea?.images} isPreview />
           <div className="my-10">
             <div className="flex items-center justify-between gap-6">
               <h6 className="text-slate-800 dark:text-aa-200 purple:text-pt-200">Comments</h6>
