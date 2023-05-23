@@ -3,8 +3,8 @@ import useGuestValidation from '@/hooks/useGuestValidation';
 import useNotification from '@/hooks/useNotification';
 import useRegisteredUserValidation from '@/hooks/useRegisteredUserValidation';
 import useSaveGuestInformation from '@/hooks/useSaveGuestInformation';
-import { generateRandomName } from '@/utils/index';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
+import { generateRandomName } from '@/utils/index';
 import cn from 'classnames';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
@@ -15,7 +15,7 @@ export default function VoteIdea({ voteCount, idea }) {
   const dispatch = useDispatch();
   const canVote = useRegisteredUserValidation('voteIdea');
   const { userIp, user, guestInfo } = useSelector((state) => state.auth);
-  const { company, isGuest } = useSelector((state) => state.company);
+  const { company } = useSelector((state) => state.company);
   const voteGuestAuthentication = useGuestValidation('voteIdea');
   const error = useSelector((state) => state.idea.error);
   const [voteCountState, setVoteCountState] = useState();
@@ -52,7 +52,7 @@ export default function VoteIdea({ voteCount, idea }) {
             companyId: company._id,
             userId: user?._id,
             onSuccess: () => {
-              if ((!user && !voteGuestAuthentication && !guestInfo.name) || isGuest) {
+              if (!user && !voteGuestAuthentication && !guestInfo.name) {
                 saveGuestInfo({
                   name: generateRandomName()
                 });
@@ -89,12 +89,13 @@ export default function VoteIdea({ voteCount, idea }) {
       ideaActions.voteIdea({
         ideaId: idea._id,
         ...(!user && !voteGuestAuthentication && { ip: userIp }),
-        ...(voteGuestAuthentication && { ...data }),
+        ...(voteGuestAuthentication && { guestEmail: data.email, guestName: data.name }),
         companyId: company._id,
         userId: user?._id,
         onSuccess: () => {
+          console.log('idea?.author?._id', user?.name ?? data.guestName, user?.name, data);
           sendNotification({
-            message: `<b>${user?.name || data.guestName}</b>  voted for  <b>${idea.title}</b>`,
+            message: `<b>${user?.name ?? data.name}</b>  voted for  <b>${idea.title}</b>`,
             targetUser: idea?.author._id,
             type: 'vote',
             url: `/public-view?feedback=${idea._id}`
