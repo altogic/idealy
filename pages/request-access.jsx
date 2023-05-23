@@ -12,7 +12,7 @@ import { generateUrl } from '../utils';
 
 export default function RequestAccess() {
   const sessionUser = useSelector((state) => state.auth.user);
-  const company = useSelector((state) => state.company.company);
+  const { company, companies } = useSelector((state) => state.company);
   const accessRequest = useSelector((state) => state.company.accessRequest);
   const isLoading = useSelector((state) => state.company.getAccessRequestLoading);
   const companyLoading = useSelector((state) => state.company.getCompanyLoading);
@@ -26,7 +26,7 @@ export default function RequestAccess() {
   }, [sessionUser]);
 
   useEffect(() => {
-    if (company?.role) {
+    if (company?._id && companies.some((c) => c._id === company._id)) {
       Router.push(generateUrl('public-view', company.subdomain));
     }
     if (user && company?._id) {
@@ -37,7 +37,7 @@ export default function RequestAccess() {
         })
       );
     }
-  }, [user, company?._id, company?.role]);
+  }, [user, company?._id, companies]);
 
   useEffect(() => {
     if (company?.privacy) {
@@ -78,7 +78,7 @@ export default function RequestAccess() {
                     <Button
                       type="button"
                       text="Request Access"
-                      icon={<Check className="w-5 h-5 icon" />}
+                      icon={<Check className="w-5 h-5 icon-slate" />}
                       variant="indigo"
                       size="sm"
                       mobileFullWidth="mobileFullWidth"

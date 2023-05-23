@@ -4,12 +4,12 @@ import CreateModal from '@/components/CreateModal';
 import Input from '@/components/Input';
 import StatusBadge from '@/components/StatusBadge';
 import { ChevronLeft, Plus, ThreeStar } from '@/components/icons';
+import useAddCompanySublist from '@/hooks/useAddCompanySublist';
 import useDebounce from '@/hooks/useDebounce';
 import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
-import { companyActions } from '@/redux/company/companySlice';
-import { compareDates, isGreaterThan } from '@/utils/index';
 import { realtime } from '@/utils/altogic';
+import { compareDates, isGreaterThan } from '@/utils/index';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { DateTime } from 'luxon';
 import dynamic from 'next/dynamic';
@@ -49,7 +49,7 @@ export default function AnnouncementForm({ onSave, children }) {
   const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
   const user = useSelector((state) => state.auth.user);
-
+  const addCompanySubList = useAddCompanySublist();
   const schema = yup.object().shape({
     title: yup
       .string()
@@ -70,26 +70,14 @@ export default function AnnouncementForm({ onSave, children }) {
     mode: 'onBlur'
   });
 
-  const addCompanySubList = (name, fieldName) => {
-    dispatch(
-      companyActions.addItemToCompanySubLists({
-        fieldName,
-        value: {
-          name,
-          color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-          order: company[fieldName].length + 1
-        }
-      })
-    );
-  };
-
   function saveAnnouncement() {
     if (company) {
+      console.log('save announcement', categories, announcement.categories);
       onSave({
         title: announcement?.title,
         content: announcement?.content,
         ...(announcement?._id && { _id: announcement?._id }),
-        categories: categories.map((category) => category._id),
+        categories: announcement.categories,
         company: company._id,
         publishDate: date
       });
@@ -132,7 +120,7 @@ export default function AnnouncementForm({ onSave, children }) {
   useDebounce(announcement, saveAnnouncement, 600);
 
   useEffect(() => {
-    if (categories?.length) {
+    if (!categories?.length) {
       setCategories(
         company.categories.filter((category) => announcement?.categories?.includes(category._id))
       );
@@ -141,7 +129,7 @@ export default function AnnouncementForm({ onSave, children }) {
 
   useUpdateEffect(() => {
     if (!compareDates(date, Date.now())) {
-      saveAnnouncement(true);
+      saveAnnouncement();
     }
   }, [date]);
 
@@ -284,7 +272,19 @@ export default function AnnouncementForm({ onSave, children }) {
         show={openCreateModal}
         onClose={() => setOpenCreateModal(false)}
         cancelOnClick={() => setOpenCreateModal(false)}
-        createOnClick={(name) => addCompanySubList(name, 'categories')}
+        createOnClick={(name) =>
+          addCompanySubList(name, 'categories', (category) => {
+            if (categories.length < 3) {
+              setCategories([...categories, category]);
+              const cIds = categories.map((cat) => cat._id);
+              dispatch(
+                announcementActions.setAnnouncement({
+                  categories: [...cIds, category._id]
+                })
+              );
+            }
+          })
+        }
         icon={<ThreeStar className="w-5 h-5 icon-green" />}
         title="Create a new category"
         description="Create a new category to organize your announcements."

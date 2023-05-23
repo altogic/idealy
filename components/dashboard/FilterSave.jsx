@@ -186,9 +186,7 @@ export default function FilterSave({ className, filters }) {
             value={selectedFilter}
             label={selectedFilter?.name}
             onChange={handleFilterSelect}
-            icon={
-              <FilterHamburger className="w-5 h-5 icon" />
-            }
+            icon={<FilterHamburger className="w-5 h-5 icon" />}
             field="name"
             options={filters}
             size="xl"
@@ -237,7 +235,7 @@ export default function FilterSave({ className, filters }) {
         </Tab.Group>
       </div>
 
-      <FilterCheckboxes
+      {/* <FilterCheckboxes
         options={company?.userSegments}
         onChange={(value) => {
           setUserSegments(value);
@@ -252,7 +250,7 @@ export default function FilterSave({ className, filters }) {
         label="User Segments"
         name="userSegments"
         selectedItems={userSegments}
-      />
+      /> */}
 
       <FilterCheckboxes
         options={company?.topics}
@@ -310,9 +308,7 @@ export default function FilterSave({ className, filters }) {
           <IdeaPropertyButton
             text="Archive"
             active={router.query.archive === 'true'}
-            icon={
-              <Archive className="w-5 h-5 icon" />
-            }
+            icon={<Archive className="w-5 h-5 icon" />}
             name="archive"
           />
           <IdeaPropertyButton
@@ -324,9 +320,7 @@ export default function FilterSave({ className, filters }) {
           <IdeaPropertyButton
             text="Need Approval"
             active={router.query.approved === 'true'}
-            icon={
-              <CircleCheck className="w-5 h-5 icon" />
-            }
+            icon={<CircleCheck className="w-5 h-5 icon" />}
             name="approved"
           />
 
@@ -340,9 +334,7 @@ export default function FilterSave({ className, filters }) {
           <IdeaPropertyButton
             text="No Status"
             active={router.query.noStatus === 'true'}
-            icon={
-              <XCircle className="w-5 h-5 icon" />
-            }
+            icon={<XCircle className="w-5 h-5 icon" />}
             name="noStatus"
           />
         </div>

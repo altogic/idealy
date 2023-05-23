@@ -16,6 +16,7 @@ export default function AddANewRoadMap({
   cancelOnClick,
   editedRoadmap,
   setEditedRoadmap,
+  onAdd,
   ...props
 }) {
   const dispatch = useDispatch();
@@ -54,7 +55,10 @@ export default function AddANewRoadMap({
       dispatch(
         companyActions.addItemToCompanySubLists({
           fieldName: 'roadmaps',
-          value
+          value,
+          onSuccess: (data) => {
+            onAdd(data);
+          }
         })
       );
     }

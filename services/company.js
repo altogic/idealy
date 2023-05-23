@@ -77,7 +77,7 @@ const companyService = {
       .lookup({ field: 'user' })
       .get(),
   approveCompanyAccessRequest: (req) => endpoint.post('/company/access-request/approve', req),
-  rejectCompanyAccessRequest: (req) => endpoint.post(`/company/access-request/reject/`, req),
+  rejectCompanyAccessRequest: (id) => endpoint.post(`/company/access-request/reject/${id}`),
   getCompanyUsers: ({ page = 1, limit = 10, filter, sort }) =>
     endpoint.get('/company/users', { page, limit, filter, sort }),
   updateCompanyUser: (req) => db.model('companyUsers').object(req._id).update(req),

@@ -38,7 +38,7 @@ export default function FilterCheckboxes({ options, label, onChange, name, selec
             label={label}
             valueField="name"
             multiple
-            size="lg"
+            size="xl"
             hidden="mobile"
             type={label !== 'Topics' ? 'status' : 'default'}
             onReset={handleReset}

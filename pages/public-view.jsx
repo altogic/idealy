@@ -22,6 +22,7 @@ import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfoModal from '@/components/InfoModal';
+import useCheckCompanyPrivacy from '@/hooks/useCheckCompanyPrivacy';
 
 export default function PublicView() {
   const [page, setPage] = useState(1);
@@ -33,6 +34,7 @@ export default function PublicView() {
   const [openInfoModal, setOpenInfoModal] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
+  useCheckCompanyPrivacy();
 
   const { company, isGuest } = useSelector((state) => state.company);
   const {
@@ -66,7 +68,7 @@ export default function PublicView() {
         ]
           .filter(Boolean)
           .join(' && '),
-        sort,
+        sort: sort ?? 'createdAt:desc',
         page
       };
       if (!user || isGuest) {
@@ -137,7 +139,7 @@ export default function PublicView() {
   }
 
   useEffect(() => {
-    if (router.isReady && company?._id) {
+    if (router.isReady) {
       const { topics, status, sort, feedback } = router.query;
       if (sort) setSortType(IDEA_SORT_TYPES.find((s) => s.url === sort));
       else setSortType(IDEA_SORT_TYPES[2]);
@@ -145,7 +147,7 @@ export default function PublicView() {
       if (status) setFilterStatus(status.split(','));
       if (feedback && !feedBackDetailModal) showFeedbackDetail(feedback);
     }
-  }, [router, ideas, company?._id]);
+  }, [router, ideas]);
 
   useEffect(() => {
     getIdeasByCompany();
@@ -154,10 +156,6 @@ export default function PublicView() {
   const isSubmitIdeaVisible = useRegisteredUserValidation('submitIdeas');
   useEffect(() => {
     if (company) {
-      if ((!company.privacy.isPublic || company.privacy.userApproval) && !company.role) {
-        router.push('/request-access');
-      }
-
       if (!company?.siteNavigation?.feedback && !(company?.role && company?.role !== 'Guest')) {
         setError({
           title: 'Feedback is disabled',
@@ -168,7 +166,7 @@ export default function PublicView() {
         setError(null);
       }
     }
-  }, [company?.privacy, company?.siteNavigation, company?.role]);
+  }, [company?.siteNavigation, company?.role]);
 
   useEffect(
     () => () => {
