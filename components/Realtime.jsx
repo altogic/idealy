@@ -279,13 +279,11 @@ export default function Realtime() {
   }
   function approveAccessHandler({ message }) {
     if (user._id === message.user._id) {
-      dispatch(companyActions.approvedAccessRequest(message));
-      router.push('/public-view');
+      dispatch(companyActions.approvedAccessRequest());
     }
   }
   function rejectAccessHandler({ message }) {
-    if (user._id === message.user._id) {
-      dispatch(companyActions.rejectCompanyAccessRequestSuccess(message));
+    if (user._id === message) {
       router.push(generateUrl('/dashboard', companies[0].subdomain));
     }
   }
@@ -295,13 +293,13 @@ export default function Realtime() {
     }
   }
   function rejectAccessCompanyHandler({ message }) {
-    if (user._id !== message.user._id) {
-      dispatch(companyActions.rejectCompanyAccessRequestSuccess(message));
+    if (user._id !== message.userId) {
+      dispatch(companyActions.rejectCompanyAccessRequestSuccess(message.id));
     }
   }
 
   function requestAccessHandler({ message }) {
-    if (user._id !== message.user._id && router.asPath.includes('request-access')) {
+    if (user._id !== message.user._id) {
       dispatch(companyActions.requestAccessRealtime(message));
     }
   }
@@ -364,7 +362,7 @@ export default function Realtime() {
       realtime.on('update-role', updateRoleHandler);
       realtime.on('new-invitation', newInvitationHandler);
       realtime.on('user-notification', userNotificationHandler);
-      realtime.on('approve-access', approveAccessHandler);
+      realtime.on('approve-access-user', approveAccessHandler);
       realtime.on('reject-access', rejectAccessHandler);
       realtime.on('delete-company-user', deleteCompanyUser);
     }
@@ -438,7 +436,7 @@ export default function Realtime() {
       realtime.off('add-reply', addReplyHandler);
       realtime.off('update-reply', updateReplyHandler);
       realtime.off('delete-reply', deleteReplyHandler);
-      realtime.off('approve-access', approveAccessHandler);
+      realtime.off('approve-access-user', approveAccessHandler);
       realtime.off('reject-access', rejectAccessHandler);
       realtime.off('approve-access', approveAccessCompanyHandler);
       realtime.off('reject-access', rejectAccessCompanyHandler);

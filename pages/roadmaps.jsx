@@ -8,6 +8,7 @@ import Layout from '@/components/Layout';
 import RoadmapBoard from '@/components/RoadmapBoard';
 import RoadmapFilter from '@/components/RoadmapFilter';
 import { Plus } from '@/components/icons';
+import useCheckCompanyPrivacy from '@/hooks/useCheckCompanyPrivacy';
 import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
@@ -25,7 +26,7 @@ export default function RoadMapAdmin() {
 
   const selectedIdea = useSelector((state) => state.idea.selectedIdea);
   const feedbackSubmitModal = useSelector((state) => state.general.feedBackSubmitModal);
-
+  useCheckCompanyPrivacy();
   const dispatch = useDispatch();
 
   function handleCloseIdea() {

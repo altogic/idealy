@@ -705,6 +705,7 @@ export const companySlice = createSlice({
         ...state.company,
         role: 'Guest'
       };
+      state.companies = [state.company, ...state.companies];
     },
     requestAccessRealtime(state, action) {
       if (!state.accessRequests.some((ar) => ar._id === action.payload._id)) {

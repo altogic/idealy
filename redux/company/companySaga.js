@@ -381,7 +381,7 @@ function* getUserCompanies({ payload: userId }) {
   }
 }
 
-function* addItemToCompanySubLists({ payload: { fieldName, value } }) {
+function* addItemToCompanySubLists({ payload: { fieldName, value, onSuccess } }) {
   try {
     const company = yield select((state) => state.company.company);
     const user = yield select((state) => state.auth.user);
@@ -407,6 +407,9 @@ function* addItemToCompanySubLists({ payload: { fieldName, value } }) {
         [fieldName]: company[fieldName].concat(data)
       }
     });
+    if (onSuccess) {
+      onSuccess(data);
+    }
   } catch (error) {
     yield put(companyActions.addItemToCompanySubListsFailed(error));
   }
@@ -528,6 +531,7 @@ function* getAccessRequestsByCompanySaga({ payload: companyId }) {
 }
 function* approveCompanyAccessRequestSaga({ payload }) {
   try {
+    const company = yield select((state) => state.company.company);
     const user = yield select((state) => state.auth.user);
     const { data, error } = yield call(companyService.approveCompanyAccessRequest, payload);
     if (error) {
@@ -536,24 +540,32 @@ function* approveCompanyAccessRequestSaga({ payload }) {
     yield put(companyActions.approveCompanyAccessRequestSuccess(data));
     realtime.send(payload.companyId, 'approve-access', {
       ...data,
+      companySubdomain: company.subdomain,
       sender: user._id
     });
-    realtime.send(data.user._id, 'approve-access', data);
+    realtime.send(data.user._id, 'approve-access-user', {
+      ...data,
+      companySubdomain: company.subdomain
+    });
     payload.onSuccess();
   } catch (error) {
     yield put(companyActions.approveCompanyAccessRequestFailed(error));
   }
 }
-function* rejectCompanyAccessRequestSaga({ payload: { body, message, onSuccess } }) {
+function* rejectCompanyAccessRequestSaga({ payload: { id, user, onSuccess } }) {
   try {
-    const { error } = yield call(companyService.rejectCompanyAccessRequest, body);
+    const company = yield select((state) => state.company.company);
+    const { error } = yield call(companyService.rejectCompanyAccessRequest, id);
     if (error) {
       throw error;
     }
-    yield put(companyActions.rejectCompanyAccessRequestSuccess(body.id));
+    yield put(companyActions.rejectCompanyAccessRequestSuccess(id));
 
-    realtime.send(message.companyId, 'reject-access', message);
-    realtime.send(message.userId, 'reject-access', message);
+    realtime.send(company._id, 'reject-access', {
+      user,
+      id
+    });
+    realtime.send(user, 'reject-access', user);
     onSuccess();
   } catch (error) {
     yield put(companyActions.rejectCompanyAccessRequestFailed(error));

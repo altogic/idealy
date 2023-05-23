@@ -23,7 +23,7 @@ function* updateAnnouncement({ payload }) {
       throw errors.items;
     }
     yield put(announcementActions.updateAnnouncementSuccess(data));
-    payload.onSuccess(data);
+    if (payload.onSuccess) payload.onSuccess(data);
   } catch (error) {
     yield put(announcementActions.updateAnnouncementFailure(error));
   }

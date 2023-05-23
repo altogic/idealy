@@ -1,14 +1,12 @@
 import useUpdateIdea from '@/hooks/useUpdateIdea';
-import { companyActions } from '@/redux/company/companySlice';
 import companyService from '@/services/company';
 import ideaService from '@/services/idea';
 import ToastMessage from '@/utils/toast';
 import copy from 'copy-to-clipboard';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import AsyncListbox from '../AsyncListbox';
 import CategoryListbox from '../CategoryListbox';
-import CreateModal from '../CreateModal';
 import IdeaPriority from '../Idea/IdeaPriority';
 import IdeaVisibility from '../Idea/IdeaVisibility';
 import TopicSelection from '../Idea/TopicSelection';
@@ -16,7 +14,7 @@ import IdeaActions from '../Idea/admin/IdeaActions';
 import IdeaApproval from '../IdeaApproval';
 import Input from '../Input';
 import StatusListbox from '../StatusListbox';
-import { Copy, ThreeStar } from '../icons';
+import { Copy } from '../icons';
 import IdeaActionItem from './IdeaActionItem';
 
 const formatOptionLabel = ({ label, value }) => {
@@ -45,14 +43,11 @@ const formatOptionLabel = ({ label, value }) => {
 };
 
 export default function DashboardIdeaActions() {
-  const dispatch = useDispatch();
-
   const company = useSelector((state) => state.company.company);
   const idea = useSelector((state) => state.idea.selectedIdea);
   const [copyText, setCopyText] = useState('');
   const [topics, setTopics] = useState(idea?.topics);
-  const [openCreateModal, setOpenCreateModal] = useState(false);
-  const [modalInfo, setModalInfo] = useState({});
+
   const [ideaOwner, setIdeaOwner] = useState();
   const updateIdea = useUpdateIdea(idea);
 
@@ -122,29 +117,6 @@ export default function DashboardIdeaActions() {
       label: member.name
     }));
   };
-  const addCompanySubList = (name, fieldName) => {
-    dispatch(
-      companyActions.addItemToCompanySubLists({
-        fieldName,
-        value: {
-          name,
-          color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-          order: company[fieldName].length + 1
-        }
-      })
-    );
-  };
-  const openModal = (name, id, field) => {
-    setOpenCreateModal(!openCreateModal);
-    setModalInfo({
-      title: `Create new ${name}`,
-      description: `Enter a name for your new ${name}`,
-      label: name,
-      id,
-      placeholder: `e.g. New ${name}`,
-      createOnClick: (name) => addCompanySubList(name, field)
-    });
-  };
 
   return (
     <div className="h-[calc(100vh-181px)] relative bg-slate-50 dark:bg-aa-900 purple:bg-pt-1000 border-l border-slate-200 dark:border-aa-600 purple:border-pt-800 shadow-xs">
@@ -179,16 +151,10 @@ export default function DashboardIdeaActions() {
               <IdeaApproval />
             </IdeaActionItem>
           )}
-          <IdeaActionItem
-            label="Statuses"
-            name="status"
-            openModal={() => openModal('Status', 'statusName', 'statuses')}>
+          <IdeaActionItem label="Statuses" name="status">
             <StatusListbox size="xxl" />
           </IdeaActionItem>
-          <IdeaActionItem
-            label="Categories"
-            name="category"
-            openModal={() => openModal('Category', 'categoryName', 'categories')}>
+          <IdeaActionItem label="Categories" name="category">
             <CategoryListbox size="xxl" />
           </IdeaActionItem>
 
@@ -231,10 +197,7 @@ export default function DashboardIdeaActions() {
               formatOptionLabel={formatOptionLabel}
             />
           </IdeaActionItem>
-          <IdeaActionItem
-            label="Topics"
-            name="topic"
-            openModal={() => openModal('Topic', 'topicName', 'topics')}>
+          <IdeaActionItem label="Topics" name="topic">
             <TopicSelection topics={topics} setTopics={setTopics} update={updateIdeaTopics} />
           </IdeaActionItem>
           <IdeaActionItem name="roadmap">
@@ -246,17 +209,6 @@ export default function DashboardIdeaActions() {
         </div>
       </div>
       <IdeaActions dashboard />
-      <CreateModal
-        show={openCreateModal}
-        onClose={() => setOpenCreateModal(false)}
-        cancelOnClick={() => setOpenCreateModal(false)}
-        createOnClick={modalInfo.createOnClick}
-        icon={<ThreeStar className="w-6 h-6 icon-green" />}
-        title={modalInfo.title}
-        description={modalInfo.description}
-        label={modalInfo.label}
-        id={modalInfo.id}
-      />
     </div>
   );
 }

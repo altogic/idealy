@@ -83,7 +83,7 @@ export default function FilterIdea({
           label="Topics"
           valueField="name"
           multiple
-          size="md"
+          size="lg"
           align="right"
           hidden="mobile"
           onReset={() => {
@@ -104,7 +104,7 @@ export default function FilterIdea({
           label="Status"
           valueField="name"
           multiple
-          size="md"
+          size="lg"
           align="right"
           hidden="mobile"
           type="status"

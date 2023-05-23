@@ -81,9 +81,12 @@
 }
 .ql-toolbar.ql-snow {
   position: absolute;
-  bottom: 0;
-  right: 2px;
+  bottom: 1px;
   z-index: 40;
+  width: 98%;
+  margin-left: 1px;
+  text-align: end;
+  @apply bg-white dark:bg-aa-900 purple:bg-pt-1000;
 }
 .ql-toolbar.ql-snow.dashboard-toolbar {
   position: absolute;

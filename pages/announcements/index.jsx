@@ -20,6 +20,7 @@ import IdeaDetail from '@/components/Idea/IdeaDetail';
 import useOpenFeedbackModal from '@/hooks/useOpenFeedbackModal';
 import AnnouncementSkeleton from '@/components/Announcement/AnnouncementSkeleton';
 import Head from 'next/head';
+import useCheckCompanyPrivacy from '@/hooks/useCheckCompanyPrivacy';
 
 export default function Announcements() {
   const router = useRouter();
@@ -36,6 +37,7 @@ export default function Announcements() {
   const [filterCategories, setFilterCategories] = useState([]);
   const [error, setError] = useState();
   const [searchText, setSearchText] = useState('');
+  useCheckCompanyPrivacy();
   useOpenFeedbackModal();
   useDebounce(searchText, () => {
     if (router.isReady) {
@@ -181,8 +183,8 @@ export default function Announcements() {
           {error ? (
             <Errors title={error?.title} message={error?.message} />
           ) : (
-            <div className="max-w-4xl mx-auto space-y-8">
-              <div className="flex flex-col md:flex-row items-start justify-between gap-8 my-8">
+            <div className="mx-auto space-y-8">
+              <div className="flex flex-col md:flex-row md:items-start items-center justify-between gap-8 my-8 lg:mx-auto lg:w-8/12">
                 <h1 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-3xl font-semibold">
                   Announcements
                 </h1>

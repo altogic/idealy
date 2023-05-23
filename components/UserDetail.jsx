@@ -10,8 +10,7 @@ import Divider from './Divider';
 import InfoModal from './InfoModal';
 import RoleListBox from './RoleListBox';
 import UserSegmentListbox from './UserSegmentListbox';
-import { Danger, Plus, ThreeStar } from './icons';
-import CreateModal from './CreateModal';
+import { Danger } from './icons';
 
 function InfoCard({ title, description }) {
   return (
@@ -26,21 +25,7 @@ export default function UserDetail({ user }) {
   const [selected, setSelected] = useState(ROLE?.[0].name);
   const [isDelete, setIsDelete] = useState(false);
 
-  const [openModal, setOpenModal] = useState(false);
   const company = useSelector((state) => state.company.company);
-
-  const addCompanySubList = (name, fieldName) => {
-    dispatch(
-      companyActions.addItemToCompanySubLists({
-        fieldName,
-        value: {
-          name,
-          color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-          order: company[fieldName].length + 1
-        }
-      })
-    );
-  };
 
   useEffect(() => {
     if (user && !!user.userId) {
@@ -91,13 +76,7 @@ export default function UserDetail({ user }) {
             <span className="block text-slate-900 mb-1.5  dark:text-aa-200 purple:text-pt-200">
               User Segment
             </span>
-            {!!company?.userSegments.length && <UserSegmentListbox size="full" user={user} />}
-            <Button
-              variant="text"
-              text="Add Segment"
-              icon={<Plus className="w-4 h-4 icon" />}
-              onClick={() => setOpenModal(!openModal)}
-            />
+            <UserSegmentListbox size="full" user={user} />
           </div>
           {user?.provider && (
             <InfoCard title="Account Created" description={_.startCase(user?.provider)} />
@@ -131,21 +110,7 @@ export default function UserDetail({ user }) {
           />
         </div>
       </div>
-      {/* Delete Modal */}
-      <CreateModal
-        show={openModal}
-        onClose={() => setOpenModal(false)}
-        cancelOnClick={() => setOpenModal(false)}
-        createOnClick={(value) => {
-          addCompanySubList(value, 'userSegments');
-          setOpenModal(false);
-        }}
-        icon={<ThreeStar className="w-6 h-6 icon-green" />}
-        title="Add Segment"
-        description="Add a new segment to this user"
-        label="Segment Name"
-        id="userSegmentName"
-      />
+
       <InfoModal
         show={isDelete}
         onClose={() => setIsDelete(!isDelete)}

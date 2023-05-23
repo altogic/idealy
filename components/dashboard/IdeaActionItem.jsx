@@ -1,20 +1,10 @@
-import Button from '../Button';
-import { Plus } from '../icons';
 import Label from '../Label';
 
-export default function IdeaActionItem({ label, children, name, openModal }) {
+export default function IdeaActionItem({ label, children }) {
   return (
     <div className="pr-4">
       {label && <Label label={label} />}
       {children}
-      {openModal && (
-        <Button
-          variant="text"
-          text={`Add ${name}`}
-          icon={<Plus className="w-4 h-4 icon" />}
-          onClick={openModal}
-        />
-      )}
     </div>
   );
 }

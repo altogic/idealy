@@ -5,10 +5,10 @@ import { fileActions } from '@/redux/file/fileSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import AddANewRoadMap from '../AddANewRoadMap';
 import BaseListBox from '../BaseListBox';
 import Label from '../Label';
 import IdeaSwitch from '../Switch';
-import AddANewRoadMap from '../AddANewRoadMap';
 import { Plus } from '../icons';
 
 export default function IdeaVisibility({ listBoxSize }) {
@@ -131,6 +131,13 @@ export default function IdeaVisibility({ listBoxSize }) {
       <AddANewRoadMap
         show={openCreateRoadmapModal}
         cancelOnClick={() => setOpenCreateRoadmapModal(false)}
+        onAdd={(value) => {
+          setRoadMap(value);
+          updateIdea({
+            roadmap: value._id,
+            message: `The roadmap of ${idea.title} changed to ${value.name}`
+          });
+        }}
       />
     </div>
   );

@@ -80,6 +80,7 @@ export default function RequestAccess() {
                       dispatch(
                         companyActions.rejectCompanyAccessRequest({
                           id: request._id,
+                          user: request.user._id,
                           onSuccess: () => {
                             sendNotification({
                               targetUser: request.user._id,
