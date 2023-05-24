@@ -9,6 +9,7 @@ import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import _ from 'lodash';
 import { generateUrl, setSessionCookie } from '../utils';
 
 export default function AuthRedirect({ error, session, user, companies }) {
@@ -57,7 +58,7 @@ export default function AuthRedirect({ error, session, user, companies }) {
 
   return (
     <div>
-      {error && (
+      {!_.isNil(error) && (
         <div className="relative h-screen">
           <a
             href="https://www.altogic.com/"

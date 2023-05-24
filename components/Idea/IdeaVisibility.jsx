@@ -42,8 +42,12 @@ export default function IdeaVisibility({ listBoxSize }) {
     dispatch(ideaActions.deleteIdeaCoverImage(idea._id));
   };
   useEffect(() => {
+    console.log('coverImage', coverImage, file);
     if (coverImage && file) {
-      updateIdea({ coverImage, message: `The cover image of <b>${idea.title}</b> changed` });
+      updateIdea({ coverImage, message: `The cover image of <b>${idea.title}</b> changed` }, () => {
+        dispatch(fileActions.clearFileLink());
+        setFile(null);
+      });
     }
   }, [coverImage]);
   useEffect(() => {

@@ -20,6 +20,7 @@ export const commentsSlice = createSlice({
       if (!state.comments.find((comment) => comment._id === action.payload._id)) {
         state.comments = [action.payload, ...state.comments];
       }
+      state.error = null;
     },
     addCommentFailure: (state, action) => {
       state.createCommentLoading = false;

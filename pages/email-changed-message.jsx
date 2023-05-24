@@ -7,7 +7,7 @@ import { realtime } from '@/utils/altogic';
 export default function EmailChangedMessage() {
   const company = useSelector((state) => state.company.company);
   const user = useSelector((state) => state.auth.user);
-
+  console.log(company);
   useEffect(() => {
     if (company?._id) {
       realtime.send(company._id, 'user-update', user);
@@ -27,7 +27,7 @@ export default function EmailChangedMessage() {
                 Your email has been changed successfully <br />{' '}
               </p>
               <div className="text-center mt-8">
-                <Link href="/">
+                <Link href="/select-company">
                   <a className="inline-flex items-center gap-2 text-sm font-medium tracking-sm text-slate-500">
                     <ArrowLeft className="w-5 h-5 icon" />
                     Back to Homepage

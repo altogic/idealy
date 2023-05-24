@@ -2,28 +2,30 @@
 // eslint-disable-next-line no-param-reassign
 import useClickMention from '@/hooks/useClickMention';
 import useIdeaActionValidation from '@/hooks/useIdeaActionValidation';
+import { commentActions } from '@/redux/comments/commentsSlice';
 import { repliesActions } from '@/redux/replies/repliesSlice';
 import cn from 'classnames';
 import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { commentActions } from '@/redux/comments/commentsSlice';
 import { hideAllUserCards } from '../utils';
 import Avatar from './Avatar';
+import Button from './Button';
 import CommentForm from './CommentForm';
 import CommentSkeleton from './CommentSkeleton';
 import Divider from './Divider';
+import InfoModal from './InfoModal';
 import ReplyCard from './ReplyCard';
 import ReplyForm from './ReplyForm';
 import SanitizeHtml from './SanitizeHtml';
 import UserCard from './UserCard';
-import { Pen, Trash, Danger } from './icons';
-import InfoModal from './InfoModal';
+import { Danger, Pen, Trash } from './icons';
 
 export default function CommentCard({ comment, dashboard }) {
   const [isReplying, setIsReplying] = useState(false);
   const [editComment, setEditComment] = useState();
   const [showReplies, setShowReplies] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [page, setPage] = useState();
   const dispatch = useDispatch();
@@ -60,6 +62,11 @@ export default function CommentCard({ comment, dashboard }) {
       name: comment?.user?.name || comment?.guestName,
       email: comment?.user?.email || comment?.guestEmail
     });
+  };
+
+  const handleDeleteComment = () => {
+    setOpenDeleteModal(false);
+    dispatch(commentActions.deleteComment({ commentId: comment._id, ideaId: idea._id }));
   };
   useEffect(() => {
     if (page) {
@@ -113,8 +120,24 @@ export default function CommentCard({ comment, dashboard }) {
                   : 'Anonymous'}
               </h6>
             </button>
-            <div className="prose prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-p:text-slate-500 prose-p:my-2 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
-              <SanitizeHtml id="comment" html={comment?.text} />
+            <div className="prose  prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-p:text-slate-500 prose-p:my-2 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm prose-p:break-all max-w-full">
+              <SanitizeHtml
+                html={
+                  comment?.text.length > 140 && !showMore
+                    ? comment?.text.slice(0, 140)
+                    : comment?.text
+                }
+              />
+
+              <Button
+                type="button"
+                variant="link"
+                className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm underline"
+                onClick={() => {
+                  setShowMore(!showMore);
+                }}
+                text={`Read ${showMore ? 'less' : 'more'}`}
+              />
             </div>
             <div className="flex items-center gap-2 min-h-[32px]">
               <span className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-xs tracking-sm">
@@ -217,10 +240,7 @@ export default function CommentCard({ comment, dashboard }) {
         show={openDeleteModal}
         onClose={() => setOpenDeleteModal(false)}
         cancelOnClick={() => setOpenDeleteModal(false)}
-        onConfirm={() => {
-          dispatch(commentActions.deleteComment({ commentId: comment._id, ideaId: idea._id }));
-          setOpenDeleteModal(false);
-        }}
+        onConfirm={handleDeleteComment}
         icon={<Danger className="w-6 h-6 icon-red" />}
         title="Delete Comment"
         description="Are you sure you want to delete this comment? This action cannot be undone."

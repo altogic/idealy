@@ -14,10 +14,12 @@ import SanitizeHtml from './SanitizeHtml';
 import UserCard from './UserCard';
 import Divider from './Divider';
 import { hideAllUserCards } from '../utils';
+import Button from './Button';
 
 export default function ReplyCard({ reply, dashboard }) {
   const [isDelete, setIsDelete] = useState(false);
   const [editReply, setEditReply] = useState();
+  const [showMore, setShowMore] = useState(false);
   const canEdit = useIdeaActionValidation(reply, 'reply');
   const dispatch = useDispatch();
   const { userCardStyle, userCardInfo, setUserCardInfo, setUserCardStyle } =
@@ -45,6 +47,15 @@ export default function ReplyCard({ reply, dashboard }) {
       name: reply?.user?.name || reply?.name,
       email: reply?.user?.email
     });
+  };
+  const handleDelete = () => {
+    dispatch(
+      repliesActions.deleteReply({
+        replyId: reply._id,
+        commentId: reply.commentId
+      })
+    );
+    setIsDelete(!isDelete);
   };
   return editReply ? (
     <ReplyForm reply={reply} setIsReplying={setEditReply} />
@@ -78,8 +89,24 @@ export default function ReplyCard({ reply, dashboard }) {
               {reply?.user?.name || reply.name}
             </h6>
           </button>
-          <div className="prose prose-p:my-0 prose-p:text-slate-500 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm max-w-full">
-            <SanitizeHtml id="reply" html={reply?.content} />
+          <div className="prose prose-p:my-0 prose-p:text-slate-500 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm prose-p:break-all max-w-full">
+            <SanitizeHtml
+              html={
+                reply?.content.length > 140 && !showMore
+                  ? reply?.content.slice(0, 140)
+                  : reply?.content
+              }
+            />
+
+            <Button
+              type="button"
+              variant="link"
+              className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm underline tracking-sm"
+              onClick={() => {
+                setShowMore(!showMore);
+              }}
+              text={`Read ${showMore ? 'less' : 'more'}`}
+            />
           </div>
           <div className="flex items-center gap-3 min-h-[32px]">
             <span className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-xs tracking-sm">
@@ -114,15 +141,7 @@ export default function ReplyCard({ reply, dashboard }) {
         show={isDelete}
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
-        onConfirm={() => {
-          dispatch(
-            repliesActions.deleteReply({
-              replyId: reply._id,
-              commentId: reply.commentId
-            })
-          );
-          setIsDelete(!isDelete);
-        }}
+        onConfirm={handleDelete}
         icon={<Danger className="w-6 h-6 icon-red" />}
         title="Delete Reply"
         description="Are you sure you want to delete this reply? This action cannot be undone."

@@ -332,7 +332,7 @@ export const USERS_SORT_OPTIONS = [
   },
   {
     value: 'lastActivityAt:desc',
-    label: 'Most Active'
+    label: 'Recently Active'
   },
   {
     value: 'lastActivityAt:asc',
@@ -340,11 +340,11 @@ export const USERS_SORT_OPTIONS = [
   },
   {
     value: 'ideaCount:desc',
-    label: 'Least Contributors'
+    label: 'Top Contributors'
   },
   {
     value: 'ideaCount:asc',
-    label: 'Top Contributors'
+    label: 'Least Contributors'
   },
   {
     value: 'commentCount:desc',

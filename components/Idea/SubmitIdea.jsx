@@ -99,6 +99,8 @@ export default function SubmitIdea({ idea }) {
     setImages([]);
     setMember();
     dispatch(ideaActions.clearSimilarIdeas());
+    dispatch(fileActions.clearFileLinks());
+    dispatch(ideaActions.setEditedIdea(null));
   };
   const handleClose = () => {
     resetForm();
@@ -132,7 +134,9 @@ export default function SubmitIdea({ idea }) {
       ...data,
       content,
       topics,
-      images: fileLinks,
+      ...(idea?._id
+        ? { images: [...images.filter((image) => image.startsWith('https')), ...fileLinks] }
+        : { images: fileLinks }),
       author: member?.provider ? member._id : undefined,
       guest: !member?.provider ? guestInfo._id : undefined,
       name: member?.name || guestName,
@@ -384,7 +388,7 @@ export default function SubmitIdea({ idea }) {
             type="submit"
             className="flex items-center justify-center bg-indigo-700 dark:bg-aa-700 purple:bg-pt-700 text-white py-3 px-4 text-sm font-medium tracking-sm border border-transparent rounded-lg hover:bg-indigo-600 dark:hover:bg-aa-600 purple:hover:bg-pt-600 focus:outline-none"
             text={`${idea ? 'Update' : 'Submit'} Idea`}
-            loading={ideaLoading}
+            loading={ideaLoading || loading}
           />
         </div>
       </form>

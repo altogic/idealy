@@ -29,9 +29,7 @@ export default function PublicViewCard({ idea, onClick }) {
             className="max-w-3xl text-slate-500 dark:text-aa-300 purple:text-pt-300 mb-6 text-sm tracking-sm text-left line-clamp-3"
             html={idea?.content}
           />
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2">
-            {/* Bottom Left */}
-
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2 flex-wrap">
             <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-2 mb-4 lg:mb-0">
               <IdeaInfo idea={idea} />
               {idea?.topics?.length > 0 && (
@@ -51,7 +49,7 @@ export default function PublicViewCard({ idea, onClick }) {
               )}
             </div>
             {/* Bottom Right */}
-            <div className="flex items-center justify-between lg:justify-start gap-3">
+            <div className="flex items-center justify-between lg:justify-start gap-3 mt-4 ">
               {/* Badges */}
               {idea?.status && (
                 <StatusBadge name={idea?.status?.name} color={idea?.status?.color} />

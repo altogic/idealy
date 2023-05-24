@@ -10,6 +10,19 @@ const EditorToolbar = dynamic(() => import('./EditorToolbar'), { ssr: false });
 export default function Editor({ content, setContent, errors, children, dashboard, ...props }) {
   const [isEditorFocus, setIsEditorFocus] = useState();
 
+  if (typeof window !== 'undefined') {
+    // eslint-disable-next-line global-require
+    const Quill = require('quill');
+    const Link = Quill.import('formats/link');
+    Link.sanitize = function (url) {
+      // quill by default creates relative links if scheme is missing.
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        return `https://${url}`;
+      }
+      return url;
+    };
+  }
+
   return (
     <>
       <ReactQuill

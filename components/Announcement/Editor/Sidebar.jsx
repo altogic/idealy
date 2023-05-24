@@ -67,7 +67,6 @@ const Sidebar = forwardRef(({ quill, inputRef }, ref) => {
   const handleShowControl = () => {
     ref.current.classList.toggle('active');
     quill.focus();
-    // closeAddIdea();
   };
 
   const handleAddIdea = (idea) => {
@@ -92,7 +91,7 @@ const Sidebar = forwardRef(({ quill, inputRef }, ref) => {
         </PopoverTrigger>
 
         <PopoverContent>
-          <div className="controls flex-1 border border-slate-200 dark:border-aa-400 purple:border-pt-400 shadow-sm rounded bg-white min-w-[288px] w-  max-w-[384px] min-h-[300px]">
+          <div className="controls flex-1 border border-slate-200 dark:border-aa-400 purple:border-pt-400 shadow-sm rounded bg-white min-w-[288px]  max-w-[384px] min-h-[300px] relative">
             {!addNewIdea ? (
               <ul
                 id="sidebar-buttons"

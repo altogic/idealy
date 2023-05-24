@@ -29,6 +29,14 @@ export default function UserPage({ selectedUser, setSelectedUser, getIdeas }) {
   const [segmentSelected, setSegmentSelected] = useState();
   const [sortSelected, setSortSelected] = useState(USERS_SORT_OPTIONS?.[0]);
 
+  const handleSortChange = (val) => {
+    setSegmentSelected(val);
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, segment: val._id }
+    });
+  };
+
   function handleSearchChange(value) {
     setSearchText(value);
     if (!value) {
@@ -76,16 +84,10 @@ export default function UserPage({ selectedUser, setSelectedUser, getIdeas }) {
             onClear={() => handleSearchChange('')}
           />
           <BaseListBox
-            value={sortSelected.label}
+            value={sortSelected}
             icon={<UpDown className="w-5 h-5 icon" />}
             type="icon"
-            onChange={(val) => {
-              setSortSelected(val);
-              router.push({
-                pathname: router.pathname,
-                query: { ...router.query, sort: val.value }
-              });
-            }}
+            onChange={handleSortChange}
             field="label"
             options={USERS_SORT_OPTIONS}
             size="sm"
@@ -93,7 +95,7 @@ export default function UserPage({ selectedUser, setSelectedUser, getIdeas }) {
           />
           {!!company?.userSegments.length && (
             <BaseListBox
-              value={segmentSelected?.name}
+              value={segmentSelected}
               icon={<Filter className="w-5 h-5 icon" />}
               type="icon"
               onChange={(val) => {

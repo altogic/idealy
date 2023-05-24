@@ -54,6 +54,8 @@ export default function CommentForm({ editedComment, setEditComment, setIsFetche
     formState: { errors, isSubmitSuccessful },
     setValue,
     setError,
+    clearErrors,
+
     control
   } = useForm({
     defaultValues: {
@@ -81,6 +83,7 @@ export default function CommentForm({ editedComment, setEditComment, setIsFetche
           guestName: user?.name || data.guestName,
           guestEmail: user?.email || data.guestEmail,
           onSuccess: () => {
+            clearErrors();
             if (data.guestEmail) {
               saveGuestInfo({
                 name: data.guestName,
@@ -107,6 +110,7 @@ export default function CommentForm({ editedComment, setEditComment, setIsFetche
           ...(!user && guestValidation && { guestName: data.guestName || guestName }),
           ...(!user && !data.guestEmail && { ip: userIp }),
           onSuccess: () => {
+            clearErrors();
             if (data.guestEmail || isGuest) {
               saveGuestInfo({
                 name: data?.guestName,
@@ -173,6 +177,7 @@ export default function CommentForm({ editedComment, setEditComment, setIsFetche
       });
     }
   }, [error]);
+
   return (
     <form onSubmit={handleSubmit(submitComment)} className="my-4">
       <Controller

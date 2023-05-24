@@ -98,16 +98,19 @@ export default function UserDetail({ user }) {
               .toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}
           />
 
-          <Divider className="my-8" />
-
-          <Button
-            type="button"
-            text="Delete User"
-            variant="indigo"
-            size="sm"
-            onClick={() => setIsDelete(!isDelete)}
-            fullWidth
-          />
+          {user?.member?.role !== 'Owner' && (
+            <>
+              <Divider className="my-8" />
+              <Button
+                type="button"
+                text="Delete User"
+                variant="indigo"
+                size="sm"
+                onClick={() => setIsDelete(!isDelete)}
+                fullWidth
+              />
+            </>
+          )}
         </div>
       </div>
 
