@@ -98,15 +98,17 @@ export default function ReplyCard({ reply, dashboard }) {
               }
             />
 
-            <Button
-              type="button"
-              variant="link"
-              className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm underline tracking-sm"
-              onClick={() => {
-                setShowMore(!showMore);
-              }}
-              text={`Read ${showMore ? 'less' : 'more'}`}
-            />
+            {reply?.content.length > 140 && (
+              <Button
+                type="button"
+                variant="link"
+                className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm underline tracking-sm"
+                onClick={() => {
+                  setShowMore(!showMore);
+                }}
+                text={`Read ${showMore ? 'less' : 'more'}`}
+              />
+            )}
           </div>
           <div className="flex items-center gap-3 min-h-[32px]">
             <span className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-xs tracking-sm">

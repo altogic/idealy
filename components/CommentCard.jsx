@@ -129,15 +129,17 @@ export default function CommentCard({ comment, dashboard }) {
                 }
               />
 
-              <Button
-                type="button"
-                variant="link"
-                className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm underline"
-                onClick={() => {
-                  setShowMore(!showMore);
-                }}
-                text={`Read ${showMore ? 'less' : 'more'}`}
-              />
+              {comment?.text.length > 140 && (
+                <Button
+                  type="button"
+                  variant="link"
+                  className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm underline"
+                  onClick={() => {
+                    setShowMore(!showMore);
+                  }}
+                  text={`Read ${showMore ? 'less' : 'more'}`}
+                />
+              )}
             </div>
             <div className="flex items-center gap-2 min-h-[32px]">
               <span className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-xs tracking-sm">

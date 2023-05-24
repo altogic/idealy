@@ -60,7 +60,9 @@ export default function Layout({ children }) {
             setCookie('subdomain', subdomain);
           },
           onFail: () => {
-            router.push(generateUrl('company-not-found'));
+            if (wildcard !== 'app') {
+              router.push(generateUrl('company-not-found'));
+            }
           }
         })
       );
