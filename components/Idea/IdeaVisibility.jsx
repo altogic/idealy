@@ -52,7 +52,7 @@ export default function IdeaVisibility({ listBoxSize }) {
     }
   }, [coverImage]);
 
-  useUpdateEffect(() => {
+  useEffect(() => {
     if (idea) {
       const roadmap = company?.roadmaps.find((roadmap) => roadmap._id === idea?.roadmap?._id);
       setShowOnRoadMap(idea?.showOnRoadMap);
