@@ -16,7 +16,7 @@ export default function Statuses() {
   const createStatusName = new yup.ObjectSchema({
     statusesName: yup
       .string()
-      .max(50, 'Status name must be less than 50 characters')
+      .max(32, 'Status name must be less than 32 characters')
       .required('Status name is required')
   });
 

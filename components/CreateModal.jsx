@@ -70,9 +70,9 @@ export default function CreateModal({
             error={error}
             autoFocus
             onChange={(e) => {
-              if (e.target.value.length > 50) {
+              if (e.target.value.length > 32) {
                 setError({
-                  message: `Please enter a ${label.toLowerCase()} less than 50 characters.`
+                  message: `Please enter a ${label.toLowerCase()} less than 32 characters.`
                 });
               } else {
                 setError(null);

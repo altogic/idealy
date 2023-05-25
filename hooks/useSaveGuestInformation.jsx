@@ -11,7 +11,6 @@ export default function useSaveGuestInformation(saveLocal = true) {
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const user = useSelector((state) => state.auth.user);
   const saveGuestInformation = ({ email, name, avatar, onSuccess }) => {
-    console.log('saveGuestInformation', email, name, avatar, saveLocal);
     if (saveLocal && _.isNil(email)) {
       addGuestInfoToLocalStorage({ name, avatar });
       dispatch(

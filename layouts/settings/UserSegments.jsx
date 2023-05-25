@@ -14,7 +14,7 @@ export default function UserSegments() {
   const createUserSegmentName = new yup.ObjectSchema({
     segmentName: yup
       .string()
-      .max(50, 'User Segment name must be less than 50 characters')
+      .max(32, 'User Segment name must be less than 32 characters')
       .required('User segment name is required')
   });
   const dispatch = useDispatch();

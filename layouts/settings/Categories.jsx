@@ -14,7 +14,7 @@ export default function Categories() {
   const createCategoriesNameSchema = new yup.ObjectSchema({
     categoriesName: yup
       .string()
-      .max(50, 'Category name must be less than 50 characters')
+      .max(32, 'Category name must be less than 32 characters')
       .required('Categories name is required')
   });
 

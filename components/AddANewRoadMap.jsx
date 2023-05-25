@@ -26,7 +26,7 @@ export default function AddANewRoadMap({
   const createRoadMapSchema = new yup.ObjectSchema({
     name: yup
       .string()
-      .max(50, 'Roadmap name must be less than 50 characters')
+      .max(32, 'Roadmap name must be less than 32 characters')
       .required('Roadmap name is required'),
     description: yup.string(),
     isPublic: yup.boolean()
