@@ -83,7 +83,7 @@ export default function RoadMapAdmin() {
         { scroll: false }
       );
     }
-  }, [sortedRoadmaps, router]);
+  }, [sortedRoadmaps, router.query.roadmap]);
 
   useEffect(() => {
     if (router.query.roadmap && router.isReady) {
