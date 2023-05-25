@@ -5,7 +5,6 @@ import { fileActions } from '@/redux/file/fileSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import AddANewRoadMap from '../AddANewRoadMap';
 import BaseListBox from '../BaseListBox';
 import Label from '../Label';
