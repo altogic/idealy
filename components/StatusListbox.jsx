@@ -1,7 +1,7 @@
 import useAddCompanySublist from '@/hooks/useAddCompanySublist';
 import useNotification from '@/hooks/useNotification';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import BaseListBox from './BaseListBox';
 import Button from './Button';
@@ -16,7 +16,7 @@ export default function StatusListbox({ size }) {
   const updateIdea = useUpdateIdea(idea);
   const sendNotification = useNotification();
   const addCompanySubList = useAddCompanySublist();
-
+  const isStatusChanged = useRef(false);
   function handleReset() {
     updateIdea({ status: null, statusUpdatedAt: Date.now(), isCompleted: false }, () => {
       sendNotification({
@@ -50,6 +50,13 @@ export default function StatusListbox({ size }) {
   function handleCreateStatus(name) {
     addCompanySubList(name, 'statuses', (data) => handleUpdateIdea(data));
   }
+
+  useEffect(() => {
+    if (idea && !isStatusChanged.current) {
+      isStatusChanged.current = true;
+      setStatus(idea?.status);
+    }
+  }, [idea]);
 
   return (
     <>

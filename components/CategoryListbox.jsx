@@ -1,6 +1,6 @@
 import useAddCompanySublist from '@/hooks/useAddCompanySublist';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import BaseListBox from './BaseListBox';
 import Button from './Button';
@@ -14,7 +14,7 @@ export default function CategoryListbox({ size }) {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const updateIdea = useUpdateIdea(idea);
   const addCompanySubList = useAddCompanySublist();
-
+  const isCategoryChanged = useRef(false);
   function handleReset() {
     updateIdea({ category: null, message: `The category of ${idea.title} cleared` });
     setCategory(null);
@@ -30,7 +30,12 @@ export default function CategoryListbox({ size }) {
   function handleCreateCategory(name) {
     addCompanySubList(name, 'categories', (data) => handleUpdateIdea(data));
   }
-
+  useEffect(() => {
+    if (idea && !isCategoryChanged.current) {
+      isCategoryChanged.current = true;
+      setCategory(idea?.category);
+    }
+  }, [idea]);
   return (
     <>
       <div>

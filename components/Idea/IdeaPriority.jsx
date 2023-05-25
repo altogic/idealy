@@ -2,7 +2,7 @@ import BaseListBox from '@/components/BaseListBox';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { calculateNormalizedPriority } from '@/utils/index';
 import { PRIORITY_VALUES } from 'constants';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 export default function IdeaPriority() {
@@ -11,7 +11,7 @@ export default function IdeaPriority() {
   const [priorityValues, setPriorityValues] = useState();
   const [benefitFactor, setBenefitFactor] = useState(idea?.benefitFactor);
   const [costFactor, setCostFactor] = useState(idea?.costFactor);
-
+  const isPriorityChanged = useRef(false);
   const updateIdea = useUpdateIdea(idea);
   useEffect(() => {
     setPriorityValues(PRIORITY_VALUES.map((value) => value[company?.priorityType]));
@@ -32,6 +32,14 @@ export default function IdeaPriority() {
       message: `The priority of <b>${idea.title}</b> changed to <b>${priorityScore}</b>`
     });
   };
+
+  useEffect(() => {
+    if (idea && !isPriorityChanged.current) {
+      isPriorityChanged.current = true;
+      setBenefitFactor(idea?.benefitFactor);
+      setCostFactor(idea?.costFactor);
+    }
+  }, [idea]);
 
   return (
     <div className="grid grid-cols-2 gap-2">
