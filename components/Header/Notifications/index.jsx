@@ -28,7 +28,6 @@ export default function Notifications() {
   const [openInfoModal, setOpenInfoModal] = useState(false);
   const showFeedbackDetail = (feedbackId) => {
     const ideaDetail = ideas.find((i) => i._id === feedbackId);
-    console.log('ideaDetail', ideaDetail);
     if (ideaDetail) {
       dispatch(ideaActions.setSelectedIdea(ideaDetail));
       dispatch(toggleFeedBackDetailModal());
@@ -43,7 +42,17 @@ export default function Notifications() {
             .filter(Boolean)
             .join(' && '),
           onSuccess: () => {
-            if (!feedBackDetailModal) dispatch(toggleFeedBackDetailModal());
+            if (!feedBackDetailModal) {
+              dispatch(toggleFeedBackDetailModal());
+              router.replace(
+                {
+                  pathname: router.pathname,
+                  query: { ...router.query, feedback: feedbackId }
+                },
+                undefined,
+                { scroll: false }
+              );
+            }
           },
           onError: () => {
             setOpenInfoModal(true);
