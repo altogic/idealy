@@ -43,7 +43,6 @@ export default function Notifications() {
             .join(' && '),
           onSuccess: () => {
             if (!feedBackDetailModal) {
-              dispatch(toggleFeedBackDetailModal());
               router.replace(
                 {
                   pathname: router.pathname,
@@ -52,6 +51,7 @@ export default function Notifications() {
                 undefined,
                 { scroll: false }
               );
+              dispatch(toggleFeedBackDetailModal());
             }
           },
           onError: () => {
