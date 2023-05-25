@@ -9,12 +9,12 @@ export default function IdeaStatuses() {
       <div className="space-y-4">
         <div>
           <Label label="Status" />
-          <StatusListbox size="md" />
+          <StatusListbox size="xl" />
         </div>
 
         <div>
           <Label label="Category" />
-          <CategoryListbox size="md" />
+          <CategoryListbox size="xl" />
         </div>
       </div>
     </IdeaAdminTab>

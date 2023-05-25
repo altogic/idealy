@@ -139,7 +139,7 @@ export default function BaseListBox({
               size === 'sm' && 'min-w-[120px] max-w-[180px]',
               size === 'md' && 'min-w-[160px] max-w-[255px]',
               size === 'lg' && 'min-w-[200px] max-w-[270px]',
-              size === 'xl' && 'min-w-[250px] max-w-[325px]',
+              size === 'xl' && 'min-w-[250px] max-w-[270px]',
               size === 'xxl' && 'min-w-[300px] max-w-full',
               size === 'full' && 'w-full',
               type === 'icon' && 'w-[195px]',
