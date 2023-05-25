@@ -92,13 +92,13 @@ export default function ReplyCard({ reply, dashboard }) {
           <div className="prose prose-p:my-0 prose-p:text-slate-500 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm prose-p:break-all max-w-full">
             <SanitizeHtml
               html={
-                reply?.content.length > 140 && !showMore
+                reply?.content.replace(/<[^>]*>/g, '').length > 140 && !showMore
                   ? reply?.content.slice(0, 140)
                   : reply?.content
               }
             />
 
-            {reply?.content.length > 140 && (
+            {reply?.content.replace(/<[^>]*>/g, '').length > 140 && (
               <Button
                 type="button"
                 variant="link"
