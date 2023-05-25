@@ -6,10 +6,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
 import { generateUrl, setCookie } from '../utils';
 import Header from './Header';
 import Realtime from './Realtime';
 import Spinner from './Spinner';
+import IdeaDetail from './Idea/IdeaDetail';
 
 export default function Layout({ children }) {
   const router = useRouter();
@@ -17,8 +20,23 @@ export default function Layout({ children }) {
   const companies = useSelector((state) => state.company.companies);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const { getCompanyLoading: loading } = useSelector((state) => state.company);
+  const selectedIdea = useSelector((state) => state.idea.selectedIdea);
+
   const load = useRef(true);
   const dispatch = useDispatch();
+  function handleCloseIdea() {
+    dispatch(toggleFeedBackDetailModal());
+    dispatch(ideaActions.setSelectedIdea(null));
+    delete router.query.feedback;
+    router.push(
+      {
+        pathname: router.pathname,
+        query: router.query
+      },
+      undefined,
+      { scroll: false }
+    );
+  }
   useEffect(() => {
     const invitation = JSON.parse(getCookie('invitation-token') || null);
     if (invitation) {
@@ -90,6 +108,13 @@ export default function Layout({ children }) {
             <main className="grow pt-[77px] lg:pt-[97px]">
               {children}
               <Realtime />
+              {!router.asPath.includes('public-view') && (
+                <IdeaDetail
+                  idea={selectedIdea}
+                  company={company}
+                  onClose={() => handleCloseIdea()}
+                />
+              )}
             </main>
           </div>
           {!company?.whiteLabel?.isHideBanner && (

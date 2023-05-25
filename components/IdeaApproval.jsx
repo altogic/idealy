@@ -24,7 +24,7 @@ export default function IdeaApproval() {
           message: `Your idea <b>${idea.title}</b> has been approved`,
           targetUser: idea?.author?._id,
           type: 'ideaApproved',
-          url: `/public-view?feedback=${idea._id}`
+          ideaId: idea._id
         });
       }
     );

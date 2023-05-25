@@ -21,7 +21,7 @@ export default function useUpdateIdea(idea) {
               message,
               ...(idea.author?._id === user._id && { targetUser: idea?.author?._id }),
               type: 'adminEditIdea',
-              url: `/public-view?feedback=${idea._id}`
+              ideaId: idea._id
             });
           }
           onSuccess(data);

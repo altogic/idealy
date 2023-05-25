@@ -10,7 +10,16 @@ export default function useNotification() {
   const { user, guestInfo } = useSelector((state) => state.auth);
   const company = useSelector((state) => state.company.company);
   const [notificationRequest, setNotificationRequest] = useState({});
-  const sendNotification = ({ message, targetUser, type, url, companyId, userId, name }) => {
+  const sendNotification = ({
+    message,
+    targetUser,
+    type,
+    url,
+    ideaId,
+    companyId,
+    userId,
+    name
+  }) => {
     if (targetUser && targetUser === user?._id) return;
     const guest = guestInfo?._id ? guestInfo : localStorageUtil.get('guestAuthentication');
     if (!guest) {
@@ -22,7 +31,8 @@ export default function useNotification() {
         message,
         targetUser,
         type,
-        url
+        url,
+        ideaId
       });
     }
     if (user || guest) {
@@ -35,7 +45,8 @@ export default function useNotification() {
           message,
           targetUser,
           type,
-          url
+          url,
+          ideaId
         })
       );
     }

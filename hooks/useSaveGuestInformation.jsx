@@ -2,6 +2,7 @@ import { authActions } from '@/redux/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { companyActions } from '@/redux/company/companySlice';
 import { realtime } from '@/utils/altogic';
+import _ from 'lodash';
 import { addGuestInfoToLocalStorage } from '../utils';
 
 export default function useSaveGuestInformation(saveLocal = true) {
@@ -10,7 +11,8 @@ export default function useSaveGuestInformation(saveLocal = true) {
   const guestInfo = useSelector((state) => state.auth.guestInfo);
   const user = useSelector((state) => state.auth.user);
   const saveGuestInformation = ({ email, name, avatar, onSuccess }) => {
-    if (saveLocal && !email) {
+    console.log('saveGuestInformation', email, name, avatar, saveLocal);
+    if (saveLocal && _.isNil(email)) {
       addGuestInfoToLocalStorage({ name, avatar });
       dispatch(
         authActions.setGuestInfo({

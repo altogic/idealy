@@ -17,13 +17,6 @@ export default function IdeaPriority() {
     setPriorityValues(PRIORITY_VALUES.map((value) => value[company?.priorityType]));
   }, [PRIORITY_VALUES]);
 
-  useEffect(() => {
-    if (idea) {
-      setBenefitFactor(idea?.benefitFactor);
-      setCostFactor(idea?.costFactor);
-    }
-  }, [idea]);
-
   const updatePriority = (benefitFactor, costFactor) => {
     const benefitIndex = PRIORITY_VALUES.find(
       (value) => value[company?.priorityType] === benefitFactor

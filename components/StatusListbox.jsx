@@ -1,12 +1,12 @@
-import useUpdateIdea from '@/hooks/useUpdateIdea';
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import useNotification from '@/hooks/useNotification';
 import useAddCompanySublist from '@/hooks/useAddCompanySublist';
+import useNotification from '@/hooks/useNotification';
+import useUpdateIdea from '@/hooks/useUpdateIdea';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import BaseListBox from './BaseListBox';
 import Button from './Button';
-import { Plus, ThreeStar } from './icons';
 import CreateModal from './CreateModal';
+import { Plus, ThreeStar } from './icons';
 
 export default function StatusListbox({ size }) {
   const idea = useSelector((state) => state.idea.selectedIdea);
@@ -23,13 +23,13 @@ export default function StatusListbox({ size }) {
         message: `The  status of ${idea.title} cleared`,
         targetUser: idea?.author?._id,
         type: 'ideaStatusChanged',
-        url: `/public-view?feedback=${idea._id}`
+        ideaId: idea._id
       });
     });
 
     setStatus(null);
   }
-  function handleUpdateIdea(value) {
+  const handleUpdateIdea = (value) => {
     setStatus(value);
     updateIdea(
       {
@@ -42,19 +42,14 @@ export default function StatusListbox({ size }) {
           message: `The  status of <b>${idea.title}</b> changed to <b>${value.name}</b>`,
           targetUser: idea?.author?._id,
           type: 'statusChange',
-          url: `/public-view?feedback=${idea._id}`
+          ideaId: idea._id
         });
       }
     );
-  }
+  };
   function handleCreateStatus(name) {
     addCompanySubList(name, 'statuses', (data) => handleUpdateIdea(data));
   }
-  useEffect(() => {
-    if (idea) {
-      setStatus(idea?.status);
-    }
-  }, [idea]);
 
   return (
     <>
@@ -63,7 +58,7 @@ export default function StatusListbox({ size }) {
           <BaseListBox
             value={status}
             label={status?.name}
-            onChange={(value) => handleUpdateIdea(value)}
+            onChange={handleUpdateIdea}
             field="name"
             options={company?.statuses}
             size={size}

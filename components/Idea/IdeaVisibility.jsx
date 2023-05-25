@@ -3,7 +3,7 @@ import Image from '@/components/Image';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { fileActions } from '@/redux/file/fileSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AddANewRoadMap from '../AddANewRoadMap';
 import BaseListBox from '../BaseListBox';
@@ -22,6 +22,7 @@ export default function IdeaVisibility({ listBoxSize }) {
   const [isPrivate, setIsPrivate] = useState();
   const [roadMap, setRoadMap] = useState();
   const [openCreateRoadmapModal, setOpenCreateRoadmapModal] = useState(false);
+  const isSetup = useRef(false);
   const updateIdea = useUpdateIdea(idea);
   const handleAddCoverImage = () => {
     const input = document.createElement('input');
@@ -50,7 +51,8 @@ export default function IdeaVisibility({ listBoxSize }) {
     }
   }, [coverImage]);
   useEffect(() => {
-    if (idea) {
+    if (idea && !isSetup.current) {
+      isSetup.current = true;
       setShowOnRoadMap(idea.showOnRoadMap);
       setIsPrivate(idea.isPrivate);
       setRoadMap(idea.roadmap);

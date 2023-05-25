@@ -49,7 +49,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
                   dispatch(announcementActions.setAnnouncement(announcement));
                 }}
                 className="flex-1">
-                <h2 className="flex-1 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left lg:truncate">
+                <h2 className="flex-1 text-slate-800 dark:text-aa-200 purple:text-pt-200 text-xl font-semibold tracking-md text-left lg:truncate max-w-[50ch]">
                   {announcement?.title || 'Untitled'}
                 </h2>
               </button>
@@ -140,7 +140,10 @@ export default function AnnouncementCard({ announcement, onPage }) {
           dispatch(
             announcementActions.deleteAnnouncement({
               announcementId: announcement?._id,
-              onSuccess: () => setOpenDeleteModal(false)
+              onSuccess: () => {
+                setOpenDeleteModal(false);
+                if (onPage) router.push('/announcements');
+              }
             })
           );
         }}

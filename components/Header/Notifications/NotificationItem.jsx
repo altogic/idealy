@@ -1,15 +1,12 @@
-import React from 'react';
-import { DateTime } from 'luxon';
-import { useRouter } from 'next/router';
 import Avatar from '@/components/Avatar';
 import SanitizeHtml from '@/components/SanitizeHtml';
+import { DateTime } from 'luxon';
 
-export default function NotificationItem({ notification, dropdown = false }) {
-  const router = useRouter();
+export default function NotificationItem({ notification, onClick, dropdown = false }) {
   return (
     <button
       type="button"
-      onClick={() => router.push(notification.url)}
+      onClick={onClick}
       className="flex items-center gap-4 p-4 transition ease-linear duration-150 hover:bg-slate-50 dark:hover:bg-aa-600 purple:hover:bg-pt-700 w-full">
       <Avatar
         src={notification?.user?.profilePicture || notification?.guest?.avatar}

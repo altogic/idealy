@@ -1,16 +1,16 @@
-import useUpdateIdea from '@/hooks/useUpdateIdea';
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import useAddCompanySublist from '@/hooks/useAddCompanySublist';
+import useUpdateIdea from '@/hooks/useUpdateIdea';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import BaseListBox from './BaseListBox';
 import Button from './Button';
-import { Plus, ThreeStar } from './icons';
 import CreateModal from './CreateModal';
+import { Plus, ThreeStar } from './icons';
 
 export default function CategoryListbox({ size }) {
   const idea = useSelector((state) => state.idea.selectedIdea);
   const company = useSelector((state) => state.company.company);
-  const [category, setCategory] = useState();
+  const [category, setCategory] = useState(idea?.category);
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const updateIdea = useUpdateIdea(idea);
   const addCompanySubList = useAddCompanySublist();
@@ -30,11 +30,6 @@ export default function CategoryListbox({ size }) {
   function handleCreateCategory(name) {
     addCompanySubList(name, 'categories', (data) => handleUpdateIdea(data));
   }
-  useEffect(() => {
-    if (idea) {
-      setCategory(idea?.category);
-    }
-  }, [idea]);
 
   return (
     <>

@@ -52,19 +52,21 @@ export default function VoteIdea({ voteCount, idea }) {
             companyId: company._id,
             userId: user?._id,
             onSuccess: () => {
+              const name = generateRandomName();
               if (!user && !voteGuestAuthentication && !guestInfo.name) {
                 saveGuestInfo({
-                  name: generateRandomName()
+                  name
                 });
               }
               if (idea?.author?._id) {
                 sendNotification({
-                  message: `<p><b>${user?.name || guestInfo.name}</b>  voted for <b>${
+                  message: `<p><b>${user?.name ?? guestInfo.name ?? name}</b>  voted for <b>${
                     idea.title
                   }</b></p>`,
                   targetUser: idea?.author._id,
                   type: 'vote',
-                  url: `/public-view?feedback=${idea._id}`
+                  ideaId: idea._id,
+                  name: user?.name ?? guestInfo.name ?? name
                 });
               }
             },
@@ -97,7 +99,7 @@ export default function VoteIdea({ voteCount, idea }) {
             message: `<b>${user?.name ?? data.name}</b>  voted for  <b>${idea.title}</b>`,
             targetUser: idea?.author._id,
             type: 'vote',
-            url: `/public-view?feedback=${idea._id}`
+            ideaId: idea._id
           });
         },
         onError: () => {

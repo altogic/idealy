@@ -2,11 +2,14 @@ import { notificationActions } from '@/redux/notification/notificationSlice';
 import { Menu, Transition } from '@headlessui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Fragment, useEffect } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Indicator from '@/components/Indicator';
 import InfiniteScroll from '@/components/InfiniteScroll';
-import { Notification, Settings } from '@/components/icons';
+import { Notification, Settings, Email } from '@/components/icons';
+import { ideaActions } from '@/redux/ideas/ideaSlice';
+import { toggleFeedBackDetailModal } from '@/redux/general/generalSlice';
+import InfoModal from '@/components/InfoModal';
 import NotificationItem from './NotificationItem';
 
 export default function Notifications() {
@@ -14,12 +17,41 @@ export default function Notifications() {
   const router = useRouter();
   const user = useSelector((state) => state.auth.user);
   const selectedCompany = useSelector((state) => state.company.company);
+  const isGuest = useSelector((state) => state.company.isGuest);
   const notifications = useSelector((state) => state.notification.notifications);
   const countInfo = useSelector((state) => state.notification.countInfo);
+  const ideas = useSelector((state) => state.idea.ideas);
+  const feedBackDetailModal = useSelector((state) => state.general.feedbackDetailModal);
   const unreadNotificationCount = useSelector(
     (state) => state.notification.unreadNotificationCount
   );
-
+  const [openInfoModal, setOpenInfoModal] = useState(false);
+  const showFeedbackDetail = (feedbackId) => {
+    const ideaDetail = ideas.find((i) => i._id === feedbackId);
+    console.log('ideaDetail', ideaDetail);
+    if (ideaDetail) {
+      dispatch(ideaActions.setSelectedIdea(ideaDetail));
+      dispatch(toggleFeedBackDetailModal());
+    } else {
+      dispatch(
+        ideaActions.getIdeaById({
+          filter: [
+            `this._id == '${feedbackId}' && this.isCompleted == false && this.isMerged == false`,
+            isGuest &&
+              'this.isApproved == true && this.isArchived == false && this.isPrivate == false && this.isDeleted == false'
+          ]
+            .filter(Boolean)
+            .join(' && '),
+          onSuccess: () => {
+            if (!feedBackDetailModal) dispatch(toggleFeedBackDetailModal());
+          },
+          onError: () => {
+            setOpenInfoModal(true);
+          }
+        })
+      );
+    }
+  };
   return (
     <Menu as="div" className="relative">
       {({ open: internalOpen }) => {
@@ -88,6 +120,11 @@ export default function Notifications() {
                             key={notification._id}
                             notification={notification}
                             dropdown
+                            onClick={() => {
+                              console.log(notification);
+                              if (notification.ideaId) showFeedbackDetail(notification.ideaId);
+                              else router.push(notification.url);
+                            }}
                           />
                         ))
                       ) : (
@@ -111,6 +148,20 @@ export default function Notifications() {
                 </div>
               </Menu.Items>
             </Transition>
+            <InfoModal
+              show={openInfoModal}
+              cancelOnClick={() => {
+                setOpenInfoModal(false);
+              }}
+              onClose={() => setOpenInfoModal(false)}
+              icon={<Email className="w-6 h-6 icon-indigo" />}
+              title="The idea you are trying to access is private or does not exist"
+              onConfirm={() => {
+                setOpenInfoModal(false);
+              }}
+              confirmColor="indigo"
+              confirmText="OK"
+            />
           </>
         );
       }}

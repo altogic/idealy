@@ -77,7 +77,7 @@ export default function ReplyForm({ setIsReplying, commentId, reply, setShowRepl
                 }</b> replied to a comment on <b>${idea.title}</b>`,
                 targetUser: idea?.author._id,
                 type: 'reply',
-                url: `/public-view?feedback=${idea._id}`,
+                ideaId: idea._id,
                 name: !user && !guestInfo.name ? name : ''
               });
               sendMentionNotification({

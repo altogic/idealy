@@ -34,7 +34,7 @@ export default function useSendMentionNotification(type) {
             message: handleNotificationMessage(name, title),
             targetUser: m.userId,
             type: 'mention',
-            url: `/public-view?feedback=${ideaId}`
+            ideaId
           });
         }
       });

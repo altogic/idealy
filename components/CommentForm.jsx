@@ -107,11 +107,11 @@ export default function CommentForm({ editedComment, setEditComment, setIsFetche
           text: comment,
           user: user?._id,
           companyId: idea.company,
-          ...(!user && guestValidation && { guestName: data.guestName || guestName }),
+          ...(!user && { guestName: data.guestName ?? guestName }),
           ...(!user && !data.guestEmail && { ip: userIp }),
           onSuccess: () => {
             clearErrors();
-            if (data.guestEmail || isGuest) {
+            if (data.guestEmail || (isGuest && user)) {
               saveGuestInfo({
                 name: data?.guestName,
                 email: data?.guestEmail
@@ -119,10 +119,13 @@ export default function CommentForm({ editedComment, setEditComment, setIsFetche
             }
             if (idea.author?._id) {
               sendNotification({
-                message: `<b>${user?.name || data.guestName}</b> commented on <b>${idea.title}</b>`,
+                message: `<b>${user?.name || data.guestName || guestName}</b> commented on <b>${
+                  idea.title
+                }</b>`,
                 targetUser: idea?.author._id,
                 type: 'comment',
-                url: `/public-view?feedback=${idea._id}`
+                ideaId: idea._id,
+                name: user?.name || data.guestName || guestName
               });
               sendMentionNotification({
                 content: comment,

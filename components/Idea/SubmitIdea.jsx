@@ -109,7 +109,7 @@ export default function SubmitIdea({ idea }) {
   };
   const sendMentionNotification = useSendMentionNotification('idea');
   const submitOnSuccess = async (guestEmail, guestName, submittedIdea) => {
-    if ((guestEmail && guestName) || isGuest) {
+    if ((guestEmail && guestName) || (isGuest && user)) {
       saveGuestInformation({ email: guestEmail, name: guestName });
     }
     sendMentionNotification({
@@ -162,16 +162,17 @@ export default function SubmitIdea({ idea }) {
                 message: `<b>${company.name}</b> submitted an idea for you`,
                 targetUser: submittedIdea?.author._id,
                 type: 'adminAddIdea',
-                url: `/public-view?feedback=${submittedIdea._id}`
+                ideaId: submittedIdea._id
               });
             }
             sendNotification({
               userId: submittedIdea.author?._id,
               message: `<b>${
-                submittedIdea.author?.name ?? submittedIdea.guestName
+                submittedIdea.author?.name ?? submittedIdea.guestName ?? submittedIdea.name
               }</b> submitted an idea at <b>${company.name}</b>`,
               type: 'submitIdea',
-              url: `/public-view?feedback=${submittedIdea._id}`
+              ideaId: submittedIdea._id,
+              name: !user && !guestInfo.name ? submittedIdea.name : ''
             });
           }
         })
