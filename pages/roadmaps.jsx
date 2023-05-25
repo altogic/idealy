@@ -71,15 +71,26 @@ export default function RoadMapAdmin() {
         sortedRoadmaps.find((roadmap) => roadmap._id === roadmapId) || sortedRoadmaps[0];
       setRoadmap(roadmap);
       dispatch(ideaActions.setSelectedRoadmap(roadmap));
+      router.replace(
+        {
+          pathname: router.pathname,
+          query: {
+            ...router.query,
+            roadmap: roadmap?._id
+          }
+        },
+        undefined,
+        { scroll: false }
+      );
     }
   }, [sortedRoadmaps, router]);
 
   useEffect(() => {
-    if (roadmap) {
+    if (router.query.roadmap && router.isReady) {
       dispatch(
         ideaActions.getIdeasByRoadmap({
           filter: [
-            `this.roadmap._id == '${roadmap._id}'`,
+            `this.roadmap._id == '${router.query.roadmap}'`,
             isGuest &&
               'this.showOnRoadMap == true && this.isPrivate == false && this.isArchived == false && this.isApproved == true',
             isGuest &&
@@ -93,7 +104,7 @@ export default function RoadMapAdmin() {
         })
       );
     }
-  }, [roadmap]);
+  }, [router.query.roadmap]);
 
   useEffect(() => {
     if (company) {

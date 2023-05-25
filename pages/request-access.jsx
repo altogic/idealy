@@ -27,8 +27,8 @@ export default function RequestAccess() {
 
   useEffect(() => {
     if (
-      (company?._id && companies.some((c) => c._id === company._id)) ||
-      company?.privacy?.isPublic
+      company?._id &&
+      (companies.some((c) => c._id === company._id) || !company?.privacy?.userApproval)
     ) {
       Router.push(generateUrl('public-view', company.subdomain));
     }
@@ -40,7 +40,7 @@ export default function RequestAccess() {
         })
       );
     }
-  }, [user, company?._id, companies, company?.privacy?.isPublic]);
+  }, [user, company?._id, companies, company?.privacy?.userApproval]);
 
   useEffect(() => {
     if (company?.privacy) {

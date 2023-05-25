@@ -16,7 +16,6 @@ export default function EditAnnouncements({ id }) {
 
   useEffect(() => {
     if (_.isEmpty(announcement)) {
-      console.log('get announcement', id);
       dispatch(announcementActions.getAnnouncement(id));
     }
   }, [announcement]);

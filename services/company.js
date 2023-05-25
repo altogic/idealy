@@ -39,11 +39,13 @@ const companyService = {
     endpoint.put(`/company/${companyId}/status`, { id }),
   deleteAllIdeas: (companyId) => db.model('ideas').filter(`company == '${companyId}'`).delete(),
   deleteCompany: (companyId) => endpoint.delete(`/company/${companyId}`),
-  deleteCompanyMember: (companyId, userId) =>
-    db
+  deleteCompanyMember: (companyId, userId) => {
+    db.model('companyUsers').filter(`companyId == '${companyId}' && user == '${userId}'`).delete();
+    return db
       .model('companyMembers')
       .filter(`companyId == '${companyId}' && user == '${userId}'`)
-      .delete(),
+      .delete();
+  },
   deleteUnregisteredCompanyMember: (id) =>
     db.model('unregisteredCompanyMembers').object(id).delete(),
   deleteInvite: (email, companyId) =>

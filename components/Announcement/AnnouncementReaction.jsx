@@ -1,16 +1,16 @@
+import AnnouncementButton from '@/components/Announcement/AnnouncementButton';
+import GuestFormModal from '@/components/GuestFormModal';
+import { FaceHappy } from '@/components/icons';
+import { REACTION_TYPES } from '@/constants/index';
 import useGuestValidation from '@/hooks/useGuestValidation';
 import useSaveGuestInformation from '@/hooks/useSaveGuestInformation';
 import { announcementActions } from '@/redux/announcement/announcementSlice';
 import { generateRandomName } from '@/utils/index';
 import { Popover, Transition } from '@headlessui/react';
+import cx from 'classnames';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import cx from 'classnames';
-import { REACTION_TYPES } from '@/constants/index';
-import { FaceHappy } from '@/components/icons';
-import GuestFormModal from '@/components/GuestFormModal';
-import AnnouncementButton from '@/components/Announcement/AnnouncementButton';
 
 export default function AnnouncementReaction({ announcementId, reactionCount }) {
   const dispatch = useDispatch();
@@ -23,7 +23,6 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
   const { error, reactions, isLoading } = useSelector((state) => state.announcement);
   const [reacted, setReacted] = useState([]);
   const [count, setCount] = useState(reactionCount);
-  const isGuest = useSelector((state) => state.company.isGuest);
   function deleteReaction(type) {
     setCount((prev) => ({
       ...prev,
@@ -64,7 +63,7 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
             type
           })
         );
-        if ((!user && !guestAuth && !guestInfo.name) || isGuest) {
+        if (!user && !guestAuth && !guestInfo.name) {
           saveGuestInfo({
             name: generateRandomName()
           });
@@ -82,6 +81,7 @@ export default function AnnouncementReaction({ announcementId, reactionCount }) 
       [type]: prev[type] + 1
     }));
     setReacted((prev) => [...prev, type]);
+
     dispatch(
       announcementActions.createAnnouncementReaction({
         announcementId,

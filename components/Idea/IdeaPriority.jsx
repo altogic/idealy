@@ -27,11 +27,10 @@ export default function IdeaPriority() {
   const updatePriority = (benefitFactor, costFactor) => {
     const benefitIndex = PRIORITY_VALUES.find(
       (value) => value[company?.priorityType] === benefitFactor
-    ).default;
-
+    )?.default;
     const costIndex = PRIORITY_VALUES.find(
       (value) => value[company?.priorityType] === costFactor
-    ).default;
+    )?.default;
     const priorityScore = calculateNormalizedPriority(benefitIndex, idea?.voteCount, costIndex);
     updateIdea({
       benefitFactor,
@@ -54,8 +53,9 @@ export default function IdeaPriority() {
             label={benefitFactor}
             size="sm"
             onChange={(selected) => {
+              const cf = company?.priorityType === 'tshirt' ? costFactor : Number(costFactor);
               setBenefitFactor(selected);
-              updatePriority(selected, Number(costFactor));
+              updatePriority(selected, cf);
             }}
           />
         </div>
@@ -71,8 +71,9 @@ export default function IdeaPriority() {
             label={costFactor}
             size="sm"
             onChange={(selected) => {
+              const bf = company?.priorityType === 'tshirt' ? benefitFactor : Number(benefitFactor);
               setCostFactor(selected);
-              updatePriority(Number(benefitFactor), selected);
+              updatePriority(bf, selected);
             }}
           />
         </div>

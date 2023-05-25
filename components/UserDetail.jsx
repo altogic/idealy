@@ -98,19 +98,21 @@ export default function UserDetail({ user }) {
               .toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}
           />
 
-          {user?.member?.role !== 'Owner' && (
-            <>
-              <Divider className="my-8" />
-              <Button
-                type="button"
-                text="Delete User"
-                variant="indigo"
-                size="sm"
-                onClick={() => setIsDelete(!isDelete)}
-                fullWidth
-              />
-            </>
-          )}
+          {user?.member?.role !== 'Owner' &&
+            company.role !== 'Moderator' &&
+            user.userId !== user._id && (
+              <>
+                <Divider className="my-8" />
+                <Button
+                  type="button"
+                  text="Delete User"
+                  variant="indigo"
+                  size="sm"
+                  onClick={() => setIsDelete(!isDelete)}
+                  fullWidth
+                />
+              </>
+            )}
         </div>
       </div>
 
@@ -119,7 +121,12 @@ export default function UserDetail({ user }) {
         onClose={() => setIsDelete(!isDelete)}
         cancelOnClick={() => setIsDelete(!isDelete)}
         onConfirm={() => {
-          dispatch(companyActions.deleteCompanyUser(user));
+          dispatch(
+            companyActions.deleteCompanyUser({
+              userId: user._id,
+              memberId: user?.member?._id
+            })
+          );
           setIsDelete(!isDelete);
           if (user?.member?._id) {
             realtime.send(user.userId, 'delete-membership', {

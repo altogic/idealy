@@ -27,7 +27,6 @@ export default function FilterIdea({
     });
   };
   const handleFilterStatusChange = (value) => {
-    console.log(value);
     if (value.length) {
       router.query.status = value.join(',');
       router.push({

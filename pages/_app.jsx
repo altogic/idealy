@@ -87,7 +87,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <meta charset="utf-8" />
+        <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <title>Idealy -Free Customer Feedback, Roadmap, and Announcements Tool</title>
         <meta

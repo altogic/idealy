@@ -72,7 +72,6 @@ export default function AnnouncementForm({ onSave, children }) {
 
   function saveAnnouncement() {
     if (company) {
-      console.log('save announcement', categories, announcement.categories);
       onSave({
         title: announcement?.title,
         content: announcement?.content,

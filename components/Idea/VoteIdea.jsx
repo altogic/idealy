@@ -93,7 +93,6 @@ export default function VoteIdea({ voteCount, idea }) {
         companyId: company._id,
         userId: user?._id,
         onSuccess: () => {
-          console.log('idea?.author?._id', user?.name ?? data.guestName, user?.name, data);
           sendNotification({
             message: `<b>${user?.name ?? data.name}</b>  voted for  <b>${idea.title}</b>`,
             targetUser: idea?.author._id,

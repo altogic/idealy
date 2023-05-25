@@ -7,7 +7,6 @@ import { realtime } from '@/utils/altogic';
 export default function EmailChangedMessage() {
   const company = useSelector((state) => state.company.company);
   const user = useSelector((state) => state.auth.user);
-  console.log(company);
   useEffect(() => {
     if (company?._id) {
       realtime.send(company._id, 'user-update', user);

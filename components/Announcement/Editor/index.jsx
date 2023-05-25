@@ -24,7 +24,9 @@ export default function AnnouncementEditor({ onChange, value }) {
     value
   );
   useEffect(() => {
-    if (quill && !isStateUpdated && router.asPath.includes('edit') && router.query.focus) {
+    if (router.isReady && quill && !isStateUpdated && router.asPath.includes('edit')) {
+      const focus = JSON.parse(router.query.focus);
+      if (!focus) return;
       quill.getSelection();
       quill.setSelection(quill.getLength(), 0);
       setIsStateUpdated(true);

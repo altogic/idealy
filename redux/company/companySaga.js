@@ -602,11 +602,11 @@ function* updateCompanyUserSaga({ payload }) {
 
 function* deleteCompanyUserSaga({ payload }) {
   try {
-    const { data, error } = yield call(companyService.deleteCompanyUser, payload);
+    const { error } = yield call(companyService.deleteCompanyUser, payload);
     if (error) {
       throw error;
     }
-    yield put(companyActions.deleteCompanyUserSuccess(data));
+    yield put(companyActions.deleteCompanyUserSuccess(payload.userId));
   } catch (error) {
     yield put(companyActions.deleteCompanyUserFailed(error));
   }

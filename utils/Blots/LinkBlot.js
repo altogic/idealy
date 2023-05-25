@@ -5,7 +5,6 @@ export default class LinkBlot extends Inline {
     const node = super.create();
     let _val = val;
     // Sanitize url value if desired
-    console.log('LinkBlot: val does not start with http or https', val);
     if (!val.startsWith('http') && !val.startsWith('https')) {
       _val = `https://${val}`;
     }

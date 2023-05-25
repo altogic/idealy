@@ -19,7 +19,7 @@ import InfiniteScroll from '../InfiniteScroll';
 import SanitizeHtml from '../SanitizeHtml';
 import SimilarIdeas from '../SimilarIdeas';
 import UserCard from '../UserCard';
-import { Archive, Pen, Trash } from '../icons';
+import { Pen, Pin, Trash } from '../icons';
 import IdeaBadges from './IdeaBadges';
 import IdeaDetailAdmin from './IdeaDetailAdmin';
 import IdeaInfo from './IdeaInfo';
@@ -167,7 +167,7 @@ export default function IdeaDetail({ idea, company, onClose }) {
                           }</b>`
                         })
                       }
-                      Icon={Archive}
+                      Icon={Pin}
                       color="green"
                       control={idea?.isPinned}
                     />

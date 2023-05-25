@@ -121,7 +121,7 @@ export default function Announcements() {
   }, [router.query.categories, company?.categories]);
 
   useEffect(() => {
-    if (company) {
+    if (company?._id) {
       dispatch(
         announcementActions.getAnnouncementReactions({
           filter: [
@@ -137,7 +137,7 @@ export default function Announcements() {
         })
       );
     }
-  }, [company, user, guestInfo, userIp]);
+  }, [company?._id, user, guestInfo, userIp]);
 
   useEffect(() => {
     getAnnouncements();

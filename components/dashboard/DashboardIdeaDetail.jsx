@@ -58,8 +58,8 @@ export default function DashboardIdeaDetail() {
     }
   }, [idea, router]);
   return (
-    <div className="flex items-center">
-      <div className="relative border-r border-slate-200 dark:border-aa-600 purple:border-pt-800 h-[calc(100vh-192px)]">
+    <div className="grid 2xl:grid-cols-[1fr,348px]">
+      <div className="relative border-r border-slate-200 dark:border-aa-600 purple:border-pt-800 h-[calc(100vh-242px)]">
         <div
           id="dashboard-idea-detail"
           className={cn('p-10 overflow-y-auto', isEditorFocus ? 'max-h-[84%]' : 'max-h-[97%]')}>
@@ -134,7 +134,7 @@ export default function DashboardIdeaDetail() {
                 )}
               />
               {isEditorFocus && (
-                <div className="absolute z-50 right-0 bottom-0">
+                <div className="absolute z-50 left-0 bottom-0">
                   <Button
                     variant="indigo"
                     text="Comment"

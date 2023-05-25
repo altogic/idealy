@@ -158,22 +158,24 @@ export const announcementSlice = createSlice({
       };
     },
     createAnnouncementReactionRealtimeSuccess: (state, action) => {
-      state.announcements = state.announcements.map((announcement) =>
-        announcement._id === action.payload.announcementId
-          ? {
-              ...announcement,
-              reactionCount: {
-                ...announcement.reactionCount,
-                [action.payload.type]: announcement.reactionCount[action.payload.type] + 1
+      if (!state.reactions.some((reaction) => reaction._id === action.payload._id)) {
+        state.announcements = state.announcements.map((announcement) =>
+          announcement._id === action.payload.announcementId
+            ? {
+                ...announcement,
+                reactionCount: {
+                  ...announcement.reactionCount,
+                  [action.payload.type]: announcement.reactionCount[action.payload.type] + 1
+                }
               }
-            }
-          : announcement
-      );
-      if (!_.isEmpty(state.announcement)) {
-        state.announcement.reactionCount = {
-          ...state.announcement.reactionCount,
-          [action.payload.type]: state.announcement.reactionCount[action.payload.type] + 1
-        };
+            : announcement
+        );
+        if (!_.isEmpty(state.announcement)) {
+          state.announcement.reactionCount = {
+            ...state.announcement.reactionCount,
+            [action.payload.type]: state.announcement.reactionCount[action.payload.type] + 1
+          };
+        }
       }
     },
     deleteAnnouncementReactionRealtimeSuccess: (state, action) => {
