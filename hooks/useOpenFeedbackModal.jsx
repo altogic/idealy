@@ -8,11 +8,18 @@ export default function useOpenFeedbackModal() {
   const router = useRouter();
   const dispatch = useDispatch();
   const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
+  const isGuest = useSelector((state) => state.company.isGuest);
   useEffect(() => {
     if (router.isReady && router.query.feedback && !feedBackDetailModal) {
       dispatch(
         ideaActions.getIdeaById({
-          id: router.query.feedback,
+          filter: [
+            `this._id == '${router.query.feedback}' && this.isCompleted == false && this.isMerged == false`,
+            isGuest &&
+              'this.isApproved == true && this.isArchived == false && this.isPrivate == false && this.isDeleted == false'
+          ]
+            .filter(Boolean)
+            .join(' && '),
           onSuccess: () => {
             dispatch(toggleFeedBackDetailModal());
           },
