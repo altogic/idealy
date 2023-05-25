@@ -7,6 +7,7 @@ export default function useUpdateIdea(idea) {
   const sendNotification = useNotification();
   const user = useSelector((state) => state.auth.user);
   const updateIdea = (req, onSuccess) => {
+    if (!idea) return;
     const { message, ...rest } = req;
     dispatch(
       ideaActions.updateIdea({

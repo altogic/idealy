@@ -3,8 +3,9 @@ import Image from '@/components/Image';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { fileActions } from '@/redux/file/fileSlice';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import useUpdateEffect from '@/hooks/useUpdatedEffect';
 import AddANewRoadMap from '../AddANewRoadMap';
 import BaseListBox from '../BaseListBox';
 import Label from '../Label';
@@ -14,6 +15,7 @@ import { Plus } from '../icons';
 export default function IdeaVisibility({ listBoxSize }) {
   const dispatch = useDispatch();
   const idea = useSelector((state) => state.idea.selectedIdea);
+
   const company = useSelector((state) => state.company.company);
   const coverImage = useSelector((state) => state.file.fileLink);
   const loading = useSelector((state) => state.file.isLoading);
@@ -22,7 +24,6 @@ export default function IdeaVisibility({ listBoxSize }) {
   const [isPrivate, setIsPrivate] = useState();
   const [roadMap, setRoadMap] = useState();
   const [openCreateRoadmapModal, setOpenCreateRoadmapModal] = useState(false);
-  const isSetup = useRef(false);
   const updateIdea = useUpdateIdea(idea);
   const handleAddCoverImage = () => {
     const input = document.createElement('input');
@@ -50,14 +51,16 @@ export default function IdeaVisibility({ listBoxSize }) {
       });
     }
   }, [coverImage]);
-  useEffect(() => {
-    if (idea && !isSetup.current) {
-      isSetup.current = true;
-      setShowOnRoadMap(idea.showOnRoadMap);
-      setIsPrivate(idea.isPrivate);
-      setRoadMap(idea.roadmap);
+
+  useUpdateEffect(() => {
+    if (idea) {
+      const roadmap = company?.roadmaps.find((roadmap) => roadmap._id === idea?.roadmap?._id);
+      setShowOnRoadMap(idea?.showOnRoadMap);
+      setIsPrivate(idea?.isPrivate);
+      setRoadMap(roadmap);
     }
   }, [idea]);
+
   return (
     <div>
       <IdeaSwitch

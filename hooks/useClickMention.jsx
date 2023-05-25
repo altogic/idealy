@@ -17,7 +17,8 @@ export default function useClickMention(id, dashboard) {
       : e.target.innerText === '@'
       ? e.target.parentElement.parentElement
       : e.target.parentElement;
-    if (mention.parentElement.parentElement.id !== id) return;
+    console.log(mention);
+    // if (mention.parentElement.parentElement.id !== id) return;
     hideAllUserCards();
     setUserCardStyle({ top, left });
     mention.parentElement.parentElement.parentElement.parentElement.previousElementSibling.previousElementSibling.style.display =

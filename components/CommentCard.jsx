@@ -123,13 +123,13 @@ export default function CommentCard({ comment, dashboard }) {
             <div className="prose  prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-p:text-slate-500 prose-p:my-2 dark:prose-p:text-aa-300 purple:prose-p:text-pt-300 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm prose-p:break-all max-w-full">
               <SanitizeHtml
                 html={
-                  comment?.text.length > 140 && !showMore
+                  comment?.text.replace(/<[^>]*>/g, '').length > 140 && !showMore
                     ? comment?.text.slice(0, 140)
                     : comment?.text
                 }
               />
 
-              {comment?.text.length > 140 && (
+              {comment?.text.replace(/<[^>]*>/g, '').length > 140 && (
                 <Button
                   type="button"
                   variant="link"

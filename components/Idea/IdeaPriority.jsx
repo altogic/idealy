@@ -2,7 +2,7 @@ import BaseListBox from '@/components/BaseListBox';
 import useUpdateIdea from '@/hooks/useUpdateIdea';
 import { calculateNormalizedPriority } from '@/utils/index';
 import { PRIORITY_VALUES } from 'constants';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 export default function IdeaPriority() {
@@ -11,7 +11,6 @@ export default function IdeaPriority() {
   const [priorityValues, setPriorityValues] = useState();
   const [benefitFactor, setBenefitFactor] = useState(idea?.benefitFactor);
   const [costFactor, setCostFactor] = useState(idea?.costFactor);
-  const isPriorityChanged = useRef(false);
   const updateIdea = useUpdateIdea(idea);
   useEffect(() => {
     setPriorityValues(PRIORITY_VALUES.map((value) => value[company?.priorityType]));
@@ -34,10 +33,13 @@ export default function IdeaPriority() {
   };
 
   useEffect(() => {
-    if (idea && !isPriorityChanged.current) {
-      isPriorityChanged.current = true;
-      setBenefitFactor(idea?.benefitFactor);
-      setCostFactor(idea?.costFactor);
+    if (idea) {
+      const bf =
+        company?.priorityType === 'tshirt' ? idea.benefitFactor : Number(idea.benefitFactor);
+      const cf = company?.priorityType === 'tshirt' ? idea.costFactor : Number(idea.costFactor);
+
+      setBenefitFactor(!Number.isNaN(bf) ? bf : null);
+      setCostFactor(!Number.isNaN(cf) ? cf : null);
     }
   }, [idea]);
 

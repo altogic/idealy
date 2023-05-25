@@ -68,7 +68,7 @@ export const repliesSlice = createSlice({
     },
     deleteReply: () => {},
     deleteReplySuccess: (state, action) => {
-      state.replies[action.payload.commentId] = state.replies[action.payload.commentId].filter(
+      state.replies[action.payload.commentId] = state.replies[action.payload.commentId]?.filter(
         (reply) => reply._id !== action.payload.replyId
       );
     },
