@@ -63,6 +63,14 @@ export default function DashboardIdeaDetail() {
         <div
           id="dashboard-idea-detail"
           className={cn('p-10 overflow-y-auto', isEditorFocus ? 'max-h-[84%]' : 'max-h-[97%]')}>
+          <UserCard
+            id="idea-user-card"
+            profilePicture={userCardInfo?.profilePicture}
+            name={userCardInfo?.name}
+            email={userCardInfo?.email}
+            style={userCardStyle}
+          />
+          <span />
           <FeedbackCardDetail setMentionCardStyle={setUserCardStyle} />
           {!!idea?.mergedIdeasDetail?.length && (
             <SimilarIdeas ideas={idea?.mergedIdeasDetail} title="Merged Ideas" />
@@ -74,12 +82,6 @@ export default function DashboardIdeaDetail() {
               <Divider className="flex-1" />
             </div>
           </div>
-          <UserCard
-            profilePicture={userCardInfo?.profilePicture}
-            name={userCardInfo?.name}
-            email={userCardInfo?.email}
-            style={userCardStyle}
-          />{' '}
           <InfiniteScroll
             items={comments}
             countInfo={commentCountInfo}

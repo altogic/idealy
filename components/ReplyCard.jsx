@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import useClickMention from '@/hooks/useClickMention';
 import cn from 'classnames';
+import { useRouter } from 'next/router';
 import Avatar from './Avatar';
 import InfoModal from './InfoModal';
 import { Danger, Pen, Trash } from './icons';
@@ -21,9 +22,12 @@ export default function ReplyCard({ reply, dashboard }) {
   const [editReply, setEditReply] = useState();
   const [showMore, setShowMore] = useState(false);
   const canEdit = useIdeaActionValidation(reply, 'reply');
+  const router = useRouter();
   const dispatch = useDispatch();
-  const { userCardStyle, userCardInfo, setUserCardInfo, setUserCardStyle } =
-    useClickMention('reply');
+  const { userCardStyle, userCardInfo, setUserCardInfo, setUserCardStyle } = useClickMention(
+    'reply',
+    router.asPath.includes('dashboard')
+  );
 
   const handleShowUserCard = (e) => {
     e.stopPropagation();

@@ -8,7 +8,7 @@ export default function UserCard({ name, profilePicture, email, className, style
   const router = useRouter();
   const dispatch = useDispatch();
   const company = useSelector((state) => state.company.company);
-  const feedbackDetailModal = useSelector((state) => state.general.feedbackDetailModal);
+  const feedBackDetailModal = useSelector((state) => state.general.feedBackDetailModal);
   return (
     <div
       id={id}
@@ -26,7 +26,8 @@ export default function UserCard({ name, profilePicture, email, className, style
           variant="indigo"
           size="xs"
           onClick={() => {
-            if (feedbackDetailModal) dispatch(toggleFeedBackDetailModal());
+            console.log('clicked', feedBackDetailModal);
+            if (feedBackDetailModal) dispatch(toggleFeedBackDetailModal());
             router.push(`/users?email=${email}`);
           }}
         />

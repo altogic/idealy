@@ -157,7 +157,7 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-[500px,1fr] 2xl:grid-cols-[300px,499px,1fr] h-[calc(100vh-88px)]">
             <FilterSave
               className="hidden 2xl:block h-[calc(100vh-88px)] bg-slate-50 dark:bg-aa-900 purple:bg-pt-1000 px-6 py-8 space-y-8 border-r border-slate-200 dark:border-aa-600 purple:border-pt-800 overflow-y-auto shadow-lg"
-              filters={user?.savedFilters}
+              filters={user?.savedFilters?.filter((f) => f.companyId === company?._id)}
             />
             <div className="border-r border-slate-200 dark:border-aa-600 purple:border-pt-800">
               <IdeaFilter isFilterSlide={isFilterSlide} setIsFilterSlide={setIsFilterSlide} />

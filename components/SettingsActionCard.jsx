@@ -52,6 +52,7 @@ export default function SettingsActionCard({
   });
 
   const handleEdit = (value, fieldName) => {
+    console.log(value);
     if (value.trim() !== '' && value.length < 50) {
       dispatch(
         editAction({
@@ -100,8 +101,7 @@ export default function SettingsActionCard({
       editAction({
         id,
         property,
-        fieldName: 'color',
-        value: color.hex
+        update: { color: color.hex }
       })
     );
   };

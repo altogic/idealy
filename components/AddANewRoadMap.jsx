@@ -38,7 +38,8 @@ export default function AddANewRoadMap({
     setValue,
     formState: { errors }
   } = useForm({
-    resolver: yupResolver(createRoadMapSchema)
+    resolver: yupResolver(createRoadMapSchema),
+    mode: 'all'
   });
   const addRoadmap = (value) => {
     if (editedRoadmap) {

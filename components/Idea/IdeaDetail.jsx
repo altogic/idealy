@@ -50,9 +50,9 @@ export default function IdeaDetail({ idea, company, onClose }) {
   useEffect(() => {
     const ideaId = router.query.feedback;
 
-    if (router.isReady && !!idea?.commentCount && !isFetched && ideaId) {
+    if (router.isReady && !!idea?.commentCount && !isFetched && (ideaId || idea?._id)) {
       setIsFetched(true);
-      dispatch(commentActions.getComments({ ideaId, page: 1 }));
+      dispatch(commentActions.getComments({ ideaId: router.query.feedback ?? idea._id, page: 1 }));
     }
   }, [router.asPath, idea]);
 
@@ -118,6 +118,7 @@ export default function IdeaDetail({ idea, company, onClose }) {
       </button>
       <div className="flex gap-6 relative">
         <UserCard
+          id="idea-user-card"
           profilePicture={userCardInfo?.profilePicture}
           name={userCardInfo?.name}
           email={userCardInfo?.email}

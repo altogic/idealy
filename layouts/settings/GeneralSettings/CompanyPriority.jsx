@@ -35,11 +35,10 @@ export default function CompanyPriority() {
         value={prioritySelected}
         onChange={(selected) => {
           setPrioritySelected(selected);
-          updateCompanyPriority('priorityType', selected);
+          updateCompanyPriority('priorityType', selected.value);
         }}
         label={prioritySelected?.name}
         options={PRIORITY_TYPES}
-        valueField="value"
         field="name"
         size="full"
       />

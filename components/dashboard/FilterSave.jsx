@@ -47,6 +47,7 @@ export default function FilterSave({ className, filters }) {
     const req = {
       _parent: user._id,
       name,
+      companyId: company._id,
       startDate: date[0].startDate,
       endDate: date[0].endDate,
       dataRange,
@@ -78,30 +79,32 @@ export default function FilterSave({ className, filters }) {
       query: {
         ...router.query,
         filter: value._id,
-        dataRange: value?.dataRange,
-        startDate: value?.startDate,
-        endDate: value?.endDate,
-        userSegments: value?.userSegments
-          .map((id) => company.userSegments.find((item) => item._id === id))
-          .map((item) => item.name)
-          .join(','),
-        category: value?.categories
-          .map((id) => company.categories.find((item) => item._id === id))
-          .map((item) => item.name)
-          .join(','),
-        topics: value?.topics
-          .map((id) => company.topics.find((item) => item._id === id))
-          .map((item) => item.name)
-          .join(','),
-        status: value?.statuses
-          .map((id) => company.statuses.find((item) => item._id === id))
-          .map((item) => item.name)
-          .join(','),
-        archive: value?.isArchive,
-        pin: value?.isPin,
-        private: value?.isPrivate,
-        noStatus: value?.isNoStatus,
-        approval: value?.isApproval
+        ...(value?.dataRange && { dataRange: value?.dataRange }),
+        ...(value?.startDate && { startDate: value?.startDate }),
+        ...(value?.endDate && { endDate: value?.endDate }),
+        ...(!!value?.categories.length && {
+          categories: value?.categories
+            .map((id) => company.categories.find((item) => item._id === id))
+            .map((item) => item.name)
+            .join(',')
+        }),
+        ...(!!value?.topics.length && {
+          topics: value?.topics
+            .map((id) => company.topics.find((item) => item._id === id))
+            .map((item) => item.name)
+            .join(',')
+        }),
+        ...(!!value?.statuses.length && {
+          status: value?.statuses
+            .map((id) => company.statuses.find((item) => item._id === id))
+            .map((item) => item.name)
+            .join(',')
+        }),
+        ...(value?.isArchive && { archive: value?.isArchive }),
+        ...(value?.isPin && { pin: value?.isPin }),
+        ...(value?.isPrivate && { private: value?.isPrivate }),
+        ...(value?.isNoStatus && { noStatus: value?.isNoStatus }),
+        ...(value?.isApproval && { approval: value?.isApproval })
       }
     });
   };
