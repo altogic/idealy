@@ -55,7 +55,7 @@ export default function Users() {
   }
 
   useEffect(() => {
-    if (!users?.length || Object.keys(router.query).length > 1) {
+    if (!users?.length || Object.keys(router.query).length >= 1) {
       getCompanyUsers();
     }
   }, [getCompanyUsers]);
@@ -90,14 +90,14 @@ export default function Users() {
   useEffect(() => {
     if (selectedUser && users) {
       const user = users?.find((user) => user._id === selectedUser._id);
-      setSelectedUser(user);
+      setSelectedUser((prev) => user ?? prev);
     }
   }, [users]);
 
   useEffect(() => {
     if (router.isReady && router.query.userId) {
       const user = users?.find((user) => user._id === router.query.userId);
-      setSelectedUser(user);
+      setSelectedUser((prev) => user ?? prev);
     }
   }, [router.isReady, router.query.userId, users]);
 

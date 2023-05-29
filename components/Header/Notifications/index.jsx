@@ -130,7 +130,6 @@ export default function Notifications() {
                             notification={notification}
                             dropdown
                             onClick={() => {
-                              console.log(notification);
                               if (notification.ideaId) showFeedbackDetail(notification.ideaId);
                               else router.push(notification.url);
                             }}

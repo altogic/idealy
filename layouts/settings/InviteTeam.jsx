@@ -157,7 +157,7 @@ export default function InviteTeam() {
               </span>
               <div className="mb-5">
                 <h2 className="text-slate-900 dark:text-aa-200 purple:text-pt-200 mb-2 text-lg font-medium tracking-sm">
-                  Invite admins to {company.name}
+                  Invite members to {company.name}
                 </h2>
                 <p className="text-slate-500 dark:text-aa-400 purple:text-pt-400 text-sm tracking-sm">
                   Invite a new team member to your company
@@ -226,7 +226,7 @@ export default function InviteTeam() {
       ) : (
         <div>
           <div className="flex items-center justify-between pl-4 pr-[7rem] pb-4 mb-11 border-b border-slate-200 dark:border-aa-600 purple:border-pt-800">
-            <span className="text-slate-800 dark:text-aa-200 purple:text-pt-200">Admins</span>
+            <span className="text-slate-800 dark:text-aa-200 purple:text-pt-200">Members</span>
             <span className="hidden lg:inline-block text-slate-800 dark:text-aa-200 purple:text-pt-200">
               Role
             </span>

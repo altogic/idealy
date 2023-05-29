@@ -70,7 +70,7 @@ export default function FilterIdea({
         onChange={handleSortChange}
         field="name"
         options={IDEA_SORT_TYPES.filter((s) => !s.isAdmin)}
-        size="md"
+        size="lg"
         hidden="mobile"
       />
 

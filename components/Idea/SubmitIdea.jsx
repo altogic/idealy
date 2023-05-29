@@ -137,7 +137,7 @@ export default function SubmitIdea({ idea }) {
       ...(idea?._id
         ? { images: [...images.filter((image) => image.startsWith('https')), ...fileLinks] }
         : { images: fileLinks }),
-      author: member?.provider ? member._id : undefined,
+      author: member?.userId ? member.userId : member.provider ? member._id : null,
       guest: !member?.provider ? guestInfo._id : undefined,
       name: member?.name || guestName,
       email: member?.email,
@@ -160,7 +160,7 @@ export default function SubmitIdea({ idea }) {
             if (member && member?._id !== user._id && member?.provider) {
               sendNotification({
                 message: `<b>${company.name}</b> submitted an idea for you`,
-                targetUser: submittedIdea?.author._id,
+                targetUser: submittedIdea?.author?._id,
                 type: 'adminAddIdea',
                 ideaId: submittedIdea._id
               });
@@ -204,9 +204,7 @@ export default function SubmitIdea({ idea }) {
       dispatch(ideaActions.searchCompanyMembers({ searchText, companyId: company._id }));
     }
   };
-  const formatResult = (item) => (
-    <Suggestion item={item} profilePicture={idea?.author?.profilePicture} />
-  );
+  const formatResult = (item) => <Suggestion item={item} profilePicture={item.profilePicture} />;
 
   const createNewUser = (data) => {
     setMember(data);

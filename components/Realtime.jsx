@@ -76,7 +76,7 @@ export default function Realtime() {
       dispatch(
         companyActions.updateMemberStatusRealtime({
           userId: data.message.userId,
-          company: data.message.company._id ?? data.message.companyId
+          company: data.message?.company?._id ?? data.message.companyId
         })
       );
     } else {
@@ -133,7 +133,7 @@ export default function Realtime() {
     setDeleteDialog(true);
   }
   function notificationHandler({ message }) {
-    if (message.userId !== user._id && !isGuest) {
+    if (message?.message.user._id !== user._id && !isGuest) {
       dispatch(notificationActions.receiveNotificationRealtime(message.message));
     }
   }

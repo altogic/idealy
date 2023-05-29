@@ -31,9 +31,10 @@ export default function UserPage({ selectedUser, setSelectedUser, getIdeas }) {
 
   const handleSortChange = (val) => {
     setSegmentSelected(val);
+
     router.push({
       pathname: router.pathname,
-      query: { ...router.query, segment: val._id }
+      query: { ...router.query, sort: val.value }
     });
   };
 
@@ -99,11 +100,20 @@ export default function UserPage({ selectedUser, setSelectedUser, getIdeas }) {
               icon={<Filter className="w-5 h-5 icon" />}
               type="icon"
               onChange={(val) => {
-                setSegmentSelected(val);
-                router.push({
-                  pathname: router.pathname,
-                  query: { ...router.query, segment: val._id }
-                });
+                if (val._id === segmentSelected?._id) {
+                  setSegmentSelected(null);
+                  delete router.query.segment;
+                  router.replace({
+                    pathname: router.pathname,
+                    query: { ...router.query }
+                  });
+                } else {
+                  setSegmentSelected(val);
+                  router.replace({
+                    pathname: router.pathname,
+                    query: { ...router.query, segment: val._id }
+                  });
+                }
               }}
               field="name"
               options={company?.userSegments}

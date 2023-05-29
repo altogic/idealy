@@ -5,9 +5,9 @@ const notificationService = {
     db
       .model('notifications')
       .filter(
-        `(targetUser == '${userId}' && companyId =='${companyId}') ${
+        `((targetUser == '${userId}' && companyId =='${companyId}') ${
           isMember ? `|| (companyId == '${companyId}' && !EXISTS(targetUser))` : ''
-        }  ${filter}`
+        })  ${filter}`
       )
       .lookup({ field: 'user' })
       .lookup({ field: 'guest' })

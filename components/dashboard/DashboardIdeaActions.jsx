@@ -91,15 +91,15 @@ export default function DashboardIdeaActions() {
       if (errors) {
         return [];
       }
-      const response = [...data.members, ...data.users];
 
-      return response.map((member) => ({
+      return data.map((member) => ({
         value: {
           _id: member._id,
           name: member.name,
           profilePicture: member.profilePicture,
           email: member.email,
-          isRegistered: !!member.provider
+          isRegistered: !!member.userId,
+          userId: member?.userId
         },
         label: member.name
       }));
@@ -112,7 +112,9 @@ export default function DashboardIdeaActions() {
         _id: member._id,
         name: member.name,
         profilePicture: member.profilePicture,
-        email: member.email
+        email: member.email,
+        isRegistered: !!member.userId,
+        userId: member?.userId
       },
       label: member.name
     }));
@@ -170,8 +172,9 @@ export default function DashboardIdeaActions() {
                 }
                 const { value } = res;
                 setIdeaOwner(res);
+
                 if (value.isRegistered) {
-                  updateIdea({ author: value._id });
+                  updateIdea({ author: value.userId });
                 } else {
                   updateIdea({
                     author: null,

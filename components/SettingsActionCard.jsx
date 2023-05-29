@@ -52,7 +52,6 @@ export default function SettingsActionCard({
   });
 
   const handleEdit = (value, fieldName) => {
-    console.log(value);
     if (value.trim() !== '' && value.length < 50) {
       dispatch(
         editAction({

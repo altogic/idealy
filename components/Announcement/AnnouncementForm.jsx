@@ -229,27 +229,38 @@ export default function AnnouncementForm({ onSave, children }) {
         </div>
       </div>
       {announcement?.title && announcement?.content && (
-        <footer className="animate__animated animate__fadeInUp bg-white dark:bg-aa-900 purple:bg-pt-1000  w-full mt-4 border-t border-slate-200 dark:border-aa-600 purple:border-pt-800 p-2 fixed bottom-0 py-8 px-5 md:px-10 space-y-4 flex justify-between">
-          <Link href="/announcements">
-            <a className="text-slate-500 dark:text-aa-200 purple:text-pt-200 font-medium flex items-center gap-2 underline">
-              <ChevronLeft className="w-4 h-4 icon" />
-              Back to announcements
-            </a>
-          </Link>
-          {isGreaterThan(date, Date.now()) && (
-            <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200 mt-4">
-              Will be published on{' '}
-              <span className="font-bold">
-                {DateTime.fromJSDate(new Date(date))
-                  .setLocale('en')
-                  .toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}
+        <footer className="animate__animated animate__fadeInUp bg-white dark:bg-aa-900 purple:bg-pt-1000  w-full mt-4 border-t border-slate-200 dark:border-aa-600 purple:border-pt-800 p-2 fixed bottom-0 py-8 px-5 md:px-10 space-y-4 flex justify-between items-center">
+          <div
+            className="flex items-center gap-4
+          ">
+            <Link href="/announcements">
+              <a className="text-slate-500 dark:text-aa-200 purple:text-pt-200 font-medium flex items-center gap-2 underline">
+                <ChevronLeft className="w-4 h-4 icon" />
+                Back to announcements
+              </a>
+            </Link>
+            {isGreaterThan(date, Date.now()) && (
+              <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200">
+                Will be published on{' '}
+                <span className="font-bold">
+                  {DateTime.fromJSDate(new Date(date))
+                    .setLocale('en')
+                    .toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}
+                </span>
               </span>
-            </span>
-          )}
+            )}
+          </div>
           <div className="flex gap-4 justify-end flex-1">
             <DatePicker
-              selected={Date.now()}
-              onChange={setDate}
+              selected={date}
+              onChange={(date) => {
+                setDate(date);
+                dispatch(
+                  announcementActions.setAnnouncement({
+                    publishDate: date
+                  })
+                );
+              }}
               showTimeSelect
               timeFormat="HH:mm"
               timeIntervals={15}

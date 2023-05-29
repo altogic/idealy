@@ -143,22 +143,31 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
                 {email}
               </p>
             )}
-            {status === 'Pending' && (
-              <Button
-                type="button"
-                variant="text"
-                text="Resend Invitation"
-                size="xs"
-                height="8"
-                onClick={() => {
-                  isSent.current = true;
-                  dispatch(
-                    companyActions.resendInvite({ email: email || name, companyId: company._id })
-                  );
-                }}
-                loading={loading && isSent.current}
-              />
-            )}
+            {status === 'Pending' ||
+              (status === 'Declined' && (
+                <Button
+                  type="button"
+                  variant="text"
+                  text="Resend Invitation"
+                  size="xs"
+                  height="8"
+                  onClick={() => {
+                    isSent.current = true;
+                    dispatch(
+                      companyActions.resendInvite({ email: email || name, companyId: company._id })
+                    );
+                    if (userId) {
+                      realtime.send(userId, 'new-invitation', {
+                        role,
+                        userId,
+                        company,
+                        memberId: id
+                      });
+                    }
+                  }}
+                  loading={loading && isSent.current}
+                />
+              ))}
           </div>
         </div>
         {status && (
@@ -167,7 +176,11 @@ export default function TeamRole({ avatar, name, email, status, role, isRegister
           </div>
         )}
         <div className="flex items-center gap-4">
-          <RoleListBox roleSelected={selected} setRoleSelected={handleRoleChange} />
+          <RoleListBox
+            roleSelected={selected}
+            setRoleSelected={handleRoleChange}
+            disabled={user._id === userId}
+          />
 
           {(email !== user?.email && role !== company?.role) || company?.role === 'Owner' ? (
             <Button

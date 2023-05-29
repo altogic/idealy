@@ -1,16 +1,17 @@
 import notificationService from '@/services/notification';
-import { all, call, put, takeEvery } from 'redux-saga/effects';
+import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { notificationActions } from './notificationSlice';
 
 function* getNotifications({ payload: { userId, limit, companyId, isMember, page } }) {
   try {
+    const user = yield select((state) => state.auth.user);
     const { data, errors } = yield call(notificationService.getNotifications, {
       userId,
       limit,
       companyId,
       page,
       isMember,
-      filter: ''
+      filter: `&& this.user._id != '${user._id}'`
     });
 
     if (errors) {

@@ -24,7 +24,7 @@ export default function UserDetail({ user }) {
   const dispatch = useDispatch();
   const [selected, setSelected] = useState(ROLE?.[0].name);
   const [isDelete, setIsDelete] = useState(false);
-
+  const sessionUser = useSelector((state) => state.auth.user);
   const company = useSelector((state) => state.company.company);
 
   useEffect(() => {
@@ -68,7 +68,11 @@ export default function UserDetail({ user }) {
                     companyId: company._id
                   });
                 }}
-                disabled={user?.member?.role === 'Owner' || company.role === 'Moderator'}
+                disabled={
+                  user?.member?.role === 'Owner' ||
+                  company.role === 'Moderator' ||
+                  sessionUser._id === user?.userId
+                }
               />
             </div>
           )}

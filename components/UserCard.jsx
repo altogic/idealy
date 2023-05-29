@@ -26,7 +26,6 @@ export default function UserCard({ name, profilePicture, email, className, style
           variant="indigo"
           size="xs"
           onClick={() => {
-            console.log('clicked', feedBackDetailModal);
             if (feedBackDetailModal) dispatch(toggleFeedBackDetailModal());
             router.push(`/users?email=${email}`);
           }}

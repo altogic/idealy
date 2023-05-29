@@ -87,7 +87,7 @@ export default function PublicView() {
       dispatch(
         ideaActions.getIdeaById({
           filter: [
-            `this._id == '${feedbackId}' && this.isMerged == false`,
+            `this._id == '${feedbackId}'`,
             isGuest &&
               'this.isApproved == true && this.isArchived == false && this.isCompleted == false && this.isPrivate == false && this.isDeleted == false'
           ]
