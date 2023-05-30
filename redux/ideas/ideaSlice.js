@@ -128,7 +128,7 @@ export const ideaSlice = createSlice({
           state.ideas = [action.payload, ...state.ideas];
         } else if (
           !action.payload.roadmap?._id ||
-          state.selectedRoadmap._id !== action.payload?.roadmap._id
+          state.selectedRoadmap?._id !== action.payload?.roadmap._id
         ) {
           state.ideas = state.ideas.filter((idea) => idea._id !== action.payload._id);
         }
@@ -256,7 +256,7 @@ export const ideaSlice = createSlice({
       if (!_.isEmpty(state.roadmapIdeas)) {
         if (
           !state.ideas.some((idea) => idea._id === action.payload.data._id) &&
-          state.selectedRoadmap._id === action.payload.data.roadmap._id &&
+          state.selectedRoadmap?._id === action.payload.data.roadmap._id &&
           action.payload.isShown
         ) {
           state.ideas = [action.payload.data, ...state.ideas];
