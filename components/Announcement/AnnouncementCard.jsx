@@ -7,7 +7,7 @@ import { announcementActions } from '@/redux/announcement/announcementSlice';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateUrl, isGreaterThan } from '@/utils/index';
 import AnnouncementReaction from '@/components/Announcement/AnnouncementReaction';
@@ -20,11 +20,31 @@ export default function AnnouncementCard({ announcement, onPage }) {
   const dispatch = useDispatch();
   const canReact = useRegisteredUserValidation('announcementReaction');
   const { company, isGuest } = useSelector((state) => state.company);
+  const [status, setStatus] = useState({});
 
   const loading = useSelector((state) => state.announcement?.isLoading);
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   useClickAnnouncementIdea(announcement);
+
+  useEffect(() => {
+    if (announcement?.publishDate && isGreaterThan(announcement?.publishDate, Date.now())) {
+      setStatus({
+        text: 'Scheduled',
+        color: '#F59E0B'
+      });
+    } else if (announcement?.isPublished) {
+      setStatus({
+        text: 'Published',
+        color: '#10B981'
+      });
+    } else {
+      setStatus({
+        text: 'Draft',
+        color: '#6B7280'
+      });
+    }
+  }, [announcement.isPublished, announcement.publishDate]);
 
   return (
     <>
@@ -64,10 +84,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
                   </span>
                 </div>
               )}
-              <StatusBadge
-                name={announcement?.isPublished ? 'Published' : 'Draft'}
-                color={announcement?.isPublished ? '#8CD460' : '#FF891C'}
-              />
+              <StatusBadge name={status?.text} color={status?.color} />
 
               {!!announcement?.categories?.length && (
                 <div className="flex flex-wrap items-center justify-center gap-2 ml-auto max-w-md pl-2">

@@ -133,7 +133,7 @@ export default function Realtime() {
     setDeleteDialog(true);
   }
   function notificationHandler({ message }) {
-    if (message?.message.user._id !== user._id && !isGuest) {
+    if (message?.message?.user?._id !== user._id && !isGuest) {
       dispatch(notificationActions.receiveNotificationRealtime(message.message));
     }
   }
@@ -242,7 +242,7 @@ export default function Realtime() {
   }
 
   function addCommentHandler({ message }) {
-    if (ideaDetailModal.current) {
+    if (ideaDetailModal.current || router.asPath.includes('dashboard')) {
       dispatch(commentActions.addCommentSuccess(message));
     }
     dispatch(ideaActions.addedNewComment(message.ideaId));

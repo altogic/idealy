@@ -117,7 +117,14 @@ export default function CommentForm({ editedComment, setEditComment, setIsFetche
                 email: data?.guestEmail
               });
             }
-            if (idea.author?._id) {
+
+            sendMentionNotification({
+              content: comment,
+              name: user?.name || data.guestName || guestName,
+              title: idea.title,
+              ideaId: idea._id
+            });
+            if (idea?.author?._id) {
               sendNotification({
                 message: `<b>${user?.name || data.guestName || guestName}</b> commented on <b>${
                   idea.title
@@ -126,12 +133,6 @@ export default function CommentForm({ editedComment, setEditComment, setIsFetche
                 type: 'comment',
                 ideaId: idea._id,
                 name: user?.name || data.guestName || guestName
-              });
-              sendMentionNotification({
-                content: comment,
-                name: user?.name || data.guestName || guestName,
-                title: idea.title,
-                ideaId: idea._id
               });
             }
           }

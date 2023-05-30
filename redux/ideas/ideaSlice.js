@@ -132,7 +132,11 @@ export const ideaSlice = createSlice({
         ) {
           state.ideas = state.ideas.filter((idea) => idea._id !== action.payload._id);
         }
-        state.roadmapIdeas = _.groupBy(state.ideas, 'status._id');
+
+        state.roadmapIdeas = _.groupBy(
+          state.ideas.sort((a, b) => a.roadmapOrder - b.roadmapOrder),
+          'status._id'
+        );
       } else if (
         !state.ideas.some((idea) => idea._id === action.payload._id) &&
         state.selectedRoadmap?._id === action.payload.roadmap?._id

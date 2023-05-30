@@ -20,7 +20,9 @@ export default function IdeaActions({ dashboard }) {
       onClick: () =>
         updateIdea({
           isPinned: !idea?.isPinned,
-          message: `${idea?.title} has been ${!idea?.isPinned ? 'pinned' : 'unpinned'}`
+          message: `<b>${idea?.title}</b> has been ${
+            !idea?.isPinned ? '<b>pinned</b>' : '<b>unpinned</b>'
+          }`
         }),
       Icon: Pin,
       color: 'green',
@@ -31,7 +33,9 @@ export default function IdeaActions({ dashboard }) {
       onClick: () =>
         updateIdea({
           isArchived: !idea?.isArchived,
-          message: `${idea?.title} ${!idea?.isArchived ? 'has been archived' : 'unarchived'}`
+          message: `<b>${idea?.title}</b> ${
+            !idea?.isArchived ? '<b>has been archived</b>' : '<b>unarchived</b>'
+          }`
         }),
       Icon: Archive,
       color: 'yellow',
@@ -42,8 +46,8 @@ export default function IdeaActions({ dashboard }) {
       onClick: () =>
         updateIdea({
           isBug: !idea?.isBug,
-          message: `${idea?.title} has been ${
-            !idea?.isBug ? 'marked as a bug' : 'remove bug badge'
+          message: `<b>${idea?.title}</b> has been ${
+            !idea?.isBug ? '<b>marked as a bug</b>' : '<b>remove bug badge</b>'
           }`
         }),
       Icon: Bug,

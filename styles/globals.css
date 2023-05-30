@@ -186,7 +186,7 @@ html:has(:is(.modal, .drawer)) {
   overflow: hidden !important;
 }
 .ql-mention-list-container {
-  @apply bg-white border-slate-200 dark:border-aa-600 purple:border-pt-800 shadow-lg z-40 !important;
+  @apply bg-white border-slate-200 dark:border-aa-600 purple:border-pt-800 shadow-lg z-50 !important;
   @apply overflow-hidden !important;
 }
 .ql-mention-list-item {

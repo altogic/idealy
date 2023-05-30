@@ -11,15 +11,14 @@ async function suggestPeople(searchTerm) {
     searchTerm,
     user?.email || guest?.email
   );
-
   return data.map((member) => ({
-    id: `${member._id}`,
+    id: `${member.userId || member.email}`,
     value: member.name,
     name: member.name,
     email: member.email,
-    profilePicture: member.profilePicture,
     isRegistered: !!member.userId,
-    userId: member.userId
+    userId: member.userId,
+    profilePicture: member.profilePicture
   }));
 }
 
@@ -30,7 +29,16 @@ export const modules = {
   mention: {
     allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
     mentionDenotationChars: ['@', '#'],
-    dataAttributes: ['id', 'value', 'link', 'email', 'profilePicture', 'name', 'isRegistered'],
+    dataAttributes: [
+      'id',
+      'value',
+      'link',
+      'email',
+      'profilePicture',
+      'name',
+      'isRegistered',
+      'userId'
+    ],
     async source(searchTerm, renderList) {
       if (searchTerm.length === 0) {
         renderList([], false);

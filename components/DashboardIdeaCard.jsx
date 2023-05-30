@@ -8,8 +8,9 @@ import SanitizeHtml from './SanitizeHtml';
 import StatusBadge from './StatusBadge';
 import TopicBadges from './TopicBadges';
 import IdeaBadges from './Idea/IdeaBadges';
+import IdeaInfo from './Idea/IdeaInfo';
 
-export default function DashboardIdeaCard({ idea, selected, id, onClick }) {
+export default function DashboardIdeaCard({ idea, selected, id, onClick, showInfo = false }) {
   const dispatch = useDispatch();
   const routeIdea = useRouteIdea();
 
@@ -44,7 +45,7 @@ export default function DashboardIdeaCard({ idea, selected, id, onClick }) {
         html={idea?.content}
       />
 
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-2 ">
         <div className="inline-flex items-center gap-3">
           <span className="inline-flex items-center gap-1.5   text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-sm">
             <svg
@@ -102,6 +103,7 @@ export default function DashboardIdeaCard({ idea, selected, id, onClick }) {
           </div>
         )}
       </div>
+      {showInfo && <IdeaInfo idea={idea} />}
     </button>
   );
 }

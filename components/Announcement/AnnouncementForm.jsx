@@ -71,7 +71,7 @@ export default function AnnouncementForm({ onSave, children }) {
   });
 
   function saveAnnouncement() {
-    if (company) {
+    if (company && !createAnnouncementLoading) {
       onSave({
         title: announcement?.title,
         content: announcement?.content,
@@ -229,7 +229,7 @@ export default function AnnouncementForm({ onSave, children }) {
         </div>
       </div>
       {announcement?.title && announcement?.content && (
-        <footer className="animate__animated animate__fadeInUp bg-white dark:bg-aa-900 purple:bg-pt-1000  w-full mt-4 border-t border-slate-200 dark:border-aa-600 purple:border-pt-800 p-2 fixed bottom-0 py-8 px-5 md:px-10 space-y-4 flex justify-between items-center">
+        <footer className="animate__animated animate__fadeInUp bg-white dark:bg-aa-900 purple:bg-pt-1000  w-full mt-4 border-t border-slate-200 dark:border-aa-600 purple:border-pt-800 p-2 fixed bottom-0 py-6 px-5 md:px-10 flex justify-between items-center">
           <div
             className="flex items-center gap-4
           ">
@@ -271,8 +271,8 @@ export default function AnnouncementForm({ onSave, children }) {
             <Button
               text="Publish"
               variant="indigo"
-              loading={loading}
-              disabled={loading}
+              disabled={loading || createAnnouncementLoading}
+              loading={loading || createAnnouncementLoading}
               onClick={publishAnnouncement()}
             />
           </div>

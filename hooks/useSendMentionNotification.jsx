@@ -22,6 +22,7 @@ export default function useSendMentionNotification(type) {
     const mentions = doc.querySelectorAll('.mention');
     if (mentions.length) {
       const mentionsArray = Array.from(mentions);
+      console.log(mentionsArray);
       const mentionsIds = mentionsArray.map((mention) => ({
         id: mention.dataset.id,
         isRegistered: mention.dataset.isRegistered,
@@ -29,6 +30,7 @@ export default function useSendMentionNotification(type) {
       }));
       const uniqueMentions = _.uniqBy(mentionsIds, 'id');
       uniqueMentions.forEach((m) => {
+        console.log(m);
         if (m.isRegistered) {
           sendNotification({
             message: handleNotificationMessage(name, title),

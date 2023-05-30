@@ -116,7 +116,7 @@ export default function IdeaVisibility({ listBoxSize }) {
               setRoadMap(value);
               updateIdea({
                 roadmap: value._id,
-                message: `The roadmap of ${idea.title} changed to ${value.name}`
+                message: `The roadmap of <b>${idea.title}</b> changed to <b>${value.name}</b>`
               });
             }}
             field="name"
@@ -124,7 +124,7 @@ export default function IdeaVisibility({ listBoxSize }) {
             size={listBoxSize}
             onReset={() => {
               setRoadMap(null);
-              updateIdea({ roadmap: null, message: `The roadmap of ${idea.title} removed` });
+              updateIdea({ roadmap: null, message: `The roadmap of <b>${idea.title}</b> removed` });
             }}
           />
         </div>
@@ -142,7 +142,7 @@ export default function IdeaVisibility({ listBoxSize }) {
           setRoadMap(value);
           updateIdea({
             roadmap: value._id,
-            message: `The roadmap of ${idea.title} changed to ${value.name}`
+            message: `The roadmap of <b>${idea.title}</b> changed to <b>${value.name}</b>`
           });
         }}
       />

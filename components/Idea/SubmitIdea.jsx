@@ -137,7 +137,7 @@ export default function SubmitIdea({ idea }) {
       ...(idea?._id
         ? { images: [...images.filter((image) => image.startsWith('https')), ...fileLinks] }
         : { images: fileLinks }),
-      author: member?.userId ? member.userId : member.provider ? member._id : null,
+      author: member?.userId ? member?.userId : member?.provider ? member._id : null,
       guest: !member?.provider ? guestInfo._id : undefined,
       name: member?.name || guestName,
       email: member?.email,

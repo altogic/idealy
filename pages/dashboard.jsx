@@ -69,6 +69,7 @@ export default function AdminDashboard() {
   );
 
   const handlePageChange = () => {
+    console.log('page change');
     router.push({
       pathname: router.pathname,
       query: { ...router.query, page: parseInt(router.query.page, 10) + 1 }

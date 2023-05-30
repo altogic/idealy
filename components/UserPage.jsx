@@ -91,7 +91,7 @@ export default function UserPage({ selectedUser, setSelectedUser, getIdeas }) {
             onChange={handleSortChange}
             field="label"
             options={USERS_SORT_OPTIONS}
-            size="sm"
+            size="lg"
             hidden="mobile"
           />
           {!!company?.userSegments.length && (
@@ -117,7 +117,7 @@ export default function UserPage({ selectedUser, setSelectedUser, getIdeas }) {
               }}
               field="name"
               options={company?.userSegments}
-              size="sm"
+              size="lg"
               hidden="mobile"
             />
           )}
@@ -189,6 +189,7 @@ export default function UserPage({ selectedUser, setSelectedUser, getIdeas }) {
                     id={i._id}
                     idea={i}
                     onClick={() => dispatch(toggleFeedBackDetailModal())}
+                    showInfo
                   />
                   <Divider />
                 </>

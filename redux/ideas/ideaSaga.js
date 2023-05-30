@@ -243,7 +243,9 @@ function* getIdeasByRoadmapSaga({ payload: { filter, onSuccess } }) {
     yield put(ideaActions.getIdeasByRoadmapFailure(error));
   }
 }
-function* updateIdeasOrderSaga({ payload: { ideas, sourceId, destinationId, sourceIdea } }) {
+function* updateIdeasOrderSaga({
+  payload: { ideas, sourceId, destinationId, sourceIdea, onSuccess }
+}) {
   try {
     const { company } = yield select((state) => state.company);
     const user = yield select((state) => state.auth.user);
@@ -267,6 +269,7 @@ function* updateIdeasOrderSaga({ payload: { ideas, sourceId, destinationId, sour
       sourceIdea,
       sender: user._id
     });
+    if (onSuccess) onSuccess();
   } catch (error) {
     yield put(ideaActions.updateIdeasOrderFailure(error));
   }

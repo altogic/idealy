@@ -317,7 +317,7 @@ export default function PublicView() {
                       countInfo={countInfo}
                       endOfList={() =>
                         setPage((page) => {
-                          if (ideas.length < countInfo?.total) return page + 1;
+                          if (ideas.length < countInfo?.count) return page + 1;
                           return page;
                         })
                       }>

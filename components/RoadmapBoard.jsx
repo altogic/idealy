@@ -2,7 +2,7 @@ import InfoModal from '@/components/InfoModal';
 import RoadmapSection from '@/components/RoadmapSection';
 import { Merge } from '@/components/icons';
 import { ideaActions } from '@/redux/ideas/ideaSlice';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -15,7 +15,7 @@ export default function RoadmapBoard({ roadmap, roadmapStatuses }) {
   const loading = useSelector((state) => state.idea.isLoading);
   const { roadmapIdeas } = useSelector((state) => state.idea);
   const { isGuest } = useSelector((state) => state.company);
-
+  const dndCheck = useRef(false);
   const move = (source, destination, droppableSource, droppableDestination) => {
     const sourceClone = Array.from(source);
     const destClone = Array.from(destination);
@@ -70,6 +70,11 @@ export default function RoadmapBoard({ roadmap, roadmapStatuses }) {
       const destinationList = state[dInd] || [];
       const result = move(state[sInd], destinationList, source, destination);
       const sourceIdea = state[sInd][source.index];
+      const orderedResult = result[dInd].map((item, index) => ({
+        ...item,
+        roadmapOrder: index + 1
+      }));
+      dndCheck.current = true;
       dispatch(
         ideaActions.updateIdea({
           idea: {
@@ -77,16 +82,15 @@ export default function RoadmapBoard({ roadmap, roadmapStatuses }) {
             status: dInd === 'undefined' ? null : dInd
           },
           onSuccess: () => {
-            const orderedResult = result[dInd].map((item, index) => ({
-              ...item,
-              roadmapOrder: index + 1
-            }));
             dispatch(
               ideaActions.updateIdeasOrder({
                 ideas: orderedResult,
                 sourceId: dInd,
                 destinationId: sInd,
-                sourceIdea
+                sourceIdea,
+                onSuccess: () => {
+                  dndCheck.current = false;
+                }
               })
             );
           }
@@ -96,7 +100,7 @@ export default function RoadmapBoard({ roadmap, roadmapStatuses }) {
       setState((state) => ({
         ...state,
         [sInd]: result[sInd],
-        [dInd]: result[dInd]
+        [dInd]: orderedResult
       }));
     }
   };
@@ -114,7 +118,7 @@ export default function RoadmapBoard({ roadmap, roadmapStatuses }) {
     setState(backupState);
   }
   useEffect(() => {
-    if (roadmapIdeas) {
+    if (roadmapIdeas && !dndCheck.current) {
       setState(roadmapIdeas);
     }
   }, [roadmapIdeas]);

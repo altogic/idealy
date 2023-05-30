@@ -20,7 +20,7 @@ export default function StatusListbox({ size }) {
   function handleReset() {
     updateIdea({ status: null, statusUpdatedAt: Date.now(), isCompleted: false }, () => {
       sendNotification({
-        message: `The  status of ${idea.title} cleared`,
+        message: `The  status of <b>${idea.title}</b> removed`,
         targetUser: idea?.author?._id,
         type: 'ideaStatusChanged',
         ideaId: idea._id

@@ -16,7 +16,7 @@ export default function CategoryListbox({ size }) {
   const addCompanySubList = useAddCompanySublist();
 
   function handleReset() {
-    updateIdea({ category: null, message: `The category of ${idea.title} cleared` });
+    updateIdea({ category: null, message: `The category of <b>${idea.title}</b> removed` });
     setCategory(null);
   }
   function handleUpdateIdea(value) {
