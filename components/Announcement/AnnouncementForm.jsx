@@ -36,10 +36,6 @@ const DatePickerButton = forwardRef(({ onClick }, ref) => (
 ));
 DatePickerButton.displayName = 'DatePickerButton';
 export default function AnnouncementForm({ onSave, children }) {
-  const [openCreateModal, setOpenCreateModal] = useState(false);
-  const [date, setDate] = useState(Date.now());
-  const [categories, setCategories] = useState([]);
-
   const {
     updateAnnouncementLoading: loading,
     createAnnouncementLoading,
@@ -50,6 +46,10 @@ export default function AnnouncementForm({ onSave, children }) {
   const company = useSelector((state) => state.company.company);
   const user = useSelector((state) => state.auth.user);
   const addCompanySubList = useAddCompanySublist();
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [date, setDate] = useState();
+  const [categories, setCategories] = useState([]);
+
   const schema = yup.object().shape({
     title: yup
       .string()
@@ -116,21 +116,24 @@ export default function AnnouncementForm({ onSave, children }) {
     };
   }
 
-  useDebounce(announcement, saveAnnouncement, 600);
-
   useEffect(() => {
     if (!categories?.length) {
       setCategories(
         company.categories.filter((category) => announcement?.categories?.includes(category._id))
       );
     }
-  }, [announcement]);
+    if (announcement.publishDate) {
+      setDate(new Date(announcement.publishDate));
+    }
+  }, [announcement.publishDate, announcement?.categories]);
 
   useUpdateEffect(() => {
     if (!compareDates(date, Date.now())) {
       saveAnnouncement();
     }
   }, [date]);
+
+  useDebounce(announcement, saveAnnouncement, 600);
 
   return (
     <>
@@ -179,7 +182,7 @@ export default function AnnouncementForm({ onSave, children }) {
               </div>
               <BaseListBox
                 label={
-                  <div className=" bg-gray-100 dark:bg-aa-700 purple:bg-pt-800 text-gray-700 dark:text-aa-200 purple:text-pt-200 inline-flex items-center text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full border border-transparent whitespace-nowrap">
+                  <div className=" bg-gray-100 dark:bg-aa-700 purple:bg-pt-800 text-gray-700 dark:text-aa-200 purple:text-pt-200 inline-flex items-center text-xs font-medium mr-2 px-2.5 py-0.5 mb-2 rounded-full border border-transparent whitespace-nowrap">
                     <Plus className="w-3 h-3 icon" />
                     <span className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-xs">
                       Categories
@@ -251,6 +254,20 @@ export default function AnnouncementForm({ onSave, children }) {
             )}
           </div>
           <div className="flex gap-4 justify-end flex-1">
+            {announcement?.publishDate && (
+              <Button
+                text="Remove publish date"
+                variant="outline"
+                onClick={() => {
+                  setDate(new Date());
+                  dispatch(
+                    announcementActions.setAnnouncement({
+                      publishDate: null
+                    })
+                  );
+                }}
+              />
+            )}
             <DatePicker
               selected={date}
               onChange={(date) => {

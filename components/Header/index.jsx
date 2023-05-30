@@ -50,7 +50,7 @@ export default function Header() {
       <div className="flex items-center">
         <MobileMenu />
         {selectedCompany?.name && (
-          <Link href="/">
+          <Link href="/public-view">
             <a
               className="inline-flex items-center gap-4 flex-shrink-0 mr-6"
               title={selectedCompany?.name}>

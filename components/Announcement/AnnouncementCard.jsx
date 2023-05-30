@@ -14,6 +14,7 @@ import AnnouncementReaction from '@/components/Announcement/AnnouncementReaction
 import IdeaActionButton from '@/components/Idea/admin/IdeaActionButton';
 import InfoModal from '@/components/InfoModal';
 import ShareButtons from '@/components/ShareButtons';
+import _ from 'lodash';
 
 export default function AnnouncementCard({ announcement, onPage }) {
   const router = useRouter();
@@ -74,16 +75,6 @@ export default function AnnouncementCard({ announcement, onPage }) {
                 </h2>
               </button>
 
-              {announcement?.publishDate && isGreaterThan(announcement?.publishDate, Date.now()) && (
-                <div className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-md text-left">
-                  Will be published on{' '}
-                  <span className="text-slate-800 dark:text-aa-200 purple:text-pt-200 font-bold ">
-                    {DateTime.fromISO(announcement?.publishDate)
-                      .setLocale('en')
-                      .toLocaleString(DateTime.DATETIME_SHORT)}
-                  </span>
-                </div>
-              )}
               <StatusBadge name={status?.text} color={status?.color} />
 
               {!!announcement?.categories?.length && (
@@ -102,7 +93,7 @@ export default function AnnouncementCard({ announcement, onPage }) {
                   title={announcement?.title}
                   hashtags={company?.categories
                     .filter((category) => announcement?.categories.includes(category._id))
-                    .map((cat) => cat.name)}
+                    .map((cat) => _.startCase(cat.name.replace(/\s/g, '')))}
                   summary={announcement?.content}
                   isPublished={announcement?.isPublished}
                 />
@@ -136,7 +127,16 @@ export default function AnnouncementCard({ announcement, onPage }) {
                 .setLocale('en')
                 .toLocaleString(DateTime.DATE_MED)}
             </span>
-
+            {announcement?.publishDate && isGreaterThan(announcement?.publishDate, Date.now()) && (
+              <div className="text-slate-500 dark:text-aa-200 purple:text-pt-200 text-sm tracking-md text-left">
+                Will be published on{' '}
+                <span className="text-slate-800 dark:text-aa-200 purple:text-pt-200 font-bold ">
+                  {DateTime.fromISO(announcement?.publishDate)
+                    .setLocale('en')
+                    .toLocaleString(DateTime.DATETIME_SHORT)}
+                </span>
+              </div>
+            )}
             <div className="prose prose-p:text-slate-800 dark:prose-p:text-aa-200 purple:prose-p:text-pt-200 prose-a:text-slate-800 dark:prose-a:text-aa-400 purple:prose-a:text-pt-400 prose-strong:text-slate-900 dark:prose-strong:text-aa-500 purple:prose-strong:text-pt-600 prose-p:mb-5 last:prose-p:mb-0 prose-p:text-sm prose-p:leading-5 prose-p:tracking-sm prose-headings:m-0 prose-headings:p-0 max-w-full mb-4">
               <SanitizeHtml id="idea-detail" html={announcement?.content} />
             </div>
