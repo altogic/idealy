@@ -122,10 +122,10 @@ export default function AnnouncementForm({ onSave, children }) {
         company.categories.filter((category) => announcement?.categories?.includes(category._id))
       );
     }
-    if (announcement.publishDate) {
+    if (announcement?.publishDate) {
       setDate(new Date(announcement.publishDate));
     }
-  }, [announcement.publishDate, announcement?.categories]);
+  }, [announcement?.publishDate, announcement?.categories]);
 
   useUpdateEffect(() => {
     if (!compareDates(date, Date.now())) {
@@ -254,7 +254,7 @@ export default function AnnouncementForm({ onSave, children }) {
             )}
           </div>
           <div className="flex gap-4 justify-end flex-1">
-            {announcement?.publishDate && (
+            {isGreaterThan(date, Date.now()) && (
               <Button
                 text="Remove publish date"
                 variant="outline"
