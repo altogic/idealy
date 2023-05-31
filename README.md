@@ -20,4 +20,14 @@ Idealy is an application used for comprehensive feedback management. It enables 
 2. Create `.env` file like `.env.example` and fill it with your own values
 3. Your second client key must be run only for realtime updates
 
-![picture alt](./public/client-key.png 'Preview image of Idealy.io') 4. This project runs with wildcards subdomains, so you need to configure your local development server 5. Navigate to the project directory: `cd idealy` 6. Install the required dependencies by running the command: `npm install` 7. Start the application by running the command: `npm start` 8. Open your browser and go to `http://localhost:3000` to experience Idealy!
+![picture alt](./public/client-key.png 'Preview image of Idealy.io')
+
+4. This project runs with wildcards subdomains, so you need to configure your local development server
+5. Add your base url to your project in Altogic
+
+   ![picture alt](./public/base-url.png 'Preview image of Idealy.io')
+
+6. Navigate to the project directory: `cd idealy`
+7. Install the required dependencies by running the command: `npm install`
+8. Start the application by running the command: `npm start`
+9. Open your browser and go to `http://localhost:3000` to experience Idealy!
