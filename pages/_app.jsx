@@ -89,7 +89,7 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-        <title>Idealy -Free Customer Feedback, Roadmap, and Announcements Tool</title>
+        <title>Idealy - Empowering Your Voice for Better Product Development</title>
         <meta
           name="description"
           content="Gather, organize, and prioritize customer feedback, create product roadmaps, and announce product updates for free using our customer feedback management tool."

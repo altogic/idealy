@@ -31,6 +31,7 @@ export default function Button({
         size === 'sm' ? 'p-3' : '',
         size === 'xs' ? 'p-2' : '',
         size === 'base' && variant !== 'text' ? 'px-4 py-2.5' : '',
+        size === 'xl' && 'px-8 py-6',
         fontSize ? `text-${fontSize}` : null,
         height ? `h-${height}` : '',
         fullWidth ? 'w-full' : '',

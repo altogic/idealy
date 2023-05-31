@@ -17,7 +17,7 @@ export default function CompanyNotFound() {
   return (
     <div>
       <Head>
-        <title>Idealy - Mail Verification</title>
+        <title>Idealy - Company Not Found</title>
       </Head>
       <div className="relative h-screen">
         <a
