@@ -61,7 +61,6 @@ export const SESSION_COOKIE_OPTIONS = {
   sameSite: 'lax',
   domain: process.env.NEXT_PUBLIC_DOMAIN
 };
-// TODO: change default value if needed
 
 export const PRIORITY_VALUES = [
   {

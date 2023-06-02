@@ -23,11 +23,90 @@ Idealy is an application used for comprehensive feedback management. It enables 
 ![picture alt](./public/client-key.png 'Preview image of Idealy.io')
 
 4. This project runs with wildcards subdomains, so you need to configure your local development server
-5. Add your base url to your project in Altogic
+5. Edit your `/etc/hosts` file and add this line: `127.0.0.1 idealy.com`
+   You can use any subdomain you want, but you shouldn't any existing domain.
+6. Install a web server like [nginx](https://www.nginx.com/) or [apache](https://httpd.apache.org/)
 
-   ![picture alt](./public/base-url.png 'Preview image of Idealy.io')
+For Linux:
 
-6. Navigate to the project directory: `cd idealy`
-7. Install the required dependencies by running the command: `npm install`
-8. Start the application by running the command: `npm start`
-9. Open your browser and go to `http://localhost:3000` to experience Idealy!
+`sudo apt-get update`
+
+`sudo apt-get install nginx`
+
+If you prefer Apache,
+`sudo apt-get install apache2`
+
+Installing Nginx For macOS, follow the instructions [here](https://www.javatpoint.com/installing-nginx-on-mac)
+
+8. Configure your web server to serve your project
+
+```
+sudo nano /opt/homebrew/etc/nginx/nginx.conf
+```
+
+After opening it, modify the file to the following:
+
+```
+server {
+    listen 80;
+    listen [::]:80;
+    listen 443 ssl;
+    server_name *.idealy.com idealy.com www.idealy.com;
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection ‘upgrade’;
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
+9. Install `dnsmasq` to resolve wildcard subdomains
+
+```
+brew install dnsmasq
+
+```
+
+10. Configure `dnsmasq` to resolve wildcard subdomains
+
+`sudo nano /opt/homebrew/dnsmasq.conf`
+
+After opening it, modify the file to the following:
+
+```
+# Add domains which you want to force to an IP address here.
+# The example below send any host in *.local.company.com and *.lan to a local
+# webserver.
+address=/idealy.com/127.0.0.1
+address=/lan/127.0.0.1
+local=/node1/
+# Don't read /etc/resolv.conf or any other configuration files.
+no-resolv
+# Never forward plain names (without a dot or domain part)
+domain-needed
+# Never forward addresses in the non-routed address spaces.
+bogus-priv
+```
+
+11. Start `dnsmasq`
+
+```
+sudo brew services start dnsmasq
+```
+
+12. Add your base url to your project in Altogic
+
+![picture alt](./public/base-url.png 'Preview image of Idealy.io')
+
+13. Navigate to the project directory: `cd idealy`
+
+14. Install the required dependencies by running the command: `npm install`
+
+15. Start the application by running the command: `npm start`
+
+16. Open your browser and go to `http://idealy.com` to experience Idealy!
+
+If you want to use another subdomain, you can change it in the `.next.config` file , `/etc/hosts`, nginx and dnsmasq configuration files.
